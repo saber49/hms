@@ -185,7 +185,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/style.css?v=20261114md3d">
     <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3e">
+    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3f">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3b">

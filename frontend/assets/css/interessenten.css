@@ -112,6 +112,9 @@ details.crm-card[open] > summary { margin-bottom: 12px; }
 .crm-erg-falsche_nummer { background: color-mix(in srgb, var(--md-sys-color-error) 14%, transparent); color: var(--md-sys-color-error); }
 /* ---------- detail ---------- */
 .crm-detail-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+/* md-*-button are inline custom elements — without a flex+gap container
+   they render glued together (native <button> rows used to get a space). */
+.crm-actions, .int-detail-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .crm-danger { color: var(--danger) !important; }
 .crm-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 14px; }
 .crm-head-firma { font-size: .85rem; font-weight: 600; color: var(--gray-500); }
