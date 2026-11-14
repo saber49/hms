@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NU-Portal</title>
-    <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20260729mob8">
-    <link rel="stylesheet" href="assets/css/nu_portal.css?v=20261114md3d">
+    <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/nu_portal.css?v=20261114md3g">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
@@ -60,7 +60,7 @@
             }
         });
     </script>
-    <script defer src="assets/js/material-web.bundle.js?v=20260928local1"></script>
-    <script src="assets/js/nu_portal.js?v=20261114md3"></script>
+    <script defer src="assets/js/material-web.bundle.js?v=20261114md3g"></script>
+    <script src="assets/js/nu_portal.js?v=20261114md3g"></script>
 </body>
 </html>

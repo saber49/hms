@@ -182,41 +182,41 @@ header('Expires: 0');
     })();
     </script>
     <!-- Material Design 3 — official design tokens (must load BEFORE all module sheets) -->
-    <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3d">
-    <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3f">
-    <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/subcontractors.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/price_history.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/absences.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/notifications.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/tasks.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/orders.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/messages.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/worker_messages.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/worker-panels.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/controlling.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/users.css?v=20261114md3d">
-    <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/company_documents.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/search-field.css?v=20261114md3b">
+    <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/subcontractors.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/price_history.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/absences.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/notifications.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/tasks.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/orders.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/messages.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/worker_messages.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/worker-panels.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/controlling.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/users.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/company_documents.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/search-field.css?v=20261114md3g">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <!-- Markdown rendering + sanitization for the AI assistant's rich replies.
          Defer so they don't block parsing; both will be ready before DOMContentLoaded. -->
     <script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
     <!-- Material Design 3 — official @material/web web components (md-*) -->
-    <script defer src="assets/js/material-web.bundle.js?v=20260928local1"></script>
+    <script defer src="assets/js/material-web.bundle.js?v=20261114md3g"></script>
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
@@ -803,17 +803,17 @@ header('Expires: 0');
             window.refreshTenantState();
         });
     </script>
-    <script defer src="assets/js/dom-morph.js?v=smooth202611020658"></script>
-    <script defer src="assets/js/app.js?v=20261114md3e"></script>
-    <script defer src="assets/js/dashboard.js?v=20261021u1"></script>
-    <script defer src="assets/js/incoming_orders.js?v=20261114md3c"></script>
-    <script defer src="assets/js/messages.js?v=20261114md3e"></script>
-    <script defer src="assets/js/worker_messages.js?v=20261114md3c"></script>
-    <script defer src="assets/js/notifications.js?v=20261019au1"></script>
+    <script defer src="assets/js/dom-morph.js?v=20261114md3g"></script>
+    <script defer src="assets/js/app.js?v=20261114md3g"></script>
+    <script defer src="assets/js/dashboard.js?v=20261114md3g"></script>
+    <script defer src="assets/js/incoming_orders.js?v=20261114md3g"></script>
+    <script defer src="assets/js/messages.js?v=20261114md3g"></script>
+    <script defer src="assets/js/worker_messages.js?v=20261114md3g"></script>
+    <script defer src="assets/js/notifications.js?v=20261114md3g"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
-    <script defer src="assets/js/realtime.js?v=smooth202611020658"></script>
-    <script defer src="assets/js/call.js?v=20260929call6"></script>
-    <script defer src="assets/js/ai-assistant.js?v=20260729mob8"></script>
+    <script defer src="assets/js/realtime.js?v=20261114md3g"></script>
+    <script defer src="assets/js/call.js?v=20261114md3g"></script>
+    <script defer src="assets/js/ai-assistant.js?v=20261114md3g"></script>
 </body>
 </html>
