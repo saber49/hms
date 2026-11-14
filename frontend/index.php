@@ -183,7 +183,7 @@ header('Expires: 0');
     </script>
     <!-- Material Design 3 — official design tokens (must load BEFORE all module sheets) -->
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3c">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3d">
     <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3b">

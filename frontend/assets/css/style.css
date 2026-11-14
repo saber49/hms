@@ -862,15 +862,23 @@ textarea.form-control {
     resize: vertical;
     min-height: 80px;
 }
+/* Legacy .form-control sizing rules (height/line-height/padding) target
+   the component HOST and would clip its inner field — neutralize the
+   surface props and express compact height via the field's own space
+   tokens instead (~40px like the old inputs). */
 md-outlined-text-field[class*="form-control"],
 md-outlined-select[class*="form-control"] {
-    padding: 0;
-    border: none;
-    background: transparent;
-    box-shadow: none;
-    min-height: 0;
-    height: auto;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    min-height: 0 !important;
+    height: auto !important;
     width: 100%;
+    --md-outlined-text-field-top-space: 6px;
+    --md-outlined-text-field-bottom-space: 6px;
+    --md-outlined-select-top-space: 6px;
+    --md-outlined-select-bottom-space: 6px;
 }
 .form-group.full-width {
     grid-column: 1 / -1;

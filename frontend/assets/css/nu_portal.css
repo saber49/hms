@@ -613,3 +613,19 @@ body {
 .nu-modal { background: var(--nu-surface); border-radius: var(--nu-radius-lg); box-shadow: var(--nu-elevation-3); }
 /* MD3 section titles */
 .nu-form-section-title { color: var(--nu-primary); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.015em; text-transform: none; }
+/* md-component hosts that still carry the old .nu-form-control class must
+   not inherit its padding/border/height — the shadow field owns those. */
+md-outlined-text-field[class*="form-control"],
+md-outlined-select[class*="form-control"] {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100%;
+    --md-outlined-text-field-top-space: 6px;
+    --md-outlined-text-field-bottom-space: 6px;
+    --md-outlined-select-top-space: 6px;
+    --md-outlined-select-bottom-space: 6px;
+}
