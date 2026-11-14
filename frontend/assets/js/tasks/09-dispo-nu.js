@@ -362,7 +362,7 @@ function plannerRenderNuSelectList() {
                 <span class="material-symbols-outlined planner-nu-select-arrow">arrow_forward</span>
             </div>
         `).join('')
-        : '<div class="nu-empty" style="padding:30px 10px"><i class="fas fa-handshake" style="font-size:2rem;color:var(--gray-400)"></i><p style="margin-top:8px;color:var(--gray-500)">Keine weiteren Nachunternehmer verfügbar.</p></div>';
+        : '<div class="nu-empty" style="padding:30px 10px"><i class="material-symbols-outlined" style="font-size:2rem;color:var(--gray-400)">handshake</i><p style="margin-top:8px;color:var(--gray-500)">Keine weiteren Nachunternehmer verfügbar.</p></div>';
 }
 
 function plannerCloseNuAddOverlay() {

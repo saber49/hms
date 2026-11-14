@@ -6,8 +6,8 @@
    ============================================ */
 
 const KP_WB_ART_ICON = {
-    dienstbeginn: 'fa-right-to-bracket', dienstende: 'fa-right-from-bracket', notiz: 'fa-pen', vorkommnis: 'fa-triangle-exclamation',
-    alarm: 'fa-bell', besucher: 'fa-id-badge', lieferung: 'fa-truck', schluessel: 'fa-key', foto: 'fa-camera', hinweis: 'fa-bullhorn', berichtigung: 'fa-eraser',
+    dienstbeginn: 'login', dienstende: 'logout', notiz: 'edit', vorkommnis: 'warning',
+    alarm: 'notifications', besucher: 'badge', lieferung: 'local_shipping', schluessel: 'vpn_key', foto: 'photo_camera', hinweis: 'campaign', berichtigung: 'ink_eraser',
 };
 let kpWbDatum = kpIso(new Date());
 
@@ -35,30 +35,30 @@ KP_TABS.wachbuch = {
         const korrigiert = new Set((data.eintraege || []).filter(e => e.berichtigt_durch).map(e => e.id));
         box.innerHTML = `
             <div class="kp-wb-nav">
-                <button class="kp-icon-btn" onclick="kpWbTag(-1)" title="Vorheriger Tag"><i class="fas fa-chevron-left"></i></button>
+                <button class="kp-icon-btn" onclick="kpWbTag(-1)" title="Vorheriger Tag"><i class="material-symbols-outlined">chevron_left</i></button>
                 <input type="date" class="kp-select" value="${kpWbDatum}" max="${kpIso(new Date())}" onchange="kpWbDatum=this.value;kpLoad()">
-                <button class="kp-icon-btn" onclick="kpWbTag(1)" ${heute ? 'disabled' : ''} title="Nächster Tag"><i class="fas fa-chevron-right"></i></button>
+                <button class="kp-icon-btn" onclick="kpWbTag(1)" ${heute ? 'disabled' : ''} title="Nächster Tag"><i class="material-symbols-outlined">chevron_right</i></button>
                 <span class="kp-muted">${kpDayName(kpWbDatum, true)} 06:00 – folgender Tag 06:00</span>
             </div>
             <div class="kp-wb-status">${(data.status || []).map(s => `
                 <div class="kp-card kp-wb-obj">
-                    <div class="kp-card-title"><i class="fas fa-building"></i> ${kpEsc(s.objektname)}</div>
+                    <div class="kp-card-title"><i class="material-symbols-outlined">apartment</i> ${kpEsc(s.objektname)}</div>
                     <div>${s.bewacht ? `<span class="kp-live"><span class="kp-live-dot"></span> bewacht · ${s.wachpersonen} Wachperson${s.wachpersonen === 1 ? '' : 'en'} seit ${kpWbZeit(s.seit)}</span>` : '<span class="kp-muted">derzeit niemand im Dienst</span>'}</div>
                     <div class="kp-card-sub">${s.vorkommnisse_7_tage} Vorkommnis${s.vorkommnisse_7_tage === 1 ? '' : 'se'} in 7 Tagen</div>
-                    <button class="kp-chip-btn" onclick="kpHinweisDialog('${kpEsc(s.obj_id)}', '${kpEsc(s.objektname).replace(/'/g, '&#39;')}')"><i class="fas fa-bullhorn"></i> Hinweis an den Wachdienst</button>
-                </div>`).join('') || kpEmpty('fa-book-open', 'Für Ihre Objekte ist kein ' + kpObLabel + ' aktiv.')}</div>
+                    <button class="kp-chip-btn" onclick="kpHinweisDialog('${kpEsc(s.obj_id)}', '${kpEsc(s.objektname).replace(/'/g, '&#39;')}')"><i class="material-symbols-outlined">campaign</i> Hinweis an den Wachdienst</button>
+                </div>`).join('') || kpEmpty('menu_book', 'Für Ihre Objekte ist kein ' + kpObLabel + ' aktiv.')}</div>
             <div class="kp-wb-list">${(data.eintraege || []).map(e => `
                 <article class="kp-card kp-wb-e kp-wb-${kpEsc(e.art)}${korrigiert.has(e.id) ? ' kp-wb-struck' : ''}">
                     <div class="kp-wb-time">${kpWbZeit(e.zeit)}</div>
                     <div class="kp-wb-body">
-                        <div class="kp-card-title"><i class="fas ${KP_WB_ART_ICON[e.art] || 'fa-pen'}"></i> ${kpEsc(e.art_label)}${e.ort ? ' · ' + kpEsc(e.ort) : ''}
+                        <div class="kp-card-title"><i class="material-symbols-outlined">${KP_WB_ART_ICON[e.art] || 'edit'}</i> ${kpEsc(e.art_label)}${e.ort ? ' · ' + kpEsc(e.ort) : ''}
                             ${e.ref_id ? '<span class="kp-pill">Berichtigung</span>' : ''}${e.nachgereicht ? '<span class="kp-pill">nachgereicht</span>' : ''}</div>
                         ${e.text ? `<div class="kp-wb-text">${kpEsc(e.text)}</div>` : ''}
                         ${kpWbDetails(e) ? `<div class="kp-card-sub">${kpEsc(kpWbDetails(e))}</div>` : ''}
-                        ${(e.fotos || []).length ? `<div class="kp-foto-grid kp-wb-fotos">${e.fotos.map(f => `<button class="kp-foto" data-wbfoto="${f.id}" data-cap="${kpEsc(kpWbZeit(f.aufgenommen_am) + (f.lat ? ' · ' + f.lat + ', ' + f.lng : ' · ohne GPS'))}"><i class="fas fa-image"></i></button>`).join('')}</div>` : ''}
+                        ${(e.fotos || []).length ? `<div class="kp-foto-grid kp-wb-fotos">${e.fotos.map(f => `<button class="kp-foto" data-wbfoto="${f.id}" data-cap="${kpEsc(kpWbZeit(f.aufgenommen_am) + (f.lat ? ' · ' + f.lat + ', ' + f.lng : ' · ohne GPS'))}"><i class="material-symbols-outlined">image</i></button>`).join('')}</div>` : ''}
                         <div class="kp-card-meta">${kpEsc(e.erfasst_von || '')}</div>
                     </div>
-                </article>`).join('') || (data.status?.length ? kpEmpty('fa-book-open', 'Keine Einträge an diesem Tag.') : '')}</div>`;
+                </article>`).join('') || (data.status?.length ? kpEmpty('menu_book', 'Keine Einträge an diesem Tag.') : '')}</div>`;
         kpWbFotos(box, seq);
     },
 };

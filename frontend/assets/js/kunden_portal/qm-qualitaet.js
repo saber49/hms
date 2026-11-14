@@ -14,20 +14,20 @@ KP_TABS.dienstanweisungen = {
             const letzte = d.meine[d.meine.length - 1];
             return `<article class="kp-card">
                 <div class="kp-card-head"><div>
-                    <div class="kp-card-title"><i class="fas fa-file-shield"></i> ${kpEsc(d.objektname)}</div>
+                    <div class="kp-card-title"><i class="material-symbols-outlined">policy</i> ${kpEsc(d.objektname)}</div>
                     <div class="kp-card-sub">Version ${d.version} · gültig ab ${kpDe(d.gueltig_ab)} · ${d.seiten} Seite${d.seiten === 1 ? '' : 'n'}</div></div>
-                    <div class="kp-card-meta">${d.bestaetigt ? '<span class="kp-pill kp-pill-ok"><i class="fas fa-check"></i> bestätigt</span>' : '<span class="kp-pill">Bestätigung offen</span>'}</div>
+                    <div class="kp-card-meta">${d.bestaetigt ? '<span class="kp-pill kp-pill-ok"><i class="material-symbols-outlined">check</i> bestätigt</span>' : '<span class="kp-pill">Bestätigung offen</span>'}</div>
                 </div>
                 <div class="kp-sec">Das Wichtigste</div>
                 <ul class="kp-kurz">${d.kurz.map(k => `<li>${kpEsc(k)}</li>`).join('')}</ul>
                 ${letzte ? `<div class="kp-card-sub">Ihre letzte Rückmeldung: ${letzte.aktion === 'bestaetigt' ? 'Inhalt bestätigt' : 'Änderung gewünscht — ' + kpEsc(letzte.text || '')} (${kpEsc(new Date(letzte.am).toLocaleString('de-DE'))})</div>` : ''}
                 <div class="kp-actions">
-                    <button class="kp-chip-btn" onclick="kpDaPdf(${d.id})"><i class="fas fa-file-pdf"></i> Vollständige Dienstanweisung öffnen</button>
-                    ${d.bestaetigt ? '' : `<button class="kp-btn-primary" onclick="kpDaAktion(${d.id}, 'bestaetigt')"><i class="fas fa-check"></i> Inhalt bestätigen</button>`}
-                    <button class="kp-chip-btn" onclick="kpDaAenderung(${d.id})"><i class="fas fa-pen"></i> Änderung wünschen</button>
+                    <button class="kp-chip-btn" onclick="kpDaPdf(${d.id})"><i class="material-symbols-outlined">picture_as_pdf</i> Vollständige Dienstanweisung öffnen</button>
+                    ${d.bestaetigt ? '' : `<button class="kp-btn-primary" onclick="kpDaAktion(${d.id}, 'bestaetigt')"><i class="material-symbols-outlined">check</i> Inhalt bestätigen</button>`}
+                    <button class="kp-chip-btn" onclick="kpDaAenderung(${d.id})"><i class="material-symbols-outlined">edit</i> Änderung wünschen</button>
                 </div>
             </article>`;
-        }).join('') : kpEmpty('fa-file-shield', 'Für Ihre Objekte liegt noch keine Dienstanweisung vor.');
+        }).join('') : kpEmpty('policy', 'Für Ihre Objekte liegt noch keine Dienstanweisung vor.');
     },
 };
 
@@ -62,7 +62,7 @@ KP_TABS.reklamationen = {
         const list = (rek.reklamationen || []).filter(r => !obj || r.obj_id === obj);
         const tone = { eingegangen: '', bestaetigt: 'kp-pill-info', in_bearbeitung: 'kp-pill-info', beantwortet: 'kp-pill-ok', abgeschlossen: 'kp-pill-ok' };
         box.innerHTML = `
-            <div class="kp-actions kp-actions-top"><button class="kp-btn-primary" onclick="kpRekMelden()"><i class="fas fa-comment-medical"></i> Beschwerde melden</button></div>
+            <div class="kp-actions kp-actions-top"><button class="kp-btn-primary" onclick="kpRekMelden()"><i class="material-symbols-outlined">add_comment</i> Beschwerde melden</button></div>
             <div class="kp-sec">Ihre Reklamationen</div>
             ${list.length ? list.map(r => `<article class="kp-card">
                 <div class="kp-card-head"><div><div class="kp-card-title">${kpEsc(r.nr)} · ${kpEsc(r.objektname)}</div>
@@ -71,10 +71,10 @@ KP_TABS.reklamationen = {
                 <div class="kp-wb-text">${kpEsc(r.text)}</div>
                 ${r.antwort ? `<div class="kp-antwort"><strong>Antwort:</strong> ${kpEsc(r.antwort)}</div>` : ''}
                 <details><summary class="kp-muted">Verlauf</summary>${r.verlauf.map(v => `<div class="kp-card-sub">${kpEsc(new Date(v.am).toLocaleString('de-DE'))} · ${kpEsc(v.art)}</div>`).join('')}</details>
-            </article>`).join('') : kpEmpty('fa-comments', 'Keine Reklamationen' + (objName ? ' für ' + objName : '') + '.')}
+            </article>`).join('') : kpEmpty('forum', 'Keine Reklamationen' + (objName ? ' für ' + objName : '') + '.')}
             <div class="kp-sec">Umgesetzte Verbesserungen</div>
             ${(mn.massnahmen || []).filter(m => !objName || m.objektname === objName).map(m => `<article class="kp-card kp-card-slim">
-                <div class="kp-card-title"><i class="fas fa-list-check"></i> ${kpEsc(m.titel)}</div>
+                <div class="kp-card-title"><i class="material-symbols-outlined">checklist</i> ${kpEsc(m.titel)}</div>
                 <div class="kp-card-sub">${kpEsc(m.objektname)} · ${kpEsc(m.status)}${m.umgesetzt_am ? ' am ' + kpEsc(new Date(m.umgesetzt_am).toLocaleDateString('de-DE')) : ''}</div>
             </article>`).join('') || '<p class="kp-muted">Noch keine freigegebenen Maßnahmen.</p>'}`;
     },

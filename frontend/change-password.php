@@ -49,7 +49,7 @@
             letter-spacing:0.3px; margin-bottom:6px;
         }
         .input-wrapper { position:relative; }
-        .input-wrapper i.fa-lock {
+        .input-wrapper > i.material-symbols-outlined {
             position:absolute; left:14px; top:50%; transform:translateY(-50%);
             color: var(--md-sys-color-on-surface-variant,var(--md-sys-color-on-surface)); font-size:0.9rem;
         }

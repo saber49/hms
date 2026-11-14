@@ -365,7 +365,7 @@ async function openNewChat() {
             <label>Teilnehmer auswählen</label>
             <ul class="chat-user-list">
                 ${users.map(u => `
-                    <li class="chat-user-item" onclick="this.classList.toggle('selected');this.querySelector('input').checked=!this.querySelector('input').checked">
+                    <li class="chat-user-item" onclick="const cb=this.querySelector('md-checkbox');if(event.target!==cb)cb.checked=!cb.checked;this.classList.toggle('selected',cb.checked)">
                         <md-checkbox value="${u.id}" class="chat-participant-cb"></md-checkbox>
                         <span>${escapeHtml(u.full_name)}</span>
                         <small style="color:var(--gray-400);margin-left:auto">${u.role}</small>
@@ -495,7 +495,7 @@ async function openAddMembers() {
         return;
     }
     list.innerHTML = `<ul class="chat-user-list" style="border:none;border-radius:0">` + candidates.map(u => `
-        <li class="chat-user-item" onclick="this.classList.toggle('selected');this.querySelector('input').checked=!this.querySelector('input').checked">
+        <li class="chat-user-item" onclick="const cb=this.querySelector('md-checkbox');if(event.target!==cb)cb.checked=!cb.checked;this.classList.toggle('selected',cb.checked)">
             <md-checkbox value="${u.id}" class="chat-participant-cb"></md-checkbox>
             <span>${escapeHtml(u.full_name)}</span>
             <small style="color:var(--gray-400);margin-left:auto">${escapeHtml(u.role || '')}</small>

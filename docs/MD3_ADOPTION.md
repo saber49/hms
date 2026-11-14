@@ -40,6 +40,19 @@ State as of 2026-11-14 (staging branch, commit ~c149f1c). Read `AGENTS.md` first
 - `querySelector('input')` misses md fields — fixed sites use `'input, md-outlined-text-field'`; `.options`/`selectedIndex`/`selectedOptions` exist on md-outlined-select.
 - Guard CSS in style.css + nu_portal.css: `md-outlined-*[class*="form-control"]{padding:0!important;border:none!important;background:transparent!important;box-shadow:none!important;min-height:0!important;height:auto!important;--md-outlined-*-top-space:6px;--md-outlined-*-bottom-space:6px}` — legacy `.form-control` site rules (e.g. `height:40px`) target the host and clip the inner field without this.
 
+## Post-review fixes (2026-11-14, `?v=` series `20261114md3e`)
+
+Regression sweep found + fixed:
+- `order_form.js` emitted `<md-checkbox>`/`<md-circular-progress>` (6 sites) into order_form.php which has **no bundle** → reverted to native inputs (readers already used `input[...]` + `.checked`).
+- `messages.js` chat-user-item onclick did `querySelector('input').checked` on an md-checkbox → `null` TypeError; now toggles the md-checkbox and syncs `.selected`.
+- `verify-email.php` `setState()` received FA names → literal text in the ligature element → now real Material names.
+- `kunden_portal/qm-*.js` rendered `<i class="fas fa-*">` (19 icons) with no FA on the page → converted to `material-symbols-outlined` (incl. `KP_WB_ART_ICON` map).
+- `_tagViewerActions` (viewer-mode gating) missed md buttons/icons → candidates now include `md-*-button`, icons matched by ligature name (`_MUTATION_ICON_NAME_RE`), primary check covers `MD-FILLED-BUTTON`.
+- `.crm-erg-pill:has(input:checked)` → added `:has(md-radio[checked])`.
+- `reset-/change-password.php` icon-positioning CSS targeted `i.fa-lock/fa-envelope` → now `.input-wrapper > i.material-symbols-outlined` (direct child — keeps `.toggle` eye icon unaffected).
+- Leftover `fa-` in index.php context: `app.js` fav star, `systemConfirm({icon:'fa-calendar-times'})` ×2 in 03-dispo-detail, `fa-handshake` in 09-dispo-nu.
+- `systemConfirm` colorMap hexes → MD3 ext/error tokens.
+
 ## Known pending / unresolved
 
 - **`u-sec-head` layout bug (UNRESOLVED)**: in "Benutzer bearbeiten" dialog, section-head `<strong>`/`<small>` render on one line. DevTools showed `div.u-sec-head` matching only wildcard/UA rules — `.u-sec-head{display:flex}` from users.css absent despite file served fine, rules top-level (not inside @media), bytes clean, other users.css rules working on the page. Defensive fix `.u-sec-head > div{display:flex;flex-direction:column}` added at users.css:435 — needs user verification (could have been a stale-cache capture). If it persists: check whether users.css applies inside the dialog at all (Network tab + Sources search); fallback = move dialog styles into style.css or inline them.

@@ -156,20 +156,20 @@
                 const data = await res.json();
                 if (res.ok && (data.success || data.message)) {
                     markVerifiedLocally();
-                    setState('fa-circle-check', 'ok', 'E-Mail bestätigt!',
+                    setState('check_circle', 'ok', 'E-Mail bestätigt!',
                         'Ihr Konto ist jetzt aktiv. Sie können sich anmelden und loslegen.');
                     const loggedIn = !!localStorage.getItem('hms_token');
                     $('actions').innerHTML = loggedIn
                         ? '<button class="btn" onclick="goToApp()"><i class="material-symbols-outlined">arrow_forward</i> Zur Anwendung</button>'
                         : '<a class="btn" href="login.php"><i class="material-symbols-outlined">login</i> Jetzt anmelden</a>';
                 } else {
-                    setState('fa-circle-xmark', 'err', 'Link ungültig oder abgelaufen',
+                    setState('cancel', 'err', 'Link ungültig oder abgelaufen',
                         (data.error || 'Dieser Bestätigungslink ist nicht mehr gültig.') +
                         '<br>Bitte fordern Sie unten einen neuen Link an.');
                     renderResend();
                 }
             } catch (e) {
-                setState('fa-triangle-exclamation', 'err', 'Verbindungsfehler',
+                setState('warning', 'err', 'Verbindungsfehler',
                     'Bitte versuchen Sie es in einem Moment erneut.');
                 renderResend();
             }
@@ -178,7 +178,7 @@
         // ── Mode B: pending screen (no token — user landed here unverified) ──
         function renderPending() {
             const target = email || (JSON.parse(localStorage.getItem('hms_user') || '{}').email) || 'Ihre E-Mail-Adresse';
-            setState('fa-envelope', 'info', 'Bitte bestätigen Sie Ihre E-Mail',
+            setState('mail', 'info', 'Bitte bestätigen Sie Ihre E-Mail',
                 'Wir haben einen Bestätigungslink an <strong>' + target + '</strong> gesendet. ' +
                 'Öffnen Sie die E-Mail und klicken Sie auf den Button, um Ihr Konto zu aktivieren.');
             renderResend();

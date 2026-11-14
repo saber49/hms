@@ -1869,8 +1869,8 @@
             const k = th.dataset.key;
             const groupOff = !showZusch && ZUSCH_KEYS.includes(k);
             const label = th.textContent.trim() || k;
-            return '<label class="sb-toggle' + (groupOff ? ' is-disabled' : '') + '"><md-checkbox data-col="' + esc(k) + '"'
-                + (hidden.has(k) ? '' : ' checked') + (groupOff ? ' disabled' : '') + '></md-checkbox> ' + esc(label) + '</label>';
+            return '<label class="sb-toggle' + (groupOff ? ' is-disabled' : '') + '"><input type="checkbox" data-col="' + esc(k) + '"'
+                + (hidden.has(k) ? '' : ' checked') + (groupOff ? ' disabled' : '') + '> ' + esc(label) + '</label>';
         }).join('');
         box.querySelectorAll('input[data-col]').forEach(cb => {
             cb.addEventListener('change', () => setColumnVisible(cb.dataset.col, cb.checked, perPdf, cb));
@@ -2482,7 +2482,7 @@
         const title = modal.querySelector('.modal-title');
         if (title) title.textContent = 'Verlauf · archivierte PDFs';
         document.getElementById('pdfsSubtitle').textContent = ref.label;
-        list.innerHTML = '<div class="loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Lade…</div>';
+        list.innerHTML = '<div class="loading"><i class="material-symbols-outlined ms-spin">progress_activity</i> Lade…</div>';
         modal.classList.add('show');
         try {
             const res = await fetch(API + '/dokument-archiv?doc_type=' + encodeURIComponent(state.docType) + '&ref_id=' + encodeURIComponent(ref.id), { headers: HEADERS() });
@@ -2641,7 +2641,7 @@
                 : '<span class="sigreq-chip ' + cls + '">' + esc(label) + (at ? ' · ' + esc(at) : '') + '</span>';
             const std = (parseFloat(w.std) || 0).toFixed(2).replace('.', ',');
             return '<div class="sigreq-row' + (off ? ' is-off' : '') + '">'
-                + '<label class="sigreq-main"><md-checkbox data-dn="' + esc(dn) + '"' + (checked ? ' checked' : '') + (off ? ' disabled' : '') + '></md-checkbox>'
+                + '<label class="sigreq-main"><input type="checkbox" data-dn="' + esc(dn) + '"' + (checked ? ' checked' : '') + (off ? ' disabled' : '') + '>'
                 + '<span><b>' + esc(w.name || dn) + '</b><small>' + (parseInt(w.einsaetze, 10) || 0) + (w.einsaetze === 1 ? ' Einsatz' : ' Einsätze') + ' · ' + std + ' Std</small></span></label>'
                 + chip
                 + (w.status === 'offen' && w.offen_id && state.sig.canSend
@@ -2666,7 +2666,7 @@
     }
 
     function sigSelected() {
-        return [...document.querySelectorAll('#sigReqList input[data-dn]:checked:not(:disabled), #sigReqList md-checkbox[data-dn][checked]:not([disabled])')].map(cb => cb.dataset.dn);
+        return [...document.querySelectorAll('#sigReqList input[data-dn]:checked:not(:disabled)')].map(cb => cb.dataset.dn);
     }
     function syncSigSendButton() {
         const btn = document.getElementById('sigReqSend');
@@ -3154,7 +3154,7 @@
                 return `<div class="sb-section dd-bs" data-slot="${s}">
                     <div class="dd-bs-head">
                         <div><div class="dd-bs-title">${meta[s][0]}</div><div class="dd-bs-sub">${meta[s][1]}</div></div>
-                        <label class="dd-switch" title="Im PDF anzeigen"><md-checkbox data-bs-on ${b.on ? 'checked' : ''}></md-checkbox><span></span></label>
+                        <label class="dd-switch" title="Im PDF anzeigen"><input type="checkbox" data-bs-on ${b.on ? 'checked' : ''}><span></span></label>
                     </div>
                     <select class="dd-input" data-bs-lib><option value="">Standardtext wählen …</option>
                         ${lib[s].map((x, i) => `<option value="${i}">${esc(x.n)}</option>`).join('')}</select>
@@ -3194,7 +3194,7 @@
                 <textarea class="dd-input" data-mail-text rows="11" maxlength="5000">${esc(state.email.text)}</textarea>
                 <div class="dd-lbl">Platzhalter</div>
                 ${ddChips(DD_PH_MAIL)}
-                <label class="sb-toggle" style="margin-top:8px"><md-checkbox data-mail-sig ${state.email.signatur ? 'checked' : ''}></md-checkbox> Signatur mit Pflichtangaben anhängen</label>
+                <label class="sb-toggle" style="margin-top:8px"><input type="checkbox" data-mail-sig ${state.email.signatur ? 'checked' : ''}> Signatur mit Pflichtangaben anhängen</label>
                 ${sig.missing.length ? `<div class="dd-warn"><span class="material-symbols-outlined">warning</span><span>Für die Pflichtangaben fehlt: ${esc(sig.missing.join(', '))} — bitte unter Konto &amp; Firma › Unternehmensdaten ergänzen.</span></div>` : ''}
             </div>
             <div class="sb-section">

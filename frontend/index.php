@@ -185,7 +185,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/style.css?v=20261114md3d">
     <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3b">
+    <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3e">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3b">
@@ -804,10 +804,10 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=smooth202611020658"></script>
-    <script defer src="assets/js/app.js?v=20261114md3c"></script>
+    <script defer src="assets/js/app.js?v=20261114md3e"></script>
     <script defer src="assets/js/dashboard.js?v=20261021u1"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261114md3c"></script>
-    <script defer src="assets/js/messages.js?v=20261114md3c"></script>
+    <script defer src="assets/js/messages.js?v=20261114md3e"></script>
     <script defer src="assets/js/worker_messages.js?v=20261114md3c"></script>
     <script defer src="assets/js/notifications.js?v=20261019au1"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>

@@ -627,7 +627,7 @@ async function plannerWithdrawPlan(einsatzId) {
         message: `Alle ${previousIds.length} Mitarbeiter wurden entfernt. Der Plan wird aufgehoben und eine Stornierung an die betroffenen Mitarbeiter gesendet.`,
         confirmText: 'Plan aufheben',
         cancelText: 'Abbrechen',
-        icon: 'fa-calendar-times',
+        icon: 'event_busy',
         type: 'danger'
     });
     if (!confirmed) return false;
@@ -1080,7 +1080,7 @@ async function plannerMarkSingleShiftPlanned(einsatzId, button) {
             message: `Alle ${previousWorkerIds.length} Mitarbeiter wurden entfernt. Der Plan wird aufgehoben und eine Stornierung an die betroffenen Mitarbeiter gesendet.`,
             confirmText: 'Plan aufheben',
             cancelText: 'Abbrechen',
-            icon: 'fa-calendar-times',
+            icon: 'event_busy',
             type: 'danger'
         });
         if (!confirmed) return;

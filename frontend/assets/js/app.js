@@ -348,14 +348,18 @@ window.applyEditGating = applyEditGating;
  */
 const _MUTATION_TEXT_RE = /(^|\s)(neu|anlegen|erstell|hinzu|speich|aktualisier|hochladen|hochlade|hoch laden|senden|importier|exportier|kopier|reset|zurücksetz|löschen|deaktivier|reaktivier|aktivier|freigeben|ablehnen|genehmig|bestätig|verwerfen|verschieben|verteil|verplant)/i;
 const _MUTATION_ICON_RE = /\b(fa-plus|fa-save|fa-cloud-upload-alt|fa-paper-plane|fa-upload|fa-download|fa-trash|fa-trash-alt|fa-ban|fa-undo|fa-times-circle|fa-power-off|fa-check-circle)\b/;
+// Material Symbols ligature names of the same mutation icons (post-MD3:
+// <i class="material-symbols-outlined">delete</i> / <md-icon>delete</md-icon>).
+const _MUTATION_ICON_NAME_RE = /^(add|save|cloud_upload|upload|file_upload|send|download|delete|block|undo|cancel|power_settings_new|check_circle)$/;
 
 function _tagViewerActions(root) {
     if (!root || !document.body.classList.contains('viewer-mode')) return;
     if (root.nodeType !== 1 && root.nodeType !== 9) return;
 
-    // Buttons (and <a class="btn">) that look like mutations
+    // Buttons (and <a class="btn">) that look like mutations — incl. the
+    // md-*-button custom elements used since the MD3 conversion.
     const candidates = root.querySelectorAll(
-        'button, a.btn, a.btn-icon, a.btn-primary, [data-perm="edit"]'
+        'button, a.btn, a.btn-icon, a.btn-primary, md-filled-button, md-outlined-button, md-text-button, md-icon-button, [data-perm="edit"]'
     );
     candidates.forEach(el => {
         if (el.classList.contains('perm-needs-edit')) return;
@@ -366,12 +370,13 @@ function _tagViewerActions(root) {
             el.classList.add('perm-needs-edit');
             return;
         }
-        const icons = el.querySelector('i, span.icon');
+        const icons = el.querySelector('i.material-symbols-outlined, md-icon, i, span.icon');
         const iconClass = icons ? icons.className : '';
+        const iconName = icons ? (icons.textContent || '').trim() : '';
         const text = (el.textContent || '').trim();
 
         // Icon-only destructive buttons (fa-trash, fa-ban, fa-undo, ...)
-        if (_MUTATION_ICON_RE.test(iconClass)) {
+        if (_MUTATION_ICON_RE.test(iconClass) || _MUTATION_ICON_NAME_RE.test(iconName)) {
             // Whitelist: fa-download for read-only PDF/export downloads is
             // sometimes safe, but viewer-mode users don't get destructive
             // exports either way — keep it gated for now.
@@ -379,7 +384,7 @@ function _tagViewerActions(root) {
             return;
         }
         // Text-bearing primary buttons that imply a mutation
-        if (text && el.classList.contains('btn-primary') && _MUTATION_TEXT_RE.test(text)) {
+        if (text && (el.classList.contains('btn-primary') || el.tagName === 'MD-FILLED-BUTTON') && _MUTATION_TEXT_RE.test(text)) {
             el.classList.add('perm-needs-edit');
             return;
         }
@@ -550,7 +555,7 @@ function renderNavFavorites() {
         item.classList.toggle('is-fav', on);
         const star = item.querySelector('.nav-fav-star');
         if (star) {
-            star.innerHTML = `<i class="${on ? 'fas' : 'far'} fa-star"></i>`;
+            star.innerHTML = `<i class="material-symbols-outlined" style="font-variation-settings:'FILL' ${on ? 1 : 0}">star</i>`;
             star.title = on ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen';
         }
     });
@@ -599,7 +604,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261110kw1');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261114md3e');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
@@ -2729,7 +2734,7 @@ function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Be
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             opacity: '0', transition: 'opacity 0.2s ease', backdropFilter: 'blur(4px)'
         });
-        const colorMap = { warning: '#f59e0b', danger: '#dc2626', info: '#2563eb', success: '#16a34a' };
+        const colorMap = { warning: 'var(--md-ext-color-warning)', danger: 'var(--md-sys-color-error)', info: 'var(--md-ext-color-info)', success: 'var(--md-ext-color-success)' };
         const accent = colorMap[type] || colorMap.warning;
         overlay.innerHTML = `
             <div style="background:var(--white);border-radius:16px;padding:36px 32px 28px;box-shadow: 0 25px 60px color-mix(in srgb, var(--md-sys-color-scrim) 30%, transparent);max-width:440px;width:90%;text-align:center;transform:scale(0.92);transition:transform 0.2s ease">
