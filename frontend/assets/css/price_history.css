@@ -18,16 +18,16 @@
 
 /* ===== 1. Theme Variables ===== */
 :root {
-    --ph-accent:        #4f46e5;   /* indigo-600 */
-    --ph-accent-hover:  #4338ca;   /* indigo-700 */
-    --ph-accent-soft:   #e0e7ff;   /* indigo-100 */
-    --ph-accent-line:   #c7d2fe;   /* indigo-200 */
-    --ph-accent-tint:   rgba(79, 70, 229, 0.06);
+    --ph-accent: var(--md-sys-color-primary);   /* indigo-600 */
+    --ph-accent-hover: var(--md-sys-color-primary);   /* indigo-700 */
+    --ph-accent-soft: var(--md-sys-color-primary-container);   /* indigo-100 */
+    --ph-accent-line: var(--md-sys-color-primary-container);   /* indigo-200 */
+    --ph-accent-tint: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
 
-    --ph-positive:      #059669;   /* emerald-600 — price increase */
-    --ph-positive-soft: #d1fae5;
-    --ph-negative:      #dc2626;   /* red-600 — price decrease */
-    --ph-negative-soft: #fee2e2;
+    --ph-positive: var(--md-ext-color-success);   /* emerald-600 — price increase */
+    --ph-positive-soft: var(--md-ext-color-success-container);
+    --ph-negative: var(--md-sys-color-error);   /* red-600 — price decrease */
+    --ph-negative-soft: var(--md-sys-color-error-container);
     --ph-neutral:       var(--gray-500);
     --ph-neutral-soft:  var(--gray-100);
 
@@ -42,15 +42,15 @@
 
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
-    --ph-accent:        #818cf8;   /* indigo-400 */
-    --ph-accent-hover:  #a5b4fc;   /* indigo-300 */
-    --ph-accent-soft:   rgba(129, 140, 248, 0.16);
-    --ph-accent-line:   rgba(129, 140, 248, 0.35);
-    --ph-accent-tint:   rgba(129, 140, 248, 0.10);
-    --ph-positive:      #34d399;
-    --ph-positive-soft: rgba(52, 211, 153, 0.16);
-    --ph-negative:      #f87171;
-    --ph-negative-soft: rgba(248, 113, 113, 0.16);
+    --ph-accent: var(--md-sys-color-primary);   /* indigo-400 */
+    --ph-accent-hover: var(--md-sys-color-primary-container);   /* indigo-300 */
+    --ph-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+    --ph-accent-line: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+    --ph-accent-tint: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    --ph-positive: var(--md-ext-color-success);
+    --ph-positive-soft: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent);
+    --ph-negative: var(--md-sys-color-error);
+    --ph-negative-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
 }
 
 /* ===== 2. Stats Bento (5 KPI cards) ===== */
@@ -68,7 +68,7 @@
     position: relative;
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 14px 16px 12px;
     overflow: hidden;
     transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
@@ -87,7 +87,7 @@
     transition: opacity .2s ease;
 }
 .ph-kpi:hover {
-    box-shadow: 0 4px 14px rgba(15,23,42,0.06);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
     border-color: var(--ph-accent-line);
     transform: translateY(-1px);
 }
@@ -100,7 +100,7 @@
 }
 .ph-kpi-icon {
     width: 32px; height: 32px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--ph-accent-soft);
     color: var(--ph-accent);
     display: flex; align-items: center; justify-content: center;
@@ -140,7 +140,7 @@
 .ph-card {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 14px;
+    border-radius: var(--md-sys-shape-corner-large);
     overflow: hidden;
     /* clip (not hidden) keeps the rounded corners without creating a
        scroll container, so the sticky filter block + month heads work. */
@@ -162,7 +162,7 @@
     height: 40px;
     padding: 0 12px;
     border: 1px solid var(--ph-border);
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background: var(--ph-bg-soft);
     color: var(--ph-text-muted);
     transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
@@ -170,7 +170,7 @@
 .ph-search:focus-within {
     border-color: var(--ph-accent);
     background: var(--ph-surface);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
 .ph-search input {
     flex: 1;
@@ -201,7 +201,7 @@
     width: 100%;
     padding: 0 10px;
     border: 1px solid var(--ph-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     background: var(--ph-surface);
     color: var(--ph-text);
     font-size: 0.84rem;
@@ -211,7 +211,7 @@
 .ph-select select:focus {
     outline: none;
     border-color: var(--ph-accent);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
 .ph-select.is-set select {
     border-color: var(--ph-accent-line);
@@ -233,7 +233,7 @@
 .ph-chip {
     height: 30px;
     padding: 0 12px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     border: 1px solid var(--ph-border);
     background: var(--ph-surface);
     color: var(--ph-text-muted);
@@ -255,7 +255,7 @@
     height: 30px;
     padding: 0 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: transparent;
     color: var(--ph-accent);
     font-size: 0.78rem;
@@ -303,7 +303,7 @@
     position: absolute;
     left: 10px; right: 10px; bottom: -1px;
     height: 3px;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
     background: transparent;
     transition: background .15s ease;
 }
@@ -319,7 +319,7 @@
     padding: 0 6px;
     background: var(--ph-neutral-soft);
     color: var(--ph-text-muted);
-    border-radius: 100px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.66rem;
     font-weight: 700;
 }
@@ -333,14 +333,14 @@
 }
 .ph-result-info { font-size: 0.76rem; color: var(--ph-text-muted); white-space: nowrap; }
 .ph-result-info strong { color: var(--ph-text); }
-.ph-trunc { color: #b45309; font-weight: 600; }
+.ph-trunc { color: var(--md-ext-color-warning); font-weight: 600; }
 .ph-csv-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     height: 32px;
     padding: 0 14px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     border: 1px solid var(--ph-accent-line);
     background: var(--ph-surface);
     color: var(--ph-accent);
@@ -380,7 +380,7 @@
 .ph-timeline {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     overflow: hidden;
 }
 .ph-timeline-row {
@@ -430,7 +430,7 @@
         flex-wrap: wrap;
         padding: 6px 10px;
         background: var(--ph-bg-soft);
-        border-radius: 8px;
+        border-radius: var(--md-sys-shape-corner-small);
     }
     .ph-price-row .ph-delta-pill { margin-left: auto; }
 }
@@ -455,7 +455,7 @@
     align-items: center;
     gap: 4px;
     padding: 2px 7px;
-    border-radius: 100px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.62rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -465,7 +465,7 @@
     width: fit-content;
 }
 .ph-tl-typ.create  { background: var(--ph-positive-soft); color: var(--ph-positive); }
-.ph-tl-typ.manual  { background: #fef3c7; color: #b45309; }
+.ph-tl-typ.manual  { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-warning); }
 
 .ph-tl-body {
     min-width: 0;
@@ -497,7 +497,7 @@
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--ph-bg-soft);
     border: 1px solid var(--ph-border);
     font-size: 0.7rem;
@@ -558,7 +558,7 @@
     align-items: center;
     gap: 3px;
     padding: 1px 7px;
-    border-radius: 100px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.7rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
@@ -576,7 +576,7 @@
     background: var(--ph-bg-soft);
     border: 1px solid var(--ph-border);
     color: var(--ph-text-muted);
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -594,7 +594,7 @@
 .ph-art-table {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     overflow: hidden;
 }
 .ph-art-table .table-container { overflow-x: auto; }
@@ -644,7 +644,7 @@
     display: inline-block;
     width: 4px;
     background: var(--ph-accent);
-    border-radius: 1px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     opacity: 0.85;
 }
 .ph-mini-spark.up span:last-child { background: var(--ph-positive); }
@@ -662,7 +662,7 @@
 .ph-top-card {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     overflow: hidden;
 }
 .ph-top-card-header {
@@ -722,7 +722,7 @@
 .modal.ph-context .modal-title { color: var(--ph-text); }
 .modal.ph-context .form-control:focus {
     border-color: var(--ph-accent);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
 
 .ph-detail-summary {
@@ -732,7 +732,7 @@
     padding: 14px;
     background: var(--ph-bg-soft);
     border: 1px solid var(--ph-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     margin-bottom: 16px;
 }
 @media (max-width: 720px) {
@@ -762,7 +762,7 @@
 .ph-chart-wrap {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 14px 16px 8px;
     margin-bottom: 14px;
 }
@@ -797,13 +797,13 @@
 }
 .ph-chart-svg .line-nu {
     fill: none;
-    stroke: #f59e0b;
+    stroke: var(--md-ext-color-warning);
     stroke-width: 2;
     stroke-dasharray: 4 3;
     stroke-linejoin: round;
 }
 .ph-chart-svg .dot-kunde { fill: var(--ph-accent); stroke: white; stroke-width: 2; }
-.ph-chart-svg .dot-nu    { fill: #f59e0b; stroke: white; stroke-width: 2; }
+.ph-chart-svg .dot-nu    { fill: var(--md-ext-color-warning); stroke: white; stroke-width: 2; }
 .ph-chart-legend {
     display: flex;
     gap: 16px;
@@ -818,15 +818,15 @@
 }
 .ph-chart-legend-swatch {
     width: 14px; height: 3px;
-    border-radius: 2px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
 }
 .ph-chart-legend-swatch.kunde { background: var(--ph-accent); }
-.ph-chart-legend-swatch.nu    { background: #f59e0b; }
+.ph-chart-legend-swatch.nu    { background: var(--md-ext-color-warning); }
 
 .ph-detail-table-wrap {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     /* 6 columns don't fit a phone — scroll sideways instead of clipping */
     overflow-x: auto;
     overflow-y: hidden;
@@ -1050,7 +1050,7 @@ md-dialog.ph-context [slot="headline"] {
     display: inline-flex;
     padding: 2px;
     gap: 2px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background: var(--white);
     border: 1px solid var(--ma-border, var(--gray-200));
     margin-right: 2px;
@@ -1059,7 +1059,7 @@ md-dialog.ph-context [slot="headline"] {
     height: 26px;
     padding: 0 10px;
     border: none;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background: transparent;
     color: var(--gray-600);
     font-size: 0.72rem;
@@ -1067,21 +1067,21 @@ md-dialog.ph-context [slot="headline"] {
     cursor: pointer;
     white-space: nowrap;
 }
-.ph-period-nav .ph-seg-btn:hover { color: var(--ma-primary, #166534); }
-.ph-period-nav .ph-seg-btn.active { background: var(--ma-primary, #166534); color: #fff; }
+.ph-period-nav .ph-seg-btn:hover { color: var(--ma-primary, var(--md-ext-color-on-success-container)); }
+.ph-period-nav .ph-seg-btn.active { background: var(--ma-primary, var(--md-ext-color-success)); color: #fff; }
 .ph-range-inline { display: inline-flex; align-items: center; gap: 6px; padding: 0 4px; }
 .ph-range-inline input {
     height: 28px;
     padding: 0 8px;
     border: 1px solid var(--ma-border, var(--gray-200));
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background: var(--white);
     color: var(--gray-800);
     font-size: 0.76rem;
 }
 [data-theme="dark"] .ph-period-nav .ph-seg,
-[data-theme="dark"] .ph-range-inline input { background: var(--md-sys-color-surface-container, #1f2937); color: var(--md-sys-color-on-surface, #e5e7eb); }
-[data-theme="dark"] .ph-period-nav .ph-seg-btn { color: var(--md-sys-color-on-surface-variant, #cbd5e1); }
+[data-theme="dark"] .ph-range-inline input { background: var(--md-sys-color-surface-container, var(--md-sys-color-primary)); color: var(--md-sys-color-on-surface, var(--md-sys-color-primary-container)); }
+[data-theme="dark"] .ph-period-nav .ph-seg-btn { color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-primary-container)); }
 
 @media (max-width: 760px) {
     /* The base .ph-tl-date rule sits after the old mobile block and won the
@@ -1128,8 +1128,8 @@ md-dialog.ph-context [slot="headline"] {
 
 /* Dark: keep the active period button readable (on-primary text on the
    bright dark-mode primary) and give the "Manuell" badge a dark tint. */
-[data-theme="dark"] .ph-period-nav .ph-seg-btn.active { background: var(--ma-primary, #4ade80); color: var(--md-sys-color-on-primary, #0b1220); }
-[data-theme="dark"] .ph-tl-typ.manual { background: rgba(251, 191, 36, 0.16); color: #fbbf24; }
+[data-theme="dark"] .ph-period-nav .ph-seg-btn.active { background: var(--ma-primary, var(--md-ext-color-success)); color: var(--md-sys-color-on-primary, var(--md-sys-color-on-primary-container)); }
+[data-theme="dark"] .ph-tl-typ.manual { background: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent); color: var(--md-ext-color-warning); }
 
 /* Sticky search + filters + tabs while the list scrolls (desktop/tablet). */
 .ph-sticky {
@@ -1138,9 +1138,9 @@ md-dialog.ph-context [slot="headline"] {
     top: var(--topbar-height, 60px);
     z-index: 20;
     background: var(--ph-surface);
-    border-radius: 14px 14px 0 0;
+    border-radius: var(--md-sys-shape-corner-large) var(--md-sys-shape-corner-large) 0 0;
 }
-.ph-sticky.is-stuck { box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.35); border-radius: 0; }
+.ph-sticky.is-stuck { box-shadow: 0 6px 14px -10px color-mix(in srgb, var(--md-sys-color-scrim) 35%, transparent); border-radius: 0; }
 /* Phones: the block is 5+ rows tall — pinning it would eat the screen.
    Same rule as the shared toolbars in style.css. */
 @media (max-width: 640px) {
@@ -1153,8 +1153,8 @@ md-dialog.ph-context [slot="headline"] {
 .ph-csv-label:first-child { margin-top: 2px; }
 .ph-csv-range { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
 .ph-csv-range label { display: flex; flex-direction: column; gap: 4px; font-size: .74rem; color: var(--ph-text-muted); flex: 1 1 150px; }
-.ph-csv-range input { height: 38px; padding: 0 10px; border: 1px solid var(--ph-border); border-radius: 10px; background: var(--ph-surface); color: var(--ph-text); font: inherit; font-size: .86rem; }
-.ph-csv-note { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding: 8px 10px; border-radius: 8px; background: var(--ph-bg-soft); color: var(--ph-text-muted); font-size: .78rem; }
+.ph-csv-range input { height: 38px; padding: 0 10px; border: 1px solid var(--ph-border); border-radius: var(--md-sys-shape-corner-medium); background: var(--ph-surface); color: var(--ph-text); font: inherit; font-size: .86rem; }
+.ph-csv-note { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding: 8px 10px; border-radius: var(--md-sys-shape-corner-small); background: var(--ph-bg-soft); color: var(--ph-text-muted); font-size: .78rem; }
 .ph-csv-muted { color: var(--ph-text-muted); font-size: .8rem; }
 #phMdDialog .ph-csv-btn:disabled { opacity: .55; cursor: progress; }
 [data-theme="dark"] .ph-csv-range input { color-scheme: dark; }

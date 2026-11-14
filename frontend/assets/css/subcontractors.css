@@ -20,11 +20,11 @@
 
 /* ===== 1. NU Theme Variables ===== */
 :root {
-    --nu-accent:        #d97706;   /* amber-600 */
-    --nu-accent-hover:  #b45309;   /* amber-700 */
-    --nu-accent-soft:   #fef3c7;   /* amber-100 */
-    --nu-accent-line:   #fde68a;   /* amber-200 */
-    --nu-accent-tint:   rgba(217, 119, 6, 0.06);
+    --nu-accent: var(--md-ext-color-warning);   /* amber-600 */
+    --nu-accent-hover: var(--md-ext-color-warning);   /* amber-700 */
+    --nu-accent-soft: var(--md-ext-color-warning-container);   /* amber-100 */
+    --nu-accent-line: var(--md-ext-color-warning-container);   /* amber-200 */
+    --nu-accent-tint: color-mix(in srgb, var(--md-ext-color-warning) 6%, transparent);
 
     --nu-surface:       var(--white);
     --nu-bg-soft:       var(--gray-50);   /* slate-50 */
@@ -36,27 +36,27 @@
     --nu-text-muted:    var(--gray-500);
     --nu-text-soft:     var(--gray-400);
 
-    --nu-ok:            #059669;
-    --nu-ok-soft:       #d1fae5;
-    --nu-warn:          #d97706;
-    --nu-warn-soft:     #fef3c7;
-    --nu-danger:        #dc2626;
-    --nu-danger-soft:   #fee2e2;
+    --nu-ok: var(--md-ext-color-success);
+    --nu-ok-soft: var(--md-ext-color-success-container);
+    --nu-warn: var(--md-ext-color-warning);
+    --nu-warn-soft: var(--md-ext-color-warning-container);
+    --nu-danger: var(--md-sys-color-error);
+    --nu-danger-soft: var(--md-sys-color-error-container);
 }
 
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
-    --nu-accent:        #fbbf24;   /* amber-400 */
-    --nu-accent-hover:  #fcd34d;   /* amber-300 */
-    --nu-accent-soft:   rgba(251, 191, 36, 0.16);
-    --nu-accent-line:   rgba(251, 191, 36, 0.35);
-    --nu-accent-tint:   rgba(251, 191, 36, 0.10);
-    --nu-ok:            #34d399;
-    --nu-ok-soft:       rgba(52, 211, 153, 0.16);
-    --nu-warn:          #fbbf24;
-    --nu-warn-soft:     rgba(251, 191, 36, 0.16);
-    --nu-danger:        #f87171;
-    --nu-danger-soft:   rgba(248, 113, 113, 0.16);
+    --nu-accent: var(--md-ext-color-warning);   /* amber-400 */
+    --nu-accent-hover: var(--md-ext-color-warning);   /* amber-300 */
+    --nu-accent-soft: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent);
+    --nu-accent-line: color-mix(in srgb, var(--md-ext-color-warning) 35%, transparent);
+    --nu-accent-tint: color-mix(in srgb, var(--md-ext-color-warning) 10%, transparent);
+    --nu-ok: var(--md-ext-color-success);
+    --nu-ok-soft: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent);
+    --nu-warn: var(--md-ext-color-warning);
+    --nu-warn-soft: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent);
+    --nu-danger: var(--md-sys-color-error);
+    --nu-danger-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
 }
 
 /* ===== 2. Stats Grid — "Partner Cards" ===== */
@@ -74,7 +74,7 @@
     position: relative;
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 14px 16px 12px;
     cursor: pointer;
     transition: border-color .18s ease, box-shadow .18s ease, transform .15s ease;
@@ -93,7 +93,7 @@
 }
 .nu-stat-card:hover {
     border-color: var(--nu-accent-line);
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
     transform: translateY(-1px);
 }
 .nu-stat-card:hover::before { background: var(--nu-accent); }
@@ -107,7 +107,7 @@
 }
 .nu-stat-icon {
     width: 32px; height: 32px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     display: flex; align-items: center; justify-content: center;
     font-size: 0.95rem;
     background: var(--nu-bg-strip);
@@ -152,7 +152,7 @@
 .nu-stat-active   .nu-stat-num  { color: var(--nu-ok); }
 .nu-stat-portal   .nu-stat-icon { background: var(--nu-accent-soft); color: var(--nu-accent); }
 .nu-stat-portal   .nu-stat-num  { color: var(--nu-accent); }
-.nu-stat-people   .nu-stat-icon { background: #e0e7ff; color: #4338ca; }
+.nu-stat-people   .nu-stat-icon { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
 .nu-stat-compliance .nu-stat-icon { background: var(--nu-ok-soft); color: var(--nu-ok); }
 .nu-stat-compliance.warn .nu-stat-icon { background: var(--nu-warn-soft); color: var(--nu-warn); }
 .nu-stat-compliance.warn .nu-stat-num  { color: var(--nu-warn); }
@@ -169,7 +169,7 @@
     padding: 12px 14px;
     background: var(--nu-bg-soft);
     border: 1px solid var(--nu-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     margin-bottom: 16px;
 }
 .nu-toolbar-left {
@@ -206,7 +206,7 @@
     height: 36px;
     padding: 0 12px 0 34px;
     border: 1px solid var(--nu-border);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--nu-surface);
     color: var(--nu-text);
     font-size: 0.85rem;
@@ -216,7 +216,7 @@
 .nu-search input:focus {
     outline: none;
     border-color: var(--nu-accent);
-    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-ext-color-warning) 12%, transparent);
 }
 
 /* ===== 4. Filter Pills (amber underline) ===== */
@@ -224,7 +224,7 @@
     display: inline-flex;
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     overflow: hidden;
     height: 36px;
 }
@@ -260,7 +260,7 @@
     bottom: 0;
     height: 2px;
     background: var(--nu-accent);
-    border-radius: 2px 2px 0 0;
+    border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
 }
 .nu-filter-pills button i { font-size: 0.78rem; }
 
@@ -268,7 +268,7 @@
 .nu-table-card {
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     overflow: hidden;
 }
 .nu-table-card .table-container {
@@ -317,7 +317,7 @@
     align-items: center;
     gap: 5px;
     padding: 3px 8px;
-    border-radius: 100px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.74rem;
     font-weight: 600;
     line-height: 1.3;
@@ -328,7 +328,7 @@
 .nu-obj-badge.all-active {
     background: var(--nu-ok-soft);
     color: var(--nu-ok);
-    border-color: rgba(5, 150, 105, 0.2);
+    border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent);
 }
 .nu-obj-badge.partial {
     background: var(--nu-accent-soft);
@@ -337,8 +337,8 @@
 }
 .nu-obj-badge.none-active {
     background: var(--nu-danger-soft);
-    color: #b91c1c;
-    border-color: rgba(220, 38, 38, 0.2);
+    color: var(--md-sys-color-error);
+    border-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent);
 }
 .nu-obj-badge.none {
     background: transparent;
@@ -353,7 +353,7 @@
     background: var(--nu-bg-soft);
     border: 1px solid var(--nu-accent-line);
     border-left: 3px solid var(--nu-accent);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 12px 16px;
     margin-bottom: 16px;
     display: flex;
@@ -404,7 +404,7 @@
 /* Primary button inside NU dialog — amber */
 .sub-dialog-content md-filled-button {
     --md-filled-button-container-color: var(--nu-accent);
-    --md-filled-button-label-text-color: #fff;
+    --md-filled-button-label-text-color: var(--md-sys-color-surface-container-lowest);
 }
 
 /* ===== 9. Info / Success Boxes ===== */
@@ -415,7 +415,7 @@
     background: var(--nu-bg-soft);
     border: 1px solid var(--nu-border);
     border-left: 3px solid var(--nu-accent);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     padding: 11px 14px;
     margin-bottom: 14px;
     font-size: 0.83rem;
@@ -439,11 +439,11 @@
     margin-top: 12px;
     padding: 10px 14px;
     background: var(--nu-ok-soft);
-    border: 1px solid rgba(5, 150, 105, 0.25);
+    border: 1px solid color-mix(in srgb, var(--md-ext-color-success) 25%, transparent);
     border-left: 3px solid var(--nu-ok);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     font-size: 0.83rem;
-    color: #166534;
+    color: var(--md-ext-color-on-success-container);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -478,14 +478,14 @@
     align-items: center;
     gap: 6px;
     padding: 5px 11px;
-    border-radius: 100px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.76rem;
     font-weight: 700;
     border: 1px solid transparent;
 }
-.nu-cs-ok       { background: var(--nu-ok-soft);     color: var(--nu-ok);     border-color: rgba(5,150,105,0.2); }
+.nu-cs-ok       { background: var(--nu-ok-soft);     color: var(--nu-ok);     border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
 .nu-cs-warn     { background: var(--nu-warn-soft);   color: var(--nu-warn);   border-color: var(--nu-accent-line); }
-.nu-cs-expired  { background: var(--nu-danger-soft); color: #b91c1c;          border-color: rgba(220,38,38,0.2); }
+.nu-cs-expired  { background: var(--nu-danger-soft); color: var(--md-sys-color-error);          border-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent); }
 .nu-cs-missing  { background: var(--nu-bg-strip);    color: var(--nu-text-muted); border-color: var(--nu-border); }
 
 .nu-checklist-list {
@@ -500,14 +500,14 @@
     padding: 11px 14px;
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     border-left: 3px solid var(--nu-border-strong);
     transition: background .12s ease;
 }
 .nu-checklist-item:hover { background: var(--nu-bg-soft); }
 .nu-checklist-item.nu-cs-ok       { border-left-color: var(--nu-ok); }
-.nu-checklist-item.nu-cs-expiring { border-left-color: var(--nu-warn);   background: #fffbeb; }
-.nu-checklist-item.nu-cs-expired  { border-left-color: var(--nu-danger); background: #fef2f2; }
+.nu-checklist-item.nu-cs-expiring { border-left-color: var(--nu-warn);   background: var(--md-ext-color-warning-container); }
+.nu-checklist-item.nu-cs-expired  { border-left-color: var(--nu-danger); background: var(--md-sys-color-error-container); }
 .nu-checklist-item.nu-cs-missing  { border-left-color: var(--nu-text-soft); }
 
 .nu-cs-icon .material-symbols-outlined { font-size: 20px; }
@@ -534,8 +534,8 @@
 .nu-doc-expired  { color: var(--nu-danger); font-weight: 700; }
 
 .customer-doc-card.nu-doc-card-expired {
-    border-color: #fecaca;
-    background: #fef2f2;
+    border-color: var(--md-sys-color-error-container);
+    background: var(--md-sys-color-error-container);
 }
 
 /* ===== 12. NU Admin — Mitarbeiter Tab ===== */
@@ -569,7 +569,7 @@
 .nu-admin-stat {
     background: var(--nu-bg-soft);
     border: 1px solid var(--nu-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 8px 14px;
     display: flex;
     flex-direction: column;
@@ -613,13 +613,13 @@
     align-items: stretch;
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     padding: 12px;
     cursor: pointer;
     transition: box-shadow .2s, border-color .2s, transform .15s;
 }
 .nu-admin-wcard:hover {
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
     border-color: var(--nu-accent-line);
     transform: translateY(-1px);
 }
@@ -628,7 +628,7 @@
     width: 64px;
     height: 78px;
     flex-shrink: 0;
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     overflow: hidden;
     background: var(--nu-bg-strip);
     display: flex;
@@ -655,7 +655,7 @@
     color: var(--nu-text-muted);
     background: var(--nu-bg-strip);
     padding: 1px 6px;
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     width: fit-content;
 }
 .nu-admin-wcard-meta {
@@ -671,13 +671,13 @@
 }
 .nu-admin-wcard-badge {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 8px; border-radius: 10px;
+    padding: 2px 8px; border-radius: var(--md-sys-shape-corner-medium);
     font-size: 0.66rem; font-weight: 700;
 }
-.nu-admin-wcard-badge.ok { background: var(--nu-ok-soft); color: #166534; }
+.nu-admin-wcard-badge.ok { background: var(--nu-ok-soft); color: var(--md-ext-color-on-success-container); }
 .nu-admin-wcard-badge.warn,
-.nu-admin-wcard-badge.expiring { background: var(--nu-warn-soft); color: #92400e; }
-.nu-admin-wcard-badge.expired { background: var(--nu-danger-soft); color: #991b1b; }
+.nu-admin-wcard-badge.expiring { background: var(--nu-warn-soft); color: var(--md-ext-color-on-warning-container); }
+.nu-admin-wcard-badge.expired { background: var(--nu-danger-soft); color: var(--md-sys-color-error); }
 .nu-admin-wcard-arrow {
     display: flex; align-items: center; color: var(--nu-text-soft);
     font-size: 0.8rem;
@@ -706,13 +706,13 @@
     display: flex; flex-direction: column; align-items: center; gap: 8px;
     padding: 14px;
     background: var(--nu-bg-soft);
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     border: 1px solid var(--nu-border);
     height: fit-content;
 }
 .nu-admin-detail-photo {
     width: 180px; height: 220px;
-    border-radius: 10px; overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-medium); overflow: hidden;
     background: var(--nu-surface);
     border: 1px solid var(--nu-border);
     display: flex; align-items: center; justify-content: center;
@@ -733,7 +733,7 @@
     font-size: 0.75rem;
     color: var(--nu-text-muted);
     background: var(--nu-surface);
-    padding: 3px 10px; border-radius: 6px;
+    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-small);
     border: 1px solid var(--nu-border);
 }
 .nu-admin-detail-badges {
@@ -854,7 +854,7 @@
     width: 100%;
     height: 56px;
     padding: 15px 12px;
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     border-color: var(--nu-border-strong);
     background: var(--nu-surface);
 }

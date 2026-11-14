@@ -150,7 +150,7 @@
     font-weight: 700;
     min-width: 20px;
     height: 20px;
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,7 +210,7 @@
 .wm-bubble {
     max-width: 70%;
     padding: 10px 14px;
-    border-radius: 16px;
+    border-radius: var(--md-sys-shape-corner-large);
     font-size: 14px;
     line-height: 1.45;
     word-break: break-word;
@@ -220,15 +220,15 @@
     align-self: flex-end;
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: var(--md-sys-shape-corner-extra-small);
 }
 
 .wm-bubble-in {
     align-self: flex-start;
     background: var(--white);
     color: var(--text);
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-bottom-left-radius: var(--md-sys-shape-corner-extra-small);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent);
 }
 
 .wm-bubble-sender {
@@ -262,7 +262,7 @@
     flex: 1;
     padding: 10px 16px;
     border: 1.5px solid var(--border);
-    border-radius: 24px;
+    border-radius: var(--md-sys-shape-corner-large);
     font-size: 14px;
     font-family: var(--font);
     color: var(--text);
@@ -353,7 +353,7 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
-    border-radius: 12px;
+    border-radius: var(--md-sys-shape-corner-medium);
     cursor: pointer;
     transition: background 0.15s;
 }
@@ -395,7 +395,7 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     color: var(--md-sys-color-on-primary-container);
     background: var(--md-sys-color-primary-container);
     border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     padding: 3px 8px;
     flex-shrink: 0;
     white-space: nowrap;
@@ -407,7 +407,7 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
 .wm-back-btn .material-symbols-outlined { display: block; }
 .empty-state .material-symbols-outlined {
     font-size: 2.4rem;
-    color: var(--gray-300, #cbd5e1);
+    color: var(--gray-300, var(--md-sys-color-primary-container));
     margin-bottom: 10px;
     display: block;
     margin-left: auto;

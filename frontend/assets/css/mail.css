@@ -72,7 +72,7 @@ md-outlined-select.ml-account-select {
     gap: 6px;
     padding: 8px 10px;
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     background: var(--white);
     color: var(--text-muted);
     font: inherit;
@@ -90,7 +90,7 @@ md-outlined-select.ml-account-select {
 .ml-tab .wm-unread-total {
     min-width: 18px;
     padding: 1px 6px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     background: var(--accent);
     color: #fff;
     font-size: 11px;
@@ -107,7 +107,7 @@ md-outlined-select.ml-account-select {
     margin-bottom: 10px;
     background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     transition: border-color .15s, box-shadow .15s;
 }
 .ml-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent); }
@@ -258,7 +258,7 @@ md-outlined-select.ml-account-select {
     max-width: 100%;
     padding: 6px 10px;
     border: 1px solid var(--md-sys-color-outline-variant, var(--border));
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     background: var(--gray-50, var(--white));
     color: var(--text);
     font: inherit;
@@ -277,7 +277,7 @@ md-outlined-select.ml-account-select {
     width: 100%;
     min-height: 240px;
     border: 0;
-    background: #fff;
+    background: var(--md-sys-color-surface-container-lowest);
     display: block;
 }
 
@@ -288,7 +288,7 @@ md-outlined-select.ml-account-select {
     gap: 8px;
     padding: 8px 12px;
     margin: 10px 0 0;
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     background: var(--md-sys-color-secondary-container, var(--gray-100));
     color: var(--md-sys-color-on-secondary-container, var(--text));
     font-size: 13px;
@@ -296,8 +296,8 @@ md-outlined-select.ml-account-select {
 .ml-banner > span:not(.material-symbols-outlined) { flex: 1; }
 .ml-banner .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
 .ml-banner-error {
-    background: var(--md-sys-color-error-container, #fee2e2);
-    color: var(--md-sys-color-on-error-container, #991b1b);
+    background: var(--md-sys-color-error-container, var(--md-sys-color-error-container));
+    color: var(--md-sys-color-on-error-container, var(--md-sys-color-error));
 }
 .ml-list-pane > .ml-banner { margin: 0 0 10px; }
 
@@ -379,7 +379,7 @@ md-dialog.ml-acc-dialog {
     color: var(--text-muted);
     cursor: pointer;
 }
-.ml-file button:hover { color: var(--md-sys-color-error, #dc2626); }
+.ml-file button:hover { color: var(--md-sys-color-error, var(--md-sys-color-error)); }
 .ml-compose-actions,
 .ml-connect-actions {
     display: flex;
@@ -400,7 +400,7 @@ md-dialog.ml-acc-dialog {
 .ml-acc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .ml-acc-info strong { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
 .ml-acc-info small { font-size: 12px; color: var(--text-muted); }
-.ml-acc-info .ml-acc-error { color: var(--md-sys-color-error, #dc2626); }
+.ml-acc-info .ml-acc-error { color: var(--md-sys-color-error, var(--md-sys-color-error)); }
 
 .ml-connect { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
 .ml-connect h4 { margin: 0; font-size: 15px; color: var(--text); }
@@ -431,17 +431,17 @@ md-dialog.ml-acc-dialog {
     gap: 12px;
     width: 100%;
     height: 46px;
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     font: inherit;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: box-shadow .15s, background .15s;
 }
-.ml-oauth-ms { background: #2f2f2f; color: #fff; border: 1px solid #2f2f2f; }
-.ml-oauth-ms:hover { background: #1f1f1f; }
-.ml-oauth-google { background: #fff; color: #1f1f1f; border: 1px solid #dadce0; }
-.ml-oauth-google:hover { box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+.ml-oauth-ms { background: var(--md-sys-color-inverse-surface); color: #fff; border: 1px solid var(--md-sys-color-outline); }
+.ml-oauth-ms:hover { background: var(--md-sys-color-inverse-surface); }
+.ml-oauth-google { background: var(--md-sys-color-surface-container-lowest); color: var(--md-sys-color-on-surface); border: 1px solid var(--md-sys-color-outline-variant); }
+.ml-oauth-google:hover { box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 15%, transparent); }
 
 /* ---------- Mobile: one pane at a time ---------- */
 @media (max-width: 900px) {

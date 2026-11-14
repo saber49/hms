@@ -38,18 +38,18 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     height: 40px;
     margin: 0;
     padding: 0 14px 0 12px;
-    background: var(--md-sys-color-surface, #fff);
-    border: 1px solid var(--md-sys-color-outline, #79747e);
-    border-radius: 20px;
+    background: var(--md-sys-color-surface, var(--md-sys-color-surface-container-lowest));
+    border: 1px solid var(--md-sys-color-outline, var(--md-sys-color-outline));
+    border-radius: var(--md-sys-shape-corner-large);
     box-shadow: none;
     transition: border-color .15s ease;
 }
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):hover {
-    border-color: var(--md-sys-color-on-surface, #1d1b20);
+    border-color: var(--md-sys-color-on-surface, var(--md-sys-color-outline));
 }
 /* Focus = 2px primary outline (padding −1px so nothing jumps). */
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):focus-within {
-    border: 2px solid var(--md-sys-color-primary, #0b57d0);
+    border: 2px solid var(--md-sys-color-primary, var(--md-sys-color-primary));
     padding: 0 13px 0 11px;
 }
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap)
@@ -60,7 +60,7 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     width: 24px;
     font-size: 24px !important;
     line-height: 1;
-    color: var(--md-sys-color-on-surface-variant, #49454f);
+    color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface));
     pointer-events: none;
 }
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input {
@@ -75,7 +75,7 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     outline: none !important;
     box-shadow: none !important;
     background: transparent !important;
-    color: var(--md-sys-color-on-surface, #1d1b20);
+    color: var(--md-sys-color-on-surface, var(--md-sys-color-on-surface));
     font-family: inherit;
     font-size: 1rem;
     line-height: 1.5;
@@ -83,7 +83,7 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     appearance: none;
 }
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::placeholder {
-    color: var(--md-sys-color-on-surface-variant, #49454f);
+    color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface));
     opacity: 1;
 }
 html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::-webkit-search-cancel-button {

@@ -51,13 +51,13 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--md-sys-color-scrim) 15%, transparent);
 }
 .nu-topbar-left { display: flex; align-items: center; gap: 12px; }
 .nu-topbar-left .nu-logo { font-size: 1.1rem; font-weight: 700; }
 .nu-topbar-left .nu-badge {
     background: rgba(255,255,255,0.18); color: #ffffff;
-    padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600;
+    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-medium); font-size: 0.7rem; font-weight: 600;
 }
 .nu-topbar-right { display: flex; align-items: center; gap: 16px; }
 .nu-topbar-right .nu-company { font-size: 0.85rem; opacity: 0.8; }
@@ -103,7 +103,7 @@ body {
 .nu-card {
     background: var(--white);
     border-radius: var(--nu-radius-lg);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent);
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -138,7 +138,7 @@ body {
     overflow: hidden;
     transition: box-shadow 0.2s;
 }
-.nu-shift-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.nu-shift-card:hover { box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent); }
 .nu-shift-header {
     padding: 14px 20px;
     display: flex;
@@ -176,15 +176,15 @@ body {
 /* --- Badges --- */
 .nu-badge {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 10px; border-radius: 12px;
+    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-medium);
     font-size: 0.7rem; font-weight: 600;
 }
-.nu-badge.open { background: #fef3c7; color: #92400e; }
-.nu-badge.full { background: #dcfce7; color: #166534; }
-.nu-badge.planned { background: #dbeafe; color: #1e40af; }
-.nu-badge.confirmed { background: #dcfce7; color: #166534; }
-.nu-badge.pending { background: #fef9c3; color: #854d0e; }
-.nu-badge.nu-pending { background: #ede9fe; color: #7c3aed; animation: nu-pulse 2s infinite; }
+.nu-badge.open { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
+.nu-badge.full { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.nu-badge.planned { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
+.nu-badge.confirmed { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.nu-badge.pending { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
+.nu-badge.nu-pending { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-secondary); animation: nu-pulse 2s infinite; }
 
 @keyframes nu-pulse {
     0%, 100% { opacity: 1; }
@@ -199,15 +199,15 @@ body {
     gap: 12px;
     padding: 14px 20px;
     margin: 0;
-    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-    border-top: 1px solid #c4b5fd;
-    border-bottom: 1px solid #c4b5fd;
+    background: linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) 100%);
+    border-top: 1px solid var(--md-sys-color-primary-container);
+    border-bottom: 1px solid var(--md-sys-color-primary-container);
 }
 
 .nu-shift-accept-msg {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #5b21b6;
+    color: var(--md-sys-color-secondary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -215,7 +215,7 @@ body {
 
 .nu-shift-accept-msg i {
     font-size: 1.1rem;
-    color: #7c3aed;
+    color: var(--md-sys-color-secondary);
 }
 
 .nu-shift-accept-actions {
@@ -256,9 +256,9 @@ body {
 .nu-btn-primary { background: var(--nu-accent); color: white; }
 .nu-btn-primary:hover { background: var(--nu-accent-hover); }
 .nu-btn-success { background: var(--nu-success); color: white; }
-.nu-btn-success:hover { background: #15803d; }
+.nu-btn-success:hover { background: var(--md-ext-color-success); }
 .nu-btn-danger { background: var(--nu-danger); color: white; }
-.nu-btn-danger:hover { background: #b91c1c; }
+.nu-btn-danger:hover { background: var(--md-sys-color-error); }
 .nu-btn-outline {
     background: var(--white); color: var(--nu-gray-700);
     border: 1px solid var(--nu-gray-300);
@@ -266,14 +266,14 @@ body {
 .nu-btn-outline:hover { background: var(--nu-gray-50); border-color: var(--nu-gray-400); }
 .nu-btn-sm { padding: 5px 10px; font-size: 0.75rem; }
 .nu-btn-icon {
-    width: 32px; height: 32px; padding: 0; border-radius: 6px;
+    width: 32px; height: 32px; padding: 0; border-radius: var(--md-sys-shape-corner-small);
     display: inline-flex; align-items: center; justify-content: center;
     background: var(--white); border: 1px solid var(--nu-gray-200); color: var(--nu-gray-500);
     cursor: pointer; transition: all 0.2s; font-size: 0.8rem;
 }
 .nu-btn-icon:hover { background: var(--nu-gray-50); color: var(--nu-gray-700); }
-.nu-btn-icon.danger:hover { background: #fef2f2; color: var(--nu-danger); border-color: #fecaca; }
-.nu-btn-icon.success:hover { background: #f0fdf4; color: var(--nu-success); border-color: #bbf7d0; }
+.nu-btn-icon.danger:hover { background: var(--md-sys-color-error-container); color: var(--nu-danger); border-color: var(--md-sys-color-error-container); }
+.nu-btn-icon.success:hover { background: var(--md-ext-color-success-container); color: var(--nu-success); border-color: var(--md-ext-color-success-container); }
 
 /* --- Forms --- */
 .nu-form-group { margin-bottom: 14px; }
@@ -283,11 +283,11 @@ body {
 }
 .nu-form-control {
     width: 100%; padding: 8px 12px; border: 1px solid var(--nu-gray-300);
-    border-radius: 6px; font-size: 0.85rem; font-family: inherit;
+    border-radius: var(--md-sys-shape-corner-small); font-size: 0.85rem; font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s; background: var(--nu-white);
     color: var(--nu-gray-900);
 }
-.nu-form-control:focus { outline: none; border-color: var(--nu-accent); box-shadow: 0 0 0 3px rgba(11,87,208,0.12); }
+.nu-form-control:focus { outline: none; border-color: var(--nu-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); }
 .nu-form-row { display: flex; gap: 12px; }
 .nu-form-row > * { flex: 1; }
 
@@ -323,7 +323,7 @@ body {
 }
 .nu-toast {
     background: var(--nu-primary); color: white; padding: 10px 18px;
-    border-radius: var(--nu-radius); font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border-radius: var(--nu-radius); font-size: 0.85rem; box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-scrim) 20%, transparent);
     animation: nuToastIn 0.3s ease;
 }
 .nu-toast.error { background: var(--nu-danger); }
@@ -336,7 +336,7 @@ body {
     background: var(--white);
     border: 1px solid var(--nu-gray-200);
     border-radius: var(--nu-radius);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--md-sys-color-scrim) 12%, transparent);
     z-index: 500;
     width: 280px;
     max-height: 300px;
@@ -345,7 +345,7 @@ body {
 .nu-assign-dropdown-header { padding: 10px 12px; border-bottom: 1px solid var(--nu-gray-200); }
 .nu-assign-dropdown-header input {
     width: 100%; padding: 6px 10px; border: 1px solid var(--nu-gray-200);
-    border-radius: 6px; font-size: 0.8rem; font-family: inherit;
+    border-radius: var(--md-sys-shape-corner-small); font-size: 0.8rem; font-family: inherit;
 }
 .nu-assign-dropdown-item {
     padding: 8px 12px; cursor: pointer; font-size: 0.82rem;
@@ -363,12 +363,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--md-ext-color-success-container);
+    color: var(--md-ext-color-success);
     font-size: 0.78rem;
     font-weight: 600;
     padding: 3px 9px;
-    border-radius: 20px;
+    border-radius: var(--md-sys-shape-corner-large);
     white-space: nowrap;
 }
 .nu-assigned-badge i {
@@ -377,7 +377,7 @@ body {
 .nu-badge-remove {
     cursor: pointer;
     color: #fff;
-    background: #c62828;
+    background: var(--md-sys-color-error);
     margin-left: 6px;
     font-size: 0.6rem;
     width: 16px;
@@ -391,7 +391,7 @@ body {
 }
 .nu-badge-remove:hover {
     opacity: 1;
-    background: #b71c1c;
+    background: var(--md-sys-color-error);
     transform: scale(1.15);
 }
 
@@ -427,14 +427,14 @@ body {
 /* --- Modal --- */
 .nu-modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5); z-index: 1000;
+    background: color-mix(in srgb, var(--md-sys-color-scrim) 50%, transparent); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
 }
 .nu-modal-overlay.active { display: flex; }
 .nu-modal {
     background: var(--white); border-radius: var(--nu-radius-lg);
     width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    box-shadow: 0 20px 60px color-mix(in srgb, var(--md-sys-color-scrim) 20%, transparent);
 }
 .nu-modal.wide { max-width: 900px; }
 .nu-modal-header {
@@ -516,11 +516,11 @@ body {
     padding: 14px;
     transition: box-shadow 0.2s, border-color 0.2s;
 }
-.nu-wcard:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); border-color: var(--nu-gray-300); }
+.nu-wcard:hover { box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent); border-color: var(--nu-gray-300); }
 .nu-wcard.inactive { opacity: 0.6; }
 .nu-wcard-photo {
     width: 72px; height: 88px; flex-shrink: 0;
-    border-radius: 8px; overflow: hidden;
+    border-radius: var(--md-sys-shape-corner-small); overflow: hidden;
     background: var(--nu-gray-100);
     display: flex; align-items: center; justify-content: center;
 }
@@ -541,7 +541,7 @@ body {
     font-family: monospace; font-size: 0.72rem;
     color: var(--nu-gray-500);
     background: var(--nu-gray-100);
-    padding: 1px 6px; border-radius: 4px;
+    padding: 1px 6px; border-radius: var(--md-sys-shape-corner-extra-small);
     display: inline-block; width: fit-content;
 }
 .nu-wcard-meta {
@@ -554,12 +554,12 @@ body {
 .nu-wcard-footer { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .nu-wcard-status {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 8px; border-radius: 10px;
+    padding: 2px 8px; border-radius: var(--md-sys-shape-corner-medium);
     font-size: 0.68rem; font-weight: 600;
 }
-.nu-wcard-status.ok { background: #dcfce7; color: #166534; }
-.nu-wcard-status.warn { background: #fef3c7; color: #92400e; }
-.nu-wcard-status.expired { background: #fee2e2; color: #991b1b; }
+.nu-wcard-status.ok { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.nu-wcard-status.warn { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
+.nu-wcard-status.expired { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
 .nu-wcard-actions {
     display: flex; flex-direction: column; gap: 4px;
 }
@@ -593,7 +593,7 @@ body {
 }
 .nu-history-worker-row {
     display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-    background: var(--nu-gray-50); border-radius: 6px; font-size: 0.85rem;
+    background: var(--nu-gray-50); border-radius: var(--md-sys-shape-corner-small); font-size: 0.85rem;
 }
 .nu-worker-avatar.sm {
     width: 28px; height: 28px; font-size: 0.65rem; flex-shrink: 0;
@@ -602,7 +602,7 @@ body {
 }
 .nu-history-worker-name { font-weight: 600; color: var(--nu-gray-900); }
 .nu-history-worker-nr { font-size: 0.75rem; color: var(--nu-gray-400); }
-.nu-history-worker-pos { font-size: 0.75rem; color: var(--nu-gray-500); background: var(--nu-gray-100); padding: 2px 8px; border-radius: 4px; }
+.nu-history-worker-pos { font-size: 0.75rem; color: var(--nu-gray-500); background: var(--nu-gray-100); padding: 2px 8px; border-radius: var(--md-sys-shape-corner-extra-small); }
 .nu-history-worker-std { margin-left: auto; font-weight: 600; color: var(--nu-primary); font-size: 0.82rem; }
 
 /* --- Responsive --- */
@@ -634,7 +634,7 @@ body {
 
 /* MD3 cards and modal */
 .nu-card, .nu-wcard, .nu-shift-card { box-shadow: var(--nu-elevation-1); }
-.nu-modal-overlay { background: rgba(0,0,0,0.32); }
+.nu-modal-overlay { background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent); }
 .nu-modal { background: var(--nu-surface); border-radius: var(--nu-radius-lg); box-shadow: var(--nu-elevation-3); }
 
 /* MD3 section titles */

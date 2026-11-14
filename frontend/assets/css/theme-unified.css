@@ -28,7 +28,7 @@
     --u-accent-soft:    var(--md-sys-color-primary-container);
     --u-accent-line:    var(--md-ref-palette-primary80);
     --u-accent-50:      var(--md-ref-palette-primary95);
-    --u-accent-tint:    rgba(11, 87, 208, 0.06);
+    --u-accent-tint: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
 
     /* ---------- Mitarbeiter (workers.css — was cyan/teal) ---------- */
     --wk-accent:        var(--u-accent);
@@ -85,14 +85,14 @@
     --ma-nu:             var(--u-accent-strong);
     --ma-nu-soft:        var(--u-accent-soft);
     /* Neutralise the green-tinted canvas / borders / text */
-    --ma-text:           #1e293b;
-    --ma-text-strong:    #0f172a;
-    --ma-text-muted:     #64748b;
+    --ma-text: var(--md-sys-color-primary);
+    --ma-text-strong: var(--md-sys-color-primary);
+    --ma-text-muted: var(--md-sys-color-primary);
     --ma-canvas:         var(--gray-50);
     --ma-border:         var(--gray-200);
-    --ma-border-strong:  #cbd5e1;
-    --ma-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.06);
-    --ma-shadow-md:      0 4px 12px rgba(15, 23, 42, 0.08);
+    --ma-border-strong: var(--md-sys-color-primary-container);
+    --ma-shadow-sm: 0 1px 2px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+    --ma-shadow-md: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
 }
 
 /* ---------- Kunden bento tiles (customers.css — were 8 colours) ---------- */
@@ -107,7 +107,7 @@
 .bento-tile-last,
 .bento-tile-docs {
     --bento-accent: var(--u-primary);
-    --bento-accent-soft: rgba(26, 39, 68, 0.08);
+    --bento-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
 }
 
 /* ---------- Small hardcoded leftovers ---------- */
@@ -163,8 +163,8 @@
     --u-accent-hover:   var(--md-ref-palette-primary70);
     --u-accent-strong:  var(--md-ref-palette-primary80);
     --u-accent-line:    var(--md-ref-palette-primary40);
-    --u-accent-50:      rgba(76, 141, 246, 0.12);   /* hover-row tint */
-    --u-accent-tint:    rgba(76, 141, 246, 0.10);
+    --u-accent-50: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);   /* hover-row tint */
+    --u-accent-tint: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
 
     /* Monatsabschluss neutrals (hardcoded slate in :root above) */
     --ma-text:           var(--gray-800);
@@ -186,7 +186,7 @@
 [data-theme="dark"] .bento-tile-last,
 [data-theme="dark"] .bento-tile-docs {
     --bento-accent: var(--md-ref-palette-primary80);
-    --bento-accent-soft: rgba(168, 199, 250, 0.12);
+    --bento-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
 
 /* ============================================================

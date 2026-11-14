@@ -6,29 +6,29 @@
 
 :root {
     /* Core palette */
-    --or-primary:        #1e293b;   /* Slate-900 — executive */
-    --or-primary-dark:   #0f172a;
-    --or-primary-light:  #334155;
+    --or-primary: var(--md-sys-color-primary);   /* Slate-900 — executive */
+    --or-primary-dark: var(--md-sys-color-primary);
+    --or-primary-light: var(--md-sys-color-primary);
     --or-primary-soft:   var(--gray-200);
     --or-primary-50:     var(--gray-50);
 
-    --or-accent:         #f97316;   /* Coral-500 — action/urgent */
-    --or-accent-dark:    #c2410c;
-    --or-accent-light:   #fb923c;
-    --or-accent-soft:    #ffedd5;
-    --or-accent-50:      #fff7ed;
+    --or-accent: var(--md-ext-color-warning);   /* Coral-500 — action/urgent */
+    --or-accent-dark: var(--md-ext-color-warning);
+    --or-accent-light: var(--md-ext-color-warning);
+    --or-accent-soft: var(--md-ext-color-warning-container);
+    --or-accent-50: var(--md-ext-color-warning-container);
 
     /* Status colors */
-    --or-open:           #2563eb;   /* Blue — active orders */
-    --or-open-soft:      #dbeafe;
-    --or-done:           #16a34a;   /* Green — closed/completed */
-    --or-done-soft:      #dcfce7;
-    --or-canceled:       #dc2626;   /* Red — canceled */
-    --or-canceled-soft:  #fee2e2;
-    --or-late:           #dc2626;   /* Red — overdue */
-    --or-late-soft:      #fee2e2;
-    --or-planned:        #f59e0b;   /* Amber — planned shifts */
-    --or-pending:        #94a3b8;   /* Grey — pending */
+    --or-open: var(--md-sys-color-primary);   /* Blue — active orders */
+    --or-open-soft: var(--md-sys-color-primary-container);
+    --or-done: var(--md-ext-color-success);   /* Green — closed/completed */
+    --or-done-soft: var(--md-ext-color-success-container);
+    --or-canceled: var(--md-sys-color-error);   /* Red — canceled */
+    --or-canceled-soft: var(--md-sys-color-error-container);
+    --or-late: var(--md-sys-color-error);   /* Red — overdue */
+    --or-late-soft: var(--md-sys-color-error-container);
+    --or-planned: var(--md-ext-color-warning);   /* Amber — planned shifts */
+    --or-pending: var(--md-sys-color-primary);   /* Grey — pending */
 
     --or-text:           var(--gray-900);
     --or-text-strong:    var(--gray-900);
@@ -40,9 +40,9 @@
     --or-border:         var(--gray-200);
     --or-border-strong:  var(--gray-300);
 
-    --or-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.06);
-    --or-shadow-md:      0 4px 12px rgba(15, 23, 42, 0.08);
-    --or-shadow-lg:      0 12px 32px rgba(15, 23, 42, 0.14);
+    --or-shadow-sm: 0 1px 2px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
+    --or-shadow-md: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+    --or-shadow-lg: 0 12px 32px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
 
     --or-radius-sm:      8px;
     --or-radius:         12px;
@@ -51,21 +51,21 @@
 
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
-    --or-primary:        #64748b;   /* slate-500 — still works as bg under white text */
-    --or-primary-dark:   #475569;
-    --or-primary-light:  #94a3b8;
-    --or-accent-dark:    #fdba74;   /* orange-300 — accent text on dark */
-    --or-accent-soft:    rgba(249, 115, 22, 0.16);
-    --or-accent-50:      rgba(249, 115, 22, 0.10);
-    --or-open:           #60a5fa;   /* blue-400 */
-    --or-open-soft:      rgba(96, 165, 250, 0.16);
-    --or-done:           #4ade80;   /* green-400 */
-    --or-done-soft:      rgba(74, 222, 128, 0.16);
-    --or-canceled:       #f87171;
-    --or-canceled-soft:  rgba(248, 113, 113, 0.16);
-    --or-late:           #f87171;
-    --or-late-soft:      rgba(248, 113, 113, 0.16);
-    --or-planned:        #fbbf24;
+    --or-primary: var(--md-sys-color-primary);   /* slate-500 — still works as bg under white text */
+    --or-primary-dark: var(--md-sys-color-primary);
+    --or-primary-light: var(--md-sys-color-primary);
+    --or-accent-dark: var(--md-ext-color-warning);   /* orange-300 — accent text on dark */
+    --or-accent-soft: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent);
+    --or-accent-50: color-mix(in srgb, var(--md-ext-color-warning) 10%, transparent);
+    --or-open: var(--md-sys-color-primary);   /* blue-400 */
+    --or-open-soft: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
+    --or-done: var(--md-ext-color-success);   /* green-400 */
+    --or-done-soft: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent);
+    --or-canceled: var(--md-sys-color-error);
+    --or-canceled-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
+    --or-late: var(--md-sys-color-error);
+    --or-late-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
+    --or-planned: var(--md-ext-color-warning);
     --or-pending:        var(--gray-400);
 }
 
@@ -101,7 +101,7 @@
     position: absolute;
     top: -50%; right: -10%;
     width: 280px; height: 280px;
-    background: radial-gradient(circle, rgba(249, 115, 22, 0.18) 0%, transparent 70%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--md-ext-color-warning) 18%, transparent) 0%, transparent 70%);
     pointer-events: none;
 }
 .or-header-title {
@@ -145,7 +145,7 @@
     border: 1px solid rgba(255, 255, 255, 0.22);
     color: white;
     padding: 6px 14px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.78rem;
     font-weight: 600;
     display: inline-flex;
@@ -153,8 +153,8 @@
     gap: 6px;
 }
 .or-header-badge i { color: var(--or-accent-light); }
-.or-header-badge.danger { background: rgba(239, 68, 68, 0.18); border-color: rgba(239, 68, 68, 0.32); }
-.or-header-badge.danger i { color: #fca5a5; }
+.or-header-badge.danger { background: color-mix(in srgb, var(--md-sys-color-error) 18%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-error) 32%, transparent); }
+.or-header-badge.danger i { color: var(--md-sys-color-error-container); }
 
 /* ============================================================
    BENTO KPIs — 6 tiles
@@ -202,7 +202,7 @@
 }
 .or-kpi-icon {
     width: 28px; height: 28px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--or-primary-soft);
     color: var(--or-primary);
     display: inline-flex;
@@ -248,14 +248,14 @@
     width: 100%;
     height: 4px;
     background: var(--or-canvas);
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     overflow: hidden;
     margin-top: 8px;
 }
 .or-progress-fill {
     height: 100%;
     background: var(--or-primary);
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     transition: width 0.4s ease;
 }
 .or-progress-fill.coral { background: var(--or-accent); }
@@ -280,7 +280,7 @@
     display: inline-flex;
     background: var(--or-canvas);
     padding: 4px;
-    border-radius: 10px;
+    border-radius: var(--md-sys-shape-corner-medium);
     gap: 4px;
 }
 .or-tab {
@@ -288,7 +288,7 @@
     background: transparent;
     color: var(--or-text-muted);
     padding: 7px 16px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
@@ -381,8 +381,8 @@ select.or-select:focus {
    LATE ORDERS ALERT BANNER
    ============================================================ */
 .or-alert {
-    background: linear-gradient(135deg, var(--or-late-soft), #fecaca);
-    border: 1px solid #fca5a5;
+    background: linear-gradient(135deg, var(--or-late-soft), var(--md-sys-color-error-container));
+    border: 1px solid var(--md-sys-color-error-container);
     border-left: 4px solid var(--or-late);
     border-radius: var(--or-radius);
     padding: 12px 16px;
@@ -409,12 +409,12 @@ select.or-select:focus {
 }
 .or-alert-title {
     font-weight: 700;
-    color: #7f1d1d;
+    color: var(--md-sys-color-on-error-container);
     font-size: 0.92rem;
 }
 .or-alert-sub {
     font-size: 0.78rem;
-    color: #991b1b;
+    color: var(--md-sys-color-error);
     margin-top: 2px;
 }
 .or-alert-action {
@@ -428,7 +428,7 @@ select.or-select:focus {
     cursor: pointer;
     transition: all 0.16s ease;
 }
-.or-alert-action:hover { background: #991b1b; }
+.or-alert-action:hover { background: var(--md-sys-color-error); }
 
 /* ============================================================
    ORDERS TABLE
@@ -479,10 +479,10 @@ select.or-select:focus {
     background: var(--or-late-soft);
 }
 .or-table tbody tr.is-late:hover {
-    background: #fecaca;
+    background: var(--md-sys-color-error-container);
 }
 [data-theme="dark"] .or-table tbody tr.is-late:hover {
-    background: rgba(248, 113, 113, 0.24);
+    background: color-mix(in srgb, var(--md-sys-color-error) 24%, transparent);
 }
 .or-table tbody tr.is-done {
     opacity: 0.78;
@@ -499,7 +499,7 @@ select.or-select:focus {
     color: var(--or-accent-dark);
     background: var(--or-accent-soft);
     padding: 3px 10px;
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     display: inline-block;
 }
 
@@ -532,7 +532,7 @@ select.or-select:focus {
     background: var(--or-primary-soft);
     color: var(--or-primary);
     padding: 3px 9px;
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     font-size: 0.74rem;
     font-weight: 700;
     white-space: nowrap;
@@ -557,7 +557,7 @@ select.or-select:focus {
     align-items: center;
     gap: 4px;
     padding: 3px 10px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -569,11 +569,11 @@ select.or-select:focus {
     width: 6px; height: 6px;
     border-radius: 50%;
 }
-.or-status.offen { background: var(--or-open-soft); color: #1e40af; }
+.or-status.offen { background: var(--or-open-soft); color: var(--md-sys-color-primary); }
 .or-status.offen::before { background: var(--or-open); }
-.or-status.abgeschlossen { background: var(--or-done-soft); color: #166534; }
+.or-status.abgeschlossen { background: var(--or-done-soft); color: var(--md-ext-color-on-success-container); }
 .or-status.abgeschlossen::before { background: var(--or-done); }
-.or-status.storniert { background: var(--or-canceled-soft); color: #991b1b; }
+.or-status.storniert { background: var(--or-canceled-soft); color: var(--md-sys-color-error); }
 .or-status.storniert::before { background: var(--or-canceled); }
 
 .or-late-pill {
@@ -583,7 +583,7 @@ select.or-select:focus {
     background: var(--or-late);
     color: white;
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     font-size: 0.66rem;
     font-weight: 700;
     margin-left: 6px;
@@ -600,7 +600,7 @@ select.or-select:focus {
 .or-row-progress-bar {
     height: 8px;
     background: var(--or-canvas);
-    border-radius: 4px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
     overflow: hidden;
     display: flex;
     border: 1px solid var(--or-border);
@@ -757,7 +757,7 @@ select.or-select:focus {
 }
 .or-detail-progress-title i {
     width: 26px; height: 26px;
-    border-radius: 7px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--or-primary);
     color: white;
     display: inline-flex;
@@ -774,7 +774,7 @@ select.or-select:focus {
 .or-detail-progress-bar {
     height: 12px;
     background: var(--white);
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     overflow: hidden;
     display: flex;
     border: 1px solid var(--or-border);
@@ -816,7 +816,7 @@ select.or-select:focus {
 }
 .or-section-icon {
     width: 30px; height: 30px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--or-primary-soft);
     color: var(--or-primary);
     display: inline-flex;
@@ -836,14 +836,14 @@ select.or-select:focus {
     background: var(--or-canvas);
     color: var(--or-text);
     padding: 3px 10px;
-    border-radius: 999px;
+    border-radius: var(--md-sys-shape-corner-full);
     font-weight: 600;
     border: 1px solid var(--or-border);
 }
 .or-section-badge.done {
     background: var(--or-done-soft);
-    color: #166534;
-    border-color: #bbf7d0;
+    color: var(--md-ext-color-on-success-container);
+    border-color: var(--md-ext-color-success-container);
 }
 
 .or-sub-table-wrap {
@@ -878,7 +878,7 @@ select.or-select:focus {
     font-weight: 700; color: var(--or-text-strong); margin-bottom: 6px;
 }
 .or-desc-head .material-symbols-outlined { color: var(--or-primary); }
-.or-desc-hint { font-weight: 500; font-size: 0.72rem; color: var(--or-text-muted, #64748b); }
+.or-desc-hint { font-weight: 500; font-size: 0.72rem; color: var(--or-text-muted, var(--md-sys-color-primary)); }
 .or-desc-body { line-height: 1.5; overflow-wrap: anywhere; }
 .or-desc-body p { margin: 0 0 4px; }
 .or-desc-body ul { margin: 0; padding-left: 18px; }
@@ -886,8 +886,8 @@ select.or-select:focus {
 .or-desc-box.collapsed .or-desc-body {
     max-height: 4.6em;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(#000 55%, transparent);
-            mask-image: linear-gradient(#000 55%, transparent);
+    -webkit-mask-image: linear-gradient(var(--md-sys-color-inverse-surface) 55%, transparent);
+            mask-image: linear-gradient(var(--md-sys-color-inverse-surface) 55%, transparent);
 }
 .or-desc-toggle {
     margin-top: 4px; padding: 2px 0; border: 0; background: none; cursor: pointer;
@@ -947,7 +947,7 @@ select.or-select:focus {
     background: var(--or-open);
     color: white;
     padding: 1px 7px;
-    border-radius: 6px;
+    border-radius: var(--md-sys-shape-corner-small);
     font-weight: 700;
     margin-left: 6px;
 }
@@ -1028,7 +1028,7 @@ select.or-select:focus {
 }
 .or-chart-card-title i {
     width: 28px; height: 28px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--or-accent-soft);
     color: var(--or-accent-dark);
     display: inline-flex;
@@ -1055,7 +1055,7 @@ select.or-select:focus {
     align-items: center;
     gap: 10px;
     padding: 8px 10px;
-    border-radius: 8px;
+    border-radius: var(--md-sys-shape-corner-small);
     background: var(--or-canvas);
     transition: all 0.16s ease;
 }
@@ -1072,9 +1072,9 @@ select.or-select:focus {
     font-weight: 800;
     flex-shrink: 0;
 }
-.or-top-rank.gold { background: #ca8a04; }
-.or-top-rank.silver { background: #94a3b8; }
-.or-top-rank.bronze { background: #b45309; }
+.or-top-rank.gold { background: var(--md-ext-color-warning); }
+.or-top-rank.silver { background: var(--md-sys-color-primary); }
+.or-top-rank.bronze { background: var(--md-ext-color-warning); }
 .or-top-name {
     flex: 1;
     font-size: 0.82rem;
