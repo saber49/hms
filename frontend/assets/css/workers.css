@@ -51,7 +51,6 @@
     --wk-danger: var(--md-sys-color-error);
     --wk-danger-soft: var(--md-sys-color-error-container);
 }
-
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
     --wk-accent: var(--md-ext-color-info);   /* cyan-400 */
@@ -68,7 +67,6 @@
     --wk-danger: var(--md-sys-color-error);   /* red-400 */
     --wk-danger-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
 }
-
 /* Dark mode — hardcoded light hexes in banner + checklist rows */
 [data-theme="dark"] .wk-warn-banner {
     border-color: color-mix(in srgb, var(--md-ext-color-warning) 35%, transparent);
@@ -80,10 +78,9 @@
     color: var(--md-sys-color-error-container);
 }
 [data-theme="dark"] .wk-cl-item.expiring { background: color-mix(in srgb, var(--md-ext-color-warning) 8%, transparent); }
-[data-theme="dark"] .wk-cl-item.expired  { background: color-mix(in srgb, var(--md-sys-color-error) 8%, transparent); }
+[data-theme="dark"] .wk-cl-item.expired { background: color-mix(in srgb, var(--md-sys-color-error) 8%, transparent); }
 [data-theme="dark"] .wk-cl-expiring { border-color: color-mix(in srgb, var(--md-ext-color-warning) 35%, transparent); }
-[data-theme="dark"] .wk-cl-expired  { border-color: color-mix(in srgb, var(--md-sys-color-error) 35%, transparent); }
-
+[data-theme="dark"] .wk-cl-expired { border-color: color-mix(in srgb, var(--md-sys-color-error) 35%, transparent); }
 /* ===== 2. Stats Bento ===== */
 .wk-stats-bento {
     display: grid;
@@ -125,7 +122,6 @@
 .wk-kpi:hover::before { opacity: 1; }
 .wk-kpi[data-clickable] { cursor: pointer; }
 .wk-kpi[data-clickable]:hover::before { opacity: 1; }
-
 .wk-kpi-head {
     display: flex;
     align-items: center;
@@ -168,15 +164,13 @@
     padding-top: 4px;
 }
 .wk-kpi-sub strong { color: var(--wk-text); font-weight: 700; }
-
 /* Variants */
-.wk-kpi-warn .wk-kpi-icon  { background: var(--wk-warn-soft);  color: var(--wk-warn); }
+.wk-kpi-warn .wk-kpi-icon { background: var(--wk-warn-soft);  color: var(--wk-warn); }
 .wk-kpi-warn .wk-kpi-value { color: var(--wk-warn); }
 .wk-kpi-danger .wk-kpi-icon { background: var(--wk-danger-soft); color: var(--wk-danger); }
 .wk-kpi-danger .wk-kpi-value { color: var(--wk-danger); }
-.wk-kpi-ok .wk-kpi-icon   { background: var(--wk-ok-soft);    color: var(--wk-ok); }
+.wk-kpi-ok .wk-kpi-icon { background: var(--wk-ok-soft);    color: var(--wk-ok); }
 .wk-kpi-teal .wk-kpi-icon { background: var(--wk-teal-soft);  color: var(--wk-teal); }
-
 /* ===== 3. Warning Banner ===== */
 .wk-warn-banner {
     display: flex;
@@ -224,7 +218,6 @@
     border-color: var(--wk-accent);
     color: var(--wk-accent);
 }
-
 /* ===== 4. Toolbar ===== */
 .wk-toolbar {
     margin-bottom: 12px;
@@ -233,7 +226,6 @@
     border: 1px solid var(--wk-border);
     border-radius: var(--md-sys-shape-corner-medium);
 }
-
 /* Toolbar layout — 3 named zones, re-arranged per screen. Breakpoints
    include the sidebar (260px desktop, 200px at 641–1024px, none ≤640px).
    (No container queries: their layout containment would re-anchor the
@@ -259,7 +251,7 @@
     gap: 10px 12px;
     min-width: 0;
 }
-.wk-tb-status  { flex: none; }
+.wk-tb-status { flex: none; }
 .wk-tb-selects {
     flex: 1 1 auto;
     display: grid;
@@ -275,38 +267,37 @@
     gap: 8px;
 }
 .wk-tb-btn { white-space: nowrap; }
-
 @media (min-width: 1760px) {
-    .wk-tb {
+.wk-tb {
         grid-template-columns: minmax(220px, 340px) minmax(0, 1fr) auto;
         grid-template-areas: "search filters actions";
     }
-    .wk-tb-selects { grid-template-columns: repeat(2, minmax(230px, 250px)); }
+.wk-tb-selects { grid-template-columns: repeat(2, minmax(230px, 250px)); }
 }
 
 @media (max-width: 915px) {
-    .wk-tb > .wk-tb-search { max-width: none; }
-    .wk-tb {
+.wk-tb > .wk-tb-search { max-width: none; }
+.wk-tb {
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas:
             "search"
             "filters"
             "actions";
     }
-    .wk-tb-filters { flex-direction: column; align-items: stretch; }
-    .wk-tb-status  { overflow-x: auto; scrollbar-width: none; }
-    .wk-tb-status::-webkit-scrollbar { display: none; }
-    .wk-tb-selects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .wk-tb-actions {
+.wk-tb-filters { flex-direction: column; align-items: stretch; }
+.wk-tb-status { overflow-x: auto; scrollbar-width: none; }
+.wk-tb-status::-webkit-scrollbar { display: none; }
+.wk-tb-selects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.wk-tb-actions {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .wk-tb-primary { grid-column: 1 / -1; order: -1; }
-    .wk-tb-btn { width: 100%; }
+.wk-tb-primary { grid-column: 1 / -1; order: -1; }
+.wk-tb-btn { width: 100%; }
 }
 
 @media (max-width: 560px) {
-    .wk-tb-selects { grid-template-columns: minmax(0, 1fr); }
+.wk-tb-selects { grid-template-columns: minmax(0, 1fr); }
 }
 
 .wk-search {
@@ -341,7 +332,6 @@
     font-size: 0.85rem;
     pointer-events: none;
 }
-
 .wk-filter-pills {
     display: inline-flex;
     background: var(--wk-surface);
@@ -383,7 +373,6 @@
     background: var(--wk-accent);
     border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
 }
-
 .wk-extra-filter select {
     height: 36px;
     padding: 0 10px;
@@ -399,7 +388,6 @@
     border-color: var(--wk-accent);
     box-shadow: 0 0 0 3px var(--wk-accent-tint);
 }
-
 .wk-btn-create {
     display: inline-flex;
     align-items: center;
@@ -417,7 +405,6 @@
     white-space: nowrap;
 }
 .wk-btn-create:hover { background: var(--wk-accent-hover); border-color: var(--wk-accent-hover); }
-
 /* App-Link bar */
 .wk-app-link-bar {
     background: var(--wk-bg-soft);
@@ -458,7 +445,6 @@
     word-break: break-all;
     margin-top: 2px;
 }
-
 /* ===== 5. Cards Grid ===== */
 .wk-grid {
     display: grid;
@@ -486,7 +472,6 @@
     transform: translateY(-1px);
 }
 .wk-card.inactive { opacity: 0.55; }
-
 .wk-card-menu {
     position: absolute;
     top: 8px;
@@ -540,7 +525,6 @@
 .wk-card-dropdown button.text-danger { color: var(--wk-danger); }
 .wk-card-dropdown button i { width: 14px; color: var(--wk-text-soft); }
 .wk-card-dropdown button.text-danger i { color: var(--wk-danger); }
-
 .wk-avatar {
     width: 64px; height: 64px;
     border-radius: 50%;
@@ -565,9 +549,8 @@
     border-radius: 50%;
     border: 2px solid white;
 }
-.wk-avatar-status.active   { background: var(--wk-ok); }
+.wk-avatar-status.active { background: var(--wk-ok); }
 .wk-avatar-status.inactive { background: var(--wk-text-soft); }
-
 .wk-card-name {
     font-size: 0.95rem;
     font-weight: 700;
@@ -613,7 +596,6 @@
     margin-top: 2px;
 }
 .wk-card-phone i { color: var(--wk-text-soft); font-size: 0.65rem; }
-
 /* ===== 6. Card mini-badges (bottom row) ===== */
 .wk-card-badges {
     display: flex;
@@ -642,7 +624,6 @@
 .wk-card-badge.ok { background: var(--wk-ok-soft); color: var(--wk-ok); border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
 .wk-card-badge.birthday { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); border-color: var(--md-sys-color-error-container); }
 .wk-card-badge i { font-size: 0.6rem; }
-
 /* ===== 7. Profile Layout ===== */
 .wk-profile {
     display: grid;
@@ -651,7 +632,7 @@
     align-items: start;
 }
 @media (max-width: 900px) {
-    .wk-profile { grid-template-columns: 1fr; }
+.wk-profile { grid-template-columns: 1fr; }
 }
 
 /* ===== 8. Profile Sidebar ===== */
@@ -675,7 +656,7 @@
     overflow-y: auto;
 }
 @media (max-width: 900px) {
-    .wk-profile-sidebar {
+.wk-profile-sidebar {
         position: static;
         max-height: none;
         overflow: visible;
@@ -789,7 +770,6 @@
     border-color: var(--wk-accent);
     color: var(--wk-accent);
 }
-
 /* ===== 9. Profile Tabs + Content ===== */
 .wk-profile-main {
     background: var(--wk-surface);
@@ -845,13 +825,11 @@
     background: var(--wk-accent-soft);
     color: var(--wk-accent);
 }
-
 .wk-tab-content {
     display: none;
     padding: 18px 20px;
 }
 .wk-tab-content.active { display: block; }
-
 /* ===== 10. Stammdaten data card ===== */
 .wk-data-card {
     background: var(--wk-surface);
@@ -866,7 +844,7 @@
     row-gap: 0;
 }
 @media (max-width: 600px) {
-    .wk-data-grid { grid-template-columns: 1fr; column-gap: 0; }
+.wk-data-grid { grid-template-columns: 1fr; column-gap: 0; }
 }
 .wk-data-section-title {
     grid-column: 1 / -1;
@@ -907,7 +885,7 @@
     border-bottom: 1px dashed var(--wk-border);
 }
 @media (max-width: 600px) {
-    .wk-data-field {
+.wk-data-field {
         grid-template-columns: 1fr;
         row-gap: 2px;
     }
@@ -943,7 +921,6 @@
     padding-top: 14px;
     border-top: 1px solid var(--wk-border);
 }
-
 /* ===== 10b. Stammdaten — section cards (wkSdSection) =====
    Each block (Persönliche Daten, Kontakt, …) is its own card; fields are
    soft tiles (label above value). Empty fields are dashed + muted so the
@@ -1060,8 +1037,8 @@
     color: var(--wk-accent-hover);
 }
 @media (max-width: 600px) {
-    .wk-sd-sec { padding: 10px 12px 12px; }
-    .wk-sd-fields { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+.wk-sd-sec { padding: 10px 12px 12px; }
+.wk-sd-fields { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
 }
 
 /* ===== 11. Documents Tab ===== */
@@ -1090,11 +1067,11 @@
     justify-content: flex-end;
 }
 @media (max-width: 900px) {
-    .wk-docs-upload-grid { grid-template-columns: 1fr 1fr; }
-    .wk-docs-upload-grid > .wk-docs-upload-submit { grid-column: 1 / -1; }
+.wk-docs-upload-grid { grid-template-columns: 1fr 1fr; }
+.wk-docs-upload-grid > .wk-docs-upload-submit { grid-column: 1 / -1; }
 }
 @media (max-width: 480px) {
-    .wk-docs-upload-grid { grid-template-columns: 1fr; }
+.wk-docs-upload-grid { grid-template-columns: 1fr; }
 }
 .wk-docs-upload-grid .form-group { margin: 0; min-width: 0; }
 /* Native file input is greedy with width; cap it to the column. */
@@ -1107,7 +1084,6 @@
     letter-spacing: 0.4px;
     margin-bottom: 4px;
 }
-
 .wk-docs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1159,10 +1135,9 @@
     font-size: 0.78rem;
     box-shadow: 0 2px 6px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
-.wk-doc-expiry-badge.expired       { color: var(--wk-danger); }
+.wk-doc-expiry-badge.expired { color: var(--wk-danger); }
 .wk-doc-expiry-badge.expiring-soon { color: var(--wk-warn); }
-.wk-doc-expiry-badge.valid         { color: var(--wk-ok); }
-
+.wk-doc-expiry-badge.valid { color: var(--wk-ok); }
 .wk-doc-info {
     padding: 10px 12px 6px;
     flex: 1;
@@ -1190,9 +1165,9 @@
     gap: 4px;
     font-weight: 600;
 }
-.wk-doc-expiry-text.expired       { color: var(--wk-danger); }
+.wk-doc-expiry-text.expired { color: var(--wk-danger); }
 .wk-doc-expiry-text.expiring-soon { color: var(--wk-warn); }
-.wk-doc-expiry-text.valid         { color: var(--wk-ok); }
+.wk-doc-expiry-text.valid { color: var(--wk-ok); }
 .wk-doc-actions {
     display: flex;
     gap: 4px;
@@ -1250,7 +1225,6 @@
     color: var(--wk-accent);
     background: var(--wk-accent-soft);
 }
-
 /* ===== 12. Absences ===== */
 .wk-absence-stats {
     display: grid;
@@ -1259,7 +1233,7 @@
     margin-bottom: 14px;
 }
 @media (max-width: 720px) {
-    .wk-absence-stats { grid-template-columns: repeat(2, 1fr); }
+.wk-absence-stats { grid-template-columns: repeat(2, 1fr); }
 }
 .wk-absence-stat {
     background: var(--wk-bg-soft);
@@ -1284,11 +1258,10 @@
     font-weight: 700;
     margin-top: 4px;
 }
-.wk-absence-stat.paid     { border-left: 3px solid var(--wk-ok); }
-.wk-absence-stat.unpaid   { border-left: 3px solid var(--wk-danger); }
+.wk-absence-stat.paid { border-left: 3px solid var(--wk-ok); }
+.wk-absence-stat.unpaid { border-left: 3px solid var(--wk-danger); }
 .wk-absence-stat.vacation { border-left: 3px solid var(--wk-accent); }
 .wk-absence-stat.remaining { border-left: 3px solid var(--wk-teal); }
-
 .wk-absence-toolbar {
     display: flex;
     align-items: center;
@@ -1309,7 +1282,6 @@
     background: var(--wk-surface);
     font-size: 0.82rem;
 }
-
 .wk-absence-form {
     background: var(--wk-bg-soft);
     border: 1px solid var(--wk-accent-line);
@@ -1322,7 +1294,6 @@
     border-left-color: var(--wk-warn);
     background: var(--md-ext-color-warning-container);
 }
-
 .absence-type-badge {
     display: inline-flex;
     align-items: center;
@@ -1374,7 +1345,6 @@
     color: var(--wk-text-soft);
     font-style: italic;
 }
-
 /* ===== 13. Compliance Checklist ===== */
 .wk-checklist-summary {
     display: flex;
@@ -1396,11 +1366,10 @@
     font-weight: 700;
     border: 1px solid transparent;
 }
-.wk-cl-ok       { background: var(--wk-ok-soft);     color: var(--wk-ok);     border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
+.wk-cl-ok { background: var(--wk-ok-soft);     color: var(--wk-ok);     border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
 .wk-cl-expiring { background: var(--wk-warn-soft);   color: var(--wk-warn);   border-color: var(--md-ext-color-warning-container); }
-.wk-cl-expired  { background: var(--wk-danger-soft); color: var(--wk-danger); border-color: var(--md-sys-color-error-container); }
-.wk-cl-missing  { background: var(--wk-bg-strip);    color: var(--wk-text-muted); border-color: var(--wk-border); }
-
+.wk-cl-expired { background: var(--wk-danger-soft); color: var(--wk-danger); border-color: var(--md-sys-color-error-container); }
+.wk-cl-missing { background: var(--wk-bg-strip);    color: var(--wk-text-muted); border-color: var(--wk-border); }
 .wk-cl-list {
     display: flex;
     flex-direction: column;
@@ -1418,17 +1387,15 @@
     transition: background .12s ease;
 }
 .wk-cl-item:hover { background: var(--wk-bg-soft); }
-.wk-cl-item.ok       { border-left-color: var(--wk-ok); }
+.wk-cl-item.ok { border-left-color: var(--wk-ok); }
 .wk-cl-item.expiring { border-left-color: var(--wk-warn);   background: var(--md-ext-color-warning-container); }
-.wk-cl-item.expired  { border-left-color: var(--wk-danger); background: var(--md-sys-color-error-container); }
-.wk-cl-item.missing  { border-left-color: var(--wk-text-soft); }
-
+.wk-cl-item.expired { border-left-color: var(--wk-danger); background: var(--md-sys-color-error-container); }
+.wk-cl-item.missing { border-left-color: var(--wk-text-soft); }
 .wk-cl-icon { font-size: 1.15rem; flex-shrink: 0; }
-.wk-cl-icon.ok       { color: var(--wk-ok); }
+.wk-cl-icon.ok { color: var(--wk-ok); }
 .wk-cl-icon.expiring { color: var(--wk-warn); }
-.wk-cl-icon.expired  { color: var(--wk-danger); }
-.wk-cl-icon.missing  { color: var(--wk-text-soft); }
-
+.wk-cl-icon.expired { color: var(--wk-danger); }
+.wk-cl-icon.missing { color: var(--wk-text-soft); }
 .wk-cl-body { flex: 1; min-width: 0; }
 .wk-cl-title {
     font-size: 0.88rem;
@@ -1441,15 +1408,14 @@
     margin-top: 2px;
 }
 .wk-cl-actions { flex-shrink: 0; }
-
 /* Phones: the non-shrinking action cluster (status chip + icon buttons)
    left the body only ~80px — the title broke into one word per line.
    Wrap the row instead: icon + body on the first line, actions on their
    own full-width line below, aligned to the right. */
 @media (max-width: 600px) {
-    .wk-cl-item { flex-wrap: wrap; row-gap: 8px; }
-    .wk-cl-body { flex: 1 1 0; min-width: 0; }
-    .wk-cl-actions {
+.wk-cl-item { flex-wrap: wrap; row-gap: 8px; }
+.wk-cl-body { flex: 1 1 0; min-width: 0; }
+.wk-cl-actions {
         flex: 1 0 100%;
         display: flex !important;
         justify-content: flex-end;
@@ -1457,7 +1423,7 @@
         gap: 6px;
         padding-left: 32px; /* line up with the body (icon width + gap) */
     }
-    .wk-cl-actions md-outlined-button { --md-outlined-button-container-height: 34px; }
+.wk-cl-actions md-outlined-button { --md-outlined-button-container-height: 34px; }
 }
 
 /* ===== 14. Modal Tabs (within create/edit modal) ===== */
@@ -1471,7 +1437,6 @@
     border: 1px solid var(--wk-border);
     overflow-x: auto;
 }
-
 .wk-modal-tab {
     /* `flex: 1 1 0` + `min-width: 0` makes every tab exactly the same
        width, regardless of its label length. Without this, a long
@@ -1504,7 +1469,6 @@
     box-shadow: 0 1px 2px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
 }
 .wk-modal-tab i { font-size: 0.74rem; }
-
 .wk-modal-pane {
     display: none;
 }
@@ -1513,8 +1477,8 @@
     animation: wkPaneFadeIn .18s ease;
 }
 @keyframes wkPaneFadeIn {
-    from { opacity: 0; transform: translateY(2px); }
-    to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(2px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== 15. Modal Accent Context ===== */
@@ -1530,7 +1494,6 @@
     background: var(--wk-accent-hover);
     border-color: var(--wk-accent-hover);
 }
-
 /* Initial password modal */
 .wk-pw-show-card {
     background: linear-gradient(135deg, var(--md-ext-color-info-container) 0%, var(--md-ext-color-info-container) 100%);
@@ -1566,7 +1529,6 @@
     color: var(--wk-accent-hover);
     margin-top: 8px;
 }
-
 /* ===== 16. Empty state ===== */
 .wk-empty {
     text-align: center;
@@ -1580,7 +1542,6 @@
     display: block;
 }
 .wk-empty p { font-size: 0.9rem; }
-
 /* ============================================
    Absence approval workflow ï¿½ status badges
    ============================================ */
@@ -1619,7 +1580,6 @@
     border-left: 4px solid var(--md-sys-color-error);
     opacity: 0.75;
 }
-
 /* ============================================================
    17. MD3 MIGRATION — Mitarbeiter module (mirrors users.css)
    ============================================================ */
@@ -1632,12 +1592,11 @@ md-dialog.workers-dialog-xl {
     max-height: calc(100vh - 48px);
     overscroll-behavior: contain;
 }
-
 .workers-dialog-content {
     overscroll-behavior: contain;
 }
 @media (min-width: 769px) {
-    md-dialog.workers-dialog-xl {
+md-dialog.workers-dialog-xl {
         --dlg-w: min(1040px, calc(100vw - var(--sidebar-width, 260px) - 48px));
         margin-left: calc(var(--sidebar-width, 260px)
                           + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
@@ -1667,7 +1626,6 @@ md-dialog.workers-dialog-xl {
     font-size: 18px;
     color: var(--wk-accent);
 }
-
 /* ---------- Toolbar (list page): MD3 field density ---------- */
 /* Every control is 40px tall (fields have no floating label, buttons are
    40px by default, chips 32px centred) so rows line up on every screen.
@@ -1691,14 +1649,13 @@ md-outlined-select.wk-extra-filter {
     --md-outlined-field-bottom-space: 8px;
 }
 .wk-toolbar md-chip-set { min-width: 0; flex-wrap: nowrap; }
-
 /* ---------- Material Symbols in existing wk shells ---------- */
 .wk-kpi-icon .material-symbols-outlined { font-size: 18px; }
 .wk-warn-banner > .material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
 .wk-card-menu .material-symbols-outlined { font-size: 18px; }
 .wk-card-dropdown button .material-symbols-outlined { font-size: 15px; vertical-align: -3px; }
-.wk-card-badge .material-symbols-outlined { font-size: 11px; }
-.wk-card-pending-badge .material-symbols-outlined { font-size: 11px; }
+.wk-card-badge .material-symbols-outlined,
+    .wk-card-pending-badge .material-symbols-outlined { font-size: 11px; }
 .wk-card-phone .material-symbols-outlined { color: var(--wk-text-soft); }
 .wk-profile-action-btn .material-symbols-outlined { font-size: 18px; }
 .wk-profile-back .material-symbols-outlined { vertical-align: -3px; }
@@ -1706,10 +1663,10 @@ md-outlined-select.wk-extra-filter {
 .wk-data-section-title .material-symbols-outlined { font-size: 16px; color: var(--wk-accent); vertical-align: -3px; }
 .wk-cl-pill .material-symbols-outlined { vertical-align: -2px; }
 .wk-cl-icon.material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
-.wk-cl-icon.ok       { color: var(--wk-ok); }
+.wk-cl-icon.ok { color: var(--wk-ok); }
 .wk-cl-icon.expiring { color: var(--wk-warn); }
-.wk-cl-icon.expired  { color: var(--wk-danger); }
-.wk-cl-icon.missing  { color: var(--wk-text-soft); }
+.wk-cl-icon.expired { color: var(--wk-danger); }
+.wk-cl-icon.missing { color: var(--wk-text-soft); }
 .wk-doc-thumb > .material-symbols-outlined { font-size: 38px; }
 .wk-doc-expiry-badge .material-symbols-outlined { display: block; }
 .wk-empty .material-symbols-outlined {
@@ -1725,7 +1682,6 @@ md-outlined-select.wk-extra-filter {
 .absence-note .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
 .wk-pw-show-hint .material-symbols-outlined { vertical-align: -3px; }
 .wk-quasod-btn .material-symbols-outlined { pointer-events: none; }
-
 /* ---------- Docs upload grid: MD3 fields fill + bottom-align ---------- */
 .wk-docs-upload-grid .form-group { margin-bottom: 0; min-width: 0; }
 .wk-docs-upload-grid md-outlined-text-field,
@@ -1746,7 +1702,6 @@ md-outlined-select.wk-extra-filter {
     background: var(--wk-surface);
 }
 .wk-docs-upload-submit { align-self: flex-end; }
-
 /* ---------- Absence toolbar: select + button on one line ---------- */
 .wk-absence-toolbar {
     display: flex;
@@ -1760,11 +1715,10 @@ md-outlined-select.wk-extra-filter {
     --md-outlined-select-text-field-top-space: 8px;
     --md-outlined-select-text-field-bottom-space: 8px;
 }
-
 /* Pane fade-in reused from the old .wk-modal-pane animation */
 @keyframes wkPaneIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(4px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 /* Pulsing red badge — count of pending (manager decision required) absences */

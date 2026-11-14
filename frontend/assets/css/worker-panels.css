@@ -27,7 +27,6 @@
     backdrop-filter: blur(2px);
     cursor: pointer;
 }
-
 /* Dialog — wide enough for the 11-column table, capped at 92vh */
 .wp-panel {
     position: relative;
@@ -47,7 +46,6 @@
 .wp-overlay.active .wp-panel {
     transform: scale(1) translateY(0);
 }
-
 /* Panel header — MD3 top app bar on surface */
 .wp-header {
     display: flex;
@@ -95,7 +93,6 @@
 .wp-header-close:hover {
     background: color-mix(in srgb, var(--md-sys-color-on-surface, var(--md-sys-color-primary)) 8%, transparent);
 }
-
 /* Panel toolbar — MD3 search bar */
 .wp-toolbar {
     display: flex;
@@ -136,7 +133,6 @@
     font-size: 0.78rem;
     font-weight: 600;
 }
-
 /* Panel body (scrollable) */
 .wp-body {
     flex: 1;
@@ -150,7 +146,6 @@
     border: 1px solid var(--md-sys-color-outline-variant, var(--md-sys-color-primary-container));
     border-radius: var(--md-sys-shape-corner-medium);
 }
-
 /* Stats row */
 .wp-stats {
     display: grid;
@@ -178,7 +173,6 @@
     font-weight: 500;
     margin-top: 2px;
 }
-
 /* Worker table */
 .wp-table {
     width: 100%;
@@ -229,7 +223,6 @@
 .wp-table tbody tr:hover {
     background: color-mix(in srgb, var(--md-sys-color-on-surface, var(--md-sys-color-primary)) 5%, transparent);
 }
-
 /* Worker name cell */
 .wp-worker-name {
     display: flex;
@@ -257,7 +250,6 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
 /* Editable hours input */
 .wp-hours-input {
     width: 68px;
@@ -278,7 +270,6 @@
     border-color: var(--md-ext-color-warning);
     background: var(--md-ext-color-warning-container);
 }
-
 /* Status badges — MD3 tonal chips */
 .wp-badge {
     display: inline-flex;
@@ -303,7 +294,6 @@
     background: var(--md-ext-color-warning-container);
     color: var(--md-ext-color-on-warning-container);
 }
-
 /* Save bar at bottom of panel */
 .wp-footer {
     display: flex;
@@ -321,7 +311,6 @@
 .wp-footer .btn {
     min-width: 140px;
 }
-
 /* Live clock state from the worker app */
 .wp-clock {
     display: inline-flex;
@@ -343,8 +332,9 @@
     animation: wpClockPulse 1.6s ease-in-out infinite;
 }
 @keyframes wpClockPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.25; }
+0%,
+    100% { opacity: 1; }
+50% { opacity: 0.25; }
 }
 .wp-clock.working {
     background: var(--md-ext-color-success-container);
@@ -367,7 +357,6 @@
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
 }
-
 /* Status filter chips (Aktive Mitarbeiter) — one per live state, with
    counts; a chip is only rendered when its group is non-empty. */
 .wp-chips {
@@ -409,16 +398,15 @@
 }
 .wp-chip.active .wp-chip-count { background: rgba(255, 255, 255, 0.22); }
 /* Colour accents per state — match the Live badges */
-.wp-chip-missed:not(.active)   { color: var(--md-sys-color-error); border-color: var(--md-sys-color-error-container); background: var(--md-sys-color-error-container); }
-.wp-chip-running:not(.active)  { color: var(--md-ext-color-on-success-container); border-color: var(--md-ext-color-success-container); background: var(--md-ext-color-success-container); }
+.wp-chip-missed:not(.active) { color: var(--md-sys-color-error); border-color: var(--md-sys-color-error-container); background: var(--md-sys-color-error-container); }
+.wp-chip-running:not(.active) { color: var(--md-ext-color-on-success-container); border-color: var(--md-ext-color-success-container); background: var(--md-ext-color-success-container); }
 .wp-chip-upcoming:not(.active) { color: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary-container); background: var(--md-sys-color-primary-container); }
-.wp-chip-missed.active         { background: var(--md-sys-color-error); border-color: var(--md-sys-color-error); }
-.wp-chip-running.active        { background: var(--md-ext-color-success); border-color: var(--md-ext-color-success); }
-.wp-chip-upcoming.active       { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); }
-[data-theme="dark"] .wp-chip-missed:not(.active)   { background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-error) 35%, transparent); color: var(--md-sys-color-error-container); }
-[data-theme="dark"] .wp-chip-running:not(.active)  { background: color-mix(in srgb, var(--md-ext-color-success) 12%, transparent); border-color: color-mix(in srgb, var(--md-ext-color-success) 35%, transparent); color: var(--md-ext-color-success); }
+.wp-chip-missed.active { background: var(--md-sys-color-error); border-color: var(--md-sys-color-error); }
+.wp-chip-running.active { background: var(--md-ext-color-success); border-color: var(--md-ext-color-success); }
+.wp-chip-upcoming.active { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); }
+[data-theme="dark"] .wp-chip-missed:not(.active) { background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-error) 35%, transparent); color: var(--md-sys-color-error-container); }
+[data-theme="dark"] .wp-chip-running:not(.active) { background: color-mix(in srgb, var(--md-ext-color-success) 12%, transparent); border-color: color-mix(in srgb, var(--md-ext-color-success) 35%, transparent); color: var(--md-ext-color-success); }
 [data-theme="dark"] .wp-chip-upcoming:not(.active) { background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent); color: var(--md-sys-color-primary-container); }
-
 /* Two-line badge (label + "seit …" underneath) — keeps the Live column
    narrow so the table never overflows its container. */
 .wp-clock-2l { padding: 4px 10px; }
@@ -435,7 +423,6 @@
 /* Let the Live column claim its space; the long Objekt/Kunde column yields. */
 .wp-table td:last-child { padding-right: 16px; }
 .wp-table td.wp-col-obj { max-width: 300px; }
-
 /* Overdue rows get a faint red tint so they stand out at the top */
 .wp-table tr.wp-row-missed td { background: var(--md-sys-color-error-container); }
 [data-theme="dark"] .wp-table tr.wp-row-missed td { background: color-mix(in srgb, var(--md-sys-color-error) 6%, transparent); }
@@ -507,7 +494,6 @@
     color: var(--md-sys-color-primary, var(--md-sys-color-primary));
 }
 .wp-daynav .wp-header-title { flex: 0 1 auto; }
-
 /* Empty state */
 .wp-empty {
     text-align: center;
@@ -522,33 +508,32 @@
 .wp-empty p {
     font-size: 0.9rem;
 }
-
 /* Responsive */
 @media (max-width: 768px) {
     /* Phones: full-screen sheet instead of a floating dialog */
-    .wp-overlay { padding: 0; }
-    .wp-panel {
+.wp-overlay { padding: 0; }
+.wp-panel {
         width: 100vw;
         max-width: 100vw;
         max-height: 100dvh;
         height: 100dvh;
         border-radius: 0;
     }
-    html.app-shell .wp-panel {
+html.app-shell .wp-panel {
         box-sizing: border-box;
         padding-top: var(--sa-top, 0px);
         padding-bottom: var(--sa-bottom, 0px);
     }
-    .wp-header { border-radius: 0; }
-    .wp-table td.wp-col-obj { max-width: 220px; }
-    .wp-toolbar {
+.wp-header { border-radius: 0; }
+.wp-table td.wp-col-obj { max-width: 220px; }
+.wp-toolbar {
         padding: 10px 16px;
     }
-    .wp-body {
+.wp-body {
         padding: 12px 16px;
     }
     .wp-table th,
-    .wp-table td {
+.wp-table td {
         padding: 7px 8px;
         font-size: 0.78rem;
     }
@@ -578,12 +563,10 @@
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
 }
-
 /* Assigned worker card needs relative for X positioning */
 .planner-worker-item.assigned {
     position: relative;
 }
-
 /* Per-worker Von / Bis / Std fields row */
 .planner-worker-fields {
     display: flex;
@@ -636,8 +619,7 @@
     appearance: none;
     margin: 0;
 }
-
 /* Print: hide panels */
 @media print {
-    .wp-overlay { display: none !important; }
+.wp-overlay { display: none !important; }
 }

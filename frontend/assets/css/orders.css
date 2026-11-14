@@ -48,7 +48,6 @@
     --or-radius:         12px;
     --or-radius-lg:      16px;
 }
-
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
     --or-primary: var(--md-sys-color-primary);   /* slate-500 — still works as bg under white text */
@@ -68,7 +67,6 @@
     --or-planned: var(--md-ext-color-warning);
     --or-pending:        var(--gray-400);
 }
-
 /* ============================================================
    PAGE WRAPPER
    ============================================================ */
@@ -77,7 +75,6 @@
     padding: 0 4px;
     color: var(--or-text);
 }
-
 /* ============================================================
    HEADER
    ============================================================ */
@@ -155,7 +152,6 @@
 .or-header-badge i { color: var(--or-accent-light); }
 .or-header-badge.danger { background: color-mix(in srgb, var(--md-sys-color-error) 18%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-error) 32%, transparent); }
 .or-header-badge.danger i { color: var(--md-sys-color-error-container); }
-
 /* ============================================================
    BENTO KPIs — 6 tiles
    ============================================================ */
@@ -193,7 +189,6 @@
 .or-kpi.done::before { background: var(--or-done); }
 .or-kpi.canceled::before { background: var(--or-canceled); }
 .or-kpi.late::before { background: var(--or-late); }
-
 .or-kpi-head {
     display: flex;
     align-items: center;
@@ -215,7 +210,6 @@
 .or-kpi.done .or-kpi-icon { background: var(--or-done-soft); color: var(--or-done); }
 .or-kpi.canceled .or-kpi-icon { background: var(--or-canceled-soft); color: var(--or-canceled); }
 .or-kpi.late .or-kpi-icon { background: var(--or-late-soft); color: var(--or-late); }
-
 .or-kpi-label {
     font-size: 0.7rem;
     font-weight: 600;
@@ -243,7 +237,6 @@
     margin-top: 6px;
     line-height: 1.3;
 }
-
 .or-progress {
     width: 100%;
     height: 4px;
@@ -261,7 +254,6 @@
 .or-progress-fill.coral { background: var(--or-accent); }
 .or-progress-fill.done { background: var(--or-done); }
 .or-progress-fill.late { background: var(--or-late); }
-
 /* ============================================================
    TOOLBAR — Tabs + Filters + Sort
    ============================================================ */
@@ -275,7 +267,6 @@
     flex-direction: column;
     gap: 10px;
 }
-
 .or-tabs {
     display: inline-flex;
     background: var(--or-canvas);
@@ -304,7 +295,6 @@
     box-shadow: var(--or-shadow-sm);
 }
 .or-tab i { font-size: 0.78rem; }
-
 .or-toolbar-row {
     display: flex;
     align-items: center;
@@ -348,7 +338,6 @@
     background: var(--or-accent);
     border-color: var(--or-accent);
 }
-
 select.or-select {
     height: 38px;
     padding: 0 32px 0 14px;
@@ -369,14 +358,12 @@ select.or-select:focus {
     outline: none;
     border-color: var(--or-accent);
 }
-
 .or-toolbar-actions {
     display: inline-flex;
     gap: 6px;
     margin-left: auto;
     flex-wrap: wrap;
 }
-
 /* ============================================================
    LATE ORDERS ALERT BANNER
    ============================================================ */
@@ -429,7 +416,6 @@ select.or-select:focus {
     transition: all 0.16s ease;
 }
 .or-alert-action:hover { background: var(--md-sys-color-error); }
-
 /* ============================================================
    ORDERS TABLE
    ============================================================ */
@@ -488,10 +474,8 @@ select.or-select:focus {
     opacity: 0.78;
 }
 .or-table tbody tr:last-child td { border-bottom: none; }
-
 .or-table .or-text-right { text-align: right; font-variant-numeric: tabular-nums; }
 .or-table .or-text-center { text-align: center; }
-
 .or-id-cell {
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
     font-size: 0.78rem;
@@ -502,13 +486,11 @@ select.or-select:focus {
     border-radius: var(--md-sys-shape-corner-small);
     display: inline-block;
 }
-
 .or-eingang-link {
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
     font-size: 0.74rem;
     color: var(--or-text-muted);
 }
-
 .or-kunde-cell {
     display: flex;
     flex-direction: column;
@@ -524,7 +506,6 @@ select.or-select:focus {
     color: var(--or-text-soft);
     font-family: ui-monospace, monospace;
 }
-
 .or-period-chip {
     display: inline-flex;
     align-items: center;
@@ -538,7 +519,6 @@ select.or-select:focus {
     white-space: nowrap;
 }
 .or-period-chip i { font-size: 0.6rem; }
-
 .or-amount {
     font-weight: 700;
     color: var(--or-text-strong);
@@ -550,7 +530,6 @@ select.or-select:focus {
     font-weight: 500;
     margin-left: 2px;
 }
-
 /* Status pills */
 .or-status {
     display: inline-flex;
@@ -575,7 +554,6 @@ select.or-select:focus {
 .or-status.abgeschlossen::before { background: var(--or-done); }
 .or-status.storniert { background: var(--or-canceled-soft); color: var(--md-sys-color-error); }
 .or-status.storniert::before { background: var(--or-canceled); }
-
 .or-late-pill {
     display: inline-flex;
     align-items: center;
@@ -589,7 +567,6 @@ select.or-select:focus {
     margin-left: 6px;
     text-transform: uppercase;
 }
-
 /* Progress bar in table */
 .or-row-progress {
     display: flex;
@@ -613,7 +590,6 @@ select.or-select:focus {
 .or-row-progress-seg.geplant { background: var(--or-planned); }
 .or-row-progress-seg.ausstehend { background: var(--or-pending); }
 .or-row-progress-seg.abgelehnt { background: var(--or-canceled); }
-
 .or-row-progress-label {
     font-size: 0.7rem;
     color: var(--or-text-muted);
@@ -627,7 +603,6 @@ select.or-select:focus {
     color: var(--or-done);
     font-size: 0.78rem;
 }
-
 .or-row-actions {
     display: inline-flex;
     gap: 4px;
@@ -656,7 +631,6 @@ select.or-select:focus {
 .or-row-actions button.close:hover { border-color: var(--or-done); color: var(--or-done); }
 .or-row-actions button.cancel:hover { border-color: var(--or-canceled); color: var(--or-canceled); }
 .or-row-actions button.delete:hover { border-color: var(--or-canceled); color: var(--or-canceled); background: var(--or-canceled-soft); }
-
 /* ============================================================
    EMPTY STATE
    ============================================================ */
@@ -681,14 +655,12 @@ select.or-select:focus {
     color: var(--or-text-soft);
     margin-top: 6px;
 }
-
 .or-loading {
     text-align: center;
     padding: 60px 20px;
     color: var(--or-text-muted);
 }
 .or-loading i { color: var(--or-accent); margin-right: 6px; }
-
 /* ============================================================
    DETAILS MODAL — Cards Grid + Sections
    ============================================================ */
@@ -731,7 +703,6 @@ select.or-select:focus {
     color: var(--or-text-muted);
     margin-top: 2px;
 }
-
 .or-detail-progress {
     background: linear-gradient(135deg, var(--or-primary-50), var(--or-canvas));
     border: 1px solid var(--or-border);
@@ -800,7 +771,6 @@ select.or-select:focus {
     width: 9px; height: 9px;
     border-radius: 50%;
 }
-
 /* ============================================================
    SUB-TABLES (Planned Days + Confirmed Workers)
    ============================================================ */
@@ -845,7 +815,6 @@ select.or-select:focus {
     color: var(--md-ext-color-on-success-container);
     border-color: var(--md-ext-color-success-container);
 }
-
 .or-sub-table-wrap {
     background: var(--or-surface);
     border: 1px solid var(--or-border);
@@ -858,10 +827,10 @@ select.or-select:focus {
     -webkit-overflow-scrolling: touch;
 }
 .or-sub-table-wrap .or-sub-table { min-width: max-content; }
-.or-sub-table thead th, .or-sub-table tbody td { white-space: nowrap; }
+.or-sub-table thead th,
+    .or-sub-table tbody td { white-space: nowrap; }
 .or-sub-table tbody td:last-child { white-space: normal; min-width: 160px; max-width: 320px; }
 .or-sub-table.no-desc tbody td:last-child { white-space: nowrap; min-width: 0; }
-
 /* Planned days: task description shown once above the table */
 .or-desc-box {
     background: var(--or-canvas);
@@ -940,7 +909,6 @@ select.or-select:focus {
 .or-sub-table.done tfoot td {
     background: var(--or-done-soft);
 }
-
 .or-nu-badge {
     display: inline-block;
     font-size: 0.66rem;
@@ -951,7 +919,6 @@ select.or-select:focus {
     font-weight: 700;
     margin-left: 6px;
 }
-
 /* ============================================================
    EDIT MODAL — Form layout
    ============================================================ */
@@ -998,7 +965,6 @@ select.or-select:focus {
     border-color: var(--or-accent);
     box-shadow: 0 0 0 3px var(--or-accent-soft);
 }
-
 /* ============================================================
    ANALYTICS TAB
    ============================================================ */
@@ -1044,7 +1010,6 @@ select.or-select:focus {
     position: relative;
     height: 240px;
 }
-
 .or-top-list {
     display: flex;
     flex-direction: column;
@@ -1090,15 +1055,15 @@ select.or-select:focus {
     color: var(--or-accent-dark);
     font-variant-numeric: tabular-nums;
 }
-
 /* ============================================================
    ANIMATIONS
    ============================================================ */
 @keyframes orFadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
 }
-.or-kpi, .or-chart-card {
+.or-kpi,
+    .or-chart-card {
     animation: orFadeUp 0.4s ease backwards;
 }
 .or-kpi:nth-child(1) { animation-delay: 0.02s; }
@@ -1107,32 +1072,31 @@ select.or-select:focus {
 .or-kpi:nth-child(4) { animation-delay: 0.08s; }
 .or-kpi:nth-child(5) { animation-delay: 0.1s; }
 .or-kpi:nth-child(6) { animation-delay: 0.12s; }
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 1100px) {
-    .or-bento { grid-template-columns: repeat(3, 1fr); }
-    .or-analytics-grid { grid-template-columns: 1fr; }
-    .or-detail-cards { grid-template-columns: repeat(2, 1fr); }
+.or-bento { grid-template-columns: repeat(3, 1fr); }
+.or-analytics-grid { grid-template-columns: 1fr; }
+.or-detail-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-    .or-bento { grid-template-columns: repeat(2, 1fr); }
-    .or-header {
+.or-bento { grid-template-columns: repeat(2, 1fr); }
+.or-header {
         flex-direction: column;
         align-items: stretch;
         text-align: center;
         padding: 14px 16px;
     }
-    .or-header-title { justify-content: center; }
+.or-header-title,
     .or-header-badges { justify-content: center; }
-    .or-form-grid { grid-template-columns: 1fr; }
+.or-form-grid,
     .or-detail-cards { grid-template-columns: 1fr; }
-    .or-toolbar-actions { margin-left: 0; width: 100%; justify-content: center; }
+.or-toolbar-actions { margin-left: 0; width: 100%; justify-content: center; }
 }
 @media (max-width: 480px) {
-    .or-bento { grid-template-columns: 1fr; }
-    .or-kpi-value { font-size: 1.5rem; }
+.or-bento { grid-template-columns: 1fr; }
+.or-kpi-value { font-size: 1.5rem; }
 }
 
 /* ============================================================
@@ -1155,10 +1119,10 @@ md-dialog.or-dialog-xl {
     --md-dialog-container-max-block-size: calc(100vh - 60px);
 }
 @media (min-width: 769px) {
-    md-dialog.or-dialog-xl {
+md-dialog.or-dialog-xl {
         --dlg-w: min(1080px, calc(100vw - var(--sidebar-width, 260px) - 48px));
     }
-    md-dialog.or-context {
+md-dialog.or-context {
         margin-left: calc(var(--sidebar-width, 260px)
                           + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
     }
@@ -1169,7 +1133,6 @@ md-dialog.or-context [slot="headline"] {
     color: var(--or-text);
 }
 .or-dialog-content { font-size: 0.88rem; }
-
 /* --- Toolbar: MD3 search field + select density --- */
 .or-toolbar-row md-outlined-text-field.or-search {
     flex: 1;
@@ -1205,7 +1168,6 @@ md-dialog.or-context [slot="headline"] {
     --md-outlined-button-icon-color: var(--or-accent);
     white-space: nowrap;
 }
-
 /* --- Material Symbols sizing in page chrome --- */
 .or-header-icon .material-symbols-outlined { font-size: 24px; }
 .or-kpi-icon .material-symbols-outlined { font-size: 16px; }
@@ -1233,7 +1195,6 @@ md-dialog.or-context [slot="headline"] {
 .or-chart-card-title .material-symbols-outlined { vertical-align: -3px; color: var(--or-accent); }
 .or-detail-progress-title .material-symbols-outlined { vertical-align: -2px; }
 .or-pdf-actions button .material-symbols-outlined { display: block; }
-
 @media (max-width: 768px) {
-    .or-toolbar-row md-outlined-text-field.or-search { max-width: none; }
+.or-toolbar-row md-outlined-text-field.or-search { max-width: none; }
 }

@@ -10,26 +10,22 @@
     max-width: 900px;
     margin: 0 auto;
 }
-
 .wm-inbox-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 0 12px;
 }
-
 .wm-inbox-header h3 {
     font-size: 18px;
     font-weight: 700;
     margin: 0;
 }
-
 .wm-unread-total {
     font-size: 13px;
     font-weight: 600;
     color: var(--accent);
 }
-
 /* ============================================
    Search bar — filters the inbox client-side
    ============================================ */
@@ -39,7 +35,6 @@
     align-items: center;
     margin-bottom: 12px;
 }
-
 .wm-search-clear {
     position: absolute;
     right: 8px;
@@ -56,17 +51,14 @@
     justify-content: center;
     transition: background 0.15s, color 0.15s;
 }
-
 .wm-search-clear:hover {
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
 }
-
 .wm-thread-prefix {
     color: var(--accent);
     font-weight: 600;
 }
-
 .wm-thread {
     display: flex;
     align-items: center;
@@ -79,16 +71,13 @@
     cursor: pointer;
     transition: background 0.15s, box-shadow 0.15s;
 }
-
 .wm-thread:hover {
     background: var(--hover);
     box-shadow: var(--shadow);
 }
-
 .wm-thread-unread {
     border-left: 3px solid var(--accent);
 }
-
 .wm-thread-avatar {
     width: 42px;
     height: 42px;
@@ -103,37 +92,31 @@
     flex-shrink: 0;
     overflow: hidden;
 }
-
 .wm-thread-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-
 .wm-thread-body {
     flex: 1;
     min-width: 0;
 }
-
 .wm-thread-top {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 8px;
 }
-
 .wm-thread-name {
     font-weight: 600;
     font-size: 14px;
     color: var(--text);
 }
-
 .wm-thread-time {
     font-size: 12px;
     color: var(--text-muted);
     white-space: nowrap;
 }
-
 .wm-thread-preview {
     font-size: 13px;
     color: var(--text-muted);
@@ -142,7 +125,6 @@
     white-space: nowrap;
     margin-top: 2px;
 }
-
 .wm-thread-badge {
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
@@ -157,7 +139,6 @@
     padding: 0 6px;
     flex-shrink: 0;
 }
-
 /* Thread chat view */
 .wm-chat {
     display: flex;
@@ -168,7 +149,6 @@
     box-shadow: var(--shadow);
     overflow: hidden;
 }
-
 .wm-chat-header {
     display: flex;
     align-items: center;
@@ -177,7 +157,6 @@
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
 }
-
 .wm-back-btn {
     background: none;
     border: none;
@@ -186,17 +165,14 @@
     cursor: pointer;
     padding: 4px;
 }
-
 .wm-chat-header-info strong {
     display: block;
     font-size: 15px;
 }
-
 .wm-chat-header-info small {
     font-size: 12px;
     opacity: 0.75;
 }
-
 .wm-chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -206,7 +182,6 @@
     gap: 8px;
     background: var(--gray-100);
 }
-
 .wm-bubble {
     max-width: 70%;
     padding: 10px 14px;
@@ -215,14 +190,12 @@
     line-height: 1.45;
     word-break: break-word;
 }
-
 .wm-bubble-out {
     align-self: flex-end;
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
     border-bottom-right-radius: var(--md-sys-shape-corner-extra-small);
 }
-
 .wm-bubble-in {
     align-self: flex-start;
     background: var(--white);
@@ -230,25 +203,21 @@
     border-bottom-left-radius: var(--md-sys-shape-corner-extra-small);
     box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent);
 }
-
 .wm-bubble-sender {
     font-size: 11px;
     font-weight: 700;
     margin-bottom: 2px;
     opacity: 0.7;
 }
-
 .wm-bubble-text {
     white-space: pre-wrap;
 }
-
 .wm-bubble-time {
     font-size: 10px;
     margin-top: 4px;
     opacity: 0.6;
     text-align: right;
 }
-
 .wm-chat-input-bar {
     display: flex;
     align-items: center;
@@ -257,7 +226,6 @@
     background: var(--white);
     border-top: 1px solid var(--border);
 }
-
 .wm-chat-input {
     flex: 1;
     padding: 10px 16px;
@@ -270,12 +238,10 @@
     outline: none;
     transition: border-color 0.2s;
 }
-
 .wm-chat-input:focus {
     border-color: var(--accent);
     background: var(--white);
 }
-
 .wm-chat-send {
     width: 40px;
     height: 40px;
@@ -291,11 +257,9 @@
     flex-shrink: 0;
     transition: background 0.15s;
 }
-
 .wm-chat-send:hover {
     background: var(--accent-hover);
 }
-
 /* ============================================================
    MD3 migration support (official @material/web components)
    ============================================================ */
@@ -312,7 +276,6 @@
 }
 /* Leave room for the floating "×" clear button */
 .wm-search-wrap .wm-search-clear { z-index: 1; }
-
 /* --- New chat: MD3 FAB + worker picker dialog --- */
 md-fab.wm-new-chat-fab {
     position: fixed;
@@ -324,13 +287,11 @@ md-fab.wm-new-chat-fab {
     --md-fab-label-text-color: var(--md-sys-color-on-primary);
     --md-fab-container-shape: 16px;
 }
-
 md-dialog.wm-new-chat-dialog {
     max-width: 440px;
     width: calc(100vw - 32px);
     --md-dialog-container-shape: 24px;
 }
-
 md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     width: 100%;
     margin-bottom: 12px;
@@ -339,7 +300,6 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     --md-outlined-text-field-container-shape: 10px;
     --md-outlined-text-field-focus-outline-color: var(--accent);
 }
-
 .wm-picker-list {
     max-height: 46vh;
     min-height: 120px;
@@ -347,7 +307,6 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     margin: 0 -8px;
     padding: 0 8px;
 }
-
 .wm-picker-row {
     display: flex;
     align-items: center;
@@ -357,18 +316,15 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     cursor: pointer;
     transition: background 0.15s;
 }
-
 .wm-picker-row:hover {
     background: var(--hover);
 }
-
 .wm-picker-info {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
 }
-
 .wm-picker-name {
     font-weight: 600;
     font-size: 14px;
@@ -377,7 +333,6 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 .wm-picker-meta {
     font-size: 12px;
     color: var(--text-muted);
@@ -385,7 +340,6 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 .wm-picker-chip {
     display: inline-flex;
     align-items: center;
@@ -400,7 +354,6 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     flex-shrink: 0;
     white-space: nowrap;
 }
-
 /* --- Material Symbols alignment in chat chrome --- */
 .wm-search-clear .material-symbols-outlined,
 .wm-chat-send .material-symbols-outlined,

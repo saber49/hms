@@ -39,7 +39,6 @@
     background: var(--white);
     gap: 10px;
 }
-
 /* Smooth scrollbar inside the modal body */
 .modal.modal-wide .modal-body::-webkit-scrollbar {
     width: 8px;
@@ -54,7 +53,6 @@
 .modal.modal-wide .modal-body::-webkit-scrollbar-thumb:hover {
     background: var(--gray-400);
 }
-
 /* Two-column layout inside modal */
 .customer-form-layout {
     display: grid;
@@ -62,7 +60,7 @@
     gap: 24px;
 }
 @media (max-width: 700px) {
-    .customer-form-layout {
+.customer-form-layout {
         grid-template-columns: 1fr;
         gap: 16px;
     }
@@ -77,7 +75,6 @@
     border-radius: var(--md-sys-shape-corner-medium);
     padding: 18px 18px 10px;
 }
-
 /* Section titles inside the form — refined classical */
 .customer-form-section-title {
     font-size: 0.72rem;
@@ -103,7 +100,6 @@
     background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
     border-radius: var(--md-sys-shape-corner-small);
 }
-
 /* Form groups inside customer modal */
 .modal.modal-wide .form-group {
     margin-bottom: 12px;
@@ -119,7 +115,6 @@
 .modal.modal-wide .form-group label .req {
     color: var(--danger);
 }
-
 /* Form controls — refined */
 .modal.modal-wide .form-control {
     height: 38px;
@@ -149,7 +144,6 @@
 .modal.modal-wide .form-control:hover:not(:focus) {
     border-color: var(--gray-300);
 }
-
 /* Inline row for street+land, plz+ort */
 .customer-form-row {
     display: flex;
@@ -159,7 +153,6 @@
     flex: 1;
     margin-bottom: 12px;
 }
-
 /* Radio group — pill style */
 .radio-group {
     display: flex;
@@ -198,7 +191,6 @@
     border-color: var(--accent);
     color: var(--accent);
 }
-
 /* Input with icon on the right */
 .input-with-icon {
     position: relative;
@@ -227,7 +219,6 @@
     color: var(--accent);
     border-left-color: var(--accent);
 }
-
 /* Field error text */
 .modal.modal-wide .field-error {
     font-size: 0.72rem;
@@ -240,7 +231,6 @@
     border-color: var(--danger);
     background: var(--danger-light, var(--md-sys-color-error-container));
 }
-
 /* -------------------- Objekt modal: Artikel section -------------------- */
 .objekt-artikel-section {
     margin-top: 20px;
@@ -270,7 +260,6 @@
     border-radius: var(--md-sys-shape-corner-full);
     letter-spacing: 0;
 }
-
 /* Info box (replacing acc-info-box) */
 .objekt-info-box {
     display: flex;
@@ -291,7 +280,6 @@
     flex-shrink: 0;
     font-size: 0.9rem;
 }
-
 /* Tighter table inside modal (articles) */
 .modal.modal-wide .data-table-card {
     border-radius: var(--md-sys-shape-corner-medium);
@@ -349,7 +337,6 @@
 .customer-tab i {
     font-size: 0.82rem;
 }
-
 /* Bereich badge in the table */
 .bereich-badge {
     display: inline-block;
@@ -375,7 +362,6 @@
     background: var(--accent);
     color: white;
 }
-
 /* Objekte badge in customers table */
 .kunden-obj-badge {
     display: inline-flex;
@@ -405,7 +391,6 @@
     color: var(--gray-400);
     font-weight: 400;
 }
-
 /* Field validation errors */
 .field-error {
     display: block;
@@ -423,12 +408,10 @@
     color: var(--danger, var(--md-sys-color-error));
     font-weight: 700;
 }
-
 /* Status colors */
 .status.status-nein { background: var(--gray-100); color: var(--gray-500); }
 .text-success { color: var(--success, var(--md-ext-color-on-success-container)) !important; }
 .text-success:hover { background: var(--success-light, var(--md-ext-color-success-container)); }
-
 /* ============================================
    Customer "Übersicht" stats panel
    ============================================ */
@@ -488,7 +471,6 @@
     padding-top: 14px;
     border-top: 1px solid var(--gray-200);
 }
-
 /* ============================================
    Delete preview modal
    ============================================ */
@@ -528,7 +510,7 @@
     gap: 6px 14px;
 }
 @media (max-width: 500px) {
-    .delete-preview-list { grid-template-columns: 1fr; }
+.delete-preview-list { grid-template-columns: 1fr; }
 }
 .delete-preview-list li {
     background: var(--danger-light, var(--md-sys-color-error-container));
@@ -555,7 +537,6 @@
     font-family: monospace;
     color: var(--danger, var(--md-sys-color-error));
 }
-
 /* Btn danger */
 .btn-danger {
     background: var(--md-sys-color-error);
@@ -570,7 +551,6 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
-
 /* NU-specific styles moved to subcontractors.css */
 
 /* Tab content visibility */
@@ -580,7 +560,6 @@
 .customer-tab-content.active {
     display: block;
 }
-
 /* ============================================
    Customer Documents
    ============================================ */
@@ -598,7 +577,6 @@
 .customer-docs-header h4 i {
     color: var(--accent);
 }
-
 .customer-doc-upload-form {
     background: var(--gray-50);
     border: 1px dashed var(--gray-300);
@@ -609,7 +587,6 @@
 .customer-doc-upload-form .customer-form-row {
     align-items: flex-end;
 }
-
 /* Document grid */
 .customer-docs-grid {
     display: grid;
@@ -617,7 +594,7 @@
     gap: 14px;
 }
 @media (max-width: 500px) {
-    .customer-docs-grid {
+.customer-docs-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -636,7 +613,6 @@
     box-shadow: var(--shadow-md);
     transform: translateY(-2px);
 }
-
 /* Thumbnail area */
 .doc-thumb {
     width: 100%;
@@ -673,7 +649,6 @@
     color: var(--gray-400);
     background: var(--gray-100);
 }
-
 /* Document info */
 .doc-info {
     padding: 10px 12px 6px;
@@ -695,7 +670,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 /* Document actions */
 .doc-actions {
     display: flex;
@@ -707,7 +681,6 @@
     font-size: 0.78rem;
     padding: 4px 8px;
 }
-
 /* Empty state */
 .customer-docs-empty {
     text-align: center;
@@ -723,7 +696,6 @@
 .customer-docs-empty p {
     font-size: 0.9rem;
 }
-
 /* (NU admin worker detail overlay and other NU-specific styles moved to subcontractors.css) */
 
 /* ============================================================
@@ -744,10 +716,10 @@
     margin-bottom: 18px;
 }
 @media (max-width: 1100px) {
-    .data-bento { grid-template-columns: repeat(2, 1fr); }
+.data-bento { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 500px) {
-    .data-bento { grid-template-columns: 1fr; }
+.data-bento { grid-template-columns: 1fr; }
 }
 
 .customer-bento {
@@ -758,12 +730,12 @@
     margin-bottom: 16px;
 }
 @media (max-width: 700px) {
-    .customer-bento { grid-template-columns: repeat(2, 1fr); }
-    .customer-bento .bento-tile-hero { grid-column: span 2; grid-row: span 2; }
+.customer-bento { grid-template-columns: repeat(2, 1fr); }
+.customer-bento .bento-tile-hero { grid-column: span 2; grid-row: span 2; }
 }
 @media (max-width: 500px) {
-    .customer-bento { grid-template-columns: 1fr; }
-    .customer-bento .bento-tile-hero { grid-column: span 1; grid-row: span 1; }
+.customer-bento { grid-template-columns: 1fr; }
+.customer-bento .bento-tile-hero { grid-column: span 1; grid-row: span 1; }
 }
 
 /* Base tile */
@@ -782,7 +754,6 @@
     transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease;
     animation: bentoFadeUp 0.4s ease-out both;
 }
-
 /* Subtle top accent line (revealed on hover) */
 .bento-tile::before {
     content: '';
@@ -804,16 +775,14 @@
 .bento-tile:hover::before {
     transform: scaleX(1);
 }
-
 @keyframes bentoFadeUp {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(6px); }
+to { opacity: 1; transform: translateY(0); }
 }
 .data-bento > .bento-tile:nth-child(1) { animation-delay: 0.00s; }
 .data-bento > .bento-tile:nth-child(2) { animation-delay: 0.05s; }
 .data-bento > .bento-tile:nth-child(3) { animation-delay: 0.10s; }
 .data-bento > .bento-tile:nth-child(4) { animation-delay: 0.15s; }
-
 /* Head (icon + label for hero) */
 .bento-tile-head {
     display: flex;
@@ -838,7 +807,6 @@
     font-size: 0.85rem;
     flex-shrink: 0;
 }
-
 /* Icon chip for small tiles */
 .bento-tile-icon {
     width: 34px;
@@ -853,7 +821,6 @@
     flex-shrink: 0;
     align-self: flex-start;
 }
-
 /* Numbers — classical solid navy (compact) */
 .bento-tile-number {
     font-size: clamp(2.4rem, 4vw, 3.4rem);
@@ -887,7 +854,6 @@
     font-weight: 600;
     color: var(--gray-400);
 }
-
 /* Body wrapper (centers content vertically) */
 .bento-tile-body {
     flex: 1;
@@ -897,7 +863,6 @@
     gap: 4px;
     min-width: 0;
 }
-
 .bento-tile-label {
     font-size: 0.65rem;
     font-weight: 700;
@@ -905,7 +870,6 @@
     letter-spacing: 0.8px;
     color: var(--gray-500);
 }
-
 /* Meta line (below progress or number) */
 .bento-tile-meta {
     display: flex;
@@ -917,7 +881,6 @@
     padding-top: 8px;
     border-top: 1px solid var(--gray-100);
 }
-
 /* Footer pills (in hero) */
 .bento-tile-foot {
     display: flex;
@@ -949,7 +912,6 @@
     color: var(--bento-accent, var(--accent));
     font-size: 0.7rem;
 }
-
 /* Progress bar — classical (no shimmer) */
 .bento-progress {
     height: 5px;
@@ -964,7 +926,6 @@
     background: var(--bento-accent, var(--accent));
     transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 /* -------------------- Span variants -------------------- */
 .bento-tile-hero {
     grid-column: span 2;
@@ -977,7 +938,6 @@
     align-items: center;
     margin: 0;
 }
-
 .bento-tile-wide {
     grid-column: span 2;
     flex-direction: row;
@@ -1004,19 +964,18 @@
     text-align: left;
     font-size: 0.7rem;
 }
-
 @media (max-width: 500px) {
     .bento-tile-hero,
-    .bento-tile-wide {
+.bento-tile-wide {
         grid-column: span 1;
         grid-row: span 1;
     }
-    .bento-tile-hero .bento-tile-number { font-size: 3.5rem; }
-    .bento-tile-wide {
+.bento-tile-hero .bento-tile-number { font-size: 3.5rem; }
+.bento-tile-wide {
         flex-direction: column;
         align-items: flex-start;
     }
-    .bento-tile-wide .bento-tile-meta {
+.bento-tile-wide .bento-tile-meta {
         padding-left: 0;
         border-left: none;
         margin-top: 8px;
@@ -1030,7 +989,6 @@
 
 .customer-bento .bento-tile { cursor: default; }
 .customer-bento .bento-tile[data-clickable="1"] { cursor: pointer; }
-
 /* -------------------- Color themes (subtle, classical) -------------------- */
 .bento-tile-total {
     --bento-accent: var(--md-sys-color-primary);
@@ -1072,7 +1030,6 @@
     --bento-accent: var(--md-ext-color-info);
     --bento-accent-soft: color-mix(in srgb, var(--md-ext-color-info) 10%, transparent);
 }
-
 /* -------------------- Refined toolbar (shared data pages) -------------------- */
 .data-toolbar {
     display: flex;
@@ -1126,7 +1083,6 @@
     background: var(--white);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
-
 .data-toolbar .toolbar-filter {
     height: 38px;
     padding: 0 34px 0 12px;
@@ -1149,7 +1105,6 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
-
 /* Segmented control (Aktiv / Archiv / Alle) */
 .data-toolbar .kunden-filter-toggle {
     display: inline-flex;
@@ -1184,7 +1139,6 @@
 .data-toolbar .kunden-filter-toggle button i {
     font-size: 0.8rem;
 }
-
 /* -------------------- Refined table (classical light) -------------------- */
 .data-table-card {
     background: var(--white);
@@ -1245,7 +1199,6 @@
     border-radius: var(--md-sys-shape-corner-extra-small);
     border: 1px solid var(--gray-200);
 }
-
 /* Refined action buttons */
 .data-table-card .btn-group {
     display: inline-flex;
@@ -1286,7 +1239,6 @@
     background: var(--danger-light);
     border-color: transparent;
 }
-
 /* Status chip in table */
 .data-table-card .status-ja {
     display: inline-flex;
@@ -1322,7 +1274,6 @@
     border-radius: 50%;
     background: var(--gray-400);
 }
-
 /* Empty state styling for table */
 .data-table-card .empty-state i {
     font-size: 3rem;
@@ -1334,12 +1285,11 @@
     font-size: 0.95rem;
     font-weight: 500;
 }
-
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .bento-tile,
     .bento-tile::before,
-    .bento-progress-bar {
+.bento-progress-bar {
         animation: none !important;
         transition: none !important;
     }
@@ -1357,7 +1307,6 @@
     overflow: hidden;
     box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 4%, transparent);
 }
-
 .zuschlag-header {
     display: flex;
     align-items: center;
@@ -1368,7 +1317,6 @@
     color: #fff;
     flex-wrap: wrap;
 }
-
 .zuschlag-title {
     display: flex;
     align-items: center;
@@ -1376,7 +1324,6 @@
     flex: 1;
     min-width: 0;
 }
-
 .zuschlag-title > i {
     font-size: 1.4rem;
     width: 40px;
@@ -1388,20 +1335,17 @@
     border-radius: var(--md-sys-shape-corner-medium);
     flex-shrink: 0;
 }
-
 .zuschlag-title-main {
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.01em;
 }
-
 .zuschlag-title-sub {
     font-size: 0.78rem;
     opacity: 0.8;
     margin-top: 2px;
     line-height: 1.4;
 }
-
 /* iOS-style toggle switch */
 .zuschlag-toggle {
     display: inline-flex;
@@ -1411,13 +1355,11 @@
     user-select: none;
     flex-shrink: 0;
 }
-
 .zuschlag-toggle input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
-
 .zuschlag-toggle-slider {
     position: relative;
     width: 44px;
@@ -1426,7 +1368,6 @@
     border-radius: var(--md-sys-shape-corner-full);
     transition: background 0.18s ease;
 }
-
 .zuschlag-toggle-slider::after {
     content: '';
     position: absolute;
@@ -1439,36 +1380,29 @@
     transition: transform 0.18s ease;
     box-shadow: 0 2px 4px color-mix(in srgb, var(--md-sys-color-scrim) 20%, transparent);
 }
-
 .zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider {
     background: var(--md-ext-color-success);
 }
-
 .zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider::after {
     transform: translateX(20px);
 }
-
 .zuschlag-toggle-label {
     font-size: 0.85rem;
     font-weight: 600;
 }
-
 /* ---------- Body ---------- */
 .zuschlag-body {
     padding: 18px 20px 20px;
     transition: opacity 0.2s ease;
 }
-
 .zuschlag-body.zuschlag-disabled {
     opacity: 0.5;
     pointer-events: none;
 }
-
 .zuschlag-body.zuschlag-disabled input,
 .zuschlag-body.zuschlag-disabled .zt-row {
     cursor: not-allowed;
 }
-
 /* Night-window editor */
 .zuschlag-night-window {
     display: flex;
@@ -1482,7 +1416,6 @@
     margin-bottom: 16px;
     font-size: 0.86rem;
 }
-
 .zuschlag-night-label {
     font-weight: 600;
     color: var(--gray-700, var(--md-sys-color-on-primary-container));
@@ -1490,11 +1423,9 @@
     align-items: center;
     gap: 6px;
 }
-
 .zuschlag-night-label i {
     color: var(--accent, var(--md-sys-color-primary));
 }
-
 .zuschlag-time {
     width: 90px !important;
     padding: 4px 8px !important;
@@ -1503,19 +1434,16 @@
     text-align: center;
     font-variant-numeric: tabular-nums;
 }
-
 .zuschlag-night-arrow {
     color: var(--gray-500, var(--md-sys-color-on-surface-variant));
     font-weight: 700;
 }
-
 .zuschlag-night-hint {
     color: var(--gray-500, var(--md-sys-color-on-surface-variant));
     font-size: 0.76rem;
     font-style: italic;
     margin-left: auto;
 }
-
 /* ---------- The actual Zuschlag table ---------- */
 .zuschlag-table-wrap {
     border: 1px solid var(--gray-200);
@@ -1523,13 +1451,11 @@
     overflow: hidden;
     background: var(--white);
 }
-
 .zuschlag-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.88rem;
 }
-
 .zuschlag-table thead th {
     background: linear-gradient(180deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-primary) 100%);
     color: #fff;
@@ -1541,54 +1467,39 @@
     border: none;
     text-align: left;
 }
-
 .zuschlag-table thead th.zt-col-pct,
 .zuschlag-table thead th.zt-col-auf,
 .zuschlag-table thead th.zt-col-end {
     text-align: right;
 }
-
 .zuschlag-table .zt-col-art { width: 38%; }
 .zuschlag-table .zt-col-pct { width: 18%; }
-.zuschlag-table .zt-col-auf { width: 22%; }
-.zuschlag-table .zt-col-end { width: 22%; }
-
+.zuschlag-table .zt-col-auf,
+    .zuschlag-table .zt-col-end { width: 22%; }
 .zuschlag-table tbody tr {
     border-bottom: 1px solid var(--md-sys-color-primary-container);
     transition: background 0.14s ease;
 }
-
 .zuschlag-table tbody tr:last-child {
     border-bottom: none;
 }
-
 .zuschlag-table tbody tr:hover {
     background: var(--gray-50);
 }
-
-.zuschlag-table tbody tr.zt-row-base {
+.zuschlag-table tbody tr.zt-row-base,
+    .zuschlag-table tbody tr.zt-row-base:hover,
+    .zuschlag-table tbody tr.zt-row-combo {
     background: var(--md-sys-color-primary-container);
 }
-
-.zuschlag-table tbody tr.zt-row-base:hover {
-    background: var(--md-sys-color-primary-container);
-}
-
-.zuschlag-table tbody tr.zt-row-combo {
-    background: var(--md-sys-color-primary-container);
-}
-
 .zuschlag-table tbody td {
     padding: 12px 14px;
     vertical-align: middle;
     border: none;
 }
-
 .zuschlag-table strong {
     color: var(--gray-900, var(--md-sys-color-on-primary-container));
     font-weight: 600;
 }
-
 /* Schichtart icon in the first column */
 .zt-icon {
     display: inline-flex;
@@ -1604,24 +1515,20 @@
     font-size: 0.85rem;
     vertical-align: middle;
 }
-
 .zt-icon i + i {
     font-size: 0.55rem;
     margin-left: 1px;
 }
-
 /* Combo rows get a distinct icon background */
 .zt-row-combo .zt-icon {
     background: linear-gradient(135deg, var(--md-ext-color-warning-container) 0%, var(--md-ext-color-warning-container) 100%);
     color: var(--md-ext-color-warning);
 }
-
 /* Tagdienst row keeps the warm "sun" tone */
 .zt-row-base .zt-icon {
     background: linear-gradient(135deg, var(--md-ext-color-warning-container) 0%, var(--md-ext-color-warning-container) 100%);
     color: var(--md-ext-color-warning);
 }
-
 /* Small inline badge after the title */
 .zt-tag {
     display: inline-block;
@@ -1635,17 +1542,14 @@
     letter-spacing: 0.02em;
     vertical-align: middle;
 }
-
 .zt-row-base .zt-tag {
     background: var(--md-ext-color-warning-container);
     color: var(--md-ext-color-on-warning-container);
 }
-
 .zt-row-combo .zt-tag {
     background: var(--md-ext-color-warning-container);
     color: var(--md-ext-color-warning);
 }
-
 /* The 0 % "fixed" pill on the Tagdienst row */
 .zt-pct-fixed {
     display: inline-block;
@@ -1657,7 +1561,6 @@
     font-size: 0.85rem;
     font-variant-numeric: tabular-nums;
 }
-
 /* Editable percentage input + % suffix */
 .zt-pct-input {
     display: inline-flex;
@@ -1671,12 +1574,10 @@
     width: fit-content;
     margin-left: auto;
 }
-
 .zt-pct-input:focus-within {
     border-color: var(--accent, var(--md-sys-color-primary));
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
-
 .zt-pct-input input {
     border: none !important;
     background: transparent !important;
@@ -1688,44 +1589,34 @@
     height: auto !important;
     box-shadow: none !important;
 }
-
 .zt-pct-input input:focus {
     outline: none;
     box-shadow: none !important;
 }
-
 .zt-pct-input span {
     color: var(--gray-500, var(--md-sys-color-on-surface-variant));
     font-weight: 600;
     font-size: 0.85rem;
 }
-
 /* Aufschlag (in-between column) */
 .zt-aufschlag {
     color: var(--md-ext-color-on-success-container);
     font-weight: 500;
 }
-
 /* Endpreis (last column) */
 .zt-end {
     color: var(--gray-900, var(--md-sys-color-on-primary-container));
     font-weight: 700;
     font-size: 0.95rem;
 }
-
-.zt-row-base .zt-end {
+.zt-row-base .zt-end,
+    .zt-row-combo .zt-end {
     color: var(--md-ext-color-warning);
 }
-
-.zt-row-combo .zt-end {
-    color: var(--md-ext-color-warning);
-}
-
 .zt-mono {
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
-
 /* ---------- Foot info ---------- */
 .zuschlag-foot-info {
     display: flex;
@@ -1739,18 +1630,15 @@
     font-size: 0.81rem;
     line-height: 1.5;
 }
-
 .zuschlag-foot-info i {
     color: var(--warning, var(--md-ext-color-warning));
     font-size: 1rem;
     margin-top: 2px;
     flex-shrink: 0;
 }
-
 .zuschlag-foot-info strong {
     color: var(--md-ext-color-on-warning-container, var(--md-ext-color-on-warning-container));
 }
-
 /* Blue info variant (object modal "So funktioniert es") */
 .zuschlag-foot-info.zuschlag-foot-info-blue {
     background: var(--info-light, var(--md-sys-color-primary-container));
@@ -1759,7 +1647,6 @@
 }
 .zuschlag-foot-info.zuschlag-foot-info-blue .material-symbols-outlined { color: var(--info, var(--md-sys-color-primary)); }
 .zuschlag-foot-info.zuschlag-foot-info-blue strong { color: var(--md-ext-color-on-info-container, var(--md-sys-color-primary)); }
-
 /* ---------- Dark mode — Zuschläge section ---------- */
 [data-theme="dark"] .zuschlag-table thead th {
     background: var(--md-sys-color-surface-container-high) !important;
@@ -1795,8 +1682,8 @@
     color: var(--md-ext-color-warning-container);
 }
 [data-theme="dark"] .zt-aufschlag { color: var(--md-ext-color-success); }
-[data-theme="dark"] .zt-row-base .zt-end { color: var(--md-ext-color-warning); }
-[data-theme="dark"] .zt-row-combo .zt-end { color: var(--md-ext-color-warning); }
+[data-theme="dark"] .zt-row-base .zt-end,
+    [data-theme="dark"] .zt-row-combo .zt-end { color: var(--md-ext-color-warning); }
 [data-theme="dark"] .zt-pct-input:focus-within {
     border-color: var(--md-sys-color-primary-container);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
@@ -1809,27 +1696,26 @@
     color: var(--gray-800);
 }
 [data-theme="dark"] .zuschlag-foot-info i,
-[data-theme="dark"] .zuschlag-foot-info .material-symbols-outlined { color: var(--md-ext-color-warning); }
-[data-theme="dark"] .zuschlag-foot-info strong { color: var(--md-ext-color-warning); }
+[data-theme="dark"] .zuschlag-foot-info .material-symbols-outlined,
+    [data-theme="dark"] .zuschlag-foot-info strong { color: var(--md-ext-color-warning); }
 [data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue {
     background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
     border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
     color: var(--md-sys-color-primary-container);
 }
-[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue .material-symbols-outlined { color: var(--md-sys-color-primary-container); }
-[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue strong { color: var(--md-sys-color-primary-container); }
-
+[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue .material-symbols-outlined,
+    [data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue strong { color: var(--md-sys-color-primary-container); }
 /* ---------- Mobile reflow ---------- */
 @media (max-width: 720px) {
     .zuschlag-table thead th.zt-col-auf,
-    .zuschlag-table tbody td:nth-child(3) {
+.zuschlag-table tbody td:nth-child(3) {
         display: none;
     }
-    .zuschlag-night-hint {
+.zuschlag-night-hint {
         margin-left: 0;
         flex-basis: 100%;
     }
-    .zt-icon {
+.zt-icon {
         display: none;
     }
 }
@@ -1850,18 +1736,15 @@
     white-space: nowrap;
     vertical-align: middle;
 }
-
 .schichtart-badge i {
     font-size: 0.62rem;
 }
-
-.schichtart-tagdienst      { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
-.schichtart-nachtdienst    { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
-.schichtart-sonntag        { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
-.schichtart-feiertag       { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
-.schichtart-nacht_sonntag  { background: linear-gradient(90deg, var(--md-sys-color-primary-container) 0%, var(--md-ext-color-success-container) 100%); color: var(--md-sys-color-primary); }
+.schichtart-tagdienst { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
+.schichtart-nachtdienst { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
+.schichtart-sonntag { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.schichtart-feiertag { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
+.schichtart-nacht_sonntag { background: linear-gradient(90deg, var(--md-sys-color-primary-container) 0%, var(--md-ext-color-success-container) 100%); color: var(--md-sys-color-primary); }
 .schichtart-nacht_feiertag { background: linear-gradient(90deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-error-container) 100%); color: var(--md-ext-color-on-warning-container); }
-
 /* =================================================================== */
 /* MD3 MIGRATION — Kunden module (mirrors users.css patterns)          */
 /* =================================================================== */
@@ -1880,7 +1763,7 @@ md-dialog.objects-dialog-xl {
 }
 @media (min-width: 769px) {
     md-dialog.customers-dialog-xl,
-    md-dialog.objects-dialog-xl {
+md-dialog.objects-dialog-xl {
         --dlg-w: min(1040px, calc(100vw - var(--sidebar-width, 260px) - 48px));
         margin-left: calc(var(--sidebar-width, 260px)
                           + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
@@ -1888,13 +1771,11 @@ md-dialog.objects-dialog-xl {
 }
 .customers-dialog-content,
 .objects-dialog-content { font-size: 0.9rem; }
-
 /* Modal tab strip */
 md-tabs.cust-modal-tabs {
     margin-bottom: 16px;
     --md-primary-tab-container-color: transparent;
 }
-
 /* MD3 fields fill their form groups */
 .customer-form-col .form-group md-outlined-text-field,
 .customer-form-col .form-group md-outlined-select,
@@ -1904,7 +1785,6 @@ md-tabs.cust-modal-tabs {
     width: 100%;
     min-width: 0;
 }
-
 /* Vertical rhythm: the old spacing rule was scoped to the removed
    `.modal.modal-wide` shell — without it the outlined fields stack
    flush and each floating label collides with the field above. */
@@ -1920,7 +1800,6 @@ md-tabs.cust-modal-tabs {
 .objects-dialog-content .customer-form-row .form-group {
     margin-bottom: 16px;
 }
-
 /* Artikel modal grid (acc-grid): MD3 fields fill their cells,
    the grid gap provides the rhythm — no extra margins needed. */
 .objects-dialog-content .acc-grid .form-group { margin-bottom: 0; }
@@ -1928,7 +1807,6 @@ md-tabs.cust-modal-tabs {
 .objects-dialog-content .acc-grid md-outlined-select {
     width: 100%;
 }
-
 /* ---------- Toolbar (list page) ---------- */
 /* NOTE: never corner-full (9999px) on outlined fields — the border is
    drawn from 3 panels whose side widths equal the corner radius. */
@@ -1947,7 +1825,6 @@ md-tabs.cust-modal-tabs {
     --md-outlined-select-text-field-bottom-space: 8px;
 }
 .data-toolbar md-chip-set { min-width: 0; }
-
 /* ---------- Table row + document actions ---------- */
 .cust-row-actions {
     display: flex;
@@ -1978,7 +1855,6 @@ md-tabs.cust-modal-tabs {
     --md-icon-button-hover-icon-color: var(--success, #059669);
     --md-icon-button-hover-state-layer-color: var(--success, #059669);
 }
-
 /* Danger filled button (delete confirmation) */
 md-filled-button.cust-danger-btn {
     --md-filled-button-container-color: var(--md-sys-color-error, #b3261e);
@@ -1989,7 +1865,6 @@ md-filled-button.cust-danger-btn {
     --md-filled-button-icon-color: var(--md-sys-color-on-error, #fff);
     --md-filled-button-hover-icon-color: var(--md-sys-color-on-error, #fff);
 }
-
 /* ---------- Material Symbols in existing shells ---------- */
 /* Additive selectors: the fa `i` rules stay for pages not yet migrated. */
 .bento-tile-head .material-symbols-outlined {
@@ -2052,7 +1927,6 @@ md-filled-button.cust-danger-btn {
     justify-content: center;
     gap: 12px;
 }
-
 /* ---------- MD3 radio group (Anschrift-Typ) ---------- */
 .cust-radio-group {
     display: flex;
@@ -2074,7 +1948,6 @@ md-filled-button.cust-danger-btn {
     cursor: pointer;
 }
 .cust-radio-label md-radio { --md-radio-icon-size: 18px; }
-
 /* Plain label above the native file input (upload form) */
 .cust-file-label {
     display: block;
@@ -2083,7 +1956,6 @@ md-filled-button.cust-danger-btn {
     color: var(--gray-600);
     margin-bottom: 5px;
 }
-
 /* ---------- Objekte module: Material Symbols in existing shells ---------- */
 .objekt-info-box .material-symbols-outlined {
     color: var(--accent);

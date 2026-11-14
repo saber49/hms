@@ -43,7 +43,6 @@
     --nu-danger: var(--md-sys-color-error);
     --nu-danger-soft: var(--md-sys-color-error-container);
 }
-
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
     --nu-accent: var(--md-ext-color-warning);   /* amber-400 */
@@ -58,7 +57,6 @@
     --nu-danger: var(--md-sys-color-error);
     --nu-danger-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
 }
-
 /* ===== 2. Stats Grid — "Partner Cards" ===== */
 .nu-stats-grid {
     display: grid;
@@ -96,9 +94,8 @@
     box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
     transform: translateY(-1px);
 }
-.nu-stat-card:hover::before { background: var(--nu-accent); }
-.nu-stat-card.is-active::before { background: var(--nu-accent); }
-
+.nu-stat-card:hover::before,
+    .nu-stat-card.is-active::before { background: var(--nu-accent); }
 .nu-stat-head {
     display: flex;
     align-items: center;
@@ -145,20 +142,18 @@
     margin-top: 2px;
     line-height: 1.3;
 }
-
 /* Variants */
 .nu-stat-total    .nu-stat-icon { background: var(--nu-bg-strip);  color: var(--nu-text-muted); }
 .nu-stat-active   .nu-stat-icon { background: var(--nu-ok-soft);   color: var(--nu-ok); }
-.nu-stat-active   .nu-stat-num  { color: var(--nu-ok); }
+.nu-stat-active   .nu-stat-num { color: var(--nu-ok); }
 .nu-stat-portal   .nu-stat-icon { background: var(--nu-accent-soft); color: var(--nu-accent); }
-.nu-stat-portal   .nu-stat-num  { color: var(--nu-accent); }
+.nu-stat-portal   .nu-stat-num { color: var(--nu-accent); }
 .nu-stat-people   .nu-stat-icon { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
 .nu-stat-compliance .nu-stat-icon { background: var(--nu-ok-soft); color: var(--nu-ok); }
 .nu-stat-compliance.warn .nu-stat-icon { background: var(--nu-warn-soft); color: var(--nu-warn); }
-.nu-stat-compliance.warn .nu-stat-num  { color: var(--nu-warn); }
+.nu-stat-compliance.warn .nu-stat-num { color: var(--nu-warn); }
 .nu-stat-compliance.danger .nu-stat-icon { background: var(--nu-danger-soft); color: var(--nu-danger); }
-.nu-stat-compliance.danger .nu-stat-num  { color: var(--nu-danger); }
-
+.nu-stat-compliance.danger .nu-stat-num { color: var(--nu-danger); }
 /* ===== 3. NU Toolbar (slate strip) ===== */
 .nu-toolbar {
     display: flex;
@@ -185,7 +180,6 @@
     gap: 8px;
     flex-shrink: 0;
 }
-
 .nu-search {
     position: relative;
     flex: 1;
@@ -218,7 +212,6 @@
     border-color: var(--nu-accent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-ext-color-warning) 12%, transparent);
 }
-
 /* ===== 4. Filter Pills (amber underline) ===== */
 .nu-filter-pills {
     display: inline-flex;
@@ -263,7 +256,6 @@
     border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
 }
 .nu-filter-pills button i { font-size: 0.78rem; }
-
 /* ===== 5. NU Table Card (slate header) ===== */
 .nu-table-card {
     background: var(--nu-surface);
@@ -310,7 +302,6 @@
     background: var(--nu-accent-tint);
 }
 .nu-table-card tbody td strong { color: var(--nu-text); font-weight: 700; }
-
 /* ===== 6. NU Obj-Badge (slate-tinted, amber for partial) ===== */
 .nu-obj-badge {
     display: inline-flex;
@@ -347,7 +338,6 @@
     font-weight: 400;
 }
 .nu-obj-badge .material-symbols-outlined { font-size: 13px; }
-
 /* ===== 7. Portal-Link Bar ===== */
 .nu-portal-link-bar {
     background: var(--nu-bg-soft);
@@ -388,25 +378,18 @@
     word-break: break-all;
     margin-top: 2px;
 }
-
 /* ===== 8. Modal Accent Context (.nu-context) =====
    When the NU modal is open, override the blue accent with amber
    for tabs, focus rings, section title icons, and primary buttons. */
-.sub-dialog-content .customer-form-section-title .material-symbols-outlined { color: var(--nu-accent); }
-.sub-dialog-content .cust-modal-tabs md-primary-tab[active] {
-    color: var(--nu-accent);
-}
-.sub-dialog-content .cust-modal-tabs md-primary-tab[active] md-icon {
-    color: var(--nu-accent);
-}
+.sub-dialog-content .customer-form-section-title .material-symbols-outlined,
+    .sub-dialog-content .cust-modal-tabs md-primary-tab[active],
+    .sub-dialog-content .cust-modal-tabs md-primary-tab[active] md-icon { color: var(--nu-accent); }
 .sub-dialog-content .req { color: var(--nu-danger); }
-
 /* Primary button inside NU dialog — amber */
 .sub-dialog-content md-filled-button {
     --md-filled-button-container-color: var(--nu-accent);
     --md-filled-button-label-text-color: var(--md-sys-color-surface-container-lowest);
 }
-
 /* ===== 9. Info / Success Boxes ===== */
 .nu-info-box {
     display: flex;
@@ -434,7 +417,6 @@
     text-decoration: underline;
     text-underline-offset: 2px;
 }
-
 .nu-success-box {
     margin-top: 12px;
     padding: 10px 14px;
@@ -449,7 +431,6 @@
     gap: 8px;
 }
 .nu-success-box .material-symbols-outlined { color: var(--nu-ok); flex-shrink: 0; }
-
 .nu-hints-list {
     font-size: 0.83rem;
     color: var(--nu-text-muted);
@@ -459,7 +440,6 @@
 }
 .nu-hints-list li { margin-bottom: 4px; }
 .nu-hints-list strong { color: var(--nu-text); font-weight: 700; }
-
 /* ===== 10. Compliance Checklist ===== */
 .nu-checklist-section {
     margin-top: 22px;
@@ -483,11 +463,10 @@
     font-weight: 700;
     border: 1px solid transparent;
 }
-.nu-cs-ok       { background: var(--nu-ok-soft);     color: var(--nu-ok);     border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
-.nu-cs-warn     { background: var(--nu-warn-soft);   color: var(--nu-warn);   border-color: var(--nu-accent-line); }
-.nu-cs-expired  { background: var(--nu-danger-soft); color: var(--md-sys-color-error);          border-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent); }
-.nu-cs-missing  { background: var(--nu-bg-strip);    color: var(--nu-text-muted); border-color: var(--nu-border); }
-
+.nu-cs-ok { background: var(--nu-ok-soft);     color: var(--nu-ok);     border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
+.nu-cs-warn { background: var(--nu-warn-soft);   color: var(--nu-warn);   border-color: var(--nu-accent-line); }
+.nu-cs-expired { background: var(--nu-danger-soft); color: var(--md-sys-color-error);          border-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent); }
+.nu-cs-missing { background: var(--nu-bg-strip);    color: var(--nu-text-muted); border-color: var(--nu-border); }
 .nu-checklist-list {
     display: flex;
     flex-direction: column;
@@ -505,11 +484,10 @@
     transition: background .12s ease;
 }
 .nu-checklist-item:hover { background: var(--nu-bg-soft); }
-.nu-checklist-item.nu-cs-ok       { border-left-color: var(--nu-ok); }
+.nu-checklist-item.nu-cs-ok { border-left-color: var(--nu-ok); }
 .nu-checklist-item.nu-cs-expiring { border-left-color: var(--nu-warn);   background: var(--md-ext-color-warning-container); }
-.nu-checklist-item.nu-cs-expired  { border-left-color: var(--nu-danger); background: var(--md-sys-color-error-container); }
-.nu-checklist-item.nu-cs-missing  { border-left-color: var(--nu-text-soft); }
-
+.nu-checklist-item.nu-cs-expired { border-left-color: var(--nu-danger); background: var(--md-sys-color-error-container); }
+.nu-checklist-item.nu-cs-missing { border-left-color: var(--nu-text-soft); }
 .nu-cs-icon .material-symbols-outlined { font-size: 20px; }
 .nu-cs-body { flex: 1; min-width: 0; }
 .nu-cs-title {
@@ -527,17 +505,14 @@
 }
 .nu-cs-status { font-weight: 700; }
 .nu-cs-actions { flex-shrink: 0; }
-
 /* ===== 11. Document expiry colors (status text) ===== */
-.nu-doc-ok       { color: var(--nu-ok); }
+.nu-doc-ok { color: var(--nu-ok); }
 .nu-doc-expiring { color: var(--nu-warn); font-weight: 600; }
-.nu-doc-expired  { color: var(--nu-danger); font-weight: 700; }
-
+.nu-doc-expired { color: var(--nu-danger); font-weight: 700; }
 .customer-doc-card.nu-doc-card-expired {
     border-color: var(--md-sys-color-error-container);
     background: var(--md-sys-color-error-container);
 }
-
 /* ===== 12. NU Admin — Mitarbeiter Tab ===== */
 .nu-admin-workers-header {
     display: flex;
@@ -560,7 +535,6 @@
 }
 .nu-admin-workers-header h4 .material-symbols-outlined { color: var(--nu-accent); }
 .nu-admin-workers-sub { font-size: 0.78rem; color: var(--nu-text-muted); }
-
 .nu-admin-workers-stats {
     display: flex;
     gap: 8px;
@@ -591,7 +565,6 @@
     margin-top: 2px;
     font-weight: 600;
 }
-
 .nu-admin-workers-toolbar {
     display: flex;
     align-items: center;
@@ -600,7 +573,6 @@
     flex-wrap: wrap;
 }
 .nu-admin-workers-toolbar .search-input { flex: 1; min-width: 180px; }
-
 /* Worker card grid */
 .nu-admin-workers-grid {
     display: grid;
@@ -683,7 +655,6 @@
     font-size: 0.8rem;
 }
 .nu-admin-wcard:hover .nu-admin-wcard-arrow { color: var(--nu-accent); }
-
 .nu-admin-workers-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -692,7 +663,6 @@
 }
 .nu-admin-workers-empty .material-symbols-outlined { font-size: 2.5rem; margin-bottom: 10px; display: block; }
 .nu-admin-workers-empty p { font-size: 0.88rem; }
-
 /* Worker detail overlay */
 .nu-admin-detail-layout {
     display: grid;
@@ -700,7 +670,7 @@
     gap: 24px;
 }
 @media (max-width: 700px) {
-    .nu-admin-detail-layout { grid-template-columns: 1fr; }
+.nu-admin-detail-layout { grid-template-columns: 1fr; }
 }
 .nu-admin-detail-left {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -764,7 +734,6 @@
     color: var(--nu-text);
     vertical-align: top;
 }
-
 /* ===== 13. MD3 Dialog Sizing ===== */
 #subMdDialog.sub-dialog-xl {
     min-width: 900px;
@@ -830,7 +799,6 @@
     margin-bottom: 16px;
     border-bottom: 1px solid var(--nu-border);
 }
-
 /* ===== 14. Dokumente tab — upload form ===== */
 /* The row bottom-aligns fields + button; extra form-group margins
    inside it distort that alignment, so reset them here. */
@@ -858,6 +826,5 @@
     border-color: var(--nu-border-strong);
     background: var(--nu-surface);
 }
-
 /* Toolbar search field width */
 .nu-search { min-width: 220px; max-width: 340px; }

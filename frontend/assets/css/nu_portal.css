@@ -30,7 +30,6 @@
     --nu-elevation-3:          var(--md-sys-elevation-level-3, 0 1px 3px 0 rgba(0,0,0,0.3), 0 4px 8px 3px rgba(0,0,0,0.15));
     --white:                   var(--md-sys-color-surface-bright, #ffffff);
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     font-family: 'Google Sans', 'Roboto', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -38,7 +37,6 @@ body {
     color: var(--nu-gray-900);
     min-height: 100vh;
 }
-
 /* --- Topbar --- */
 .nu-topbar {
     background: var(--nu-primary);
@@ -67,7 +65,6 @@ body {
     font-size: 0.8rem; font-family: inherit; transition: all 0.2s;
 }
 .nu-topbar-right .nu-btn-logout:hover { background: rgba(255,255,255,0.2); }
-
 /* --- Navigation Tabs --- */
 .nu-nav {
     background: var(--white);
@@ -95,10 +92,8 @@ body {
 }
 .nu-nav-tab:hover { color: var(--nu-primary); }
 .nu-nav-tab.active { color: var(--nu-accent); border-bottom-color: var(--nu-accent); }
-
 /* --- Content --- */
 .nu-content { padding: 24px; max-width: 1400px; margin: 0 auto; }
-
 /* --- Cards --- */
 .nu-card {
     background: var(--white);
@@ -118,7 +113,6 @@ body {
 .nu-card-header h3 { font-size: 0.95rem; font-weight: 700; color: var(--nu-primary); }
 .nu-card-body { padding: 20px; }
 .nu-card-body.no-pad { padding: 0; }
-
 /* --- Week Navigation --- */
 .nu-week-nav {
     display: flex;
@@ -128,7 +122,6 @@ body {
     flex-wrap: wrap;
 }
 .nu-week-label { font-size: 1rem; font-weight: 700; color: var(--nu-primary); }
-
 /* --- Shift Cards --- */
 .nu-shift-card {
     background: var(--white);
@@ -153,7 +146,6 @@ body {
 .nu-shift-time { font-size: 0.85rem; color: var(--nu-gray-500); font-weight: 500; }
 .nu-shift-meta { padding: 12px 20px; display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.8rem; color: var(--nu-gray-500); }
 .nu-shift-meta strong { color: var(--nu-gray-700); }
-
 /* --- Position Table --- */
 .nu-pos-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .nu-pos-table th {
@@ -172,7 +164,6 @@ body {
     vertical-align: middle;
 }
 .nu-pos-table tr:hover { background: var(--nu-gray-50); }
-
 /* --- Badges --- */
 .nu-badge {
     display: inline-flex; align-items: center; gap: 4px;
@@ -185,10 +176,10 @@ body {
 .nu-badge.confirmed { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
 .nu-badge.pending { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
 .nu-badge.nu-pending { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-secondary); animation: nu-pulse 2s infinite; }
-
 @keyframes nu-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+0%,
+    100% { opacity: 1; }
+50% { opacity: 0.7; }
 }
 
 /* --- Accept/Reject Bar --- */
@@ -203,7 +194,6 @@ body {
     border-top: 1px solid var(--md-sys-color-primary-container);
     border-bottom: 1px solid var(--md-sys-color-primary-container);
 }
-
 .nu-shift-accept-msg {
     font-size: 0.88rem;
     font-weight: 600;
@@ -212,28 +202,25 @@ body {
     align-items: center;
     gap: 8px;
 }
-
 .nu-shift-accept-msg i {
     font-size: 1.1rem;
     color: var(--md-sys-color-secondary);
 }
-
 .nu-shift-accept-actions {
     display: flex;
     gap: 8px;
     flex-shrink: 0;
 }
-
 @media (max-width: 600px) {
-    .nu-shift-accept-bar {
+.nu-shift-accept-bar {
         flex-direction: column;
         align-items: stretch;
         gap: 10px;
     }
-    .nu-shift-accept-actions {
+.nu-shift-accept-actions {
         justify-content: stretch;
     }
-    .nu-shift-accept-actions .nu-btn {
+.nu-shift-accept-actions .nu-btn {
         flex: 1;
         text-align: center;
     }
@@ -274,7 +261,6 @@ body {
 .nu-btn-icon:hover { background: var(--nu-gray-50); color: var(--nu-gray-700); }
 .nu-btn-icon.danger:hover { background: var(--md-sys-color-error-container); color: var(--nu-danger); border-color: var(--md-sys-color-error-container); }
 .nu-btn-icon.success:hover { background: var(--md-ext-color-success-container); color: var(--nu-success); border-color: var(--md-ext-color-success-container); }
-
 /* --- Forms --- */
 .nu-form-group { margin-bottom: 14px; }
 .nu-form-group label {
@@ -290,7 +276,6 @@ body {
 .nu-form-control:focus { outline: none; border-color: var(--nu-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); }
 .nu-form-row { display: flex; gap: 12px; }
 .nu-form-row > * { flex: 1; }
-
 /* --- Worker List --- */
 .nu-worker-list { display: flex; flex-direction: column; gap: 8px; }
 .nu-worker-item {
@@ -308,14 +293,12 @@ body {
 .nu-worker-info { flex: 1; }
 .nu-worker-name { font-weight: 600; font-size: 0.85rem; }
 .nu-worker-meta { font-size: 0.75rem; color: var(--nu-gray-500); }
-
 /* --- Empty State --- */
 .nu-empty {
     text-align: center; padding: 40px 20px; color: var(--nu-gray-400);
 }
 .nu-empty i { font-size: 2rem; margin-bottom: 10px; display: block; }
 .nu-empty p { font-size: 0.85rem; }
-
 /* --- Toast --- */
 .nu-toast-container {
     position: fixed; top: 70px; right: 24px; z-index: 9999;
@@ -352,7 +335,6 @@ body {
     display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--nu-gray-100);
 }
 .nu-assign-dropdown-item:hover { background: var(--nu-gray-50); }
-
 /* --- Assigned Worker Badge --- */
 .nu-assigned-badges {
     display: flex;
@@ -394,7 +376,6 @@ body {
     background: var(--md-sys-color-error);
     transform: scale(1.15);
 }
-
 /* --- Position Manager Modal --- */
 .nu-pm-header {
     display: flex;
@@ -423,7 +404,6 @@ body {
     gap: 4px;
     margin-bottom: 4px;
 }
-
 /* --- Modal --- */
 .nu-modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -452,7 +432,6 @@ body {
     padding: 12px 20px; border-top: 1px solid var(--nu-gray-200);
     display: flex; justify-content: flex-end; gap: 8px;
 }
-
 /* --- Worker Form (Extended — 2-column with photo upload) --- */
 .nu-worker-form {
     display: grid;
@@ -461,7 +440,6 @@ body {
 }
 .nu-worker-form-left { display: flex; flex-direction: column; gap: 10px; }
 .nu-worker-form-right { min-width: 0; }
-
 .nu-photo-card {
     background: var(--nu-gray-50);
     border: 1px dashed var(--nu-gray-300);
@@ -485,7 +463,6 @@ body {
 }
 .nu-photo-placeholder small { font-size: 0.7rem; text-align: center; color: var(--nu-gray-700); line-height: 1.4; }
 .nu-photo-actions { display: flex; gap: 6px; }
-
 .nu-form-section-title {
     font-size: 0.78rem;
     font-weight: 700;
@@ -500,7 +477,6 @@ body {
 }
 .nu-form-section-title:first-child { margin-top: 0; padding-top: 0; }
 .nu-form-section-title i { color: var(--nu-accent); }
-
 /* --- Worker Card Grid (NU Portal side) --- */
 .nu-wcard-grid {
     display: grid;
@@ -563,7 +539,6 @@ body {
 .nu-wcard-actions {
     display: flex; flex-direction: column; gap: 4px;
 }
-
 /* --- History Tab (Auftragshistorie) --- */
 .nu-history-summary {
     display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
@@ -604,19 +579,19 @@ body {
 .nu-history-worker-nr { font-size: 0.75rem; color: var(--nu-gray-400); }
 .nu-history-worker-pos { font-size: 0.75rem; color: var(--nu-gray-500); background: var(--nu-gray-100); padding: 2px 8px; border-radius: var(--md-sys-shape-corner-extra-small); }
 .nu-history-worker-std { margin-left: auto; font-weight: 600; color: var(--nu-primary); font-size: 0.82rem; }
-
 /* --- Responsive --- */
 @media (max-width: 768px) {
-    .nu-content { padding: 16px; }
-    .nu-topbar { padding: 0 16px; }
-    .nu-nav { padding: 0 12px; overflow-x: auto; }
-    .nu-nav-tab { padding: 12px 14px; font-size: 0.8rem; white-space: nowrap; }
-    .nu-form-row { flex-direction: column; }
-    .nu-shift-header { flex-direction: column; align-items: flex-start; }
-    .nu-pos-table { font-size: 0.75rem; }
-    .nu-pos-table th, .nu-pos-table td { padding: 6px 8px; }
-    .nu-worker-form { grid-template-columns: 1fr; }
-    .nu-photo-card { max-width: 260px; margin: 0 auto; }
+.nu-content { padding: 16px; }
+.nu-topbar { padding: 0 16px; }
+.nu-nav { padding: 0 12px; overflow-x: auto; }
+.nu-nav-tab { padding: 12px 14px; font-size: 0.8rem; white-space: nowrap; }
+.nu-form-row { flex-direction: column; }
+.nu-shift-header { flex-direction: column; align-items: flex-start; }
+.nu-pos-table { font-size: 0.75rem; }
+.nu-pos-table th,
+    .nu-pos-table td { padding: 6px 8px; }
+.nu-worker-form { grid-template-columns: 1fr; }
+.nu-photo-card { max-width: 260px; margin: 0 auto; }
 }
 
 /* --- Material Design 3 Facelift (Sep 2026) --- */
@@ -626,16 +601,15 @@ body {
 .nu-btn-primary:hover { background: var(--nu-accent-hover); box-shadow: var(--nu-elevation-1); }
 .nu-btn-outline { background: transparent; color: var(--nu-primary); border: 1px solid var(--nu-gray-300); }
 .nu-btn-outline:hover { background: var(--nu-primary-container); }
-
 /* MD3 outlined text fields */
 .nu-form-control { border-radius: var(--nu-radius); background: var(--nu-surface); }
 .nu-form-control:hover { border-color: var(--nu-gray-500); }
 .nu-form-control:focus { border-width: 2px; padding: 7px 11px; }
-
 /* MD3 cards and modal */
-.nu-card, .nu-wcard, .nu-shift-card { box-shadow: var(--nu-elevation-1); }
+.nu-card,
+    .nu-wcard,
+    .nu-shift-card { box-shadow: var(--nu-elevation-1); }
 .nu-modal-overlay { background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent); }
 .nu-modal { background: var(--nu-surface); border-radius: var(--nu-radius-lg); box-shadow: var(--nu-elevation-3); }
-
 /* MD3 section titles */
 .nu-form-section-title { color: var(--nu-primary); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.015em; text-transform: none; }

@@ -43,7 +43,6 @@
     --ma-radius:         12px;
     --ma-radius-lg:      16px;
 }
-
 /* Dark mode — explicit rules for elements whose colors rely on var()
    fallbacks (topbar month-nav) or high-emphasis text (KPI values). */
 [data-theme="dark"] .ma-kpi-value { color: var(--md-sys-color-on-surface); }
@@ -70,7 +69,6 @@
     color: var(--ma-on-primary, #fff) !important;
     border-color: var(--ma-primary) !important;
 }
-
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
     --ma-primary: var(--md-ext-color-success);   /* green-400 */
@@ -91,7 +89,6 @@
     --ma-danger-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
     --ma-border-strong: color-mix(in srgb, var(--md-ext-color-success) 35%, transparent);
 }
-
 /* ============================================================
    MAIN PAGE WRAPPER
    ============================================================ */
@@ -102,7 +99,6 @@
     padding: 0 4px;
     color: var(--ma-text);
 }
-
 /* ============================================================
    TOPBAR INJECTOR — Month navigation lives in the global topbar
    beside #pageTitle. The old in-page hero header was removed.
@@ -112,7 +108,6 @@
     align-items: center;
     margin-left: 8px;
 }
-
 .ma-month-nav {
     display: inline-flex;
     align-items: center;
@@ -159,7 +154,6 @@
     background: transparent;
     color: var(--ma-primary, var(--md-ext-color-on-success-container));
 }
-
 .ma-today-btn {
     background: var(--ma-accent, var(--md-ext-color-warning)) !important;
     color: var(--ma-on-primary, #fff) !important;
@@ -180,7 +174,6 @@
     background: var(--ma-accent-dark, var(--md-ext-color-warning)) !important;
     color: var(--ma-on-primary, #fff) !important;
 }
-
 .ma-range-btn {
     background: var(--white) !important;
     color: var(--ma-primary, var(--md-ext-color-on-success-container)) !important;
@@ -206,7 +199,6 @@
     color: var(--ma-on-primary, #fff) !important;
     border-color: var(--ma-primary, var(--md-ext-color-success)) !important;
 }
-
 .ma-range-popover {
     position: absolute;
     top: calc(100% + 8px);
@@ -326,7 +318,6 @@
     color: var(--ma-danger);
     border-color: var(--ma-danger);
 }
-
 /* ============================================================
    BENTO KPIs — 7 tiles
    ============================================================ */
@@ -363,7 +354,6 @@
 .ma-kpi.nu::before { background: var(--ma-nu); }
 .ma-kpi.warn::before { background: var(--ma-warn); }
 .ma-kpi.danger::before { background: var(--ma-danger); }
-
 .ma-kpi-head {
     display: flex;
     align-items: center;
@@ -384,7 +374,6 @@
 .ma-kpi.nu .ma-kpi-icon { background: var(--ma-nu-soft); color: var(--ma-nu); }
 .ma-kpi.warn .ma-kpi-icon { background: var(--ma-warn-soft); color: var(--ma-warn); }
 .ma-kpi.danger .ma-kpi-icon { background: var(--ma-danger-soft); color: var(--ma-danger); }
-
 .ma-kpi-label {
     font-size: 0.7rem;
     font-weight: 600;
@@ -425,7 +414,6 @@
 .ma-kpi-trend.up { background: var(--ma-primary-soft); color: var(--ma-primary-dark); }
 .ma-kpi-trend.down { background: var(--ma-danger-soft); color: var(--ma-danger); }
 .ma-kpi-trend.flat { background: var(--gray-100); color: var(--ma-text-muted); }
-
 /* ============================================================
    TOOLBAR — Tabs, Filter pills, Sort, Search
    ============================================================ */
@@ -446,7 +434,6 @@
     top: var(--topbar-height, 60px);
     z-index: 20;
 }
-
 .ma-tabs {
     display: inline-flex;
     background: var(--ma-canvas);
@@ -475,7 +462,6 @@
     box-shadow: var(--ma-shadow-sm);
 }
 .ma-tab i { font-size: 0.78rem; }
-
 /* Tabs + Mitarbeiter/Kunde switch on one line */
 .ma-toolbar-top {
     display: flex;
@@ -483,7 +469,6 @@
     gap: 12px;
     flex-wrap: wrap;
 }
-
 /* ---- Mode identity: Mitarbeiter = green · Kunde = blue (never mixed) ----
    Fixed colours on purpose: --ma-primary follows the theme (blue), which
    made the MA Freigabe look like the Kunde one. */
@@ -494,7 +479,6 @@
 .ma-freigabe-btn:not(.kunde).on { background: var(--ma-mode-ma); border-color: var(--ma-mode-ma); color: #fff; }
 .ma-freigabe-btn:not(.kunde).on:hover { background: var(--ma-danger); border-color: var(--ma-danger); }
 .ma-freigabe-all-btn:not(.kunde).done { background: var(--ma-mode-ma-soft); border-color: var(--ma-mode-ma); color: var(--ma-mode-ma); }
-
 /* ---- Mitarbeiter | Kunde switch in the global topbar ----
    Beside the month navigation (#maNavInjector > .ma-topbar-stack), both
    left-aligned after the title. It sits outside .ma-page, so the mode
@@ -507,10 +491,10 @@
 .ma-mode-switch .ma-tab .material-symbols-outlined { font-size: 19px !important; }
 /* Desktop: title, switch and month navigation share one 50px band. */
 @media (min-width: 769px) {
-    .topbar:has(.ma-topbar-stack) { align-items: flex-start; }
+.topbar:has(.ma-topbar-stack) { align-items: flex-start; }
     .topbar:has(.ma-topbar-stack) > .page-title,
-    .topbar:has(.ma-topbar-stack) > .menu-toggle { line-height: 50px; }
-    .topbar:has(.ma-topbar-stack) > .topbar-right { height: 50px; }
+.topbar:has(.ma-topbar-stack) > .menu-toggle { line-height: 50px; }
+.topbar:has(.ma-topbar-stack) > .topbar-right { height: 50px; }
 }
 .ma-mode-switch .ma-tab:not(.kunde).active { color: var(--ma-mode-ma, var(--md-ext-color-success)); }
 .ma-mode-switch .ma-tab.kunde.active { color: var(--ma-kunde, var(--md-sys-color-primary)); }
@@ -526,16 +510,17 @@
     border: 1px solid; border-left-width: 4px;
 }
 .ma-mode-banner .material-symbols-outlined { margin-top: 1px; flex-shrink: 0; }
-.ma-mode-banner.ma    { background: color-mix(in srgb, var(--md-ext-color-success) 7%, transparent); border-color: color-mix(in srgb, var(--md-ext-color-success) 30%, transparent); border-left-color: var(--ma-mode-ma); color: var(--md-ext-color-on-success-container); }
+.ma-mode-banner.ma { background: color-mix(in srgb, var(--md-ext-color-success) 7%, transparent); border-color: color-mix(in srgb, var(--md-ext-color-success) 30%, transparent); border-left-color: var(--ma-mode-ma); color: var(--md-ext-color-on-success-container); }
 .ma-mode-banner.ma .material-symbols-outlined { color: var(--ma-mode-ma); }
 .ma-mode-banner.kunde { background: color-mix(in srgb, var(--md-sys-color-primary) 7%, transparent); border-color: color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent); border-left-color: var(--ma-kunde, var(--md-sys-color-primary)); color: var(--md-sys-color-primary); }
 .ma-mode-banner.kunde .material-symbols-outlined { color: var(--ma-kunde, var(--md-sys-color-primary)); }
-[data-theme="dark"] .ma-mode-banner.ma    { background: color-mix(in srgb, var(--md-ext-color-success) 10%, transparent); color: var(--md-ext-color-success-container); }
+[data-theme="dark"] .ma-mode-banner.ma { background: color-mix(in srgb, var(--md-ext-color-success) 10%, transparent); color: var(--md-ext-color-success-container); }
 [data-theme="dark"] .ma-mode-banner.kunde { background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); color: var(--md-sys-color-primary-container); }
-
 /* Worker cards carry the mode colour on their left edge */
-.ma-worker-block.is-ma, .ma-worker-block.is-kunde { position: relative; }
-.ma-worker-block.is-ma::before, .ma-worker-block.is-kunde::before {
+.ma-worker-block.is-ma,
+    .ma-worker-block.is-kunde { position: relative; }
+.ma-worker-block.is-ma::before,
+    .ma-worker-block.is-kunde::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; z-index: 2; pointer-events: none;
     background: var(--ma-mode-ma);
 }
@@ -547,7 +532,6 @@
 [data-theme="dark"] .ma-th-frei.kunde { color: var(--md-sys-color-primary-container) !important; }
 /* Kunde Freigabe button: rounded square (MA stays a circle) */
 .ma-freigabe-btn.kunde { border-radius: var(--md-sys-shape-corner-medium); }
-
 /* Kunde mode: blue accent for the values that go to the Leistungsnachweis */
 .ma-worker-block.is-kunde .ma-worker-std-label,
 .ma-worker-block.is-kunde .ma-th-group .ma-th-ist { color: var(--ma-kunde, var(--md-sys-color-primary)); }
@@ -570,7 +554,6 @@
 [data-theme="dark"] .ma-worker-block.is-kunde .ma-worker-std-label,
 [data-theme="dark"] .ma-worker-block.is-kunde .ma-th-group .ma-th-ist { color: var(--md-sys-color-primary-container); }
 [data-theme="dark"] .ma-freigabe-btn.kunde.on { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); }
-
 .ma-toolbar-row {
     display: flex;
     align-items: center;
@@ -605,7 +588,6 @@
     border-color: var(--ma-primary);
     box-shadow: 0 0 0 3px var(--ma-primary-soft);
 }
-
 .ma-filter-pills {
     display: inline-flex;
     gap: 4px;
@@ -635,8 +617,8 @@
     color: white;
 }
 .ma-filter-pills button i { font-size: 0.72rem; }
-
-select.ma-bereich-select, select.ma-scope-select {
+select.ma-bereich-select,
+    select.ma-scope-select {
     height: 38px;
     padding: 0 32px 0 14px;
     border: 1px solid var(--ma-border);
@@ -652,11 +634,11 @@ select.ma-bereich-select, select.ma-scope-select {
     background-position: right 8px center;
     background-size: 16px;
 }
-select.ma-bereich-select:focus, select.ma-scope-select:focus {
+select.ma-bereich-select:focus,
+    select.ma-scope-select:focus {
     outline: none;
     border-color: var(--ma-primary);
 }
-
 select.ma-scope-select {
     max-width: 220px;
     text-overflow: ellipsis;
@@ -666,7 +648,6 @@ select.ma-scope-select.active {
     color: var(--ma-primary);
     font-weight: 700;
 }
-
 .ma-toolbar-actions {
     display: inline-flex;
     gap: 6px;
@@ -714,7 +695,6 @@ select.ma-scope-select.active {
     color: var(--ma-danger);
 }
 .ma-btn-danger:hover { background: var(--ma-danger); color: white; }
-
 /* ============================================================
    QUICK JUMP SIDEBAR (sticky list of workers)
    ============================================================ */
@@ -791,7 +771,6 @@ select.ma-scope-select.active {
     align-items: center;
     gap: 6px;
 }
-
 /* ============================================================
    WORKER BLOCKS
    ============================================================ */
@@ -808,7 +787,6 @@ select.ma-scope-select.active {
 .ma-worker-block:hover { box-shadow: var(--ma-shadow-md); }
 .ma-worker-block.has-anomaly { border-color: var(--ma-warn); }
 .ma-worker-block.editing { border-color: var(--ma-accent); box-shadow: 0 0 0 3px var(--ma-accent-soft), var(--ma-shadow-md); }
-
 .ma-worker-head {
     display: flex;
     align-items: center;
@@ -821,7 +799,6 @@ select.ma-scope-select.active {
 .ma-worker-block.has-anomaly .ma-worker-head {
     background: linear-gradient(180deg, var(--white) 0%, var(--ma-warn-soft) 100%);
 }
-
 .ma-worker-avatar {
     width: 44px; height: 44px;
     border-radius: 50%;
@@ -873,7 +850,6 @@ select.ma-scope-select.active {
 }
 .ma-worker-meta-chip i { font-size: 0.62rem; color: var(--ma-text-muted); }
 .ma-worker-meta-chip.bereich { background: var(--ma-primary-soft); color: var(--ma-primary-dark); }
-
 .ma-worker-std-display {
     text-align: right;
     padding-right: 8px;
@@ -898,7 +874,6 @@ select.ma-scope-select.active {
     color: var(--ma-text-muted);
     font-weight: 600;
 }
-
 .ma-worker-actions {
     display: inline-flex;
     align-items: center;
@@ -925,7 +900,6 @@ select.ma-scope-select.active {
 .ma-worker-action-btn.pdf:hover { border-color: var(--ma-danger); color: var(--ma-danger); }
 .ma-worker-action-btn.send:hover { border-color: var(--ma-primary); color: var(--ma-primary); background: var(--ma-primary-soft); }
 .ma-worker-action-btn.edit:hover { border-color: var(--ma-accent); color: var(--ma-accent); }
-
 .ma-worker-action-btn-wide {
     height: 36px;
     padding: 0 12px;
@@ -954,7 +928,6 @@ select.ma-scope-select.active {
     border-color: var(--ma-danger);
     color: var(--ma-danger);
 }
-
 /* Zeit-Freigabe — per-entry check toggle (green check in the worker app).
    Open = clearly outlined circle with muted check; confirmed = solid green. */
 .ma-freigabe-btn {
@@ -984,13 +957,11 @@ select.ma-scope-select.active {
     background: var(--ma-danger);
     border-color: var(--ma-danger);
 }
-
 .ma-freigabe-all-btn.done {
     background: var(--ma-primary-soft, color-mix(in srgb, var(--md-ext-color-success) 10%, transparent));
     border-color: var(--ma-primary);
     color: var(--ma-primary);
 }
-
 [data-theme="dark"] .ma-freigabe-btn {
     background: transparent;
     border-color: rgba(255,255,255,0.25);
@@ -1001,7 +972,6 @@ select.ma-scope-select.active {
     border-color: var(--md-ext-color-success);
     color: #fff;
 }
-
 .ma-anomaly-chip {
     display: inline-flex;
     align-items: center;
@@ -1015,7 +985,6 @@ select.ma-scope-select.active {
     border: 1px solid var(--md-ext-color-warning-container);
 }
 .ma-anomaly-chip i { font-size: 0.65rem; }
-
 /* ============================================================
    WORKER TABLES
    ============================================================ */
@@ -1051,10 +1020,8 @@ select.ma-scope-select.active {
 .ma-table tbody tr.has-anomaly:hover { background: var(--md-ext-color-warning-container); }
 [data-theme="dark"] .ma-table tbody tr.has-anomaly:hover { background: color-mix(in srgb, var(--md-ext-color-warning) 24%, transparent); }
 .ma-table tbody tr:last-child td { border-bottom: none; }
-
 .ma-table .ma-text-right { text-align: right; font-variant-numeric: tabular-nums; }
 .ma-table .ma-text-center { text-align: center; }
-
 .ma-cell-input {
     height: 30px;
     border: 1px solid var(--ma-border);
@@ -1078,11 +1045,10 @@ select.ma-scope-select.active {
     font-weight: 700;
 }
 .ma-cell-input-time { width: 100px; }
-
 /* Soll (Bestelleingang) vs Ist (Mitarbeiter-App) — neutral like the rest of the table; groups split by a thin line */
 .ma-table-sollist .ma-th-group th { padding-top: 6px; padding-bottom: 2px; border-bottom: none; }
-.ma-table-sollist th.ma-th-soll { border-left: 1px solid var(--ma-border); }
-.ma-table-sollist th.ma-th-soll + th.ma-th-ist { border-left: 1px solid var(--ma-border); }
+.ma-table-sollist th.ma-th-soll,
+    .ma-table-sollist th.ma-th-soll + th.ma-th-ist { border-left: 1px solid var(--ma-border); }
 .ma-th-hint { font-weight: 500; text-transform: none; letter-spacing: 0; opacity: .75; margin-left: 4px; }
 .ma-cell-soll { border-left: 1px solid var(--ma-border); white-space: nowrap; }
 .ma-soll-time { font-variant-numeric: tabular-nums; color: var(--ma-text-muted); }
@@ -1102,7 +1068,6 @@ select.ma-scope-select.active {
 .ma-diff.neg { color: var(--ma-danger); }
 .ma-worker-std-sub { font-size: 0.7rem; color: var(--ma-text-muted); margin-top: 3px; white-space: nowrap; }
 .ma-cell-input-num { width: 75px; }
-
 .ma-day-chip {
     display: inline-block;
     padding: 2px 8px;
@@ -1116,7 +1081,6 @@ select.ma-scope-select.active {
     background: var(--ma-warn-soft);
     color: var(--ma-warn);
 }
-
 .ma-status-pill {
     display: inline-flex;
     align-items: center;
@@ -1149,7 +1113,6 @@ select.ma-scope-select.active {
     color: var(--gray-600);
 }
 .ma-status-pill.pending::before { background: var(--md-sys-color-primary); }
-
 /* ============================================================
    NU COMPANIES SECTION
    ============================================================ */
@@ -1190,7 +1153,6 @@ select.ma-scope-select.active {
     gap: 12px;
     flex-wrap: wrap;
 }
-
 .ma-worker-block.is-nu {
     border-left: 4px solid var(--ma-nu);
 }
@@ -1216,7 +1178,6 @@ select.ma-scope-select.active {
     font-size: 0.7rem;
     font-weight: 700;
 }
-
 /* ============================================================
    EMPTY STATE
    ============================================================ */
@@ -1244,14 +1205,12 @@ select.ma-scope-select.active {
     color: var(--ma-text-soft);
     margin-top: 6px;
 }
-
 .ma-loading {
     text-align: center;
     padding: 60px 20px;
     color: var(--ma-text-muted);
 }
 .ma-loading i { color: var(--ma-primary); margin-right: 6px; }
-
 /* ============================================================
    ANALYTICS TAB
    ============================================================ */
@@ -1297,7 +1256,6 @@ select.ma-scope-select.active {
     position: relative;
     height: 240px;
 }
-
 .ma-top-list {
     display: flex;
     flex-direction: column;
@@ -1343,7 +1301,6 @@ select.ma-scope-select.active {
     color: var(--ma-primary-dark);
     font-variant-numeric: tabular-nums;
 }
-
 /* ============================================================
    PROGRESS BARS (for Bento sub-meters)
    ============================================================ */
@@ -1364,15 +1321,16 @@ select.ma-scope-select.active {
 .ma-progress-fill.gold { background: var(--ma-accent); }
 .ma-progress-fill.warn { background: var(--ma-warn); }
 .ma-progress-fill.danger { background: var(--ma-danger); }
-
 /* ============================================================
    ANIMATIONS
    ============================================================ */
 @keyframes maFadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
 }
-.ma-worker-block, .ma-kpi, .ma-chart-card {
+.ma-worker-block,
+    .ma-kpi,
+    .ma-chart-card {
     animation: maFadeUp 0.4s ease backwards;
 }
 .ma-worker-block:nth-child(1) { animation-delay: 0.02s; }
@@ -1380,52 +1338,51 @@ select.ma-scope-select.active {
 .ma-worker-block:nth-child(3) { animation-delay: 0.06s; }
 .ma-worker-block:nth-child(4) { animation-delay: 0.08s; }
 .ma-worker-block:nth-child(5) { animation-delay: 0.1s; }
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 /* Kunde mode adds the "Freigabe Kunde" tile → 7 columns */
 @media (min-width: 1101px) {
-    .ma-bento:has(> .ma-kpi:nth-child(7)) { grid-template-columns: repeat(7, 1fr); }
+.ma-bento:has(> .ma-kpi:nth-child(7)) { grid-template-columns: repeat(7, 1fr); }
 }
 @media (max-width: 1100px) {
-    .ma-bento { grid-template-columns: repeat(3, 1fr); }
-    .ma-layout { grid-template-columns: 1fr; }
-    .ma-quickjump { display: none; }
-    .ma-analytics-grid { grid-template-columns: 1fr; }
+.ma-bento { grid-template-columns: repeat(3, 1fr); }
+.ma-layout { grid-template-columns: 1fr; }
+.ma-quickjump { display: none; }
+.ma-analytics-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
-    .ma-bento { grid-template-columns: repeat(2, 1fr); }
-    .ma-nav-injector {
+.ma-bento { grid-template-columns: repeat(2, 1fr); }
+.ma-nav-injector {
         flex-wrap: nowrap;       /* lives in topbar row 2 — swipes, never wraps */
         margin-left: 0;
     }
-    .ma-month-nav {
+.ma-month-nav {
         gap: 4px;
         padding: 3px 4px;
         flex-wrap: nowrap;
         width: max-content;
         min-width: 100%;
     }
-    .ma-month-label {
+.ma-month-label {
         min-width: 80px;
         font-size: 0.78rem;
         padding: 0 4px;
     }
     .ma-today-btn,
-    .ma-range-btn {
+.ma-range-btn {
         font-size: 0.68rem !important;
         padding: 0 8px !important;
     }
-    .ma-worker-head {
+.ma-worker-head {
         flex-direction: column;
         align-items: stretch;
         text-align: center;
     }
-    .ma-worker-std-display { text-align: center; padding-right: 0; }
-    .ma-worker-actions { justify-content: center; }
-    .ma-toolbar-actions { margin-left: auto; }
-    .ma-table thead { display: none; }
+.ma-worker-std-display { text-align: center; padding-right: 0; }
+.ma-worker-actions { justify-content: center; }
+.ma-toolbar-actions { margin-left: auto; }
+.ma-table thead { display: none; }
     /* Phone card layout. The table is turned into plain blocks so a long
        Objekt name can never widen it (it used to scroll sideways), and every
        row is ONE 8-column grid:
@@ -1433,10 +1390,12 @@ select.ma-scope-select.active {
          Objekt (wraps)
          Soll ···················· Diff
          [ Ist von | Ist bis | Pause | Std ]  ← one tinted panel           */
-    .ma-table-wrap { overflow-x: hidden; }
-    .ma-table, .ma-table tbody { display: block; width: 100%; min-width: 0; }
-    .ma-cell-soll, .ma-cell-ist.ma-cell-von { border-left: none; }
-    .ma-table tbody tr {
+.ma-table-wrap { overflow-x: hidden; }
+.ma-table,
+    .ma-table tbody { display: block; width: 100%; min-width: 0; }
+.ma-cell-soll,
+    .ma-cell-ist.ma-cell-von { border-left: none; }
+.ma-table tbody tr {
         display: grid;
         grid-template-columns: repeat(8, minmax(0, 1fr));
         grid-template-areas:
@@ -1450,7 +1409,7 @@ select.ma-scope-select.active {
         padding: 14px 14px 12px;
         border-bottom: 1px solid var(--ma-border);
     }
-    .ma-table tbody tr:has(td[data-label="Position"]) {
+.ma-table tbody tr:has(td[data-label="Position"]) {
         grid-template-areas:
             "tag datum datum datum status status status status"
             "objekt objekt objekt objekt objekt objekt objekt objekt"
@@ -1459,7 +1418,7 @@ select.ma-scope-select.active {
             "von von bis bis pause pause std std";
     }
     /* NU in Kunde mode also carries a Freigabe button */
-    .ma-table tbody tr:has(td[data-label="Position"]):has(td[data-label="Freigabe"]) {
+.ma-table tbody tr:has(td[data-label="Position"]):has(td[data-label="Freigabe"]) {
         grid-template-areas:
             "tag datum datum datum status status status freigabe"
             "objekt objekt objekt objekt objekt objekt objekt objekt"
@@ -1469,9 +1428,9 @@ select.ma-scope-select.active {
     }
     /* Cards separate by spacing, not by zebra stripes */
     .ma-table tbody tr:nth-child(even),
-    .ma-table tbody tr:hover { background: transparent; }
-    .ma-table tbody tr.has-anomaly { background: var(--ma-warn-soft); }
-    .ma-table tbody td {
+.ma-table tbody tr:hover { background: transparent; }
+.ma-table tbody tr.has-anomaly { background: var(--ma-warn-soft); }
+.ma-table tbody td {
         display: flex;
         flex-direction: column;
         gap: 3px;
@@ -1483,7 +1442,7 @@ select.ma-scope-select.active {
         white-space: normal;
         overflow-wrap: anywhere;
     }
-    .ma-table tbody td::before {
+.ma-table tbody td::before {
         content: attr(data-label);
         font-weight: 700;
         color: var(--ma-text-muted);
@@ -1496,23 +1455,23 @@ select.ma-scope-select.active {
     .ma-table tbody td[data-label="Tag"],
     .ma-table tbody td[data-label="Datum"],
     .ma-table tbody td[data-label="Status"],
-    .ma-table tbody td[data-label="Freigabe"] { align-self: center; }
+.ma-table tbody td[data-label="Freigabe"] { align-self: center; }
     .ma-table tbody td[data-label="Tag"]::before,
     .ma-table tbody td[data-label="Datum"]::before,
     .ma-table tbody td[data-label="Status"]::before,
-    .ma-table tbody td[data-label="Freigabe"]::before { display: none; }
-    .ma-table tbody td[data-label="Tag"]      { grid-area: tag; align-items: flex-start; }
-    .ma-table tbody td[data-label="Datum"]    { grid-area: datum; font-weight: 700; font-size: 0.95rem; color: var(--ma-text-strong); white-space: nowrap; }
-    .ma-table tbody td[data-label="Status"]   { grid-area: status; align-items: flex-end; padding-right: 6px; }
-    .ma-table tbody td[data-label="Freigabe"] { grid-area: freigabe; align-items: flex-end; }
-    .ma-table tbody td[data-label="Freigabe"] .ma-freigabe-btn { width: 34px; height: 34px; overflow: hidden; flex-shrink: 0; }
-    .ma-table tbody td[data-label="Objekt"]   { grid-area: objekt; font-weight: 600; color: var(--ma-text-strong); }
-    .ma-table tbody td[data-label="Position"] { grid-area: position; }
-    .ma-table tbody td[data-label="Soll"]     { grid-area: soll; }
-    .ma-table tbody td[data-label="Diff"]     { grid-area: diff; align-items: flex-end; text-align: right; }
-    .ma-soll-time { white-space: nowrap; }
+.ma-table tbody td[data-label="Freigabe"]::before { display: none; }
+.ma-table tbody td[data-label="Tag"] { grid-area: tag; align-items: flex-start; }
+.ma-table tbody td[data-label="Datum"] { grid-area: datum; font-weight: 700; font-size: 0.95rem; color: var(--ma-text-strong); white-space: nowrap; }
+.ma-table tbody td[data-label="Status"] { grid-area: status; align-items: flex-end; padding-right: 6px; }
+.ma-table tbody td[data-label="Freigabe"] { grid-area: freigabe; align-items: flex-end; }
+.ma-table tbody td[data-label="Freigabe"] .ma-freigabe-btn { width: 34px; height: 34px; overflow: hidden; flex-shrink: 0; }
+.ma-table tbody td[data-label="Objekt"] { grid-area: objekt; font-weight: 600; color: var(--ma-text-strong); }
+.ma-table tbody td[data-label="Position"] { grid-area: position; }
+.ma-table tbody td[data-label="Soll"] { grid-area: soll; }
+.ma-table tbody td[data-label="Diff"] { grid-area: diff; align-items: flex-end; text-align: right; }
+.ma-soll-time { white-space: nowrap; }
     /* Ist values: one tinted panel, equal columns, captions on one line */
-    .ma-table tbody td.ma-cell-ist {
+.ma-table tbody td.ma-cell-ist {
         background: var(--ma-canvas);
         padding: 9px 6px;
         border-top: 1px solid var(--ma-border);
@@ -1520,24 +1479,24 @@ select.ma-scope-select.active {
         align-self: stretch;   /* equal heights → one even panel */
     }
     /* Kunde mode: captions name the customer values (data-label stays for the grid) */
-    .ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist von"]::before { content: 'Kunde von'; }
-    .ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist bis"]::before { content: 'Kunde bis'; }
-    .ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist Std"]::before { content: 'Kunde Std'; }
-    .ma-worker-block.is-kunde .ma-table tbody td.ma-cell-ist::before { color: var(--ma-kunde, var(--md-sys-color-primary)); }
-    [data-theme="dark"] .ma-worker-block.is-kunde .ma-table tbody td.ma-cell-ist::before { color: var(--md-sys-color-primary-container); }
-    .ma-table tbody td[data-label="Ist von"]  { grid-area: von; padding-left: 10px; border-left: 1px solid var(--ma-border); border-radius: var(--ma-radius-sm) 0 0 var(--ma-radius-sm); }
-    .ma-table tbody td[data-label="Ist bis"]  { grid-area: bis; }
-    .ma-table tbody td[data-label="Pause"]    { grid-area: pause; }
-    .ma-table tbody td[data-label="Ist Std"]  { grid-area: std; align-items: flex-end; text-align: right; padding-right: 10px; border-right: 1px solid var(--ma-border); border-radius: 0 var(--ma-radius-sm) var(--ma-radius-sm) 0; }
-    .ma-table tbody td.ma-cell-ist .ma-display { font-variant-numeric: tabular-nums; font-weight: 600; }
-    .ma-table tbody td[data-label="Ist Std"] .ma-display { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-    .ma-table tbody td[data-label="Ist Std"] .ma-ist-src { margin-left: 0; }
-    .ma-table tbody td.ma-cell-ist .ma-ist-early { font-weight: 400; margin-top: 2px; }
-    .ma-table tbody td .ma-cell-input { width: 100%; max-width: 100%; }
+.ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist von"]::before { content: 'Kunde von'; }
+.ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist bis"]::before { content: 'Kunde bis'; }
+.ma-worker-block.is-kunde .ma-table tbody td[data-label="Ist Std"]::before { content: 'Kunde Std'; }
+.ma-worker-block.is-kunde .ma-table tbody td.ma-cell-ist::before { color: var(--ma-kunde, var(--md-sys-color-primary)); }
+[data-theme="dark"] .ma-worker-block.is-kunde .ma-table tbody td.ma-cell-ist::before { color: var(--md-sys-color-primary-container); }
+.ma-table tbody td[data-label="Ist von"] { grid-area: von; padding-left: 10px; border-left: 1px solid var(--ma-border); border-radius: var(--ma-radius-sm) 0 0 var(--ma-radius-sm); }
+.ma-table tbody td[data-label="Ist bis"] { grid-area: bis; }
+.ma-table tbody td[data-label="Pause"] { grid-area: pause; }
+.ma-table tbody td[data-label="Ist Std"] { grid-area: std; align-items: flex-end; text-align: right; padding-right: 10px; border-right: 1px solid var(--ma-border); border-radius: 0 var(--ma-radius-sm) var(--ma-radius-sm) 0; }
+.ma-table tbody td.ma-cell-ist .ma-display { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ma-table tbody td[data-label="Ist Std"] .ma-display { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.ma-table tbody td[data-label="Ist Std"] .ma-ist-src { margin-left: 0; }
+.ma-table tbody td.ma-cell-ist .ma-ist-early { font-weight: 400; margin-top: 2px; }
+.ma-table tbody td .ma-cell-input { width: 100%; max-width: 100%; }
 }
 @media (max-width: 480px) {
-    .ma-bento { grid-template-columns: 1fr; }
-    .ma-kpi-value { font-size: 1.5rem; }
+.ma-bento { grid-template-columns: 1fr; }
+.ma-kpi-value { font-size: 1.5rem; }
 }
 
 /* ============================================================
@@ -1571,7 +1530,6 @@ select.ma-scope-select.active {
     --md-outlined-button-label-text-color: var(--ma-text);
     --md-outlined-button-icon-color: var(--ma-primary);
 }
-
 /* --- Material Symbols sizing in page chrome --- */
 .ma-kpi-icon .material-symbols-outlined { font-size: 16px; }
 .ma-empty .material-symbols-outlined {
@@ -1603,11 +1561,10 @@ select.ma-scope-select.active {
 .ma-range-reset .material-symbols-outlined,
 .ma-range-apply .material-symbols-outlined,
 .ma-today-btn .material-symbols-outlined,
-.ma-range-btn .material-symbols-outlined { vertical-align: -2px; }
-.ma-kpi-sub .material-symbols-outlined { vertical-align: -2px; }
-
+.ma-range-btn .material-symbols-outlined,
+    .ma-kpi-sub .material-symbols-outlined { vertical-align: -2px; }
 @media (max-width: 768px) {
-    .ma-toolbar-row md-outlined-text-field.ma-search { max-width: none; }
+.ma-toolbar-row md-outlined-text-field.ma-search { max-width: none; }
 }
 
 /* ============================================================
@@ -1638,7 +1595,6 @@ select.ma-scope-select.active {
 .ma-exp-format-text { min-width: 0; }
 .ma-exp-format-text strong { display: block; font-size: 0.95rem; }
 .ma-exp-format-text small { display: block; font-size: 0.74rem; line-height: 1.3; color: var(--ma-text-muted); }
-
 .ma-exp-modes {
     display: flex; gap: 4px; padding: 4px; border-radius: var(--md-sys-shape-corner-full);
     background: var(--ma-canvas); border: 1px solid var(--ma-border);
@@ -1652,7 +1608,6 @@ select.ma-scope-select.active {
 }
 .ma-exp-mode:hover { color: var(--ma-primary-dark); }
 .ma-exp-mode.active { background: var(--ma-surface); color: var(--ma-primary-dark); box-shadow: var(--ma-shadow-sm); }
-
 .ma-exp-period { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ma-exp-stepper {
     flex: 1 1 240px; display: flex; align-items: center; gap: 8px; padding: 6px;
@@ -1688,7 +1643,6 @@ select.ma-scope-select.active {
 }
 .ma-exp-view strong { display: block; color: var(--ma-text-strong); }
 .ma-exp-view small { display: block; font-size: 0.78rem; color: var(--ma-text-muted); }
-
 .ma-exp-summary {
     display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: var(--ma-radius);
     background: var(--ma-primary-50); border: 1px solid var(--ma-primary-soft); color: var(--ma-primary-dark); font-size: 0.88rem;
@@ -1697,23 +1651,22 @@ select.ma-scope-select.active {
 .ma-exp-summary strong { color: var(--ma-primary-dark); }
 .ma-exp-summary.empty { background: var(--ma-canvas); border-color: var(--ma-border); color: var(--ma-text-muted); }
 .ma-exp-summary.empty span { color: var(--ma-text-muted); }
-
 #maExpGo { --md-filled-button-container-color: var(--ma-primary); }
 #maExpGo.ma-exp-go-pdf { --md-filled-button-container-color: var(--ma-accent); }
 #maExpGo { --md-filled-button-label-text-color: var(--ma-on-primary, #fff); --md-filled-button-icon-color: var(--ma-on-primary, #fff); }
-
 @media (max-width: 480px) {
-    .ma-exp { gap: 16px; }
-    .ma-exp-format { padding: 10px; gap: 10px; }
-    .ma-exp-format-icon { width: 34px; height: 34px; }
-    .ma-exp-format-text small { display: none; }
-    .ma-exp-modes { overflow: hidden; }
-    .ma-exp-mode { flex: 1 1 0; min-width: 0; padding: 8px 2px; font-size: 0.78rem; }
-    .ma-exp-now { width: 100%; justify-content: center; }
-    .ma-exp-range { grid-template-columns: 1fr; }
+.ma-exp { gap: 16px; }
+.ma-exp-format { padding: 10px; gap: 10px; }
+.ma-exp-format-icon { width: 34px; height: 34px; }
+.ma-exp-format-text small { display: none; }
+.ma-exp-modes { overflow: hidden; }
+.ma-exp-mode { flex: 1 1 0; min-width: 0; padding: 8px 2px; font-size: 0.78rem; }
+.ma-exp-now { width: 100%; justify-content: center; }
+.ma-exp-range { grid-template-columns: 1fr; }
     /* ≥16px stops iOS from zooming into the field */
-    .ma-exp-range input, .ma-exp-select { font-size: 16px; }
-    .modal-footer:has(#maExpGo) > * { flex: 1; }
+.ma-exp-range input,
+    .ma-exp-select { font-size: 16px; }
+.modal-footer:has(#maExpGo) > * { flex: 1; }
 }
 
 /* ============================================================
@@ -1723,20 +1676,22 @@ select.ma-scope-select.active {
    — the stacked phone header is too tall to pin.
    ============================================================ */
 @media (min-width: 769px) {
-    .ma-worker-head {
+.ma-worker-head {
         position: sticky;
         top: calc(var(--topbar-height, 60px) + var(--ma-toolbar-height, 0px));
         z-index: 6;
     }
     /* Solid base under the (partly translucent) header gradients */
-    .ma-page .ma-worker-block .ma-worker-head { background-color: var(--ma-surface); }
-    .ma-worker-block.is-ma .ma-worker-head    { box-shadow: inset 4px 0 0 var(--ma-mode-ma), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
-    .ma-worker-block.is-kunde .ma-worker-head { box-shadow: inset 4px 0 0 var(--ma-kunde), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
+.ma-page .ma-worker-block .ma-worker-head { background-color: var(--ma-surface); }
+.ma-worker-block.is-ma .ma-worker-head { box-shadow: inset 4px 0 0 var(--ma-mode-ma), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
+.ma-worker-block.is-kunde .ma-worker-head { box-shadow: inset 4px 0 0 var(--ma-kunde), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
 }
 
 /* ── Row-level edit (pencil → save/cancel inside the row) ── */
 td.ma-cell-edit { white-space: nowrap; }
-.ma-row-edit-btn, .ma-row-save-btn, .ma-row-cancel-btn {
+.ma-row-edit-btn,
+    .ma-row-save-btn,
+    .ma-row-cancel-btn {
     width: 30px; height: 30px; padding: 0;
     border: none; border-radius: var(--md-sys-shape-corner-medium);
     background: transparent; color: var(--md-sys-color-primary-container);
@@ -1761,7 +1716,6 @@ td.ma-cell-edit { white-space: nowrap; }
 }
 tr.ma-row-editing > td { background: var(--ma-mode-ma-soft, var(--md-ext-color-success-container)); }
 tr.ma-row-editing > td.ma-cell-edit { background: transparent; }
-
 /* ============================================================
    MODE THEME — the whole Zeiterfassung page follows the active mode:
    Mitarbeiter = green · Kunde = blue. JS sets .ma-theme-ma / .ma-theme-kunde
@@ -1882,11 +1836,9 @@ body:has(.ma-page[class*="ma-theme-"]) .ma-topbar-stack .ma-month-nav { backgrou
 .ma-page[class*="ma-theme-"] .ma-kpi:not(.warn):not(.danger):not(.nu) .ma-kpi-icon { background: var(--ma-primary-soft); color: var(--ma-primary-dark); }
 .ma-page[class*="ma-theme-"] .ma-kpi.nu .ma-kpi-icon { background: var(--ma-nu-soft); color: var(--ma-nu); }
 .ma-page[class*="ma-theme-"] .ma-kpi.gold::before { background: var(--ma-primary-dark); }
-
 /* Sticky toolbar: a page-coloured halo hides the worker cards that scroll
    behind its rounded corners / side edges and the strip above it. */
 .ma-page .ma-toolbar { box-shadow: 0 0 0 6px var(--bg), 0 -16px 0 6px var(--bg), var(--ma-shadow-sm); }
-
 /* ============================================================
    Month navigation in the Zeiterfassung topbar — same shape as the
    Mitarbeiter | Kunde switch: 50px rectangle, 10px rounded buttons.
@@ -1929,9 +1881,9 @@ body:has(.ma-page[class*="ma-theme-"]) .ma-topbar-stack .ma-month-nav { backgrou
    (tooltip keeps the text) so switch + navigation still fit on one line. */
 @media (min-width: 1025px) and (max-width: 1399px) {
     .ma-topbar-stack .ma-today-btn,
-    .ma-topbar-stack .ma-range-btn { font-size: 0 !important; gap: 0; padding: 0 11px !important; }
-    .ma-topbar-stack .ma-month-label { min-width: 0; padding: 0 2px; }
-    .ma-topbar-stack .ma-month-nav > button:not(.ma-today-btn):not(.ma-range-btn) { width: 34px; }
+.ma-topbar-stack .ma-range-btn { font-size: 0 !important; gap: 0; padding: 0 11px !important; }
+.ma-topbar-stack .ma-month-label { min-width: 0; padding: 0 2px; }
+.ma-topbar-stack .ma-month-nav > button:not(.ma-today-btn):not(.ma-range-btn) { width: 34px; }
 }
 /* Not enough room beside the title → the injector shrinks and the month
    navigation wraps under the switch (the icons stay on the title line). */
@@ -1939,17 +1891,17 @@ body:has(.ma-page[class*="ma-theme-"]) .ma-topbar-stack .ma-month-nav { backgrou
 .ma-topbar-stack > * { flex-shrink: 0; }
 @media (max-width: 640px) {
     /* style.css forces nowrap on topbar grandchildren for phones */
-    .topbar > .ma-nav-injector > .ma-topbar-stack { flex-wrap: wrap !important; }
+.topbar > .ma-nav-injector > .ma-topbar-stack { flex-wrap: wrap !important; }
 }
 @media (max-width: 768px) {
-    .ma-topbar-stack .ma-month-nav { height: auto; min-height: 50px; }
-    .ma-topbar-stack .ma-month-label { min-width: 110px; font-size: 0.9rem; }
+.ma-topbar-stack .ma-month-nav { height: auto; min-height: 50px; }
+.ma-topbar-stack .ma-month-label { min-width: 110px; font-size: 0.9rem; }
     .ma-topbar-stack .ma-today-btn,
-    .ma-topbar-stack .ma-range-btn { padding: 0 12px !important; font-size: 0.85rem !important; }
+.ma-topbar-stack .ma-range-btn { padding: 0 12px !important; font-size: 0.85rem !important; }
 }
 @media (max-width: 480px) {
     /* Heute / Zeitraum as icon buttons — the text is a bare text node */
     .ma-topbar-stack .ma-today-btn,
-    .ma-topbar-stack .ma-range-btn { font-size: 0 !important; gap: 0; padding: 0 10px !important; }
-    .ma-topbar-stack .ma-month-label { min-width: 100px !important; }
+.ma-topbar-stack .ma-range-btn { font-size: 0 !important; gap: 0; padding: 0 10px !important; }
+.ma-topbar-stack .ma-month-label { min-width: 100px !important; }
 }

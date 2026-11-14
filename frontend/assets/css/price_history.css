@@ -39,7 +39,6 @@
     --ph-text-muted:    var(--gray-500);
     --ph-text-soft:     var(--gray-400);
 }
-
 /* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
 [data-theme="dark"] {
     --ph-accent: var(--md-sys-color-primary);   /* indigo-400 */
@@ -52,7 +51,6 @@
     --ph-negative: var(--md-sys-color-error);
     --ph-negative-soft: color-mix(in srgb, var(--md-sys-color-error) 16%, transparent);
 }
-
 /* ===== 2. Stats Bento (5 KPI cards) ===== */
 .ph-stats-bento {
     display: grid;
@@ -92,7 +90,6 @@
     transform: translateY(-1px);
 }
 .ph-kpi:hover::before { opacity: 1; }
-
 .ph-kpi-head {
     display: flex;
     align-items: center;
@@ -128,14 +125,12 @@
     padding-top: 4px;
 }
 .ph-kpi-sub strong { color: var(--ph-text); font-weight: 700; }
-
 /* Variants */
 .ph-kpi-positive .ph-kpi-icon { background: var(--ph-positive-soft); color: var(--ph-positive); }
 .ph-kpi-positive .ph-kpi-value { color: var(--ph-positive); }
 .ph-kpi-negative .ph-kpi-icon { background: var(--ph-negative-soft); color: var(--ph-negative); }
 .ph-kpi-negative .ph-kpi-value { color: var(--ph-negative); }
 .ph-kpi-neutral  .ph-kpi-icon { background: var(--ph-neutral-soft); color: var(--ph-neutral); }
-
 /* ===== 3. Main card: filter toolbar + tabs + panes ===== */
 .ph-card {
     background: var(--ph-surface);
@@ -146,7 +141,6 @@
        scroll container, so the sticky filter block + month heads work. */
     overflow: clip;
 }
-
 /* Row 1: search grows, three selects share the rest */
 .ph-toolbar {
     display: grid;
@@ -219,7 +213,6 @@
     color: var(--ph-accent);
     font-weight: 600;
 }
-
 /* Row 2: Typ chips + reset */
 .ph-toolbar-row2 {
     display: flex;
@@ -263,7 +256,6 @@
     cursor: pointer;
 }
 .ph-reset-btn:hover { background: var(--ph-accent-tint); }
-
 /* ===== 4. Tabs (underline style) + result info + CSV ===== */
 .ph-tabbar {
     display: flex;
@@ -356,27 +348,25 @@
     font-size: 0.76rem;
     color: var(--ph-text-muted);
 }
-
 @media (max-width: 1100px) {
-    .ph-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .ph-search { grid-column: 1 / -1; }
+.ph-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ph-search { grid-column: 1 / -1; }
 }
 @media (max-width: 720px) {
-    .ph-toolbar { grid-template-columns: 1fr; padding: 12px 12px 6px; }
-    .ph-toolbar-row2 { padding: 4px 12px 10px; }
-    .ph-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; width: 100%; }
-    .ph-chip { flex-shrink: 0; }
-    .ph-tabbar { flex-direction: column; align-items: stretch; padding: 0 8px; }
-    .ph-tab { flex: 1; justify-content: center; padding: 0 8px; }
-    .ph-tab > span:not(.ph-tab-count):not(.material-symbols-outlined) { font-size: 0.8rem; }
-    .ph-tabbar-side { justify-content: space-between; height: 44px; border-top: 1px solid var(--ph-border); }
-    .ph-tab-hint { padding: 10px 12px 0; }
+.ph-toolbar { grid-template-columns: 1fr; padding: 12px 12px 6px; }
+.ph-toolbar-row2 { padding: 4px 12px 10px; }
+.ph-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; width: 100%; }
+.ph-chip { flex-shrink: 0; }
+.ph-tabbar { flex-direction: column; align-items: stretch; padding: 0 8px; }
+.ph-tab { flex: 1; justify-content: center; padding: 0 8px; }
+.ph-tab > span:not(.ph-tab-count):not(.material-symbols-outlined) { font-size: 0.8rem; }
+.ph-tabbar-side { justify-content: space-between; height: 44px; border-top: 1px solid var(--ph-border); }
+.ph-tab-hint { padding: 10px 12px 0; }
 }
 
 /* ===== 5. Timeline (Verlauf) ===== */
 .ph-pane { display: none; }
 .ph-pane.active { display: block; }
-
 .ph-timeline {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
@@ -402,7 +392,7 @@
        and overlapped the badges. Explicit areas (which override the inline
        grid-column) lay it out as a card: date row on top with the drill
        button on the right, then body, then prices full-width. */
-    .ph-timeline-row {
+.ph-timeline-row {
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
             "date    actions"
@@ -411,28 +401,28 @@
         gap: 10px 12px;
         align-items: start;
     }
-    .ph-tl-date {
+.ph-tl-date {
         grid-area: date;
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
         gap: 6px 10px;
     }
-    .ph-tl-date-day { font-size: 0.95rem; }
-    .ph-tl-body   { grid-area: body; }
-    .ph-tl-prices { grid-area: prices; min-width: 0; align-items: stretch; gap: 6px; }
-    .ph-timeline-row .ph-tl-actions {
+.ph-tl-date-day { font-size: 0.95rem; }
+.ph-tl-body { grid-area: body; }
+.ph-tl-prices { grid-area: prices; min-width: 0; align-items: stretch; gap: 6px; }
+.ph-timeline-row .ph-tl-actions {
         grid-area: actions !important;
         grid-column: auto !important;
         padding-top: 0 !important;
     }
-    .ph-price-row {
+.ph-price-row {
         flex-wrap: wrap;
         padding: 6px 10px;
         background: var(--ph-bg-soft);
         border-radius: var(--md-sys-shape-corner-small);
     }
-    .ph-price-row .ph-delta-pill { margin-left: auto; }
+.ph-price-row .ph-delta-pill { margin-left: auto; }
 }
 
 .ph-tl-date {
@@ -464,9 +454,8 @@
     color: var(--ph-accent);
     width: fit-content;
 }
-.ph-tl-typ.create  { background: var(--ph-positive-soft); color: var(--ph-positive); }
-.ph-tl-typ.manual  { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-warning); }
-
+.ph-tl-typ.create { background: var(--ph-positive-soft); color: var(--ph-positive); }
+.ph-tl-typ.manual { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-warning); }
 .ph-tl-body {
     min-width: 0;
     display: flex;
@@ -512,7 +501,6 @@
     font-style: italic;
     margin-top: 3px;
 }
-
 .ph-tl-prices {
     display: flex;
     flex-direction: column;
@@ -521,7 +509,7 @@
     min-width: 200px;
 }
 @media (max-width: 760px) {
-    .ph-tl-prices { align-items: flex-start; }
+.ph-tl-prices { align-items: flex-start; }
 }
 .ph-price-row {
     display: flex;
@@ -563,10 +551,9 @@
     font-weight: 700;
     font-variant-numeric: tabular-nums;
 }
-.ph-delta-pill.up   { background: var(--ph-positive-soft); color: var(--ph-positive); }
+.ph-delta-pill.up { background: var(--ph-positive-soft); color: var(--ph-positive); }
 .ph-delta-pill.down { background: var(--ph-negative-soft); color: var(--ph-negative); }
 .ph-delta-pill.flat { background: var(--ph-neutral-soft);  color: var(--ph-neutral); }
-
 .ph-tl-actions {
     display: flex;
     gap: 6px;
@@ -589,7 +576,6 @@
     color: var(--ph-accent);
     background: var(--ph-accent-soft);
 }
-
 /* ===== 6. Per-Article Table (Pro Artikel) ===== */
 .ph-art-table {
     background: var(--ph-surface);
@@ -632,7 +618,6 @@
     background: var(--ph-accent-tint);
 }
 .ph-art-table .text-right { text-align: right; }
-
 .ph-mini-spark {
     display: inline-flex;
     align-items: end;
@@ -649,7 +634,6 @@
 }
 .ph-mini-spark.up span:last-child { background: var(--ph-positive); }
 .ph-mini-spark.down span:last-child { background: var(--ph-negative); }
-
 /* ===== 7. Top Changes Ranked ===== */
 .ph-top-grid {
     display: grid;
@@ -657,7 +641,7 @@
     gap: 14px;
 }
 @media (max-width: 760px) {
-    .ph-top-grid { grid-template-columns: 1fr; }
+.ph-top-grid { grid-template-columns: 1fr; }
 }
 .ph-top-card {
     background: var(--ph-surface);
@@ -717,14 +701,12 @@
     gap: 6px;
     margin-top: 2px;
 }
-
 /* ===== 8. Article-history drill-down modal ===== */
 .modal.ph-context .modal-title { color: var(--ph-text); }
 .modal.ph-context .form-control:focus {
     border-color: var(--ph-accent);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
-
 .ph-detail-summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -736,7 +718,7 @@
     margin-bottom: 16px;
 }
 @media (max-width: 720px) {
-    .ph-detail-summary { grid-template-columns: repeat(2, 1fr); }
+.ph-detail-summary { grid-template-columns: repeat(2, 1fr); }
 }
 .ph-detail-stat {
     display: flex;
@@ -756,9 +738,8 @@
     color: var(--ph-text);
     font-variant-numeric: tabular-nums;
 }
-.ph-detail-stat-val.up   { color: var(--ph-positive); }
+.ph-detail-stat-val.up { color: var(--ph-positive); }
 .ph-detail-stat-val.down { color: var(--ph-negative); }
-
 .ph-chart-wrap {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
@@ -803,7 +784,7 @@
     stroke-linejoin: round;
 }
 .ph-chart-svg .dot-kunde { fill: var(--ph-accent); stroke: white; stroke-width: 2; }
-.ph-chart-svg .dot-nu    { fill: var(--md-ext-color-warning); stroke: white; stroke-width: 2; }
+.ph-chart-svg .dot-nu { fill: var(--md-ext-color-warning); stroke: white; stroke-width: 2; }
 .ph-chart-legend {
     display: flex;
     gap: 16px;
@@ -821,8 +802,7 @@
     border-radius: var(--md-sys-shape-corner-extra-small);
 }
 .ph-chart-legend-swatch.kunde { background: var(--ph-accent); }
-.ph-chart-legend-swatch.nu    { background: var(--md-ext-color-warning); }
-
+.ph-chart-legend-swatch.nu { background: var(--md-ext-color-warning); }
 .ph-detail-table-wrap {
     background: var(--ph-surface);
     border: 1px solid var(--ph-border);
@@ -838,7 +818,8 @@
     border-collapse: collapse;
     font-size: 0.84rem;
 }
-.ph-detail-table th, .ph-detail-table td { white-space: nowrap; }
+.ph-detail-table th,
+    .ph-detail-table td { white-space: nowrap; }
 .ph-detail-table thead {
     background: var(--ph-neutral-soft);
 }
@@ -859,7 +840,6 @@
 }
 .ph-detail-table tr:last-child td { border-bottom: none; }
 .ph-detail-table .text-right { text-align: right; }
-
 /* ===== 9. Empty state ===== */
 .ph-empty {
     text-align: center;
@@ -878,7 +858,6 @@
     color: var(--ph-text-soft);
     margin-top: 6px;
 }
-
 /* Loading */
 .ph-loading {
     text-align: center;
@@ -886,7 +865,6 @@
     color: var(--ph-text-muted);
 }
 .ph-loading i { color: var(--ph-accent); }
-
 /* ============================================================
    MD3 migration support (official @material/web components)
    ============================================================ */
@@ -907,10 +885,10 @@ md-dialog.ph-dialog-xl {
     --md-dialog-container-max-block-size: calc(100vh - 60px);
 }
 @media (min-width: 769px) {
-    md-dialog.ph-dialog-xl {
+md-dialog.ph-dialog-xl {
         --dlg-w: min(1000px, calc(100vw - var(--sidebar-width, 260px) - 48px));
     }
-    md-dialog.ph-context {
+md-dialog.ph-context {
         margin-left: calc(var(--sidebar-width, 260px)
                           + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
     }
@@ -921,7 +899,6 @@ md-dialog.ph-context [slot="headline"] {
     color: var(--ph-text);
 }
 .ph-dialog-content { font-size: 0.88rem; }
-
 /* --- Filter bar: MD3 select / text-field density --- */
 .ph-filter-field .ph-md-select {
     width: 100%;
@@ -949,7 +926,6 @@ md-dialog.ph-context [slot="headline"] {
     --md-icon-button-state-layer-width: 36px;
     --md-icon-button-state-layer-height: 36px;
 }
-
 /* --- Material Symbols sizing in page chrome --- */
 .ph-kpi-icon .material-symbols-outlined { font-size: 17px; }
 .ph-tab .material-symbols-outlined { vertical-align: -2px; }
@@ -975,8 +951,6 @@ md-dialog.ph-context [slot="headline"] {
 .ph-top-card.up   .ph-top-card-header .material-symbols-outlined { color: var(--ph-positive); }
 .ph-top-card.down .ph-top-card-header .material-symbols-outlined { color: var(--ph-negative); }
 .ph-chart-title .material-symbols-outlined { color: var(--ph-accent); }
-
-
 /* ===== 10. v3 layout additions ===== */
 /* Panes live inside .ph-card: no nested card borders. */
 .ph-panes { padding: 10px 0 0; }
@@ -985,7 +959,6 @@ md-dialog.ph-context [slot="headline"] {
 .ph-card .ph-art-table { border-top: 1px solid var(--ph-border); margin-top: 6px; }
 .ph-card .ph-top-grid { padding: 6px 16px 16px; }
 .ph-card .ph-empty { padding: 48px 20px; }
-
 /* Month groups in Verlauf */
 .ph-month-head {
     position: sticky;
@@ -1005,7 +978,6 @@ md-dialog.ph-context [slot="headline"] {
 }
 .ph-month:first-child .ph-month-head { border-top: none; }
 .ph-month-count { font-size: 0.72rem; font-weight: 600; color: var(--ph-text-muted); }
-
 /* Timeline row: date | body | prices | chevron — whole row opens the detail */
 .ph-timeline-row {
     grid-template-columns: 92px minmax(0, 1fr) auto 22px;
@@ -1020,14 +992,14 @@ md-dialog.ph-context [slot="headline"] {
 .ph-cell-go { color: var(--ph-text-soft); width: 28px; }
 .ph-art-table tbody tr:hover .ph-cell-go { color: var(--ph-accent); }
 @media (max-width: 760px) {
-    .ph-timeline-row {
+.ph-timeline-row {
         grid-template-columns: minmax(0, 1fr) 22px;
         grid-template-areas:
             "date    go"
             "body    body"
             "prices  prices";
     }
-    .ph-tl-go { grid-area: go; }
+.ph-tl-go { grid-area: go; }
 }
 
 /* Top lists: empty side */
@@ -1041,10 +1013,8 @@ md-dialog.ph-context [slot="headline"] {
     font-size: 0.82rem;
 }
 .ph-top-card-header .ph-tab-count { margin-left: auto; }
-
 /* Empty state actions */
 .ph-empty-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
-
 /* Period navigation in the topbar (look shared with Zeiterfassung) */
 .ph-period-nav .ph-seg {
     display: inline-flex;
@@ -1082,11 +1052,10 @@ md-dialog.ph-context [slot="headline"] {
 [data-theme="dark"] .ph-period-nav .ph-seg,
 [data-theme="dark"] .ph-range-inline input { background: var(--md-sys-color-surface-container, var(--md-sys-color-primary)); color: var(--md-sys-color-on-surface, var(--md-sys-color-primary-container)); }
 [data-theme="dark"] .ph-period-nav .ph-seg-btn { color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-primary-container)); }
-
 @media (max-width: 760px) {
     /* The base .ph-tl-date rule sits after the old mobile block and won the
        cascade (date stacked + centred). Re-assert the compact date row. */
-    .ph-timeline-row .ph-tl-date {
+.ph-timeline-row .ph-tl-date {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
@@ -1095,42 +1064,41 @@ md-dialog.ph-context [slot="headline"] {
     }
 }
 @media (max-width: 720px) {
-    .ph-tab .material-symbols-outlined { display: none; }
-    .ph-tab { gap: 5px; padding: 0 4px; font-size: 0.78rem; }
-    .ph-period-nav .ph-seg-btn { padding: 0 7px; font-size: 0.68rem; }
-    .ph-period-nav .ma-month-label { min-width: 0; }
-    .ph-range-inline input { width: 118px; padding: 0 4px; }
+.ph-tab .material-symbols-outlined { display: none; }
+.ph-tab { gap: 5px; padding: 0 4px; font-size: 0.78rem; }
+.ph-period-nav .ph-seg-btn { padding: 0 7px; font-size: 0.68rem; }
+.ph-period-nav .ma-month-label { min-width: 0; }
+.ph-range-inline input { width: 118px; padding: 0 4px; }
 }
 @media (max-width: 480px) {
-    .ph-stats-bento { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .ph-stats-bento .ph-kpi:first-child { grid-column: 1 / -1; }
-    .ph-kpi { min-height: 0; padding: 12px; }
-    .ph-kpi-value { font-size: 1.35rem; }
+.ph-stats-bento { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.ph-stats-bento .ph-kpi:first-child { grid-column: 1 / -1; }
+.ph-kpi { min-height: 0; padding: 12px; }
+.ph-kpi-value { font-size: 1.35rem; }
 }
 
 @media (max-width: 768px) {
     /* theme-unified forces 44px touch targets on .ma-month-nav buttons; the
        period bar has more controls than Zeiterfassung, so keep it compact
        and let it swipe instead of squeezing the label. */
-    .ph-period-nav {
+.ph-period-nav {
         width: 100%;
         max-width: 100%;
         overflow-x: auto;
         scrollbar-width: none;
     }
-    .ph-period-nav::-webkit-scrollbar { display: none; }
-    .ph-period-nav > * { flex-shrink: 0; }
-    .ph-period-nav .ph-seg-btn { min-width: 0; min-height: 34px; height: 34px; }
-    .ph-period-nav > button { min-width: 36px; min-height: 36px; }
-    .ph-period-nav .ma-month-label { min-width: 74px; }
-    .ph-period-nav .ma-today-btn .ph-today-txt { display: none; }
+.ph-period-nav::-webkit-scrollbar { display: none; }
+.ph-period-nav > * { flex-shrink: 0; }
+.ph-period-nav .ph-seg-btn { min-width: 0; min-height: 34px; height: 34px; }
+.ph-period-nav > button { min-width: 36px; min-height: 36px; }
+.ph-period-nav .ma-month-label { min-width: 74px; }
+.ph-period-nav .ma-today-btn .ph-today-txt { display: none; }
 }
 
 /* Dark: keep the active period button readable (on-primary text on the
    bright dark-mode primary) and give the "Manuell" badge a dark tint. */
 [data-theme="dark"] .ph-period-nav .ph-seg-btn.active { background: var(--ma-primary, var(--md-ext-color-success)); color: var(--md-sys-color-on-primary, var(--md-sys-color-on-primary-container)); }
 [data-theme="dark"] .ph-tl-typ.manual { background: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent); color: var(--md-ext-color-warning); }
-
 /* Sticky search + filters + tabs while the list scrolls (desktop/tablet). */
 .ph-sticky {
     position: -webkit-sticky;
@@ -1144,8 +1112,8 @@ md-dialog.ph-context [slot="headline"] {
 /* Phones: the block is 5+ rows tall — pinning it would eat the screen.
    Same rule as the shared toolbars in style.css. */
 @media (max-width: 640px) {
-    .ph-sticky { position: static; }
-    .ph-month-head { top: var(--topbar-height, 60px); }
+.ph-sticky { position: static; }
+.ph-month-head { top: var(--topbar-height, 60px); }
 }
 
 /* CSV export dialog */

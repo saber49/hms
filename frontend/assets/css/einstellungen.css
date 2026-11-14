@@ -14,9 +14,9 @@
 .est-nav-text small { font-size: .78rem; color: var(--gray-500); line-height: 1.35; }
 .est-body { min-height: 200px; }
 @media (max-width: 640px) {
-    .est-nav { grid-template-columns: 1fr; gap: 8px; }
-    .est-nav-text small { display: none; }
-    .est-nav-item { padding: 10px 12px; align-items: center; }
+.est-nav { grid-template-columns: 1fr; gap: 8px; }
+.est-nav-text small { display: none; }
+.est-nav-item { padding: 10px 12px; align-items: center; }
 }
 /* Sections rendered inside the page use its full width. */
 .est-body .pdfd-wrap { max-width: none; margin: 0; }

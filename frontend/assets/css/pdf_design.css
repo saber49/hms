@@ -8,17 +8,14 @@
     max-width: 980px;
     margin: 0 auto;
 }
-
 .pdfd-card.is-orders::before { background: var(--orange); }
 .pdfd-card.is-orders:hover { border-color: var(--orange); }
-
 .pdfd-card.is-upload::before { background: var(--purple, var(--md-sys-color-primary)); }
 .pdfd-card.is-upload:hover { border-color: var(--purple, var(--md-sys-color-primary)); }
 .pdfd-card.is-upload .pdfd-card-icon {
     background: linear-gradient(135deg, var(--purple, var(--md-sys-color-primary)), var(--md-sys-color-primary));
 }
 .pdfd-card.is-upload .pdfd-card-cta { color: var(--purple, var(--md-sys-color-primary)); }
-
 /* ── "Demnächst verfügbar" — disabled card state ─────────────────── */
 .pdfd-card.is-soon {
     position: relative;
@@ -33,7 +30,6 @@
     background: var(--orange);
 }
 .pdfd-card.is-orders .pdfd-card-cta { color: var(--orange); }
-
 /* ── Worker-PDF preview panel ────────────────────────────────────── */
 .pdfd-preview {
     margin-top: 24px;
@@ -45,8 +41,8 @@
     animation: pdfd-fade 0.25s ease;
 }
 @keyframes pdfd-fade {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
 }
 .pdfd-preview-bar {
     display: flex;
@@ -93,7 +89,6 @@
     font-size: 0.9rem;
 }
 .pdfd-preview-loading i { margin-right: 8px; color: var(--accent); }
-
 /* ── Order picker (Bestellungen card → modal) ────────────────────── */
 .pdfd-picker {
     display: flex;
@@ -144,7 +139,6 @@
 .pdfd-picker-loading i { margin-right: 8px; color: var(--accent); }
 .pdfd-picker-empty i { font-size: 1.8rem; color: var(--gray-300); display: block; margin-bottom: 10px; }
 .pdfd-picker-empty p { margin: 0; }
-
 .pdfd-picker-item {
     display: flex;
     align-items: center;
@@ -216,7 +210,6 @@
     color: var(--accent);
     transform: translateX(3px);
 }
-
 .pdfd-ord-status {
     font-size: 0.68rem;
     font-weight: 700;
@@ -230,7 +223,6 @@
 .pdfd-ord-status.abgeschlossen { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
 .pdfd-ord-status.storniert { background: var(--gray-200); color: var(--gray-600); }
 .pdfd-ord-status.ueberfaellig { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
-
 /* ── Upload design (Card 3 → modal) ──────────────────────────────── */
 .pdfd-up {
     display: flex;
@@ -268,7 +260,6 @@
     font-size: 0.78rem;
     color: var(--gray-500);
 }
-
 .pdfd-up-file {
     display: flex;
     align-items: center;
@@ -318,12 +309,11 @@
     transition: var(--transition);
 }
 .pdfd-up-remove:hover { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
-
 .pdfd-up-status {
     font-size: 0.82rem;
     min-height: 1.1em;
 }
-.pdfd-up-status.is-busy  { color: var(--purple, var(--md-sys-color-primary)); }
+.pdfd-up-status.is-busy { color: var(--purple, var(--md-sys-color-primary)); }
 .pdfd-up-status.is-error { color: var(--md-sys-color-error); }
 .pdfd-up-note {
     display: flex;
@@ -335,15 +325,14 @@
     color: var(--gray-500);
 }
 .pdfd-up-note i { color: var(--purple, var(--md-sys-color-primary)); margin-top: 2px; }
-
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-    .pdfd-intro { flex-direction: column; }
-    .pdfd-preview-frame { height: 540px; }
-    .pdfd-preview-stage { padding: 12px; }
-    .pdfd-picker-item { gap: 10px; }
-    .pdfd-picker-item-arrow { display: none; }
-    .pdfd-picker-item-meta { flex-direction: column; align-items: flex-end; gap: 4px; }
+.pdfd-intro { flex-direction: column; }
+.pdfd-preview-frame { height: 540px; }
+.pdfd-preview-stage { padding: 12px; }
+.pdfd-picker-item { gap: 10px; }
+.pdfd-picker-item-arrow { display: none; }
+.pdfd-picker-item-meta { flex-direction: column; align-items: flex-end; gap: 4px; }
 }
 
 /* ============================================================
@@ -358,7 +347,7 @@ md-dialog.pdfd-context {
     max-height: calc(100vh - 48px);
 }
 @media (min-width: 769px) {
-    md-dialog.pdfd-context {
+md-dialog.pdfd-context {
         margin-left: calc(var(--sidebar-width, 260px)
                           + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
     }
@@ -367,7 +356,6 @@ md-dialog.pdfd-context [slot="headline"] {
     font-size: 1.05rem;
     font-weight: 700;
 }
-
 /* --- Picker search: MD3 text field --- */
 .pdfd-picker-search md-outlined-text-field.pdfd-search-md {
     flex: 1;
@@ -378,7 +366,6 @@ md-dialog.pdfd-context [slot="headline"] {
     --md-outlined-text-field-container-shape: 10px;
     --md-outlined-text-field-focus-outline-color: var(--accent);
 }
-
 /* --- Preview bar: MD3 buttons density --- */
 .pdfd-preview-actions {
     display: flex;
@@ -395,7 +382,6 @@ md-dialog.pdfd-context [slot="headline"] {
     --md-icon-button-state-layer-width: 34px;
     --md-icon-button-state-layer-height: 34px;
 }
-
 /* --- Material Symbols sizing in page chrome --- */
 .pdfd-intro-icon .material-symbols-outlined { font-size: 24px; }
 .pdfd-card-icon .material-symbols-outlined { font-size: 22px; }
@@ -403,12 +389,8 @@ md-dialog.pdfd-context [slot="headline"] {
 .pdfd-card:hover .pdfd-card-cta .material-symbols-outlined { transform: translateX(4px); }
 .pdfd-soon-badge .material-symbols-outlined { vertical-align: -2px; }
 .pdfd-preview-bar h3 .material-symbols-outlined { vertical-align: -3px; }
-.pdfd-preview-loading md-circular-progress {
-    vertical-align: middle;
-    margin-right: 8px;
-    --md-circular-progress-active-indicator-color: var(--accent);
-}
-.pdfd-picker-loading md-circular-progress {
+.pdfd-preview-loading md-circular-progress,
+    .pdfd-picker-loading md-circular-progress {
     vertical-align: middle;
     margin-right: 8px;
     --md-circular-progress-active-indicator-color: var(--accent);
@@ -437,7 +419,6 @@ md-dialog.pdfd-context [slot="headline"] {
 /* Spinner inside disabled md-buttons while analysing/generating */
 #pdfdAnalyzeBtn md-circular-progress,
 #pdfdGenerateBtn md-circular-progress { vertical-align: middle; margin-right: 6px; }
-
 /* ════════ Dokumentvorlagen hub — clear list layout (2026-11-04) ════════
    Replaces the blue intro banner + tile grid: one row per document type
    with where it is used, its current look and a single "Bearbeiten". */
@@ -512,8 +493,8 @@ md-dialog.pdfd-context [slot="headline"] {
     font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary)));
 }
 @media (max-width: 720px) {
-    .pdfx-row { grid-template-columns: auto 1fr; gap: 12px 14px; padding: 16px; }
-    .pdfx-state { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; align-items: center; min-width: 0; }
-    .pdfx-btn { grid-column: 1 / -1; justify-content: center; }
-    .pdfx-steps { flex-direction: column; gap: 6px; }
+.pdfx-row { grid-template-columns: auto 1fr; gap: 12px 14px; padding: 16px; }
+.pdfx-state { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; align-items: center; min-width: 0; }
+.pdfx-btn { grid-column: 1 / -1; justify-content: center; }
+.pdfx-steps { flex-direction: column; gap: 6px; }
 }

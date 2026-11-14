@@ -5,7 +5,6 @@
 .lg-page { display: flex; flex-direction: column; gap: 14px; }
 .lg-muted { color: var(--gray-500); font-size: .82rem; }
 .lg-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .8rem; color: var(--gray-600); }
-
 /* ---------- Thumbnails / Foto ---------- */
 .lg-thumb {
     border-radius: var(--md-sys-shape-corner-medium); object-fit: cover; flex-shrink: 0;
@@ -24,7 +23,6 @@
     object-fit: contain; background: var(--white);
 }
 .lg-foto-none { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 0; }
-
 /* ---------- Tabs ---------- */
 .lg-tabs {
     display: flex; gap: 4px; border-bottom: 1px solid var(--gray-200);
@@ -43,7 +41,6 @@
 .lg-tab .material-symbols-outlined { font-size: 17px; }
 .lg-tab-count { font-weight: 500; color: var(--gray-400); }
 .lg-tab.active .lg-tab-count { color: var(--accent); }
-
 /* ---------- Badges ---------- */
 .lg-kat {
     display: inline-flex; align-items: center; gap: 4px;
@@ -55,12 +52,11 @@
     padding: 2px 9px; border-radius: var(--md-sys-shape-corner-full);
     font-size: .74rem; font-weight: 600; white-space: nowrap;
 }
-.lg-z-neu       { background: var(--success-light, var(--md-ext-color-success-container)); color: var(--success, var(--md-ext-color-on-success-container)); }
-.lg-z-gut       { background: var(--info-light, var(--md-sys-color-primary-container));    color: var(--info, var(--md-sys-color-primary)); }
+.lg-z-neu { background: var(--success-light, var(--md-ext-color-success-container)); color: var(--success, var(--md-ext-color-on-success-container)); }
+.lg-z-gut { background: var(--info-light, var(--md-sys-color-primary-container));    color: var(--info, var(--md-sys-color-primary)); }
 .lg-z-abgenutzt { background: var(--warning-light);          color: var(--warning); }
-.lg-z-defekt    { background: var(--danger-light, var(--md-sys-color-error-container));  color: var(--danger, var(--md-sys-color-error)); }
+.lg-z-defekt { background: var(--danger-light, var(--md-sys-color-error-container));  color: var(--danger, var(--md-sys-color-error)); }
 .lg-z-reparatur { background: var(--accent-soft);            color: var(--accent); }
-
 /* ---------- Bestand ---------- */
 .lg-bestand {
     display: inline-flex; align-items: baseline; gap: 2px;
@@ -69,7 +65,7 @@
     font-weight: 700; font-size: .88rem; font-variant-numeric: tabular-nums;
 }
 .lg-bestand-total { font-weight: 500; font-size: .72rem; opacity: .75; }
-.lg-bestand.lg-leer    { background: var(--danger-light, var(--md-sys-color-error-container)); color: var(--danger, var(--md-sys-color-error)); }
+.lg-bestand.lg-leer { background: var(--danger-light, var(--md-sys-color-error-container)); color: var(--danger, var(--md-sys-color-error)); }
 .lg-bestand.lg-niedrig { background: var(--warning-light); color: var(--warning); }
 .lg-offen {
     display: inline-flex; align-items: center; gap: 3px; margin-left: 6px;
@@ -77,7 +73,6 @@
     background: var(--accent-soft); color: var(--accent);
     font-size: .72rem; font-weight: 600;
 }
-
 /* ---------- Dialog: Ausgabe ---------- */
 .lg-ausgabe-meta {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -108,7 +103,6 @@
     background: var(--info-light, var(--md-sys-color-primary-container)); color: var(--info, var(--md-sys-color-primary));
     border-radius: var(--md-sys-shape-corner-small); font-size: .78rem; line-height: 1.4;
 }
-
 /* ---------- Verlauf list ---------- */
 .lg-verlauf-list { display: flex; flex-direction: column; }
 .lg-verlauf-row {
@@ -117,7 +111,6 @@
     color: var(--gray-700); font-size: .86rem;
 }
 .lg-verlauf-row:last-child { border-bottom: 0; }
-
 /* ---------- Kategorien ---------- */
 .lg-kat-list { display: flex; flex-direction: column; min-width: 320px; }
 .lg-kat-row {
@@ -140,25 +133,22 @@
 }
 .lg-farb-pick:hover { transform: scale(1.12); }
 .lg-farb-pick.selected { border-color: var(--gray-800); transform: scale(1.12); }
-
 /* ---------- Actions ---------- */
 .lg-act { white-space: nowrap; text-align: right; }
 .lg-act md-icon-button { --md-icon-button-icon-size: 18px; }
 .lg-danger { color: var(--danger, var(--md-sys-color-error)); }
-
 /* ---------- Mobile ---------- */
 @media (max-width: 768px) {
-    .lg-tabs { gap: 0; }
-    .lg-tab { padding: 8px 10px 9px; font-size: .8rem; }
-    .lg-ma-list { max-height: 220px; }
-    .lg-kat-list { min-width: 0; }
+.lg-tabs { gap: 0; }
+.lg-tab { padding: 8px 10px 9px; font-size: .8rem; }
+.lg-ma-list { max-height: 220px; }
+.lg-kat-list { min-width: 0; }
 }
 
 /* ---------- Ausgaben: grouped by worker (click opens dialog) ---------- */
 .lg-grp td { cursor: pointer; }
 .lg-grp .lg-chev { color: var(--gray-400); vertical-align: middle; }
 .lg-grp:hover .lg-chev { color: var(--accent); }
-
 /* ---------- Rückgabe-Protokoll ---------- */
 .lg-prot-label { font-size: .82rem; font-weight: 600; color: var(--gray-600); display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
 .lg-prot-input { font-size: .84rem; color: var(--gray-700); }

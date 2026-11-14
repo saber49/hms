@@ -48,7 +48,6 @@
     --transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
     --font: var(--md-ref-typeface-brand);
 }
-
 /* Dark-mode corrections — MUST mirror md3-tokens.css. The :root block
    above re-declares aliases that point at STATIC palette steps
    (e.g. gray-700 = neutral-variant30, dark). Because this sheet loads
@@ -64,7 +63,6 @@
     --accent-pressed: var(--md-ref-palette-primary60);
     --accent-line:    var(--md-ref-palette-primary40);
 }
-
 /* ── Material Symbols (icon font) ── */
 .material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
@@ -82,7 +80,6 @@
     -webkit-font-smoothing: antialiased;
 }
 .material-symbols-outlined.md-filled { font-variation-settings: 'FILL' 1, 'opsz' 24; }
-
 /* IMPORTANT: never use `* { margin:0; padding:0 }` here. Document rules
    beat shadow-DOM `:host` styles, so a universal reset strips the internal
    paddings/margins of EVERY Material Web component (buttons hug their text,
@@ -94,11 +91,21 @@
 }
 body, h1, h2, h3, h4, h5, h6, p, blockquote, figure, figcaption, hr,
 dl, dd, ol, ul, menu, form, fieldset, legend, input, button, textarea,
-select, optgroup, table, th, td, pre, a, span, div, label, small, strong {
+select,
+    optgroup,
+    table,
+    th,
+    td,
+    pre,
+    a,
+    span,
+    div,
+    label,
+    small,
+    strong {
     margin: 0;
     padding: 0;
 }
-
 /* MD3 <md-dialog> centers itself with `margin: auto` on a fixed-inset
    host — the universal margin reset above kills that and pins every
    dialog to the top-left corner. Restore it for all MD3 dialogs. */
@@ -160,7 +167,6 @@ body:has(md-dialog[open]) .cdocs-toolbar,
 body:has(md-dialog[open]) .ma-toolbar {
     z-index: 0;
 }
-
 body {
     font-family: var(--font);
     background: var(--bg);
@@ -171,13 +177,11 @@ body {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
-
 html {
     /* Reserve the scrollbar gutter so locking the page (.modal-open)
        doesn't shift the layout when the scrollbar is removed. */
     scrollbar-gutter: stable;
 }
-
 /* While any dialog overlay is open, the page behind it must not scroll.
    .modal-open is toggled on <html> from app.js (syncBodyScrollLock).
    Fine pointers (mouse/trackpad): overflow:hidden kills every scroll
@@ -188,7 +192,7 @@ html {
    the shadow <dialog> on the top layer). Never lock <body> here. */
 @media (pointer: fine) {
     html.modal-open,
-    html.modal-open body {
+html.modal-open body {
         overflow: hidden;
         overscroll-behavior: none;
     }
@@ -203,7 +207,6 @@ dialog,
 .modal-body,
 .wp-panel,
 .chat-panel-body { overscroll-behavior: contain; }
-
 /* Thin, modern scrollbars everywhere (main content) */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -214,7 +217,6 @@ dialog,
     background-clip: content-box;
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--gray-400); }
-
 /* ============================================
    Sidebar — modern dark UI
    ============================================ */
@@ -236,7 +238,6 @@ dialog,
     border-right: 1px solid var(--gray-200);
     box-shadow: 1px 0 6px color-mix(in srgb, var(--md-sys-color-scrim) 10%, transparent);
 }
-
 /* Thin custom scrollbar (sidebar only) */
 .sidebar::-webkit-scrollbar { width: 6px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
@@ -246,13 +247,11 @@ dialog,
 }
 .sidebar::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
 .sidebar { scrollbar-width: thin; scrollbar-color: var(--gray-300) transparent; }
-
 .sidebar-header {
     padding: 20px 18px 18px;
     border-bottom: none;
     position: relative;
 }
-
 .logo {
     display: flex;
     align-items: center;
@@ -261,7 +260,6 @@ dialog,
     letter-spacing: 0.2px;
     min-width: 0; /* allow the name to shrink/wrap inside the flex row */
 }
-
 /* The mark is a square tile that either holds the fallback FA icon
    or a tenant-uploaded image. Same footprint either way so the
    sidebar layout never jumps. */
@@ -288,7 +286,6 @@ dialog,
     padding: 4px;
     background: var(--white);
 }
-
 /* The name auto-shrinks based on length via classes set in JS.
    Word-break + line-height keep long company names like
    "HMS Gruppe GmbH & Co. KG" readable on two lines. */
@@ -304,7 +301,6 @@ dialog,
 .logo .logo-name.logo-name-md { font-size: 0.95rem; }
 .logo .logo-name.logo-name-sm { font-size: 0.85rem; }
 .logo .logo-name.logo-name-xs { font-size: 0.78rem; line-height: 1.1; }
-
 /* Account modal — company logo uploader */
 .company-logo-uploader {
     display: flex;
@@ -350,7 +346,6 @@ dialog,
     gap: 8px;
     flex-wrap: wrap;
 }
-
 /* Signatur & Stempel uploaders (Mein Profil) — checkerboard preview so
    transparent PNGs are actually visible against the card. */
 .doc-assets-grid {
@@ -398,9 +393,9 @@ dialog,
     padding: 2px 10px;
     border-radius: var(--md-sys-shape-corner-full);
 }
-.doc-asset-status.asset-own     { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.doc-asset-status.asset-own { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
 .doc-asset-status.asset-default { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
-.doc-asset-status.asset-none    { background: var(--gray-100); color: var(--gray-400); }
+.doc-asset-status.asset-none { background: var(--gray-100); color: var(--gray-400); }
 .doc-asset-scope {
     display: flex;
     align-items: center;
@@ -412,7 +407,7 @@ dialog,
 }
 .doc-asset-scope input { cursor: pointer; }
 @media (max-width: 560px) {
-    .doc-assets-grid { grid-template-columns: 1fr; }
+.doc-assets-grid { grid-template-columns: 1fr; }
 }
 
 .sidebar-subtitle {
@@ -427,16 +422,13 @@ dialog,
     border-radius: var(--md-sys-shape-corner-full);
     letter-spacing: 0.4px;
 }
-
 .sidebar-nav {
     padding: 14px 10px;
     flex: 1;
 }
-
 .nav-section {
     margin-bottom: 14px;
 }
-
 .nav-section-title {
     padding: 8px 16px 6px;
     font-size: 0.68rem;
@@ -451,7 +443,6 @@ dialog,
 .nav-section-title::after {
     content: none;
 }
-
 /* Each nav row */
 .nav-item {
     display: flex;
@@ -468,7 +459,6 @@ dialog,
     position: relative;
     border: none;
 }
-
 /* Icon now lives in its own subtle tile */
 .nav-item i {
     width: 24px;
@@ -485,7 +475,6 @@ dialog,
     transition: color 0.15s ease;
     flex-shrink: 0;
 }
-
 .nav-item:hover {
     background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 8%, transparent);
     color: var(--gray-900);
@@ -493,7 +482,6 @@ dialog,
 .nav-item:hover i {
     color: var(--gray-800);
 }
-
 /* Active state — Gmail-style tonal pill */
 .nav-item.active {
     background: var(--accent-soft);
@@ -507,12 +495,10 @@ dialog,
 .nav-item.active i {
     color: var(--md-sys-color-on-primary-container);
 }
-
 .nav-item:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--accent-line);
 }
-
 .badge {
     margin-left: auto;
     background: var(--danger);
@@ -525,11 +511,10 @@ dialog,
     min-width: 18px;
     text-align: center;
 }
-
-.badge:empty, .badge[data-count="0"] {
+.badge:empty,
+    .badge[data-count="0"] {
     display: none;
 }
-
 /* ============================================
    Main Content
    ============================================ */
@@ -569,7 +554,6 @@ dialog,
     z-index: 90;
     box-shadow: none;
 }
-
 .menu-toggle {
     display: none;
     background: none;
@@ -578,7 +562,6 @@ dialog,
     color: var(--gray-600);
     cursor: pointer;
 }
-
 .page-title {
     font-size: 1.25rem;
     font-weight: 700;
@@ -589,7 +572,6 @@ dialog,
     min-width: 0;
     flex-shrink: 1;
 }
-
 .topbar-right {
     margin-left: auto;
     display: flex;
@@ -598,12 +580,10 @@ dialog,
     flex-shrink: 0;
     white-space: nowrap;
 }
-
 .current-date {
     font-size: 0.85rem;
     color: var(--gray-500);
 }
-
 .content {
     padding: 24px;
     flex: 1;
@@ -613,10 +593,9 @@ dialog,
        of the viewport — i.e. it would scroll with the page. */
     animation: pageFadeIn 0.28s ease backwards;
 }
-
 @keyframes pageFadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+from { opacity: 0; transform: translateY(6px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
@@ -629,7 +608,6 @@ dialog,
     box-shadow: var(--shadow);
     overflow: hidden;
 }
-
 .card-header {
     padding: 16px 20px;
     border-bottom: 1px solid var(--gray-200);
@@ -638,21 +616,17 @@ dialog,
     justify-content: space-between;
     gap: 12px;
 }
-
 .card-header h3 {
     font-size: 1rem;
     font-weight: 600;
     color: var(--primary);
 }
-
 .card-body {
     padding: 20px;
 }
-
 .card-body.no-pad {
     padding: 0;
 }
-
 /* KPI Grid */
 .kpi-grid {
     display: grid;
@@ -660,7 +634,6 @@ dialog,
     gap: 16px;
     margin-bottom: 24px;
 }
-
 .kpi-card {
     background: var(--white);
     border: 1px solid var(--gray-200);
@@ -673,18 +646,15 @@ dialog,
     border-left: 4px solid var(--accent);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-
 .kpi-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
-
 .kpi-card.green { border-left-color: var(--success); }
 .kpi-card.orange { border-left-color: var(--orange); }
 .kpi-card.red { border-left-color: var(--danger); }
 .kpi-card.blue { border-left-color: var(--accent); }
 .kpi-card.info { border-left-color: var(--info); }
-
 .kpi-icon {
     width: 44px;
     height: 44px;
@@ -695,38 +665,32 @@ dialog,
     font-size: 1.1rem;
     flex-shrink: 0;
 }
-
 .kpi-card.green .kpi-icon { background: var(--success-light); color: var(--success); }
 .kpi-card.orange .kpi-icon { background: var(--warning-light); color: var(--warning); }
 .kpi-card.red .kpi-icon { background: var(--danger-light); color: var(--danger); }
 .kpi-card.blue .kpi-icon { background: var(--accent-soft); color: var(--accent); }
 .kpi-card.info .kpi-icon { background: var(--info-light); color: var(--info); }
-
 .kpi-value {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--gray-900);
 }
-
 /* ============================================
    Tables
    ============================================ */
 .table-container {
     overflow-x: auto;
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
 }
-
 thead {
     background: var(--gray-50);
     color: var(--gray-600);
     border-bottom: 1px solid var(--gray-200);
 }
-
 thead th {
     padding: 12px 14px;
     text-align: left;
@@ -737,21 +701,17 @@ thead th {
     letter-spacing: 0.7px;
     color: var(--gray-500);
 }
-
 tbody tr {
     border-bottom: 1px solid var(--gray-200);
     transition: var(--transition);
 }
-
 tbody tr:hover {
     background: var(--gray-50);
 }
-
 tbody td {
     padding: 10px 14px;
     white-space: nowrap;
 }
-
 /* ============================================
    Buttons
    ============================================ */
@@ -770,14 +730,11 @@ tbody td {
     text-decoration: none;
     white-space: nowrap;
 }
-
 .btn:active { transform: translateY(1px); }
-
 .btn:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px var(--accent-line);
 }
-
 .btn-primary {
     background: var(--accent);
     color: white;
@@ -787,37 +744,31 @@ tbody td {
     box-shadow: var(--shadow);
 }
 .btn-primary:active { background: var(--accent-pressed); }
-
 .btn-success {
     background: var(--success);
     color: white;
 }
 .btn-success:hover { background: var(--md-ext-color-success); box-shadow: var(--shadow); }
-
 .btn-warning {
     background: var(--warning);
     color: white;
 }
 .btn-warning:hover { background: var(--md-ext-color-warning); box-shadow: var(--shadow); }
-
 .btn-danger {
     background: var(--danger);
     color: white;
 }
 .btn-danger:hover { background: var(--md-sys-color-error); box-shadow: var(--shadow); }
-
 .btn-outline {
     background: transparent;
     border: 1px solid var(--gray-300);
     color: var(--accent);
 }
 .btn-outline:hover { background: var(--info-light); border-color: var(--accent-line); color: var(--accent-hover); }
-
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.78rem;
 }
-
 .btn-icon {
     width: 32px;
     height: 32px;
@@ -831,12 +782,10 @@ tbody td {
     transition: var(--transition);
     font-size: 0.8rem;
 }
-
 .btn-group {
     display: flex;
     gap: 6px;
 }
-
 /* ============================================
    Forms
    ============================================ */
@@ -845,13 +794,11 @@ tbody td {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 16px;
 }
-
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
-
 .form-group label {
     font-size: 0.8rem;
     font-weight: 600;
@@ -859,7 +806,6 @@ tbody td {
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
-
 .form-control {
     padding: 9px 12px;
     border: 1px solid var(--gray-300);
@@ -870,17 +816,14 @@ tbody td {
     color: var(--gray-800);
     font-family: inherit;
 }
-
 .form-control:hover:not(:focus) {
     border-color: var(--gray-400);
 }
-
 .form-control:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 1px var(--accent);
 }
-
 select.form-control {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
@@ -888,16 +831,13 @@ select.form-control {
     background-position: right 12px center;
     padding-right: 32px;
 }
-
 textarea.form-control {
     resize: vertical;
     min-height: 80px;
 }
-
 .form-group.full-width {
     grid-column: 1 / -1;
 }
-
 /* ============================================
    Status Badges
    ============================================ */
@@ -910,7 +850,6 @@ textarea.form-control {
     font-weight: 600;
     text-transform: capitalize;
 }
-
 .status-offen { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
 .status-unbearbeitet { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
 .status-bearbeitet { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
@@ -922,7 +861,6 @@ textarea.form-control {
 .status-ja { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
 .status-nein { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
 .status-erledigt { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
-
 /* ============================================
    Filter Bar
    ============================================ */
@@ -938,22 +876,17 @@ textarea.form-control {
     gap: 12px;
     align-items: flex-end;
 }
-
 .filter-bar .form-group {
     min-width: 150px;
     flex: 1;
 }
-
 .filter-bar .form-group label {
     font-size: 0.7rem;
 }
-
 .filter-bar .form-control {
     padding: 7px 10px;
     font-size: 0.8rem;
 }
-
-
 /* ============================================
    Modal
    ============================================ */
@@ -1002,7 +935,7 @@ textarea.form-control {
 }
 .nav-fav-hint i { color: var(--md-ext-color-warning); margin-right: 4px; }
 @media (hover: none) {
-    .nav-item .nav-fav-star { opacity: 0.55; }
+.nav-item .nav-fav-star,
     .nav-fav-item .nav-fav-star { opacity: 0.55; }
 }
 
@@ -1021,11 +954,9 @@ textarea.form-control {
     justify-content: center;
     padding: 20px;
 }
-
 .modal-overlay.active {
     display: flex;
 }
-
 .modal {
     background: var(--white);
     border-radius: var(--radius-lg);
@@ -1037,40 +968,38 @@ textarea.form-control {
     box-shadow: var(--shadow-lg);
     animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-
 @keyframes modalPop {
-    from { opacity: 0; transform: scale(0.96) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+from { opacity: 0; transform: scale(0.96) translateY(10px); }
+to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Attention blink: played when the user tries to interact with the
    rest of the app (e.g. sidebar) while a modal is open. Horizontal
    shake + a blue ring flash, like a native OS dialog refusing focus. */
 @keyframes modalAttentionShake {
-    0%   { transform: translateX(0); }
-    15%  { transform: translateX(-10px); }
-    30%  { transform: translateX(8px); }
-    45%  { transform: translateX(-6px); }
-    60%  { transform: translateX(4px); }
-    75%  { transform: translateX(-2px); }
-    100% { transform: translateX(0); }
+0% { transform: translateX(0); }
+15% { transform: translateX(-10px); }
+30% { transform: translateX(8px); }
+45% { transform: translateX(-6px); }
+60% { transform: translateX(4px); }
+75% { transform: translateX(-2px); }
+100% { transform: translateX(0); }
 }
 @keyframes modalAttentionRing {
-    0%, 100% { box-shadow: var(--shadow-lg); }
-    20%, 60% { box-shadow: 0 0 0 4px var(--accent-line), 0 0 24px color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent), var(--shadow-lg); }
+0%,
+    100% { box-shadow: var(--shadow-lg); }
+20%,
+    60% { box-shadow: 0 0 0 4px var(--accent-line), 0 0 24px color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent), var(--shadow-lg); }
 }
 .modal-attention {
     animation: modalAttentionShake 0.5s ease, modalAttentionRing 0.9s ease;
 }
-
 .modal.modal-xl {
     max-width: 1280px;
 }
-
 .modal.modal-lg {
     max-width: 920px;
 }
-
 /* Fullscreen toggle for the legacy #modalOverlay modal — mirrors the
    md-dialog .dlg-max behaviour so every modal can be maximized. */
 .modal.modal-max {
@@ -1079,7 +1008,6 @@ textarea.form-control {
     height: 100%;
     max-height: none;
 }
-
 .modal-max-btn {
     /* Absorb the flex free space so the button always sits directly
        next to the X, no matter what else is in the header. */
@@ -1090,7 +1018,6 @@ textarea.form-control {
     font-size: 20px;
     vertical-align: middle;
 }
-
 .modal-header {
     padding: 16px 20px;
     border-bottom: 1px solid var(--gray-200);
@@ -1103,13 +1030,11 @@ textarea.form-control {
     z-index: 1;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
-
 .modal-title {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--primary);
 }
-
 .modal-close {
     background: none;
     border: none;
@@ -1119,13 +1044,10 @@ textarea.form-control {
     padding: 0 4px;
     line-height: 1;
 }
-
 .modal-close:hover { color: var(--gray-700); }
-
 .modal-body {
     padding: 20px;
 }
-
 .modal-footer {
     padding: 12px 20px;
     border-top: 1px solid var(--gray-200);
@@ -1133,7 +1055,6 @@ textarea.form-control {
     justify-content: flex-end;
     gap: 8px;
 }
-
 /* ============================================
    System Confirm Dialog
    ============================================ */
@@ -1170,7 +1091,6 @@ textarea.form-control {
 .system-confirm-message { font-size: 0.9rem; color: var(--gray-500); line-height: 1.6; margin-bottom: 28px; }
 .system-confirm-actions { display: flex; gap: 12px; justify-content: center; }
 .system-confirm-actions .btn { min-width: 130px; padding: 11px 22px; border-radius: var(--md-sys-shape-corner-medium); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
-
 /* ============================================
    Toast Notifications
    ============================================ */
@@ -1183,7 +1103,6 @@ textarea.form-control {
     flex-direction: column;
     gap: 8px;
 }
-
 /* When shown as a manual popover (top layer, above md-dialog modals) the UA
    applies default popover styles — reset them and keep the top-right spot. */
 .toast-container:popover-open,
@@ -1206,7 +1125,6 @@ textarea.form-control {
     flex-direction: column;
     gap: 8px;
 }
-
 .toast {
     background: rgba(255,255,255,0.96);
     -webkit-backdrop-filter: blur(8px);
@@ -1222,39 +1140,33 @@ textarea.form-control {
     animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     border-left: 4px solid var(--accent);
 }
-
 .toast.success { border-left-color: var(--success); }
 .toast.error { border-left-color: var(--danger); }
 .toast.warning { border-left-color: var(--warning); }
-
 /* Dark mode — elevated dark surface instead of the hardcoded white */
 [data-theme="dark"] .toast {
     background: var(--md-sys-color-surface-container-high);
     border-color: var(--md-sys-color-outline-variant);
     color: var(--md-sys-color-on-surface);
 }
-
 .toast-message {
     font-size: 0.85rem;
     flex: 1;
 }
-
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+from { transform: translateX(100%); opacity: 0; }
+to { transform: translateX(0); opacity: 1; }
 }
 
 .dashboard-grid .card {
     min-height: 200px;
 }
-
 .report-kpi-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 20px;
 }
-
 .quick-stat {
     display: flex;
     align-items: center;
@@ -1262,20 +1174,16 @@ textarea.form-control {
     padding: 12px 0;
     border-bottom: 1px solid var(--gray-100);
 }
-
 .quick-stat:last-child { border-bottom: none; }
-
 .quick-stat-label {
     font-size: 0.85rem;
     color: var(--gray-600);
 }
-
 .quick-stat-value {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--primary);
 }
-
 /* ============================================
    Empty State
    ============================================ */
@@ -1284,16 +1192,13 @@ textarea.form-control {
     padding: 60px 20px;
     color: var(--gray-400);
 }
-
 .empty-state i {
     font-size: 3rem;
     margin-bottom: 12px;
 }
-
 .empty-state p {
     font-size: 0.9rem;
 }
-
 /* ============================================
    Toolbar (above tables)
    ============================================ */
@@ -1305,17 +1210,14 @@ textarea.form-control {
     flex-wrap: wrap;
     gap: 12px;
 }
-
 .toolbar-left {
     display: flex;
     gap: 8px;
     align-items: center;
 }
-
 .search-input {
     position: relative;
 }
-
 .search-input input {
     padding: 8px 14px 8px 36px;
     border: 1px solid transparent;
@@ -1332,7 +1234,6 @@ textarea.form-control {
     box-shadow: var(--shadow);
     border-color: transparent;
 }
-
 .search-input i {
     position: absolute;
     left: 10px;
@@ -1341,7 +1242,6 @@ textarea.form-control {
     color: var(--gray-400);
     font-size: 0.85rem;
 }
-
 /* ============================================
    Sidebar User Section
    ============================================ */
@@ -1363,12 +1263,10 @@ textarea.form-control {
     top: 16px;
     right: 16px;
 }
-
 .sidebar-close:hover {
     background: var(--danger);
     color: white;
 }
-
 /* Sidebar Overlay (mobile) */
 .sidebar-overlay {
     display: none;
@@ -1380,11 +1278,9 @@ textarea.form-control {
     background: color-mix(in srgb, var(--md-sys-color-scrim) 50%, transparent);
     z-index: 299;
 }
-
 .sidebar-overlay.active {
     display: block;
 }
-
 .sidebar-user {
     padding: 12px 14px;
     margin: 8px 10px 14px;
@@ -1407,7 +1303,6 @@ textarea.form-control {
 [data-theme="dark"] .sidebar-user:hover {
     background: var(--md-sys-color-surface-container-highest);
 }
-
 .user-info {
     display: flex;
     align-items: center;
@@ -1416,7 +1311,6 @@ textarea.form-control {
     flex: 1;
     cursor: pointer;
 }
-
 /* Avatar tile (using the FA user-circle icon as a glyph) */
 .user-info > i {
     font-size: 1.05rem;
@@ -1431,12 +1325,10 @@ textarea.form-control {
     justify-content: center;
     flex-shrink: 0;
 }
-
 .user-info > div {
     min-width: 0;
     flex: 1;
 }
-
 .user-name {
     font-size: 0.84rem;
     color: var(--gray-800);
@@ -1446,7 +1338,6 @@ textarea.form-control {
     text-overflow: ellipsis;
     letter-spacing: 0.1px;
 }
-
 .user-role {
     display: inline-block;
     font-size: 0.62rem;
@@ -1459,7 +1350,6 @@ textarea.form-control {
     margin-top: 3px;
     font-weight: 600;
 }
-
 .btn-logout {
     background: var(--gray-100);
     border: none;
@@ -1475,14 +1365,11 @@ textarea.form-control {
     flex-shrink: 0;
     font-size: 0.85rem;
 }
-
 .btn-logout:hover {
     background: var(--danger-light);
     color: var(--danger);
 }
-
 .user-info:hover .user-name { color: var(--accent); }
-
 /* Account Modal */
 .account-profile {
     display: flex;
@@ -1540,9 +1427,9 @@ textarea.form-control {
 .role-badge.role-viewer { background: var(--gray-100); color: var(--gray-500); }
 .role-badge.role-editor { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
 @media (max-width: 640px) {
-    .account-profile { flex-direction: column; align-items: center; text-align: center; }
-    .account-detail-row { flex-direction: column; gap: 2px; }
-    .account-label { width: auto; }
+.account-profile { flex-direction: column; align-items: center; text-align: center; }
+.account-detail-row { flex-direction: column; gap: 2px; }
+.account-label { width: auto; }
 }
 
 /* Redesigned Account Modal — Tabs */
@@ -1554,7 +1441,6 @@ textarea.form-control {
 }
 .role-badge.role-tenant_admin { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-secondary); }
 .role-badge.role-manager { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-warning); }
-
 .acc-tabs {
     display: flex;
     gap: 4px;
@@ -1565,7 +1451,6 @@ textarea.form-control {
     scrollbar-width: none;
 }
 .acc-tabs::-webkit-scrollbar { display: none; }
-
 .acc-tab {
     background: none;
     border: none;
@@ -1589,12 +1474,10 @@ textarea.form-control {
     border-bottom-color: var(--primary);
     background: transparent;
 }
-
 .acc-tab-content {
     padding: 4px 4px 8px;
     min-height: 280px;
 }
-
 .acc-loading {
     text-align: center;
     padding: 60px 20px;
@@ -1602,12 +1485,10 @@ textarea.form-control {
     font-size: 0.95rem;
 }
 .acc-loading i { margin-right: 8px; color: var(--primary); }
-
 .acc-section {
     margin-bottom: 28px;
 }
 .acc-section:last-child { margin-bottom: 0; }
-
 .acc-section-header {
     font-size: 0.95rem;
     font-weight: 700;
@@ -1630,7 +1511,6 @@ textarea.form-control {
     background: var(--accent-soft, var(--md-sys-color-primary-container));
     border-radius: var(--md-sys-shape-corner-small);
 }
-
 .acc-grid {
     display: grid;
     gap: 14px;
@@ -1638,7 +1518,6 @@ textarea.form-control {
 .acc-grid-2 { grid-template-columns: repeat(2, 1fr); }
 .acc-grid-3 { grid-template-columns: repeat(3, 1fr); }
 .acc-span-2 { grid-column: span 2; }
-
 .acc-info-box {
     background: var(--md-sys-color-primary-container);
     border: 1px solid var(--md-sys-color-primary-container);
@@ -1657,14 +1536,12 @@ textarea.form-control {
     margin-top: 2px;
     flex-shrink: 0;
 }
-
 .acc-hint {
     display: block;
     color: var(--gray-500);
     font-size: 0.72rem;
     margin-top: 4px;
 }
-
 /* ============================================================
    Account modal — Documents tab
    (Gewerbeschein, Handelsregisterauszug, Steuerbescheid, …)
@@ -1686,7 +1563,6 @@ textarea.form-control {
     display: flex;
     justify-content: flex-end;
 }
-
 .docs-list {
     display: flex;
     flex-direction: column;
@@ -1705,7 +1581,6 @@ textarea.form-control {
     margin-bottom: 8px;
     color: var(--md-sys-color-primary-container);
 }
-
 .docs-count {
     margin-left: 4px;
     background: var(--accent);
@@ -1715,7 +1590,6 @@ textarea.form-control {
     padding: 1px 8px;
     border-radius: var(--md-sys-shape-corner-medium);
 }
-
 .doc-card {
     display: flex;
     align-items: center;
@@ -1730,7 +1604,6 @@ textarea.form-control {
     border-color: var(--md-sys-color-primary-container);
     box-shadow: 0 2px 10px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
 }
-
 /* Tenant-doc card preview thumbnail (replaces the .doc-icon when the
    document is a PDF / image and a thumb has been generated). */
 .doc-card .doc-thumb {
@@ -1758,7 +1631,6 @@ textarea.form-control {
     background: var(--white);
     border-color: var(--md-sys-color-primary-container);
 }
-
 /* Generic styling for thumbnail <img> injected by the shared
    secure-thumbnail loader. Each module styles the surrounding container
    itself; we just make sure the image fills it neatly and the icon
@@ -1835,17 +1707,16 @@ textarea.form-control {
     color: var(--md-sys-color-error);
     border-color: var(--md-sys-color-error-container);
 }
-
 @media (max-width: 720px) {
     .acc-grid-2,
-    .acc-grid-3 { grid-template-columns: 1fr; }
-    .acc-span-2 { grid-column: span 1; }
-    .acc-tab { padding: 10px 12px; font-size: 0.82rem; }
+.acc-grid-3 { grid-template-columns: 1fr; }
+.acc-span-2 { grid-column: span 1; }
+.acc-tab { padding: 10px 12px; font-size: 0.82rem; }
     .acc-tab span,
-    .acc-tab { gap: 6px; }
-    .docs-uploader-row { grid-template-columns: 1fr; }
-    .doc-card { flex-wrap: wrap; }
-    .doc-actions { width: 100%; justify-content: flex-end; }
+.acc-tab { gap: 6px; }
+.docs-uploader-row { grid-template-columns: 1fr; }
+.doc-card { flex-wrap: wrap; }
+.doc-actions { width: 100%; justify-content: flex-end; }
 }
 
 /* Topbar Chat Icon */
@@ -1865,13 +1736,11 @@ textarea.form-control {
     transition: var(--transition);
     flex-shrink: 0;
 }
-
 .topbar-icon-btn:hover {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
 }
-
 .chat-badge {
     position: absolute;
     top: -4px;
@@ -1889,16 +1758,19 @@ textarea.form-control {
     padding: 0 4px;
     line-height: 1;
 }
-
 .chat-badge.visible {
     display: flex;
 }
-
 @media print {
-    .sidebar, .topbar, .toolbar, .modal-overlay, .toast-container, .filter-bar { display: none !important; }
-    .main-content { margin-left: 0; }
-    .content { padding: 0; }
-    .card { box-shadow: none; border: 1px solid var(--md-sys-color-outline-variant); }
+.sidebar,
+    .topbar,
+    .toolbar,
+    .modal-overlay,
+    .toast-container,
+    .filter-bar { display: none !important; }
+.main-content { margin-left: 0; }
+.content { padding: 0; }
+.card { box-shadow: none; border: 1px solid var(--md-sys-color-outline-variant); }
 }
 
 /* ============================================
@@ -1910,38 +1782,37 @@ textarea.form-control {
        `clip`, NOT `hidden`: overflow-x:hidden on <body> turns body into a
        scroll container, which silently disables position:sticky on the
        topbar (title + icons scrolled away on phones). */
-    html, body {
+html,
+    body {
         overflow-x: clip;
         max-width: 100vw;
     }
-
-    .sidebar {
+.sidebar {
         transform: translateX(-100%);
         z-index: 300;
     }
-    .sidebar.open {
+.sidebar.open {
         transform: translateX(0);
     }
-    .main-content {
+.main-content {
         margin-left: 0;
         max-width: 100vw;
     }
-    .menu-toggle {
+.menu-toggle {
         display: block;
     }
-    .sidebar-header {
+.sidebar-header {
         position: relative;
     }
-    .sidebar-close {
+.sidebar-close {
         display: flex;
         width: 44px;
         height: 44px;
         top: 12px;
         right: 12px;
     }
-
     /* Touch targets: min. 44x44 (Apple HIG) */
-    .menu-toggle {
+.menu-toggle {
         width: 44px;
         height: 44px;
         display: flex;
@@ -1949,31 +1820,26 @@ textarea.form-control {
         justify-content: center;
         margin-left: -8px;
     }
-    .topbar-icon-btn {
-        width: 44px;
-        height: 44px;
-    }
+.topbar-icon-btn,
     .btn-logout {
         width: 44px;
         height: 44px;
     }
-    .nav-item {
+.nav-item {
         min-height: 44px;
         display: flex;
         align-items: center;
     }
-
     /* Readability: raise tiny sidebar fonts */
-    .nav-section-title {
+.nav-section-title {
         font-size: 0.72rem;
     }
-    .user-role {
+.user-role {
         font-size: 0.7rem;
     }
-
     /* Topbar: allow wrapping — module-injected controls (month nav,
        filters) drop to a second row instead of widening the page */
-    .topbar {
+.topbar {
         padding: 4px 12px;
         gap: 4px 8px;
         height: auto;
@@ -1983,11 +1849,11 @@ textarea.form-control {
     /* Row 1 is ALWAYS: ☰ · section title · icons (never wraps).
        Anything a module injects into the topbar (month nav, week nav…)
        becomes row 2: full width, swipes horizontally, never wraps. */
-    .menu-toggle  { order: 0; flex: 0 0 auto; }
-    .page-title   { order: 1; flex: 1 1 0; min-width: 0; font-size: 1rem;
+.menu-toggle { order: 0; flex: 0 0 auto; }
+.page-title { order: 1; flex: 1 1 0; min-width: 0; font-size: 1rem;
                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .topbar-right { order: 2; flex: 0 0 auto; margin-left: auto; gap: 6px; }
-    .topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right) {
+.topbar-right { order: 2; flex: 0 0 auto; margin-left: auto; gap: 6px; }
+.topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right) {
         order: 3;
         flex: 1 1 100%;
         min-width: 0;
@@ -1999,168 +1865,153 @@ textarea.form-control {
         scrollbar-width: none;
         margin: 0 0 4px;
     }
-    .topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right)::-webkit-scrollbar { display: none; }
-    .topbar > * > * { flex-wrap: nowrap !important; }
+.topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right)::-webkit-scrollbar { display: none; }
+.topbar > * > * { flex-wrap: nowrap !important; }
     /* App shell: the fixed-height rule (60px + inset) made the wrapped
        rows spill over the page content — grow with the content instead.
        --sa-top is defined by index.php (Android native push / iOS env()). */
-    html.app-shell .topbar {
+html.app-shell .topbar {
         height: auto;
         min-height: calc(50px + var(--sa-top, 0px));
     }
-    .current-date {
+.current-date {
         display: none;
     }
-    .btn-sm {
+.btn-sm {
         padding: 4px 8px;
         font-size: 0.72rem;
     }
-
     /* Content */
-    .content {
+.content {
         padding: 12px;
     }
-
     /* KPI Cards */
-    .kpi-grid {
+.kpi-grid {
         grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
-    .kpi-card {
+.kpi-card {
         padding: 12px;
         gap: 10px;
         flex-direction: column;
         align-items: flex-start;
     }
-    .kpi-icon {
+.kpi-icon {
         width: 36px;
         height: 36px;
         font-size: 0.9rem;
     }
-    .kpi-content h4 {
+.kpi-content h4 {
         font-size: 0.65rem;
         word-break: break-word;
         white-space: normal;
     }
-    .kpi-value {
+.kpi-value {
         font-size: 1.2rem;
     }
-
     /* Dashboard Grid */
-    .dashboard-grid {
+.dashboard-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-
     /* Cards */
-    .card-header {
-        padding: 12px;
-    }
+.card-header,
     .card-body {
         padding: 12px;
     }
-
     /* Tables */
-    .table-container {
+.table-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-    table {
+table {
         min-width: 600px;
     }
-    th, td {
+th,
+    td {
         padding: 8px 10px;
         font-size: 0.78rem;
     }
-
     /* Toolbar */
-    .toolbar {
+.toolbar {
         flex-wrap: wrap;
         gap: 8px;
         margin-bottom: 12px;
     }
-    .toolbar .btn {
+.toolbar .btn {
         font-size: 0.78rem;
         padding: 7px 12px;
     }
-
     /* Filter Bar */
-    .filter-bar {
+.filter-bar {
         flex-direction: column;
         gap: 8px;
         padding: 12px;
     }
-    .filter-bar .form-group {
+.filter-bar .form-group {
         min-width: unset;
         width: 100%;
     }
-
     /* Modal */
-    .modal-overlay {
+.modal-overlay {
         left: 0;
         padding: 10px;
         align-items: flex-end;
     }
-    .modal {
+.modal {
         max-width: 100%;
         max-height: 85vh;
         border-radius: var(--radius) var(--radius) 0 0;
     }
-    .modal-header {
-        padding: 12px 16px;
-    }
+.modal-header,
     .modal-body {
         padding: 12px 16px;
     }
-    .modal-footer {
+.modal-footer {
         padding: 12px 16px;
         flex-wrap: wrap;
     }
-    .modal-footer .btn {
+.modal-footer .btn {
         flex: 1;
         min-width: 100px;
     }
-
     /* Forms */
-    .form-grid {
+.form-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-
     /* Search */
-    .search-input input {
+.search-input input {
         max-width: 100%;
     }
-
     /* Sidebar user section */
-    .sidebar-user {
+.sidebar-user {
         padding: 12px 16px;
     }
-
     /* Report KPI Grid */
-    .report-kpi-grid {
+.report-kpi-grid {
         grid-template-columns: 1fr;
         gap: 10px;
     }
-    .quick-stat {
+.quick-stat {
         padding: 8px 0;
     }
-    .quick-stat-label {
+.quick-stat-label {
         font-size: 0.78rem;
     }
-    .quick-stat-value {
+.quick-stat-value {
         font-size: 0.95rem;
     }
 }
 
 @media (max-width: 400px) {
-    .kpi-grid {
+.kpi-grid {
         grid-template-columns: 1fr;
     }
-    .topbar {
+.topbar {
         padding: 0 8px;
     }
-    .content {
+.content {
         padding: 8px;
     }
 }
@@ -2173,47 +2024,44 @@ textarea.form-control {
     /* Sidebar schmaler, aber sichtbar. The variable is what every
        module dialog (md-dialog.*-xl) uses to size/center itself beside
        the sidebar — keep it truthful so dialogs don't get cut off. */
-    :root { --sidebar-width: 200px; }
-    .sidebar {
+:root { --sidebar-width: 200px; }
+.sidebar {
         width: var(--sidebar-width);
     }
-    .main-content {
+.main-content {
         margin-left: var(--sidebar-width);
     }
-
     /* Topbar: erlaube Umbrechen, damit Week-Nav + Actions nicht
        abgeschnitten werden */
-    .topbar {
+.topbar {
         padding: 6px 16px;
         gap: 6px 10px;
         height: auto;
         min-height: 50px;
         flex-wrap: wrap;
     }
-    .page-title {
+.page-title {
         font-size: 1rem;
         overflow: visible;
         text-overflow: clip;
         white-space: normal;
     }
-    .topbar-right {
+.topbar-right {
         gap: 10px;
     }
-    .current-date {
+.current-date {
         display: none;
     }
-
     /* Content-Padding etwas kompakter */
-    .content {
+.content {
         padding: 16px;
     }
-
     /* Touch-Targets für iPad-Touch */
-    .topbar-icon-btn {
+.topbar-icon-btn {
         width: 40px;
         height: 40px;
     }
-    .nav-item {
+.nav-item {
         min-height: 40px;
     }
 }
@@ -2225,20 +2073,20 @@ textarea.form-control {
 @media (min-width: 641px) and (max-width: 900px) {
     /* Off-canvas → it occupies 0px of layout; dialogs must center on
        the full viewport. */
-    :root { --sidebar-width: 0px; }
-    .sidebar {
+:root { --sidebar-width: 0px; }
+.sidebar {
         width: 260px;
         transform: translateX(-100%);
         z-index: 300;
     }
-    .sidebar.open {
+.sidebar.open {
         transform: translateX(0);
     }
-    .main-content {
+.main-content {
         margin-left: 0;
         max-width: 100vw;
     }
-    .menu-toggle {
+.menu-toggle {
         display: flex;
         width: 44px;
         height: 44px;
@@ -2246,20 +2094,20 @@ textarea.form-control {
         justify-content: center;
         margin-left: -8px;
     }
-    .sidebar-header {
+.sidebar-header {
         position: relative;
     }
-    .sidebar-close {
+.sidebar-close {
         display: flex;
         width: 44px;
         height: 44px;
         top: 12px;
         right: 12px;
     }
-    .topbar {
+.topbar {
         padding: 4px 12px;
     }
-    .content {
+.content {
         padding: 12px;
     }
 }
@@ -2278,7 +2126,7 @@ textarea.form-control {
    ResizeObserver live nachgeführt.
    ============================================ */
 @media (min-width: 1025px) and (max-width: 1440px) {
-    .topbar {
+.topbar {
         height: auto;
         min-height: var(--topbar-height);
         flex-wrap: wrap;
@@ -2286,7 +2134,7 @@ textarea.form-control {
         padding-bottom: 6px;
         row-gap: 6px;
     }
-    .page-title {
+.page-title {
         overflow: visible;
         text-overflow: clip;
         white-space: normal;
@@ -2325,7 +2173,6 @@ textarea.form-control {
 }
 /* Sticky elements must not be clipped by an overflow on the page wrapper. */
 .content { overflow: visible; }
-
 /* ============================================
    Dialogs on tablets (≤1024px)
    Companies work on iPads: creating/editing customers, orders,
@@ -2341,7 +2188,7 @@ textarea.form-control {
     md-dialog.be-context,
     md-dialog.or-context,
     md-dialog.ph-context,
-    md-dialog.pdfd-context {
+md-dialog.pdfd-context {
         --dlg-w: calc(100vw - var(--sidebar-width, 0px) - 24px);
         min-width: var(--dlg-w) !important;
         max-width: var(--dlg-w) !important;
@@ -2352,25 +2199,23 @@ textarea.form-control {
         --md-dialog-container-max-block-size: calc(100vh - 24px);
         --md-dialog-container-max-block-size: calc(100dvh - 24px);
     }
-    md-dialog > [slot="headline"] { padding: 18px 18px 0; }
-    md-dialog > [slot="content"]  { padding: 16px 18px; overflow-x: hidden; }
-    md-dialog > [slot="actions"]  { padding: 12px 18px 18px; }
-
+md-dialog > [slot="headline"] { padding: 18px 18px 0; }
+md-dialog > [slot="content"] { padding: 16px 18px; overflow-x: hidden; }
+md-dialog > [slot="actions"] { padding: 12px 18px 18px; }
     /* Legacy .modal (non-MD3) dialogs */
-    .modal { width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; max-height: calc(100dvh - 24px); }
-    .modal-body { overflow-x: hidden; }
-
+.modal { width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; max-height: calc(100dvh - 24px); }
+.modal-body { overflow-x: hidden; }
     /* Everything inside a dialog stays within its width */
     md-dialog [slot="content"] *,
-    .modal-body * { min-width: 0; }
+.modal-body * { min-width: 0; }
     md-dialog [slot="content"] img,
-    md-dialog [slot="content"] table { max-width: 100%; }
+md-dialog [slot="content"] table { max-width: 100%; }
     /* …except tables that live in their own horizontal scroller — those
        must be allowed to grow wider than the dialog and scroll sideways. */
     md-dialog [slot="content"] .or-sub-table-wrap > table,
     md-dialog [slot="content"] .or-table-wrap > table,
     md-dialog [slot="content"] .ph-detail-table-wrap > table,
-    md-dialog [slot="content"] .table-container > table { max-width: none; }
+md-dialog [slot="content"] .table-container > table { max-width: none; }
 }
 
 /* PHONES (≤640px): the sidebar is off-canvas but --sidebar-width stays
@@ -2381,7 +2226,7 @@ textarea.form-control {
     md-dialog.be-context,
     md-dialog.or-context,
     md-dialog.ph-context,
-    md-dialog.pdfd-context {
+md-dialog.pdfd-context {
         --dlg-w: 100vw;
         min-width: 100vw !important;
         max-width: 100vw !important;
@@ -2395,23 +2240,24 @@ textarea.form-control {
         --md-dialog-container-max-block-size: 100vh;
         --md-dialog-container-max-block-size: 100dvh;
     }
-    md-dialog > [slot="headline"] { padding: 14px 14px 0; font-size: 1.05rem; }
-    md-dialog > [slot="content"]  { padding: 12px 14px; }
-    md-dialog > [slot="actions"]  { padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
+md-dialog > [slot="headline"] { padding: 14px 14px 0; font-size: 1.05rem; }
+md-dialog > [slot="content"] { padding: 12px 14px; }
+md-dialog > [slot="actions"] { padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
     /* App shell (edge-to-edge WebView): a fullscreen sheet starts at the very
        top of the screen — push its headline below the status bar / Dynamic
        Island, and its actions above the home indicator. --sa-* is defined by
        index.php (Android native push / iOS env()); plain browsers → 0. */
-    html.app-shell md-dialog > [slot="headline"] { padding-top: calc(14px + var(--sa-top, 0px)); }
-    html.app-shell md-dialog > [slot="actions"]  { padding-bottom: calc(14px + var(--sa-bottom, 0px)); }
+html.app-shell md-dialog > [slot="headline"] { padding-top: calc(14px + var(--sa-top, 0px)); }
+html.app-shell md-dialog > [slot="actions"] { padding-bottom: calc(14px + var(--sa-bottom, 0px)); }
     /* Legacy bottom-sheet .modal: keep its footer above the home indicator. */
-    html.app-shell .modal-overlay { padding-bottom: calc(10px + var(--sa-bottom, 0px)); }
-
+html.app-shell .modal-overlay { padding-bottom: calc(10px + var(--sa-bottom, 0px)); }
     /* Filter toolbars are 3–5 rows tall on a phone — pinning them would
        eat half the screen. Scroll normally here (tablet/desktop stay sticky). */
     body .filter-bar, body .data-toolbar, body .wk-toolbar, body .ab-toolbar, body .oc-toolbar,
     body .be-toolbar, body .or-toolbar, body .ph-filter-bar, body .ctrl-filters,
-    body .users-filters, body .cdocs-toolbar, body .ma-toolbar {
+body .users-filters,
+    body .cdocs-toolbar,
+    body .ma-toolbar {
         position: static;
     }
 }
@@ -2423,18 +2269,16 @@ textarea.form-control {
     .wk-data-grid,
     .be-anf-grid,
     md-dialog .form-grid,
-    .modal .form-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
-
+.modal .form-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
     /* Wizard stepper: wrap into two rows instead of horizontal scroll */
-    .be-stepper { flex-wrap: wrap; overflow-x: visible; gap: 8px 0; padding-bottom: 12px; }
-    .be-stepper-step { flex: 1 1 33%; min-width: 0; }
+.be-stepper { flex-wrap: wrap; overflow-x: visible; gap: 8px 0; padding-bottom: 12px; }
+.be-stepper-step { flex: 1 1 33%; min-width: 0; }
     .be-stepper-step::before,
-    .be-stepper-step::after { display: none; }
-    .be-stepper-label { font-size: 0.66rem; }
-
+.be-stepper-step::after { display: none; }
+.be-stepper-label { font-size: 0.66rem; }
     /* Staffing position rows: 2 fields per line instead of 6 columns */
-    .be-anf-pos-head-row { display: none; }
-    .be-anf-pos-row {
+.be-anf-pos-head-row { display: none; }
+.be-anf-pos-row {
         grid-template-columns: 1fr 1fr;
         row-gap: 6px;
         padding: 10px;
@@ -2442,11 +2286,11 @@ textarea.form-control {
         border-radius: var(--md-sys-shape-corner-medium);
         background: var(--gray-50);
     }
-    .be-anf-pos-row > *:nth-child(2) { grid-column: 1 / -1; }
-    .be-anf-pos-remove { justify-self: end; }
-
+.be-anf-pos-row > *:nth-child(2) { grid-column: 1 / -1; }
+.be-anf-pos-remove { justify-self: end; }
     /* Breadcrumb chips in the wizard may wrap */
-    .be-breadcrumb, .be-bc { flex-wrap: wrap; }
+.be-breadcrumb,
+    .be-bc { flex-wrap: wrap; }
 }
 
 /* ============================================
@@ -2470,8 +2314,6 @@ textarea.form-control {
 .w-100 { width: 100%; }
 .mt-1 { margin-top: 8px; }
 .currency::after { content: ' €'; }
-
-
 /* ============================================
    Viewer-mode gating
    --------------------------------------------
@@ -2484,7 +2326,6 @@ textarea.form-control {
    ============================================ */
 body.viewer-mode .perm-needs-edit,
 body.viewer-mode [data-perm="edit"] { display: none !important; }
-
 body.viewer-mode .perm-readonly-banner {
     display: flex;
     align-items: center;
@@ -2497,7 +2338,6 @@ body.viewer-mode .perm-readonly-banner {
     margin-bottom: 14px;
     font-size: 0.9rem;
 }
-
 /* ============================================
    Top horizontal scrollbar for wide tables
    --------------------------------------------
@@ -2542,7 +2382,6 @@ body.viewer-mode .perm-readonly-banner {
 .table-container.has-top-scroll::-webkit-scrollbar {
     height: 0;
 }
-
 /* ============================================
    Floating left/right scroll buttons for wide tables
    --------------------------------------------
@@ -2597,7 +2436,7 @@ body:has(.sidebar.open) .ai-launcher,
 body:has(.sidebar.open) .ai-panel,
 body:has(.sidebar.open) md-fab.wm-new-chat-fab { display: none !important; }
 @media print {
-    .hscroll-nav { display: none !important; }
+.hscroll-nav { display: none !important; }
 }
 
 /* ============================================
@@ -2641,13 +2480,12 @@ md-dialog.dlg-max {
     max-height: calc(100vh - 24px) !important;
     margin: auto !important;
 }
-
 /* Mobile drawer: scrolling inside the menu (or touching the dimmed area)
    must never scroll the page behind it. */
 .sidebar { overscroll-behavior: contain; }
 .sidebar-overlay { touch-action: none; overscroll-behavior: contain; }
 @media (max-width: 900px) {
-    html:has(.sidebar.open) { overflow: hidden; }
+html:has(.sidebar.open) { overflow: hidden; }
 }
 
 /* Legacy #modal (openModal): header + footer stay put, ONLY the body scrolls.
@@ -2660,5 +2498,5 @@ md-dialog.dlg-max {
 #modal > .modal-footer { flex-shrink: 0; }
 #modal > .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 @media (max-width: 1024px) {
-    #modal { max-height: calc(100dvh - 24px - var(--sa-top, 0px) - var(--sa-bottom, 0px)); }
+#modal { max-height: calc(100dvh - 24px - var(--sa-top, 0px) - var(--sa-bottom, 0px)); }
 }

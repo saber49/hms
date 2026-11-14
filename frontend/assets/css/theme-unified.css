@@ -94,7 +94,6 @@
     --ma-shadow-sm: 0 1px 2px color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent);
     --ma-shadow-md: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
 }
-
 /* ---------- Kunden bento tiles (customers.css — were 8 colours) ---------- */
 .bento-tile-total,
 .bento-tile-active,
@@ -109,7 +108,6 @@
     --bento-accent: var(--u-primary);
     --bento-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
 }
-
 /* ---------- Small hardcoded leftovers ---------- */
 /* Einsätze: purple "NU pending" chips → unified blue */
 .nu-pending-chip {
@@ -121,33 +119,25 @@
     background: linear-gradient(90deg, var(--u-accent-light), var(--u-accent)) !important;
 }
 .planner-anf-field-label { color: var(--u-accent-strong) !important; }
-
 /* Kunden: navy gradient table header → flat brand navy */
 .zuschlag-table thead th {
     background: var(--u-primary) !important;
 }
-
 /* Mitarbeiter: initial-password card (was cyan gradient) */
 .wk-pw-show-card {
     background: linear-gradient(135deg, var(--u-accent-50) 0%, var(--u-accent-soft) 100%) !important;
 }
-
 /* Nachunternehmer: "people" stat icon (was indigo) */
 .nu-stat-people .nu-stat-icon {
     background: var(--u-accent-soft) !important;
     color: var(--u-accent-strong) !important;
 }
-
 /* Account modal: tenant-admin role badge (was violet) */
-.role-badge.role-tenant_admin {
+.role-badge.role-tenant_admin,
+    .doc-cat {
     background: var(--u-accent-soft);
     color: var(--u-accent-strong);
 }
-.doc-cat {
-    background: var(--u-accent-soft);
-    color: var(--u-accent-strong);
-}
-
 /* ============================================================
    DARK MODE corrections
    ------------------------------------------------------------
@@ -174,7 +164,6 @@
     --ma-shadow-sm:      var(--md-sys-elevation-level1);
     --ma-shadow-md:      var(--md-sys-elevation-level2);
 }
-
 [data-theme="dark"] .bento-tile-total,
 [data-theme="dark"] .bento-tile-active,
 [data-theme="dark"] .bento-tile-archiv,
@@ -188,7 +177,6 @@
     --bento-accent: var(--md-ref-palette-primary80);
     --bento-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
-
 /* ============================================================
    Mobile: Touch-Targets (min. 44x44, Apple HIG) & Lesbarkeit
    Loaded last -> overrides module sheets on small screens only.
@@ -196,76 +184,66 @@
 @media (max-width: 768px) {
 
     /* Menu toggle must not be squeezed by the flex topbar */
-    .menu-toggle {
+.menu-toggle {
         min-width: 44px;
         flex-shrink: 0;
     }
-
     /* MD3 icon buttons in table rows / doc actions */
-    md-icon-button {
+md-icon-button {
         width: 44px !important;
         height: 44px !important;
         --md-icon-button-state-layer-width: 44px !important;
         --md-icon-button-state-layer-height: 44px !important;
     }
-
     /* Filter chips */
-    md-filter-chip {
+md-filter-chip {
         --md-filter-chip-container-height: 40px;
     }
-
     /* Common small icon buttons across modules */
     .chat-header-btn,
     .btn-icon,
     .wk-card-menu,
-    .dispo-gate-close {
+.dispo-gate-close {
         min-width: 44px;
         min-height: 44px;
     }
-
     /* AI assistant controls */
     .ai-expand,
     .ai-clear,
     .ai-close,
     .ai-attach,
-    .ai-send {
+.ai-send {
         min-width: 44px;
         min-height: 44px;
     }
-    .ai-quick-chip {
+.ai-quick-chip {
         min-height: 40px;
     }
-
     /* Email links on worker cards: enlarge tap area, not the font */
-    .wk-card-email {
+.wk-card-email {
         padding: 8px 0;
         display: inline-block;
     }
-
     /* Sidebar user row + dashboard quick links */
-    .user-info {
-        min-height: 44px;
-    }
+.user-info,
     .dash-quick-btn {
         min-height: 44px;
     }
-    .link-more {
+.link-more {
         padding: 12px 0;
         display: inline-block;
     }
-
     /* MD3 buttons: 44px container on touch devices */
     md-filled-button,
     md-outlined-button,
-    md-text-button {
+md-text-button {
         --md-filled-button-container-height: 44px !important;
         --md-outlined-button-container-height: 44px !important;
         --md-text-button-container-height: 44px !important;
     }
-    md-icon-button {
+md-icon-button {
         min-width: 44px !important;
     }
-
     /* Chips / segmented buttons across modules */
     .ai-quick-chip,
     .chip,
@@ -277,18 +255,18 @@
     .ma-today-btn,
     .ma-range-btn,
     .ma-tab,
-    button.btn-sm {
+button.btn-sm {
         min-height: 44px;
     }
     .ctrl-period button,
-    .ctrl-paginator button {
+.ctrl-paginator button {
         min-height: 44px;
     }
-    .chip {
+.chip {
         min-width: 44px;
     }
     .or-tab,
-    button.btn-primary {
+button.btn-primary {
         min-height: 44px;
     }
     .or-actions button,
@@ -297,81 +275,74 @@
     button.pdfs,
     button.close,
     button.cancel,
-    button.delete {
+button.delete {
         min-width: 44px;
         min-height: 44px;
     }
     .dispo-search-clear,
     #ctrlSnapClose,
-    #dispoBereichReopen {
+#dispoBereichReopen {
         min-width: 44px;
         min-height: 44px;
     }
-
     /* Monatsabschluss month nav arrows */
     .ma-month-nav button,
-    .ma-header button {
+.ma-header button {
         min-width: 44px;
         min-height: 44px;
     }
-
     /* Worker card email links: full tap height */
-    .wk-card-email {
+.wk-card-email {
         min-height: 44px;
         display: inline-flex;
         align-items: center;
     }
-
     /* Bestellungseingang: toolbar stacks, chips scroll, button full width */
-    .be-toolbar {
+.be-toolbar {
         flex-direction: column;
         align-items: stretch;
     }
-    .be-toolbar md-outlined-text-field.be-search {
+.be-toolbar md-outlined-text-field.be-search {
         max-width: none;
     }
-    .be-toolbar md-chip-set {
+.be-toolbar md-chip-set {
         max-width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding-bottom: 4px;
     }
     .be-toolbar-right,
-    .be-toolbar-right md-filled-button {
+.be-toolbar-right md-filled-button {
         width: 100%;
     }
-
     /* Controlling: snapshots drawer covers the full width */
-    .ctrl-snap-drawer {
+.ctrl-snap-drawer {
         width: 100vw;
         max-width: 100vw;
     }
-
     /* Monatsabschluss: month-nav injector must fit / scroll, not overflow */
-    .ma-nav-injector {
+.ma-nav-injector {
         max-width: 100%;
         min-width: 0;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
-    .ma-nav-injector::-webkit-scrollbar { display: none; }
-
+.ma-nav-injector::-webkit-scrollbar { display: none; }
     /* Preishistorie: action buttons get their own full row and wrap */
-    .ph-filter-actions {
+.ph-filter-actions {
         grid-column: 1 / -1;
         flex-wrap: wrap;
     }
-
     /* Filter chip rows (Bestellungseingang + Bestellungen):
        horizontal scroll instead of widening the page */
     .be-toolbar-left,
-    .or-toolbar-row {
+.or-toolbar-row {
         max-width: 100%;
         min-width: 0;
     }
     .be-toolbar md-chip-set,
-    .or-toolbar-row md-chip-set {
+.or-toolbar-row md-chip-set {
         display: flex;
         width: 100%;
         max-width: 100%;
@@ -381,43 +352,40 @@
         padding-bottom: 4px;
     }
     .be-toolbar md-chip-set::-webkit-scrollbar,
-    .or-toolbar-row md-chip-set::-webkit-scrollbar { display: none; }
-
+.or-toolbar-row md-chip-set::-webkit-scrollbar { display: none; }
     /* Controlling: title/period must wrap, heatmap scrolls */
     .ctrl-title,
     .ctrl-title h2,
-    .ctrl-title small {
+.ctrl-title small {
         max-width: 100%;
         white-space: normal;
         overflow-wrap: anywhere;
     }
-    .ctrl-period {
+.ctrl-period {
         max-width: 100%;
     }
-    .ctrl-heatmap {
+.ctrl-heatmap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-
     /* Dashboard (Übersicht): grid items must never exceed the screen.
        The Chart.js canvas sets an intrinsic width that blows out the
        grid column — min-width:0 + clamped canvas fixes it. */
     .dash-grid > *,
     .dash-card,
-    .dash-hero > * {
+.dash-hero > * {
         min-width: 0;
         max-width: 100%;
     }
-    .dash-chart-wrap {
+.dash-chart-wrap {
         max-width: 100%;
         overflow: hidden;
     }
-    .dash-chart-wrap canvas {
+.dash-chart-wrap canvas {
         max-width: 100% !important;
     }
-
     /* Readability: raise fonts below 11px */
-    th {
+th {
         font-size: 0.72rem !important;
     }
     .ph-tl-typ,
@@ -425,7 +393,7 @@
     .ph-filter-field label,
     .owner-ribbon,
     .ma-today-btn,
-    .ma-range-btn {
+.ma-range-btn {
         font-size: 0.7rem !important;
     }
     .bento-tile-head,
@@ -436,7 +404,7 @@
     .nu-stat-cue,
     .wk-tag,
     .wk-card-badge,
-    .ai-badge-pro {
+.ai-badge-pro {
         font-size: 0.7rem !important;
     }
 }

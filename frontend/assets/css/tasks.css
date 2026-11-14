@@ -11,7 +11,6 @@
     flex-direction: column;
     gap: 18px;
 }
-
 .planner-toolbar {
     padding: 18px 20px;
     display: flex;
@@ -20,52 +19,40 @@
     align-items: center;
     flex-wrap: wrap;
 }
-
 .planner-week-nav {
     display: flex;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
 }
-
 .planner-topbar-nav {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .planner-topbar-actions {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     margin-left: 8px;
 }
-
 .planner-week-title {
     font-size: 1rem;
     font-weight: 700;
     color: var(--primary);
 }
-
 .planner-week-range {
     font-size: 0.82rem;
     color: var(--gray-500);
     margin-top: 2px;
 }
-
-.planner-toolbar-actions {
+.planner-toolbar-actions,
+    .planner-overview-cards {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
 }
-
-.planner-overview-cards {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
 /* ============================================
    Disposition: Search + Filters bar
    Sits in the same row as the overview pills (Ausstehend / Geplant /
@@ -79,7 +66,6 @@
     flex-wrap: wrap;
     width: 100%;
 }
-
 .dispo-filterbar {
     display: flex;
     align-items: center;
@@ -89,7 +75,6 @@
     justify-content: flex-end;
     min-width: 280px;
 }
-
 .dispo-search-wrap {
     position: relative;
     display: flex;
@@ -97,7 +82,6 @@
     flex: 1 1 220px;
     max-width: 320px;
 }
-
 .dispo-search-icon {
     position: absolute;
     left: 12px;
@@ -105,7 +89,6 @@
     font-size: 0.85rem;
     pointer-events: none;
 }
-
 .dispo-search-input {
     width: 100%;
     padding: 8px 32px 8px 34px;
@@ -116,17 +99,14 @@
     color: var(--gray-800, var(--md-sys-color-on-primary-container));
     transition: border-color 0.15s, box-shadow 0.15s;
 }
-
 .dispo-search-input:focus {
     outline: none;
     border-color: var(--md-sys-color-primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
-
 .dispo-search-input::placeholder {
     color: var(--gray-400, var(--md-sys-color-on-surface-variant));
 }
-
 .dispo-search-clear {
     position: absolute;
     right: 6px;
@@ -143,12 +123,10 @@
     justify-content: center;
     transition: background 0.15s, color 0.15s;
 }
-
 .dispo-search-clear:hover {
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
 }
-
 .dispo-filter-select {
     appearance: none;
     -webkit-appearance: none;
@@ -163,17 +141,14 @@
     max-width: 200px;
     transition: border-color 0.15s, box-shadow 0.15s;
 }
-
 .dispo-filter-select:hover {
     border-color: var(--md-sys-color-primary-container);
 }
-
 .dispo-filter-select:focus {
     outline: none;
     border-color: var(--md-sys-color-primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
-
 /* Visual hint: a select that has a value picked is tinted blue. */
 /* (handled by JS-applied classes — see below) */
 
@@ -191,12 +166,10 @@
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
 }
-
 .dispo-reset-btn:hover {
     background: var(--md-sys-color-error-container);
     border-color: var(--md-sys-color-error-container);
 }
-
 /* Bereich filter — compact select in the filter bar (replaces the old
    full-width chip row so search/filters sit one row higher). */
 .dispo-bereich-select {
@@ -214,7 +187,6 @@
     color: var(--md-sys-color-primary-container);
     border-color: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
 }
-
 .dispo-filter-summary {
     display: flex;
     align-items: center;
@@ -224,11 +196,9 @@
     font-size: 0.8rem;
     color: var(--gray-600, var(--md-sys-color-primary));
 }
-
 .dispo-filter-summary:empty {
     display: none;
 }
-
 .dispo-chip {
     display: inline-flex;
     align-items: center;
@@ -241,7 +211,6 @@
     font-size: 0.75rem;
     font-weight: 600;
 }
-
 /* ===== Bereich quick-filter squares (Dispo) ===== */
 .dispo-bereich-chips {
     display: flex;
@@ -320,7 +289,6 @@
     --chip-bd: var(--gray-300);
     padding: 7px 11px;
 }
-
 /* ===== Floating Bereich selection window (frosted overlay) ===== */
 .dispo-bereich-gate {
     position: fixed;
@@ -437,7 +405,6 @@
 }
 .dispo-gate-all { --g-bg: var(--md-sys-color-primary-container); --g-fg: var(--md-sys-color-primary); --g-bd: var(--md-sys-color-primary-container); }
 .dispo-gate-none { --g-bg: var(--gray-100); --g-fg: var(--md-sys-color-primary); --g-bd: var(--md-sys-color-primary-container); }
-
 /* Dark mode — translucent tints instead of light pastels */
 [data-theme="dark"] .dispo-gate-square,
 [data-theme="dark"] .dispo-gate-all {
@@ -451,35 +418,34 @@
     --g-bd: var(--gray-300);
 }
 [data-theme="dark"] .dispo-gate-head i { color: var(--md-sys-color-primary-container); }
-
 @media (max-width: 620px) {
-    .dispo-gate-panel { padding: 24px 18px 28px; border-radius: var(--md-sys-shape-corner-large); }
-    .dispo-gate-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .dispo-gate-square { min-height: 128px; padding: 18px 10px; }
-    .dispo-gate-head { font-size: 1.2rem; }
+.dispo-gate-panel { padding: 24px 18px 28px; border-radius: var(--md-sys-shape-corner-large); }
+.dispo-gate-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.dispo-gate-square { min-height: 128px; padding: 18px 10px; }
+.dispo-gate-head { font-size: 1.2rem; }
 }
 
 @media (max-width: 880px) {
-    .dispo-overview-row {
+.dispo-overview-row {
         flex-direction: column;
         align-items: stretch;
     }
-    .dispo-filterbar {
+.dispo-filterbar {
         justify-content: flex-start;
     }
-    .dispo-search-wrap {
+.dispo-search-wrap {
         max-width: none;
     }
-    .dispo-filter-select {
+.dispo-filter-select {
         flex: 1 1 calc(50% - 4px);
         max-width: none;
     }
-    .dispo-bereich-chips {
+.dispo-bereich-chips {
         overflow-x: auto;
         flex-wrap: nowrap;
         padding-bottom: 4px;
     }
-    .dispo-bereich-chip { flex: 0 0 auto; }
+.dispo-bereich-chip { flex: 0 0 auto; }
 }
 
 .planner-calendar {
@@ -488,7 +454,6 @@
        day headers would stick to this card instead of the page. */
     overflow: clip;
 }
-
 .planner-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(180px, 1fr));
@@ -497,7 +462,6 @@
        topbar and the day headers pin right below it. */
     overflow: visible;
 }
-
 /* Narrow screens: 7 columns don't fit, so the grid must scroll
    horizontally. That makes it a scroll container (breaking the
    page-level sticky), so vertical scrolling moves inside too and
@@ -507,7 +471,7 @@
    the Einsatz cards would scroll the grid while the filters stay put.
    There the PAGE scrolls — see the (pointer: coarse) rule below. */
 @media (max-width: 1500px) and (hover: hover) and (pointer: fine) {
-    .planner-grid {
+.planner-grid {
         /* Horizontal scroll ONLY. No max-height: the grid takes its full
            content height so the mouse wheel scrolls the PAGE (filters and
            KPI cards rise away) instead of a boxed inner scroller — the
@@ -522,7 +486,7 @@
        (same specificity + later in the file would otherwise win and pin
        the header 60px below the grid's top edge, leaving a gap through
        which the Einsatz cards show above the weekday row). */
-    .planner-grid .planner-day-header { top: 0; }
+.planner-grid .planner-day-header { top: 0; }
 }
 
 /* Overflow-driven fallback: the media queries above switch the grid into
@@ -538,11 +502,10 @@
     overscroll-behavior-x: contain;
 }
 .planner-grid.hscroll-on .planner-day-header { top: 0; }
-
 /* Phones (<641px): 7 columns can never fit — keep the classic inner
    scroll container with 180px columns and horizontal swipe. */
 @media (max-width: 640px) {
-    .planner-grid {
+.planner-grid {
         grid-template-columns: repeat(7, minmax(180px, 1fr));
         overflow-x: auto;
         overflow-y: visible;
@@ -552,63 +515,61 @@
         -webkit-overflow-scrolling: touch;
         touch-action: pan-x pan-y;
     }
-    .planner-grid .planner-day-header { top: 0; }
+.planner-grid .planner-day-header { top: 0; }
 }
 
 /* Touch TABLETS 641–1500px (iPad portrait/landscape, 768–1366px): no inner
    scroll container, 7 equal columns fill the width, page scrolls. */
 @media (min-width: 641px) and (max-width: 1500px) and (pointer: coarse) {
-    .planner-grid {
+.planner-grid {
         grid-template-columns: repeat(7, minmax(0, 1fr));
         overflow: visible;
         max-height: none;
     }
-    .planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
-
+.planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
     /* Narrow columns (~110–170px): nothing may stick out of the card.
        Long single words (customer names, "Anforderungen") break, chips
        stack full-width and wrap instead of being clipped. */
     .planner-day-column,
-    .planner-kunde-cell        { min-width: 0; padding: 8px; gap: 8px; }
+.planner-kunde-cell { min-width: 0; padding: 8px; gap: 8px; }
     /* min-height:0 — the 232px floor sized for wide desktop columns makes
        iPad cards look stretched even with little content; cards now size
        to their content on narrow columns. */
-    .planner-card              { min-width: 0; overflow: hidden; padding: 8px; min-height: 0; }
-    .planner-card-title-row    { gap: 4px; }
+.planner-card { min-width: 0; overflow: hidden; padding: 8px; min-height: 0; }
+.planner-card-title-row { gap: 4px; }
     /* break-word (NOT anywhere / word-break:break-word): those shrink the
        min-content width to one letter, so flex items wrap letter-by-letter.
        break-word keeps whole words and only splits a word wider than the box. */
     .planner-card-title,
     .planner-card-subtitle,
     .planner-card-note,
-    .planner-card-time         { min-width: 0; overflow-wrap: break-word; word-break: normal; hyphens: auto; }
+.planner-card-time { min-width: 0; overflow-wrap: break-word; word-break: normal; hyphens: auto; }
     /* Legacy -webkit-box puts the colour dot on its own row and clamps the
        text to one line ("HA…") — use a plain block with a max-height instead. */
-    .planner-card-title        { display: block; -webkit-line-clamp: unset; line-clamp: unset;
+.planner-card-title { display: block; -webkit-line-clamp: unset; line-clamp: unset;
                                  font-size: 0.76rem; line-height: 1.2; max-height: 3.6em; overflow: hidden; }
     .planner-card-title .planner-kunde-dot,
-    .planner-card-title > span:first-child { display: inline-block; vertical-align: middle; }
-    .planner-card-time         { font-size: 0.82rem; }
+.planner-card-title > span:first-child { display: inline-block; vertical-align: middle; }
+.planner-card-time { font-size: 0.82rem; }
     .planner-card-subtitle,
-    .planner-card-note         { font-size: 0.7rem; }
+.planner-card-note { font-size: 0.7rem; }
     /* Long object names wrap to 3-4 lines at ~130px column width — clamp to
        2 lines so cards stay compact. */
     .planner-card-subtitle,
-    .planner-card-month-objekt {
+.planner-card-month-objekt {
         display: -webkit-box;
         line-clamp: 2;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .planner-card-count        { min-width: 22px; height: 22px; font-size: 0.68rem; flex: 0 0 auto; }
-
+.planner-card-count { min-width: 22px; height: 22px; font-size: 0.68rem; flex: 0 0 auto; }
     /* row+wrap (not column): full-width pills wasted the right half of the
        card — chips now pack side-by-side and only wrap when needed. */
     .planner-card-footer,
-    .planner-card-workers      { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+.planner-card-workers { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
     .planner-card-chip,
-    .planner-card-worker {
+.planner-card-worker {
         /* block, not flex: WebKit cannot wrap text inside an anonymous flex
            item, so names like "Mohamad Mohamad" were clipped at the pill
            edge instead of wrapping to a second line. */
@@ -624,7 +585,7 @@
         overflow-wrap: break-word;
         word-break: normal;
     }
-    .planner-card-chip .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
+.planner-card-chip .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
 }
 
 .planner-day-column {
@@ -632,16 +593,13 @@
     border-right: 1px solid var(--gray-200);
     background: var(--white);
 }
-
 .planner-day-column:last-child {
     border-right: none;
 }
-
 .planner-day-column.today .planner-day-header {
     background: var(--accent);
     color: var(--white);
 }
-
 .planner-day-header {
     padding: 14px 14px 12px;
     border-bottom: 1px solid var(--gray-200);
@@ -650,25 +608,21 @@
     top: var(--topbar-height, 60px);
     z-index: 5;
 }
-
 .planner-day-name {
     font-size: 0.82rem;
     font-weight: 700;
 }
-
 .planner-day-date {
     font-size: 0.78rem;
     opacity: 0.8;
     margin-top: 2px;
 }
-
 .planner-day-body {
     padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
 .planner-day-empty,
 .planner-loading,
 .planner-empty-list {
@@ -677,13 +631,11 @@
     color: var(--gray-400);
     font-size: 0.82rem;
 }
-
 /* ---- Week view grouped by customer (Kunde rows, like a crew planner) ---- */
 .planner-day-header.today {
     background: var(--accent);
     color: var(--white);
 }
-
 .planner-kunde-row {
     grid-column: 1 / -1;
     display: flex;
@@ -697,7 +649,6 @@
     font-weight: 800;
     color: var(--gray-900, var(--md-sys-color-on-primary-container));
 }
-
 .planner-kunde-row-dot {
     width: 10px;
     height: 10px;
@@ -705,7 +656,6 @@
     flex: 0 0 auto;
     box-shadow: 0 0 0 1px color-mix(in srgb, var(--md-sys-color-scrim) 15%, transparent);
 }
-
 .planner-kunde-row-count {
     margin-left: 4px;
     padding: 1px 8px;
@@ -715,7 +665,6 @@
     font-size: 0.72rem;
     font-weight: 700;
 }
-
 .planner-kunde-cell {
     min-height: 54px;
     padding: 10px;
@@ -726,15 +675,12 @@
     border-right: 1px solid var(--gray-200);
     border-bottom: 1px solid var(--gray-100);
 }
-
 .planner-kunde-cell.last {
     border-right: none;
 }
-
 .planner-kunde-cell.today {
     background: var(--gray-50);
 }
-
 .planner-week-empty {
     grid-column: 1 / -1;
     padding: 48px 12px;
@@ -742,7 +688,6 @@
     color: var(--gray-400);
     font-size: 0.86rem;
 }
-
 .planner-card {
     width: 100%;
     display: flex;
@@ -757,49 +702,40 @@
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
 .planner-card:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
-
 .planner-card.pending {
     border-color: var(--md-sys-color-primary-container);
     background: linear-gradient(180deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) 100%);
 }
-
 .planner-card.planned {
     border-color: var(--md-ext-color-warning);
     background: linear-gradient(180deg, var(--md-ext-color-warning-container) 0%, var(--md-ext-color-warning-container) 100%);
 }
-
 .planner-card.confirmed {
     border-color: var(--md-ext-color-success-container);
     background: linear-gradient(180deg, var(--md-ext-color-success-container) 0%, var(--md-ext-color-success-container) 100%);
 }
-
 .planner-card.nu-pending {
     border-color: var(--md-sys-color-primary-container);
     background: linear-gradient(180deg, var(--md-sys-color-primary-container) 0%, var(--md-sys-color-primary-container) 100%);
 }
-
 .nu-pending-chip {
     color: var(--md-sys-color-secondary) !important;
     background: var(--md-sys-color-primary-container) !important;
     border: 1px solid var(--md-sys-color-primary-container) !important;
 }
-
 .nu-accepted-chip {
     color: var(--md-ext-color-success) !important;
     background: var(--md-ext-color-success-container) !important;
     border: 1px solid var(--md-ext-color-success-container) !important;
 }
-
 .planner-card.rejected {
     border-color: var(--md-sys-color-error-container);
     background: linear-gradient(180deg, var(--md-sys-color-error-container) 0%, var(--md-sys-color-error-container) 100%);
 }
-
 .planner-card.partial {
     border-color: var(--md-sys-color-primary-container);
     background: repeating-linear-gradient(
@@ -810,7 +746,6 @@
         var(--md-sys-color-primary-container) 18px
     );
 }
-
 .planner-card.planned.partial {
     border-color: var(--md-ext-color-warning);
     background: repeating-linear-gradient(
@@ -821,7 +756,6 @@
         var(--md-ext-color-warning-container) 18px
     );
 }
-
 /* Tombstone: day removed from Bestelleingang → card is locked, grayed-out,
    read-only. Overrides any status/partial coloring. */
 .planner-card.storno-locked {
@@ -869,20 +803,17 @@
     color: var(--md-sys-color-on-surface-variant);
     border-color: var(--md-sys-color-primary);
 }
-
 .dispo-cnt { font-weight: 700; }
 .dispo-cnt-added { color: var(--md-ext-color-success); }
 .dispo-cnt-req { color: var(--md-sys-color-error); }
 .dispo-cnt-done { color: var(--md-ext-color-success); }
 .dispo-cnt-sep { color: var(--gray-400); margin: 0 1px; }
-
 .planner-card-title-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
 }
-
 .planner-card-title {
     font-size: 0.88rem;
     font-weight: 700;
@@ -893,7 +824,6 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 .planner-card-count {
     min-width: 28px;
     height: 28px;
@@ -905,7 +835,6 @@
     font-size: 0.75rem;
     color: var(--gray-700);
 }
-
 .planner-card-time,
 .planner-card-subtitle,
 .planner-card-note {
@@ -913,14 +842,12 @@
     margin-top: 6px;
     color: var(--gray-700);
 }
-
 /* Shift start/end time must be readable at a glance. */
 .planner-card-time {
     font-size: 0.95rem;
     font-weight: 800;
     color: var(--gray-900, var(--md-sys-color-on-primary-container));
 }
-
 .planner-card-note {
     color: var(--gray-600);
     line-height: 1.35;
@@ -930,7 +857,6 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 .planner-card-subtitle {
     display: -webkit-box;
     line-clamp: 2;
@@ -938,13 +864,11 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-
 /* Push footer (chips) to the bottom so every card ends at the same edge */
 .planner-card-footer {
     margin-top: auto !important;
     padding-top: 10px;
 }
-
 .planner-card-footer,
 .planner-card-workers {
     display: flex;
@@ -952,7 +876,6 @@
     gap: 6px;
     margin-top: 10px;
 }
-
 .planner-card-chip,
 .planner-card-worker {
     display: inline-flex;
@@ -975,7 +898,6 @@
     color: var(--gray-600);
     font-weight: 700;
 }
-
 .planner-detail {
     display: flex;
     flex-direction: column;
@@ -991,7 +913,6 @@
 .planner-detail > .planner-storno-banner {
     margin: 0;
 }
-
 .planner-detail-headline {
     font-size: 1.5rem;
     font-weight: 700;
@@ -1043,13 +964,11 @@
     color: var(--md-ext-color-warning);
     margin-right: 4px;
 }
-
 .planner-detail-tabs {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
 }
-
 .planner-detail-pill {
     padding: 12px 18px;
     border-radius: var(--md-sys-shape-corner-large);
@@ -1057,12 +976,10 @@
     font-weight: 600;
     color: var(--gray-700);
 }
-
 .planner-detail-pill.active {
     background: var(--md-sys-color-primary-container);
     color: var(--primary);
 }
-
 .planner-detail-note {
     display: flex;
     gap: 12px;
@@ -1073,18 +990,15 @@
     padding: 16px;
     background: var(--md-ext-color-success-container);
 }
-
 .planner-detail-note i {
     color: var(--md-ext-color-success);
     margin-top: 2px;
 }
-
 .planner-detail-meta {
     font-size: 0.82rem;
     color: var(--gray-500);
     margin-top: 6px;
 }
-
 .planner-detail-topfields {
     display: grid;
     grid-template-columns: minmax(0, 420px);
@@ -1098,7 +1012,6 @@
 .planner-detail-topfields .form-group {
     margin-bottom: 0;
 }
-
 .planner-detail-topfields label {
     font-size: 0.75rem;
     font-weight: 700;
@@ -1108,7 +1021,6 @@
     margin-bottom: 6px;
     display: block;
 }
-
 .planner-detail-topfields select,
 .planner-detail-topfields textarea {
     border: 1px solid var(--gray-300);
@@ -1119,14 +1031,12 @@
     transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
 }
-
 .planner-detail-topfields select:focus,
 .planner-detail-topfields textarea:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
     outline: none;
 }
-
 .planner-shift-confirmed {
     display: inline-flex;
     align-items: center;
@@ -1138,14 +1048,12 @@
     color: var(--md-ext-color-on-success-container);
     font-weight: 700;
 }
-
 .planner-modal-header {
     position: sticky !important;
     top: 0;
     z-index: 10;
     background: var(--white);
 }
-
 .planner-modal-footer {
     position: sticky;
     bottom: 0;
@@ -1153,7 +1061,6 @@
     z-index: 10;
     border-top: 1px solid var(--gray-200);
 }
-
 /* Plan/confirm actions sit right-aligned next to the fullscreen/close
    buttons (inserted before .modal-max-btn by openPlannerTaskDetail) —
    no longer floating over the title in the middle of the header. */
@@ -1169,27 +1076,22 @@
 .planner-modal-header .planner-header-action + .modal-max-btn {
     margin-left: 0;
 }
-
 .planner-header-action > * {
     pointer-events: auto;
 }
-
 .planner-header-action-group {
     display: inline-flex;
     align-items: center;
     gap: 10px;
 }
-
 .planner-team-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
 }
-
 .planner-team-grid-split {
     align-items: start;
 }
-
 .planner-team-column {
     border: 1px solid var(--gray-200);
     border-radius: var(--md-sys-shape-corner-large);
@@ -1197,11 +1099,9 @@
     background: var(--white);
     box-shadow: var(--shadow-sm);
 }
-
 .planner-team-column-full {
     grid-column: 1 / -1;
 }
-
 .planner-team-header {
     padding: 14px 16px;
     border-bottom: 1px solid var(--gray-200);
@@ -1210,7 +1110,6 @@
     font-weight: 700;
     color: var(--gray-800);
 }
-
 .planner-soll-menge {
     color: var(--gray-500);
     font-weight: 500;
@@ -1218,7 +1117,6 @@
 .planner-team-header { align-items: center; gap: 10px; }
 .planner-team-title { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
 .planner-team-count { white-space: nowrap; }
-
 /* ♂/♀ coverage of the required gender mix (display only) */
 .planner-gender-cov { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 .planner-gender-cov:empty { display: none; }
@@ -1233,7 +1131,6 @@
 .planner-gender-cov-part.m.ok { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
 .planner-gender-cov-part.w.ok { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
 .planner-gender-cov-part.nu { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); }
-
 /* Order changed the Anforderungen after the shift was staffed */
 .planner-anf-changed {
     border: 1px solid var(--md-ext-color-warning-container);
@@ -1258,7 +1155,6 @@
 .planner-anf-changed-empty { margin-top: 8px; color: var(--gray-500); }
 [data-theme="dark"] .planner-anf-changed { background: color-mix(in srgb, var(--md-ext-color-warning) 12%, transparent); border-color: color-mix(in srgb, var(--md-ext-color-warning) 35%, transparent); color: var(--md-ext-color-warning-container); }
 [data-theme="dark"] .planner-gender-cov-part { background: var(--gray-200); }
-
 .planner-team-list {
     padding: 12px;
     display: flex;
@@ -1268,23 +1164,18 @@
     max-height: 340px;
     overflow-y: auto;
 }
-
 .planner-team-list-assigned {
     background: linear-gradient(180deg, color-mix(in srgb, var(--md-sys-color-primary) 70%, transparent) 0%, var(--md-sys-color-surface-container-lowest) 100%);
 }
-
 .planner-worker-search-wrap {
     padding: 12px 12px 0;
 }
-
 .planner-worker-search {
     width: 100%;
 }
-
 .planner-worker-search input {
     max-width: 100%;
 }
-
 .planner-worker-item {
     border: 1px solid var(--gray-200);
     border-radius: var(--md-sys-shape-corner-large);
@@ -1295,18 +1186,15 @@
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
-
 .planner-worker-item:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
     border-color: var(--md-sys-color-primary-container);
 }
-
 .planner-worker-item.assigned {
     border-left: 4px solid var(--warning);
     background: var(--md-ext-color-warning-container);
 }
-
 /* Per-worker task input (sent to the worker's app) — only on assigned cards.
    Separate from the shift-level Dispo note (bemerkung), which stays internal. */
 .planner-worker-task-wrap {
@@ -1350,7 +1238,6 @@
     color: var(--gray-400);
     font-size: 0.78rem;
 }
-
 /* Bulk "team task" bar — type once, apply to all assigned workers. */
 .planner-bulk-task {
     display: flex;
@@ -1404,7 +1291,6 @@
     transition: opacity 0.15s ease;
 }
 .planner-bulk-task-btn:hover { opacity: 0.9; }
-
 /* NU (Subcontractor) worker card — light blue */
 .planner-nu-worker-card {
     background: var(--md-sys-color-primary-container);
@@ -1424,7 +1310,6 @@
     background: var(--md-sys-color-error-container) !important;
     color: var(--md-sys-color-error) !important;
 }
-
 /* NU Worker Removal Modal */
 #nuRemoveOverlay {
     position: fixed;
@@ -1455,8 +1340,8 @@
     animation: nuRemoveSlideIn 0.2s ease-out;
 }
 @keyframes nuRemoveSlideIn {
-    from { opacity: 0; transform: translate(-50%, -48%); }
-    to { opacity: 1; transform: translate(-50%, -50%); }
+from { opacity: 0; transform: translate(-50%, -48%); }
+to { opacity: 1; transform: translate(-50%, -50%); }
 }
 .nu-remove-header {
     display: flex;
@@ -1577,13 +1462,11 @@
     align-items: center;
     gap: 4px;
 }
-
 .planner-worker-main {
     display: flex;
     align-items: center;
     gap: 12px;
 }
-
 .planner-worker-avatar {
     width: 38px;
     height: 38px;
@@ -1596,34 +1479,28 @@
     justify-content: center;
     font-weight: 700;
 }
-
 .planner-worker-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-
 .planner-worker-info {
     flex: 1;
     min-width: 0;
 }
-
 .planner-worker-name {
     font-weight: 700;
     color: var(--gray-900);
 }
-
 .planner-worker-subline {
     font-size: 0.78rem;
     color: var(--gray-500);
     margin-top: 2px;
 }
-
 .planner-worker-side {
     display: flex;
     justify-content: flex-end;
 }
-
 .planner-warning-btn {
     border: none;
     background: transparent;
@@ -1631,21 +1508,17 @@
     cursor: pointer;
     font-size: 1rem;
 }
-
 /* Soft variant: only multi_shift hints — info-blue, no alarm */
 .planner-warning-btn.info {
     color: var(--md-sys-color-primary);
 }
-
 .planner-warning-panel {
     display: none;
     padding-top: 4px;
 }
-
 .planner-warning-panel.open {
     display: block;
 }
-
 .planner-warning-entry {
     padding: 10px 12px;
     border-radius: var(--md-sys-shape-corner-medium);
@@ -1655,13 +1528,11 @@
     color: var(--gray-700);
     margin-top: 6px;
 }
-
 /* Multi-shift soft notice: another shift on the same day, but no time overlap */
 .planner-warning-entry.info {
     background: var(--md-sys-color-primary-container);
     border-color: var(--md-sys-color-primary-container);
 }
-
 /* ============================================
    Quick Overview Cards (Disposition) - moved to tasks.css
    ============================================ */
@@ -1670,7 +1541,6 @@
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .overview-card {
     display: inline-flex;
     align-items: center;
@@ -1683,7 +1553,6 @@
     box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 4%, transparent);
     min-height: auto;
 }
-
 .overview-card small {
     font-size: 0.78rem;
     font-weight: 700;
@@ -1692,31 +1561,26 @@
     gap: 5px;
     white-space: nowrap;
 }
-
 .overview-card.pending {
     background: var(--md-sys-color-primary-container);
     border-color: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-primary);
 }
-
 .overview-card.planned {
     background: var(--md-ext-color-warning-container);
     border-color: var(--md-ext-color-warning);
     color: var(--md-ext-color-on-warning-container);
 }
-
 .overview-card.confirmed {
     background: var(--md-ext-color-success-container);
     border-color: var(--md-ext-color-success-container);
     color: var(--md-ext-color-on-success-container);
 }
-
 .overview-card.rejected {
     background: var(--md-sys-color-error-container);
     border-color: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
 }
-
 /* ============================================
    NU Positionen & Anforderungen — Redesign
    ============================================ */
@@ -1728,7 +1592,6 @@
     overflow: hidden;
     box-shadow: 0 1px 4px color-mix(in srgb, var(--md-sys-color-scrim) 5%, transparent);
 }
-
 .nu-positions-header {
     display: flex;
     align-items: center;
@@ -1738,25 +1601,21 @@
     background: var(--gray-50);
     gap: 10px;
 }
-
 .nu-positions-header-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
 .nu-positions-header-left i,
 .nu-positions-header-left .material-symbols-outlined {
     color: var(--accent);
     font-size: 0.92rem;
 }
-
 .nu-positions-title {
     font-weight: 700;
     font-size: 0.85rem;
     color: var(--gray-800);
 }
-
 .nu-firma-badge {
     font-size: 0.78rem;
     color: var(--accent);
@@ -1766,13 +1625,11 @@
     border-radius: var(--md-sys-shape-corner-large);
     letter-spacing: 0.2px;
 }
-
 .nu-positions-header-right {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .nu-close-btn {
     width: 28px;
     height: 28px;
@@ -1788,13 +1645,11 @@
     padding: 0;
     font-size: 0.75rem;
 }
-
 .nu-close-btn:hover {
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
     border-color: var(--md-sys-color-error-container);
 }
-
 .nu-add-btn {
     display: inline-flex;
     align-items: center;
@@ -1810,23 +1665,19 @@
     transition: all 0.15s;
     white-space: nowrap;
 }
-
 .nu-add-btn:hover {
     background: var(--md-ext-color-warning-container);
     border-color: var(--md-ext-color-warning);
 }
-
 .nu-add-btn i {
     font-size: 0.7rem;
 }
-
 .nu-positions-body {
     padding: 14px 16px;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
 .nu-position-card {
     background: var(--white);
     border: 1px solid var(--gray-200);
@@ -1834,12 +1685,10 @@
     overflow: hidden;
     transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
-
 .nu-position-card:hover {
     box-shadow: 0 2px 8px color-mix(in srgb, var(--md-sys-color-scrim) 6%, transparent);
     border-color: var(--gray-400);
 }
-
 .nu-position-card-header {
     display: flex;
     align-items: center;
@@ -1848,7 +1697,6 @@
     background: var(--gray-50);
     border-bottom: 1px solid var(--gray-100);
 }
-
 .nu-position-badge {
     background: linear-gradient(135deg, var(--md-ext-color-warning-container), var(--md-ext-color-warning));
     color: #fff;
@@ -1862,7 +1710,6 @@
     font-weight: 700;
     flex-shrink: 0;
 }
-
 .nu-position-card-header .form-control {
     font-size: 0.85rem;
     font-weight: 600;
@@ -1871,13 +1718,11 @@
     padding: 4px 8px;
     border-radius: var(--md-sys-shape-corner-small);
 }
-
 .nu-position-card-header .form-control:focus {
     border-color: var(--accent);
     background: var(--white);
     box-shadow: 0 0 0 1px var(--accent);
 }
-
 .nu-position-count-input {
     width: 52px !important;
     text-align: center;
@@ -1887,12 +1732,10 @@
     background: var(--md-ext-color-warning-container) !important;
     border-radius: var(--md-sys-shape-corner-small) !important;
 }
-
 .nu-position-count-input:focus {
     border-color: var(--md-ext-color-warning) !important;
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-ext-color-warning) 15%, transparent) !important;
 }
-
 .nu-position-remove-btn {
     border: none;
     background: transparent;
@@ -1903,32 +1746,26 @@
     border-radius: var(--md-sys-shape-corner-small);
     transition: all 0.15s;
 }
-
 .nu-position-remove-btn:hover {
     color: var(--md-sys-color-error);
     background: var(--md-sys-color-error-container);
 }
-
 .nu-position-card-body {
     padding: 12px 16px 14px;
 }
-
 .nu-position-fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-
 .nu-field-group {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
-
 .nu-field-group.full-width {
     grid-column: 1 / -1;
 }
-
 .nu-field-label {
     font-size: 0.72rem;
     font-weight: 600;
@@ -1936,7 +1773,6 @@
     letter-spacing: 0.4px;
     color: var(--gray-500);
 }
-
 .nu-field-group .form-control {
     font-size: 0.875rem;
     padding: 9px 12px;
@@ -1944,21 +1780,17 @@
     border-color: var(--gray-300);
     transition: border-color 0.15s, box-shadow 0.15s;
 }
-
 .nu-field-group .form-control:hover:not(:focus) {
     border-color: var(--gray-400);
 }
-
 .nu-field-group .form-control:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px var(--accent);
 }
-
 .nu-field-group .form-control::placeholder {
     color: var(--md-sys-color-primary-container);
     font-style: italic;
 }
-
 /* Gender split inside a NU position card — shown when Geschlecht=gemischt */
 .nu-geschlecht-mix {
     display: flex; gap: 8px; margin-top: 6px;
@@ -1970,32 +1802,27 @@
     width: 100%; text-align: center; font-weight: 700;
 }
 .nu-mix-sym { font-size: 1rem; font-weight: 700; flex-shrink: 0; }
-
 .nu-assignment-status {
     margin-top: 10px;
     padding: 10px 14px;
     border-radius: var(--md-sys-shape-corner-medium);
     font-size: 0.78rem;
 }
-
 .nu-assignment-status.waiting {
     background: var(--gray-50);
     border: 1px dashed var(--gray-300);
     color: var(--gray-400);
 }
-
 .nu-assignment-status.partial {
     background: var(--md-ext-color-warning-container);
     border: 1px solid var(--md-ext-color-warning-container);
     color: var(--md-ext-color-on-warning-container);
 }
-
 .nu-assignment-status.complete {
     background: var(--md-ext-color-success-container);
     border: 1px solid var(--md-ext-color-success-container);
     color: var(--md-ext-color-success);
 }
-
 .nu-assignment-status-header {
     font-size: 0.72rem;
     font-weight: 700;
@@ -2006,7 +1833,6 @@
     align-items: center;
     gap: 6px;
 }
-
 .nu-assigned-worker {
     display: flex;
     align-items: center;
@@ -2014,7 +1840,6 @@
     padding: 4px 0;
     font-size: 0.8rem;
 }
-
 .nu-assigned-worker-avatar {
     background: var(--md-ext-color-success);
     color: white;
@@ -2028,17 +1853,14 @@
     font-weight: 700;
     flex-shrink: 0;
 }
-
 .nu-assigned-worker-name {
     font-weight: 600;
     color: var(--gray-800);
 }
-
 .nu-assigned-worker-nr {
     color: var(--gray-400);
     font-size: 0.72rem;
 }
-
 .nu-positions-footer {
     padding: 10px 16px;
     border-top: 1px solid var(--gray-100);
@@ -2047,7 +1869,6 @@
     justify-content: flex-end;
     gap: 8px;
 }
-
 .nu-submit-btn {
     display: inline-flex;
     align-items: center;
@@ -2063,17 +1884,14 @@
     transition: all 0.15s ease;
     box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
 }
-
 .nu-submit-btn:hover {
     background: var(--accent-hover);
     box-shadow: 0 2px 8px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
     transform: translateY(-1px);
 }
-
 .nu-submit-btn i {
     font-size: 0.78rem;
 }
-
 .nu-empty-state {
     text-align: center;
     padding: 32px 20px;
@@ -2082,7 +1900,6 @@
     align-items: center;
     gap: 4px;
 }
-
 .nu-empty-state .nu-empty-icon {
     width: 44px;
     height: 44px;
@@ -2093,25 +1910,21 @@
     justify-content: center;
     margin-bottom: 4px;
 }
-
 .nu-empty-state .nu-empty-icon i {
     font-size: 1.1rem;
     color: var(--gray-400);
 }
-
 .nu-empty-state .nu-empty-title {
     font-size: 0.88rem;
     font-weight: 700;
     color: var(--gray-700);
 }
-
 .nu-empty-state .nu-empty-text {
     font-size: 0.78rem;
     color: var(--gray-400);
     max-width: 280px;
     line-height: 1.5;
 }
-
 .nu-empty-state .nu-empty-cta {
     margin-top: 10px;
     display: inline-flex;
@@ -2127,25 +1940,21 @@
     cursor: pointer;
     transition: all 0.15s ease;
 }
-
 .nu-empty-state .nu-empty-cta:hover {
     border-color: var(--md-ext-color-warning);
     background: var(--md-ext-color-warning-container);
     color: var(--md-ext-color-on-warning-container);
 }
-
 .nu-empty-state .nu-empty-cta i {
     font-size: 0.72rem;
     color: var(--md-ext-color-warning);
 }
-
 .nu-summary-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 12px;
 }
-
 .nu-summary-card {
     background: var(--white);
     border: 1px solid var(--gray-200);
@@ -2159,7 +1968,6 @@
     position: relative;
     overflow: hidden;
 }
-
 .nu-summary-card::before {
     content: '';
     position: absolute;
@@ -2169,52 +1977,41 @@
     height: 3px;
     background: linear-gradient(90deg, var(--md-ext-color-warning-container), var(--md-ext-color-warning));
 }
-
 .nu-summary-card:hover {
     border-color: var(--md-ext-color-warning);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--md-ext-color-warning) 15%, transparent);
     transform: translateY(-2px);
 }
-
 .nu-summary-card.complete::before {
     background: linear-gradient(90deg, var(--md-ext-color-success-container), var(--md-ext-color-success));
 }
-
 .nu-summary-card.complete {
     border-color: var(--md-ext-color-success-container);
 }
-
 .nu-summary-card.complete:hover {
     border-color: var(--md-ext-color-success);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--md-ext-color-success) 15%, transparent);
 }
-
 .nu-summary-card.accepted::before {
     background: linear-gradient(90deg, var(--md-ext-color-success-container), var(--md-ext-color-success));
 }
-
 .nu-summary-card.accepted {
     border-color: var(--md-ext-color-success-container);
 }
-
 .nu-summary-card.accepted:hover {
     border-color: var(--md-ext-color-success);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--md-ext-color-success) 15%, transparent);
 }
-
 .nu-summary-card.nu-pending::before {
     background: linear-gradient(90deg, var(--md-sys-color-primary-container), var(--md-sys-color-secondary));
 }
-
 .nu-summary-card.nu-pending {
     border-color: var(--md-sys-color-primary-container);
 }
-
 .nu-summary-card.nu-pending:hover {
     border-color: var(--md-sys-color-primary-container);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-secondary) 15%, transparent);
 }
-
 .nu-summary-location {
     font-size: 0.7rem;
     color: var(--gray-500);
@@ -2226,7 +2023,6 @@
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
-
 .nu-summary-firma {
     font-size: 0.92rem;
     font-weight: 700;
@@ -2236,13 +2032,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 .nu-summary-stats {
     display: flex;
     align-items: center;
     gap: 12px;
 }
-
 .nu-summary-stat {
     display: flex;
     align-items: center;
@@ -2250,20 +2044,16 @@
     font-size: 0.78rem;
     color: var(--gray-500);
 }
-
 .nu-summary-stat i {
     font-size: 0.72rem;
 }
-
 .nu-summary-stat .count {
     font-weight: 700;
     color: var(--gray-700);
 }
-
 .nu-summary-stat.filled .count {
     color: var(--md-ext-color-success);
 }
-
 .nu-summary-actions {
     position: absolute;
     top: 10px;
@@ -2273,11 +2063,9 @@
     opacity: 0;
     transition: opacity 0.15s;
 }
-
 .nu-summary-card:hover .nu-summary-actions {
     opacity: 1;
 }
-
 .nu-summary-action-btn {
     border: none;
     background: var(--gray-100);
@@ -2292,17 +2080,14 @@
     justify-content: center;
     transition: all 0.15s;
 }
-
 .nu-summary-action-btn:hover {
     background: var(--gray-200);
     color: var(--gray-700);
 }
-
 .nu-summary-action-btn.danger:hover {
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
 }
-
 .nu-add-card {
     background: var(--gray-50);
     border: 2px dashed var(--gray-300);
@@ -2320,30 +2105,27 @@
     font-size: 0.8rem;
     font-weight: 600;
 }
-
 .nu-add-card:hover {
     border-color: var(--md-ext-color-warning);
     background: var(--md-ext-color-warning-container);
     color: var(--md-ext-color-on-warning-container);
 }
-
 .nu-add-card i {
     font-size: 1.2rem;
 }
-
 @media (max-width: 640px) {
-    .nu-position-fields {
+.nu-position-fields {
         grid-template-columns: 1fr;
     }
-    .nu-positions-header {
+.nu-positions-header {
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
     }
-    .nu-summary-cards {
+.nu-summary-cards {
         flex-direction: column;
     }
-    .nu-summary-card {
+.nu-summary-card {
         max-width: 100%;
     }
 }
@@ -2353,19 +2135,16 @@
     gap: 8px;
     flex-wrap: wrap;
 }
-
 .planner-mobile-weeknav {
     display: none;
     padding: 14px 16px;
 }
-
 /* Month Grid View */
 .planner-grid-month {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 0;
 }
-
 .planner-month-header {
     background: var(--gray-50);
     padding: 8px;
@@ -2379,10 +2158,9 @@
     top: var(--topbar-height, 60px);
     z-index: 5;
 }
-
 @media (max-width: 768px) {
     /* Mobile topbar wraps (height:auto, min 50px) */
-    .planner-month-header { top: 50px; }
+.planner-month-header { top: 50px; }
 }
 
 .planner-month-cell {
@@ -2393,16 +2171,13 @@
     background: var(--white);
     overflow: hidden;
 }
-
 .planner-month-cell.today {
     background: var(--md-sys-color-primary-container);
 }
-
 .planner-month-cell.planner-month-empty {
     background: var(--gray-50);
     min-height: 90px;
 }
-
 .planner-month-cell-date {
     font-size: 0.72rem;
     font-weight: 700;
@@ -2410,53 +2185,43 @@
     padding: 2px 4px;
     margin-bottom: 2px;
 }
-
 .planner-month-cell.today .planner-month-cell-date {
     color: var(--primary);
 }
-
 .planner-month-cell-body {
     display: flex;
     flex-direction: column;
     gap: 3px;
 }
-
 .planner-month-cell-body .planner-card {
     font-size: 0.7rem;
     padding: 4px 6px;
     border-radius: var(--md-sys-shape-corner-small);
     min-height: 0;
 }
-
 .planner-month-cell-body .planner-card-footer {
     margin-top: 2px !important;
     padding-top: 0;
 }
-
 .planner-month-cell-body .planner-card-title-row {
     gap: 4px;
 }
-
 .planner-month-cell-body .planner-card-title {
     font-size: 0.7rem;
 }
-
 .planner-month-cell-body .planner-card-time,
 .planner-month-cell-body .planner-card-subtitle,
 .planner-month-cell-body .planner-card-note,
 .planner-month-cell-body .planner-card-workers {
     display: none;
 }
-
 .planner-month-cell-body .planner-card-footer {
     margin-top: 2px;
 }
-
 .planner-month-cell-body .planner-card-chip {
     font-size: 0.65rem;
     padding: 1px 4px;
 }
-
 /* Month view — customer group inside a day cell (mirrors the weekly
    Kunde rows at monthly scale). */
 .planner-month-kgroup {
@@ -2500,7 +2265,6 @@
     background: rgba(255,255,255,0.10);
     color: var(--gray-400);
 }
-
 /* Object line on the compact month card — stays visible (the generic
    subtitle is hidden in month cells). */
 .planner-month-cell-body .planner-card-month-objekt {
@@ -2514,7 +2278,6 @@
 [data-theme="dark"] .planner-month-cell-body .planner-card-month-objekt {
     color: var(--gray-400);
 }
-
 .planner-month-empty-label {
     color: var(--gray-300);
     font-size: 0.75rem;
@@ -2522,33 +2285,30 @@
     display: block;
     padding: 8px 0;
 }
-
 /* View dropdown hover */
 .planner-view-option:hover {
     background: var(--gray-50);
 }
-
 .planner-topbar-title-mobile {
     display: none;
 }
-
 @media (max-width: 640px) {
-    .planner-shell {
+.planner-shell {
         gap: 10px;
     }
-    .planner-topbar-nav {
+.planner-topbar-nav {
         display: none !important;
     }
-    .planner-topbar-title-mobile {
+.planner-topbar-title-mobile {
         display: inline;
     }
-    .planner-mobile-toolbar {
+.planner-mobile-toolbar {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 6px;
         width: 100%;
     }
-    .planner-mobile-toolbar .btn {
+.planner-mobile-toolbar .btn {
         min-width: 0;
         min-height: 44px;
         padding: 6px 4px;
@@ -2559,17 +2319,17 @@
         white-space: normal;
         text-align: center;
     }
-    .planner-mobile-toolbar .material-symbols-outlined {
+.planner-mobile-toolbar .material-symbols-outlined {
         font-size: 1.05rem;
         flex: 0 0 auto;
     }
-    .planner-overview-cards {
+.planner-overview-cards {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 6px;
         width: 100%;
     }
-    .planner-overview-cards .overview-card {
+.planner-overview-cards .overview-card {
         min-width: 0;
         min-height: 54px;
         padding: 6px 4px;
@@ -2579,32 +2339,32 @@
         font-size: 0.95rem;
         text-align: center;
     }
-    .planner-overview-cards .overview-card small {
+.planner-overview-cards .overview-card small {
         max-width: 100%;
         gap: 2px;
         font-size: 0.64rem;
     }
-    .planner-overview-cards .overview-card small .material-symbols-outlined {
+.planner-overview-cards .overview-card small .material-symbols-outlined {
         font-size: 0.9rem;
     }
-    .dispo-overview-row {
+.dispo-overview-row {
         gap: 8px;
     }
-    .dispo-filterbar {
+.dispo-filterbar {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 6px;
         width: 100%;
         min-width: 0;
     }
-    .dispo-search-wrap {
+.dispo-search-wrap {
         grid-column: 1 / -1;
         width: 100%;
         max-width: none;
         min-width: 0;
     }
     .dispo-search-input,
-    .dispo-filter-select {
+.dispo-filter-select {
         width: 100%;
         max-width: none;
         min-width: 0;
@@ -2613,48 +2373,48 @@
         padding-bottom: 6px;
         font-size: 0.75rem;
     }
-    .dispo-reset-btn {
+.dispo-reset-btn {
         grid-column: 1 / -1;
         min-height: 34px;
         padding: 6px 10px;
         justify-content: center;
         font-size: 0.75rem;
     }
-    .dispo-filter-summary {
+.dispo-filter-summary {
         margin-top: 6px;
         gap: 4px;
         font-size: 0.72rem;
     }
-    .planner-mobile-weeknav {
+.planner-mobile-weeknav {
         display: block;
         position: relative;
         z-index: 20;
         overflow: visible;
         padding: 10px;
     }
-    .planner-mobile-weeknav .planner-week-nav {
+.planner-mobile-weeknav .planner-week-nav {
         display: grid;
         grid-template-columns: 40px minmax(0, 1fr) 40px;
         gap: 6px;
         width: 100%;
     }
-    .planner-mobile-weeknav .planner-week-nav > .btn {
+.planner-mobile-weeknav .planner-week-nav > .btn {
         width: 40px;
         min-width: 40px;
         height: 40px;
         padding: 0;
         justify-content: center;
     }
-    .planner-mobile-weeknav .planner-view-toggle {
+.planner-mobile-weeknav .planner-view-toggle {
         grid-column: 1 / -1;
         justify-self: center;
     }
-    .planner-mobile-weeknav .planner-view-toggle > .btn {
+.planner-mobile-weeknav .planner-view-toggle > .btn {
         min-height: 38px;
         padding: 7px 16px;
         font-size: 0.78rem;
     }
-    .planner-mobile-weeknav .planner-view-dropdown {
+.planner-mobile-weeknav .planner-view-dropdown {
         left: 50% !important;
         right: auto !important;
         transform: translateX(-50%);
@@ -2744,7 +2504,6 @@
     color: var(--md-sys-color-secondary);
     white-space: nowrap;
 }
-
 /* ============================================================
    MD3 migration support (Material Symbols replacing FontAwesome)
    ------------------------------------------------------------
@@ -2792,7 +2551,6 @@
 }
 /* Loading spinners swapped from fa-spinner */
 .wp-empty md-circular-progress { margin: 0 auto 10px; display: block; }
-
 /* ── Boxes previously styled inline in tasks.js ── */
 .planner-confirmed-banner {
     background: var(--md-ext-color-success-container);
@@ -2806,7 +2564,6 @@
 }
 .planner-confirmed-banner .material-symbols-outlined { color: var(--md-ext-color-success); font-size: 1.3rem; }
 .planner-confirmed-banner span:last-child { font-weight: 700; color: var(--md-ext-color-on-success-container); font-size: 0.95rem; }
-
 /* Storno-locked banner: day removed from Bestelleingang */
 .planner-storno-banner {
     background: var(--md-sys-color-primary-container);
@@ -2853,7 +2610,6 @@
     font-size: 0.82rem;
     color: var(--md-ext-color-on-warning-container);
 }
-
 /* ============================================================
    DARK MODE — Dispo / Einsätze
    All hardcoded light pastels above are swapped for translucent
@@ -2920,7 +2676,6 @@
 [data-theme="dark"] .dispo-cnt-added,
 [data-theme="dark"] .dispo-cnt-done { color: var(--md-ext-color-success); }
 [data-theme="dark"] .dispo-cnt-req { color: var(--md-sys-color-error); }
-
 /* ── Overview cards (Ausstehend / Geplant / …) ── */
 [data-theme="dark"] .overview-card.pending {
     background: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
@@ -2942,12 +2697,10 @@
     border-color: color-mix(in srgb, var(--md-sys-color-error) 45%, transparent);
     color: var(--md-sys-color-error-container);
 }
-
 /* ── Month view ── */
 [data-theme="dark"] .planner-month-cell.today {
     background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
 }
-
 /* ── Detail modal ── */
 [data-theme="dark"] .planner-detail-pill.active {
     background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
@@ -2988,7 +2741,6 @@
     border-color: color-mix(in srgb, var(--md-ext-color-warning) 45%, transparent);
     color: var(--md-ext-color-warning);
 }
-
 /* ── Team lists / worker cards ── */
 [data-theme="dark"] .planner-team-list-assigned {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
@@ -3011,7 +2763,6 @@
     border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
 }
 [data-theme="dark"] .planner-warning-btn.info { color: var(--md-sys-color-primary); }
-
 /* ── NU worker cards / removal modal ── */
 [data-theme="dark"] .planner-nu-worker-card {
     background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
@@ -3033,7 +2784,6 @@
     color: var(--md-sys-color-primary-container);
 }
 [data-theme="dark"] .nu-remove-close:hover { background: rgba(255, 255, 255, 0.12); }
-
 /* ── NU positions panel ── */
 [data-theme="dark"] .nu-firma-badge {
     background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
@@ -3099,7 +2849,6 @@
     border-color: var(--md-ext-color-warning);
     color: var(--md-ext-color-warning);
 }
-
 /* ── Anforderungen panel ── */
 [data-theme="dark"] .planner-card-anf-chip {
     background: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
@@ -3120,7 +2869,6 @@
 }
 [data-theme="dark"] .planner-anf-table td { color: var(--gray-800); }
 [data-theme="dark"] .planner-anf-anzahl { color: var(--md-sys-color-primary-container); }
-
 /* ── New NU selection overlay + card ── */
 .planner-add-nu-card {
     display: flex; align-items: center; gap: 14px;
@@ -3139,7 +2887,6 @@
 .planner-add-nu-text { flex: 1; }
 .planner-add-nu-title { font-weight: 700; font-size: 0.95rem; color: var(--accent); }
 .planner-add-nu-sub { font-size: 0.78rem; color: var(--gray-500); margin-top: 2px; }
-
 .planner-nu-select-overlay {
     position: fixed; inset: 0; z-index: 3000;
     background: color-mix(in srgb, var(--md-sys-color-primary) 55%, transparent);
@@ -3224,7 +2971,6 @@
     color: var(--accent); opacity: 0.7; transition: opacity 0.15s;
 }
 .planner-nu-select-item:hover .planner-nu-select-arrow { opacity: 1; }
-
 /* ============================================
    iPad / Tablet (641px–1024px)
    Ziel: verhält sich wie Desktop, nur kompakter.
@@ -3236,47 +2982,42 @@
    - Mitarbeiter-Namen dürfen auf 2 Zeilen umbrechen
    ============================================ */
 @media (min-width: 641px) and (max-width: 1024px) {
-    .planner-topbar-nav        { display: inline-flex !important; }
+.planner-topbar-nav { display: inline-flex !important; }
     .planner-topbar-title-mobile,
     .planner-mobile-toolbar,
-    .planner-mobile-weeknav    { display: none !important; }
-
-    .planner-topbar-actions .planner-btn-label { display: none; }
-    .planner-topbar-actions .btn { padding: 8px 10px; }
-
+.planner-mobile-weeknav { display: none !important; }
+.planner-topbar-actions .planner-btn-label { display: none; }
+.planner-topbar-actions .btn { padding: 8px 10px; }
     /* Overview + Filter: untereinander, volle Breite */
-    .dispo-overview-row  { flex-direction: column; align-items: stretch; }
-    .dispo-filterbar     { justify-content: flex-start; }
-    .dispo-search-wrap   { max-width: none; flex: 1 1 100%; }
-    .dispo-filter-select { flex: 1 1 calc(50% - 4px); max-width: none; }
-    .dispo-bereich-chips { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
-    .dispo-bereich-chip  { flex: 0 0 auto; }
-
+.dispo-overview-row { flex-direction: column; align-items: stretch; }
+.dispo-filterbar { justify-content: flex-start; }
+.dispo-search-wrap { max-width: none; flex: 1 1 100%; }
+.dispo-filter-select { flex: 1 1 calc(50% - 4px); max-width: none; }
+.dispo-bereich-chips { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+.dispo-bereich-chip { flex: 0 0 auto; }
     /* Kalender: 7 Spalten passen in die Breite (Sidebar ist schmal),
        die SEITE scrollt vertikal → Filter scrollen weg wie am Laptop.
        Kein inneres Scroll-Container mehr (überschreibt die 1500px-Regel). */
-    .planner-grid {
+.planner-grid {
         grid-template-columns: repeat(7, minmax(0, 1fr));
         overflow: visible;
         max-height: none;
     }
     /* Day-Header pinnt unter der Topbar (die auf iPad umbricht → höher) */
-    .planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
-    .planner-kunde-row { position: static; }
-
+.planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
+.planner-kunde-row { position: static; }
     /* Karten kompakter, aber lesbar */
-    .planner-card        { min-height: 170px; padding: 10px; border-radius: var(--md-sys-shape-corner-medium); }
-    .planner-card-title  { font-size: 0.8rem; }
+.planner-card { min-height: 170px; padding: 10px; border-radius: var(--md-sys-shape-corner-medium); }
+.planner-card-title { font-size: 0.8rem; }
     .planner-card-time,
     .planner-card-subtitle,
-    .planner-card-note   { font-size: 0.72rem; }
-    .planner-day-header  { padding: 10px 10px 8px; }
-    .planner-day-name    { font-size: 0.75rem; }
-    .planner-day-date    { font-size: 0.7rem; }
-    .planner-day-body    { padding: 8px; gap: 8px; }
-
+.planner-card-note { font-size: 0.72rem; }
+.planner-day-header { padding: 10px 10px 8px; }
+.planner-day-name { font-size: 0.75rem; }
+.planner-day-date { font-size: 0.7rem; }
+.planner-day-body { padding: 8px; gap: 8px; }
     /* Mitarbeiter-Namen: nicht abschneiden, sondern umbrechen */
-    .planner-card-worker {
+.planner-card-worker {
         max-width: 100%;
         white-space: normal;
         overflow: visible;
@@ -3286,12 +3027,11 @@
         padding: 4px 8px;
         border-radius: var(--md-sys-shape-corner-small);
     }
-    .planner-card-chip { font-size: 0.7rem; }
-
+.planner-card-chip { font-size: 0.7rem; }
     /* Touch-Targets */
-    .dispo-bereich-chip  { padding: 9px 16px; font-size: 0.85rem; }
-    .dispo-filter-select { padding: 10px 28px 10px 12px; font-size: 0.88rem; }
-    .dispo-search-input  { padding: 10px 32px 10px 34px; font-size: 0.88rem; }
+.dispo-bereich-chip { padding: 9px 16px; font-size: 0.85rem; }
+.dispo-filter-select { padding: 10px 28px 10px 12px; font-size: 0.88rem; }
+.dispo-search-input { padding: 10px 32px 10px 34px; font-size: 0.88rem; }
 }
 
 /* Tablet PORTRAIT (641px–900px): even with the sidebar off-canvas,
@@ -3300,42 +3040,42 @@
    auto (no max-height), so vertical scrolling remains on the page and
    the filters still scroll away. */
 @media (min-width: 641px) and (max-width: 900px) and (pointer: coarse) {
-    .planner-calendar {
+.planner-calendar {
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x proximity;
     }
-    .planner-grid {
+.planner-grid {
         grid-template-columns: repeat(7, 160px);
         min-width: calc(7 * 160px);
         overflow: visible;
         max-height: none;
     }
     .planner-day-column,
-    .planner-kunde-cell { scroll-snap-align: start; }
+.planner-kunde-cell { scroll-snap-align: start; }
     /* Headers can't pin to the viewport inside a horizontal scroller —
        keep them static so no gap/overlap appears. */
-    .planner-grid .planner-day-header { position: static; }
+.planner-grid .planner-day-header { position: static; }
     /* Wider columns: back to readable sizes and one-row chips. */
-    .planner-card              { padding: 10px; }
-    .planner-card-title        { font-size: 0.82rem; max-height: none; }
-    .planner-card-time         { font-size: 0.9rem; }
+.planner-card { padding: 10px; }
+.planner-card-title { font-size: 0.82rem; max-height: none; }
+.planner-card-time { font-size: 0.9rem; }
     .planner-card-subtitle,
-    .planner-card-note         { font-size: 0.74rem; }
+.planner-card-note { font-size: 0.74rem; }
     .planner-card-footer,
-    .planner-card-workers      { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+.planner-card-workers { flex-direction: row; flex-wrap: wrap; gap: 6px; }
     .planner-card-chip,
-    .planner-card-worker       { font-size: 0.7rem; padding: 4px 8px; display: inline-flex; flex-wrap: nowrap; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-    .planner-card-worker       { max-width: 140px; }
+.planner-card-worker { font-size: 0.7rem; padding: 4px 8px; display: inline-flex; flex-wrap: nowrap; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.planner-card-worker { max-width: 140px; }
 }
 
 /* iPad Portrait (641px–834px) — Filter vollständig stapeln */
 @media (min-width: 641px) and (max-width: 834px) {
-    .dispo-filterbar     { flex-direction: column; align-items: stretch; gap: 6px; }
-    .dispo-filter-select { flex: 1 1 100%; }
-    .dispo-reset-btn     { justify-content: center; }
-    .planner-overview-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.dispo-filterbar { flex-direction: column; align-items: stretch; gap: 6px; }
+.dispo-filter-select { flex: 1 1 100%; }
+.dispo-reset-btn { justify-content: center; }
+.planner-overview-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 }
 
 /* ============================================
@@ -3348,11 +3088,11 @@
    - Footer: 2-spaltiges Raster, Speichern über die volle Breite
    ============================================ */
 @media (max-width: 640px), (max-height: 500px) and (pointer: coarse) {
-    #modalOverlay:has(.planner-modal-header) {
+#modalOverlay:has(.planner-modal-header) {
         align-items: stretch;
         padding: var(--sa-top, 0px) 0 var(--sa-bottom, 0px);
     }
-    #modalOverlay:has(.planner-modal-header) .modal {
+#modalOverlay:has(.planner-modal-header) .modal {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -3363,7 +3103,7 @@
         overflow: hidden;
         border-radius: 0;
     }
-    #modalOverlay:has(.planner-modal-header) .modal-body {
+#modalOverlay:has(.planner-modal-header) .modal-body {
         flex: 1 1 auto;
         min-width: 0;
         min-height: 0;
@@ -3373,39 +3113,37 @@
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
     }
-    #modalOverlay.planner-keyboard-open {
+#modalOverlay.planner-keyboard-open {
         min-height: 0;
         max-height: var(--planner-visible-height, 100dvh);
         align-items: stretch;
     }
-    #modalOverlay.planner-keyboard-open .modal {
+#modalOverlay.planner-keyboard-open .modal {
         height: 100%;
         max-height: 100%;
     }
-    #modalOverlay.planner-worker-search-active .planner-detail > :not(.planner-team-grid) {
-        display: none;
-    }
+#modalOverlay.planner-worker-search-active .planner-detail > :not(.planner-team-grid),
     #modalOverlay.planner-worker-search-active .planner-team-grid > .planner-team-column:first-child {
         display: none;
     }
     #modalOverlay.planner-worker-search-active .planner-team-grid,
-    #modalOverlay.planner-worker-search-active .planner-team-grid-split {
+#modalOverlay.planner-worker-search-active .planner-team-grid-split {
         display: block;
     }
     #modalOverlay.planner-worker-search-active .planner-modal-footer,
-    #modalOverlay.planner-worker-search-active .planner-header-action {
+#modalOverlay.planner-worker-search-active .planner-header-action {
         display: none;
     }
-    #modalOverlay.planner-worker-search-active .planner-modal-header {
+#modalOverlay.planner-worker-search-active .planner-modal-header {
         padding-top: 8px;
         padding-bottom: 8px;
         row-gap: 0;
     }
-    #modalOverlay.planner-worker-search-active .modal-body {
+#modalOverlay.planner-worker-search-active .modal-body {
         padding-top: 8px;
         padding-bottom: 8px;
     }
-    #modalOverlay.planner-worker-search-active .planner-team-list {
+#modalOverlay.planner-worker-search-active .planner-team-list {
         min-height: 140px;
         max-height: none;
         height: calc(var(--planner-visible-height, 100dvh) - 190px);
@@ -3413,7 +3151,7 @@
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
     }
-    #modalOverlay.planner-worker-search-active .planner-worker-search-wrap {
+#modalOverlay.planner-worker-search-active .planner-worker-search-wrap {
         position: sticky;
         top: 0;
         z-index: 3;
@@ -3421,7 +3159,7 @@
         background: var(--white);
     }
     #modalOverlay:has(.planner-modal-header) .planner-worker-search,
-    #modalOverlay:has(.planner-modal-header) .planner-worker-search input {
+#modalOverlay:has(.planner-modal-header) .planner-worker-search input {
         width: 100%;
         min-width: 0;
         max-width: 100%;
@@ -3429,29 +3167,29 @@
     }
     #modalOverlay:has(.planner-modal-header) input,
     #modalOverlay:has(.planner-modal-header) textarea,
-    #modalOverlay:has(.planner-modal-header) select {
+#modalOverlay:has(.planner-modal-header) select {
         font-size: 16px;
     }
     .planner-modal-header,
-    .planner-modal-footer {
+.planner-modal-footer {
         position: static !important;
         flex: 0 0 auto;
     }
-    .planner-modal-header .modal-max-btn {
+.planner-modal-header .modal-max-btn {
         display: none;
     }
-    .planner-modal-header {
+.planner-modal-header {
         flex-wrap: wrap;
         row-gap: 10px;
     }
-    .planner-modal-header .modal-title {
+.planner-modal-header .modal-title {
         flex: 1 1 0;
         min-width: 0;
         font-size: 1rem;
         line-height: 1.3;
         word-break: break-word;
     }
-    .planner-header-action {
+.planner-header-action {
         position: static;
         transform: none;
         flex: 1 1 100%;
@@ -3459,58 +3197,55 @@
         justify-content: flex-start;
         margin: 0;
     }
-    .planner-header-action-group {
+.planner-header-action-group {
         display: flex;
         width: 100%;
         gap: 8px;
     }
-    .planner-header-action-group .btn {
+.planner-header-action-group .btn {
         flex: 1 1 0;
         justify-content: center;
         padding: 9px 10px;
         font-size: 0.85rem;
         white-space: nowrap;
     }
-
     .planner-detail,
     .planner-team-grid,
     .planner-team-grid-split,
     .planner-team-column,
-    .planner-worker-item {
+.planner-worker-item {
         min-width: 0;
         max-width: 100%;
     }
     .planner-team-grid,
-    .planner-team-grid-split {
+.planner-team-grid-split {
         grid-template-columns: minmax(0, 1fr);
         gap: 14px;
     }
-    .planner-team-list {
+.planner-team-list {
         min-height: 0;
         max-height: 300px;
     }
-    .planner-team-list-assigned {
+.planner-team-list-assigned {
         max-height: none;
         overflow-y: visible;
     }
-
-    .planner-bulk-task {
+.planner-bulk-task {
         flex-wrap: wrap;
     }
-    .planner-bulk-task-input {
+.planner-bulk-task-input {
         flex: 1 1 calc(100% - 28px);
     }
-    .planner-bulk-task-btn {
+.planner-bulk-task-btn {
         flex: 1 1 100%;
         padding: 9px 12px;
     }
-
-    .planner-modal-footer {
+.planner-modal-footer {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
     }
-    .planner-modal-footer .btn {
+.planner-modal-footer .btn {
         flex: none;
         min-width: 0;
         width: 100%;
@@ -3521,7 +3256,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .planner-modal-footer .btn.btn-primary {
+.planner-modal-footer .btn.btn-primary {
         grid-column: 1 / -1;
         padding: 12px;
         font-size: 0.95rem;
@@ -3571,7 +3306,6 @@
 /* Phone worker-search mode shows only the team grid — keep the dock, hide its band. */
 #modalOverlay.planner-worker-search-active .planner-detail > .planner-staff-dock { display: block; }
 #modalOverlay.planner-worker-search-active .planner-staff-dock > .planner-anf-panel { display: none; }
-
 /* ── Ort / Treffpunkt on the headline row, right side (2026-10-19) ── */
 .planner-head-row {
     display: flex;
@@ -3612,7 +3346,7 @@
 }
 .planner-head-ort a:hover { background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent); }
 @media (max-width: 760px) {
-    .planner-detail-ort.planner-head-ort { max-width: 100%; flex: 1 1 100%; }
+.planner-detail-ort.planner-head-ort { max-width: 100%; flex: 1 1 100%; }
 }
 
 /* ── Schichtbörse (shift exchange) — shift modal box + toolbar dialog ── */
@@ -3639,30 +3373,30 @@
 .boerse-empty-big { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 40px 10px; text-align: center; }
 .boerse-empty-big .material-symbols-outlined { font-size: 40px; }
 .boerse-dialog { display: flex; flex-direction: column; gap: 10px; }
-
 /* Topbar: week nav + 4 action buttons must stay on ONE row — the topbar has a
    fixed height, a wrapped second row clipped the week label at the top.
    Below 1440px the buttons collapse to icons (title attribute = tooltip). */
 @media (min-width: 641px) {
-    .planner-topbar-nav, .planner-topbar-actions { flex-wrap: nowrap; white-space: nowrap; }
+.planner-topbar-nav,
+    .planner-topbar-actions { flex-wrap: nowrap; white-space: nowrap; }
 }
 @media (min-width: 641px) and (max-width: 1600px) {
-    .planner-topbar-actions .planner-btn-label { display: none; }
-    .planner-topbar-actions .btn { padding: 8px 10px; }
+.planner-topbar-actions .planner-btn-label { display: none; }
+.planner-topbar-actions .btn { padding: 8px 10px; }
 }
 /* The page title may overflow into .topbar-right (style.css: overflow visible) —
    in Planung the date gives way so the buttons never run over it. */
 @media (min-width: 641px) and (max-width: 1800px) {
-    .topbar:has(.planner-topbar-nav) .current-date { display: none; }
+.topbar:has(.planner-topbar-nav) .current-date { display: none; }
 }
 
 /* Overview counters in the Planung topbar (desktop ≥1200px) — compact chips
    next to the action buttons; the copy in the filter row is hidden there. */
 .planner-topbar-stats { display: none; }
 @media (min-width: 1200px) {
-    .planner-topbar-stats { display: inline-flex; align-items: center; gap: 8px; margin-left: 6px; flex-wrap: nowrap; white-space: nowrap; }
-    .planner-topbar-stats .overview-card { padding: 4px 11px; font-size: .95rem; gap: 6px; box-shadow: none; line-height: 1.2; }
-    .planner-topbar-stats .overview-card small { font-size: .72rem; }
-    .planner-topbar-stats .overview-card small .material-symbols-outlined { font-size: .95rem; }
-    .main-content:has(.planner-topbar-stats) .dispo-overview-row > .planner-overview-cards { display: none; }
+.planner-topbar-stats { display: inline-flex; align-items: center; gap: 8px; margin-left: 6px; flex-wrap: nowrap; white-space: nowrap; }
+.planner-topbar-stats .overview-card { padding: 4px 11px; font-size: .95rem; gap: 6px; box-shadow: none; line-height: 1.2; }
+.planner-topbar-stats .overview-card small { font-size: .72rem; }
+.planner-topbar-stats .overview-card small .material-symbols-outlined { font-size: .95rem; }
+.main-content:has(.planner-topbar-stats) .dispo-overview-row > .planner-overview-cards { display: none; }
 }

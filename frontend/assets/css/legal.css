@@ -3,7 +3,6 @@
    Shared stylesheet, MD3-aligned with the login/register pages.
    ============================================================ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body {
     font-family: 'Google Sans', 'Roboto', 'Segoe UI', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -11,7 +10,6 @@ body {
     color: var(--md-sys-color-on-surface);
     min-height: 100vh;
 }
-
 .legal-hero {
     background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-primary) 55%, var(--md-sys-color-primary) 100%);
     padding: 48px 20px 72px;
@@ -35,7 +33,6 @@ body {
 .legal-hero .brand span { font-weight: 700; font-size: 1rem; letter-spacing: .2px; }
 .legal-hero h1 { font-size: 1.7rem; font-weight: 700; }
 .legal-hero p { color: rgba(255,255,255,.6); font-size: .9rem; margin-top: 6px; }
-
 .legal-container {
     max-width: 860px;
     margin: -40px auto 60px;
@@ -57,13 +54,13 @@ body {
 }
 .legal-card h2:first-child { margin-top: 0; }
 .legal-card h3 { font-size: .98rem; font-weight: 600; margin: 18px 0 6px; }
-.legal-card p, .legal-card li { font-size: .93rem; line-height: 1.65; color: var(--md-sys-color-on-surface); }
+.legal-card p,
+    .legal-card li { font-size: .93rem; line-height: 1.65; color: var(--md-sys-color-on-surface); }
 .legal-card ul { padding-left: 22px; margin: 8px 0; }
 .legal-card a { color: var(--md-sys-color-primary); text-decoration: none; }
 .legal-card a:hover { text-decoration: underline; }
 .legal-card strong { color: var(--md-sys-color-on-surface); }
 .legal-card .stand { color: var(--md-sys-color-on-surface-variant); font-size: .82rem; margin-bottom: 20px; }
-
 .legal-address {
     background: var(--md-sys-color-primary-container);
     border-radius: var(--md-sys-shape-corner-large);
@@ -72,7 +69,6 @@ body {
     font-size: .93rem;
     line-height: 1.7;
 }
-
 .legal-nav {
     display: flex;
     flex-wrap: wrap;
@@ -91,8 +87,8 @@ body {
     font-weight: 600;
     transition: background .15s;
 }
-.legal-nav a:hover, .legal-nav a.active { background: rgba(255,255,255,.26); }
-
+.legal-nav a:hover,
+    .legal-nav a.active { background: rgba(255,255,255,.26); }
 .legal-footer {
     text-align: center;
     color: var(--md-sys-color-on-surface-variant);

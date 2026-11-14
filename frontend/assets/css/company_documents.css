@@ -8,7 +8,6 @@
     max-width: 1100px;
     margin: 0 auto;
 }
-
 /* ── Hero ────────────────────────────────────────────────────────── */
 .cdocs-hero {
     display: flex;
@@ -36,7 +35,6 @@
 .cdocs-hero-text { flex: 1 1 320px; min-width: 260px; }
 .cdocs-hero-text h2 { margin: 0 0 4px; }
 .cdocs-hero-text p { margin: 0; opacity: 0.85; max-width: 620px; }
-
 .cdocs-hero-stats {
     display: flex;
     gap: 12px;
@@ -62,7 +60,6 @@
     font-size: 0.75rem;
     color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface));
 }
-
 /* ── MD3 tab bar + panel ─────────────────────────────────────────── */
 .cdocs-tabs {
     margin-bottom: 20px;
@@ -70,7 +67,6 @@
     background: var(--md-sys-color-surface, var(--md-sys-color-surface-container-lowest));
     --md-primary-tab-container-color: transparent;
 }
-
 .cdocs-panel {
     background: var(--md-sys-color-surface, var(--md-sys-color-surface-container-lowest));
     border: 1px solid var(--md-sys-color-outline-variant, var(--md-sys-color-outline));
@@ -78,7 +74,6 @@
     padding: 22px 24px;
     min-height: 320px;
 }
-
 .cdocs-savebar {
     display: flex;
     justify-content: flex-end;
@@ -86,7 +81,6 @@
     padding-top: 16px;
     border-top: 1px solid var(--md-sys-color-outline-variant, var(--md-sys-color-outline));
 }
-
 /* ── Cards ───────────────────────────────────────────────────────── */
 .cdocs-card {
     background: var(--md-sys-color-surface, var(--md-sys-color-surface-container-lowest));
@@ -105,7 +99,6 @@
 .cdocs-card-title .material-symbols-outlined {
     color: var(--md-sys-color-primary, var(--md-sys-color-primary));
 }
-
 /* ── Upload ──────────────────────────────────────────────────────── */
 .cdocs-upload-grid {
     display: grid;
@@ -114,7 +107,7 @@
     align-items: stretch;
 }
 @media (max-width: 760px) {
-    .cdocs-upload-grid { grid-template-columns: 1fr; }
+.cdocs-upload-grid { grid-template-columns: 1fr; }
 }
 
 .cdocs-dropzone {
@@ -152,7 +145,6 @@
 }
 .cdocs-dz-text strong { color: var(--md-sys-color-on-surface, var(--md-sys-color-on-surface)); }
 .cdocs-dz-hint { opacity: 0.75; }
-
 .cdocs-upload-fields {
     display: flex;
     flex-direction: column;
@@ -166,7 +158,6 @@
 .cdocs-upload-fields md-filled-button {
     align-self: flex-end;
 }
-
 /* ── Toolbar (chips + search) ────────────────────────────────────── */
 .cdocs-toolbar {
     display: flex;
@@ -178,14 +169,12 @@
 }
 .cdocs-toolbar md-chip-set { flex: 1 1 auto; }
 .cdocs-search { flex: 0 1 300px; min-width: 220px; }
-
 /* ── Documents grid ──────────────────────────────────────────────── */
 .cdocs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 16px;
 }
-
 .cdocs-doc {
     display: flex;
     align-items: center;
@@ -200,7 +189,6 @@
     border-color: var(--md-sys-color-primary, var(--md-sys-color-primary));
     box-shadow: var(--md-sys-elevation-2, 0 2px 6px color-mix(in srgb, var(--md-sys-color-scrim) 15%, transparent));
 }
-
 .cdocs-doc-thumb {
     flex: 0 0 auto;
     width: 56px;
@@ -218,7 +206,6 @@
     height: 100%;
     object-fit: cover;
 }
-
 .cdocs-doc-body { flex: 1 1 auto; min-width: 0; }
 .cdocs-doc-title {
     color: var(--md-sys-color-on-surface, var(--md-sys-color-on-surface));
@@ -237,7 +224,6 @@
     color: var(--md-sys-color-on-secondary-container, var(--md-sys-color-on-primary-container));
 }
 .cdocs-doc-meta { color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface)); }
-
 .cdocs-doc-actions {
     flex: 0 0 auto;
     display: flex;
@@ -246,7 +232,6 @@
 .cdocs-doc-actions md-icon-button.cdocs-danger {
     --md-icon-button-icon-color: var(--md-sys-color-error, #b3261e);
 }
-
 /* ── Empty state ─────────────────────────────────────────────────── */
 .cdocs-empty {
     grid-column: 1 / -1;
@@ -264,7 +249,6 @@
     opacity: 0.6;
 }
 .cdocs-empty p { margin: 0; }
-
 /* ── Benachrichtigungen tab (personal notification toggles) ───────── */
 .cnotif-master {
     display: flex; align-items: center; gap: 14px;
@@ -277,7 +261,6 @@
 .cnotif-master-text { flex: 1; min-width: 0; }
 .cnotif-master-title { font-size: 14px; font-weight: 600; }
 .cnotif-master-desc { font-size: 12px; color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-primary)); margin-top: 2px; }
-
 .cnotif-head {
     display: flex; align-items: center; gap: 12px;
     padding: 8px 4px;
@@ -287,7 +270,6 @@
 }
 .cnotif-head > span:first-child { flex: 1; }
 .cnotif-head-ch { width: 96px; text-align: center; }
-
 .cnotif-row {
     display: flex; align-items: center; gap: 12px;
     padding: 10px 4px;
@@ -310,7 +292,6 @@
     font-size: 11px; color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-primary));
 }
 .cnotif-toggle.disabled { opacity: .4; }
-
 /* Auto-save status line (notification prefs save instantly on toggle) */
 .cnotif-status {
     min-height: 20px;
@@ -320,7 +301,6 @@
     text-align: right;
     transition: opacity .3s;
 }
-
 /* ── Phones: stacked notification rows ─────────────────────────────
    Three fixed 96px toggle columns squeeze the type text into ~130px
    on narrow screens — unreadable. Stack instead: text full-width on
@@ -329,21 +309,21 @@
    a full-width content area (off-canvas sidebar) and keeps the row
    layout. */
 @media (max-width: 640px) {
-    .cdocs-panel { padding: 16px 14px; }
-    .cnotif-head { display: none; }
-    .cnotif-master { gap: 10px; padding: 12px 0; }
-    .cnotif-master-icon { font-size: 22px; }
-    .cnotif-row {
+.cdocs-panel { padding: 16px 14px; }
+.cnotif-head { display: none; }
+.cnotif-master { gap: 10px; padding: 12px 0; }
+.cnotif-master-icon { font-size: 22px; }
+.cnotif-row {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
         padding: 12px 0;
     }
-    .cnotif-toggles {
+.cnotif-toggles {
         width: 100%;
         gap: 4px;
     }
-    .cnotif-toggle {
+.cnotif-toggle {
         width: auto;
         flex: 1;
         flex-direction: row;
@@ -375,7 +355,7 @@
     border-radius: 0 0 var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px);
 }
 @media (max-width: 640px) {
-    .cdocs-wrap > .cdocs-hero { border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0; }
+.cdocs-wrap > .cdocs-hero { border-radius: var(--md-sys-shape-corner-large, 16px) var(--md-sys-shape-corner-large, 16px) 0 0; }
 }
 
 /* Tab bar pinned under the app top bar while scrolling (offset set by
