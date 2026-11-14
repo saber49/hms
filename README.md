@@ -8,8 +8,23 @@ Single source of truth for the code running on VPS `87.106.142.253`.
 | Path         | Deployed to                                            |
 |--------------|--------------------------------------------------------|
 | `backend/`   | `/var/www/hms-backend` (prod) / `-staging` — Laravel Octane/FrankenPHP |
-| `frontend/`  | `/var/www/hms-frontend` (prod) / `-staging` — PHP admin portal |
+| `frontend/`  | `/var/www/hms-frontend` (prod) / `-staging` — PHP admin portal + PWA `worker/` |
 | `deploy/`    | deploy tooling                                         |
+| `scripts/`   | dev tooling (e.g. `sync-worker-ui.sh`)                 |
+
+## Platform apps (sibling repos — not in this monorepo)
+
+- `../clood-x-1` (`saber49/clood-x-1`) — **source of truth for the worker
+  web UI** (`www/`) + Capacitor iOS/Android apps. After editing `www/`:
+  bump `CACHE_NAME` in `www/sw.js`, run `bash scripts/sync-worker-ui.sh`
+  (copies assets into `frontend/worker/` + `../clood-x-desktop/renderer`),
+  bump `?v=` in `frontend/worker/index.php` keeping it equal to
+  `CACHE_NAME`, commit, deploy via `deploy.sh`. Native builds pick changes
+  up via `npx cap sync` / Codemagic.
+- `../clood-x-desktop` (`saber49/clood-x-desktop`) — Electron wrapper;
+  `npm run dist` syncs the renderer first. Publish binaries with
+  `deploy-desktop.sh` on the server (installs to `frontend/desktop/`,
+  which is excluded from git).
 
 ## Branches
 
