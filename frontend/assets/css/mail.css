@@ -56,18 +56,6 @@ md-outlined-select.ml-account-select {
     --md-outlined-select-text-field-focus-outline-color: var(--accent);
 }
 .ml-actions { display: flex; flex-shrink: 0; }
-
-.ml-subhead {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding: 0 2px 10px;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    color: var(--text-muted);
-}
 .ml-subhead .wm-unread-total { text-transform: none; letter-spacing: 0; }
 
 /* ---------- Folder tabs + search ---------- */

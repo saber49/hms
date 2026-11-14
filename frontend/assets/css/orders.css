@@ -339,30 +339,6 @@
     border-color: var(--or-accent);
     box-shadow: 0 0 0 3px var(--or-accent-soft);
 }
-
-.or-filter-pills {
-    display: inline-flex;
-    gap: 4px;
-    flex-wrap: wrap;
-}
-.or-filter-pills button {
-    border: 1px solid var(--or-border);
-    background: var(--white);
-    color: var(--or-text-muted);
-    padding: 7px 13px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.16s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-.or-filter-pills button:hover {
-    border-color: var(--or-accent);
-    color: var(--or-accent-dark);
-}
 .or-filter-pills button.active {
     background: var(--or-primary);
     border-color: var(--or-primary);
@@ -372,7 +348,6 @@
     background: var(--or-accent);
     border-color: var(--or-accent);
 }
-.or-filter-pills button i { font-size: 0.72rem; }
 
 select.or-select {
     height: 38px;
@@ -400,42 +375,6 @@ select.or-select:focus {
     gap: 6px;
     margin-left: auto;
     flex-wrap: wrap;
-}
-.or-btn {
-    height: 38px;
-    padding: 0 14px;
-    border-radius: var(--or-radius-sm);
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.16s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--or-border);
-    background: var(--white);
-    color: var(--or-text);
-}
-.or-btn:hover { border-color: var(--or-accent); color: var(--or-accent-dark); }
-.or-btn-primary {
-    background: var(--or-primary);
-    border-color: var(--or-primary);
-    color: white;
-}
-.or-btn-primary:hover {
-    background: var(--or-primary-dark);
-    border-color: var(--or-primary-dark);
-    color: white;
-}
-.or-btn-coral {
-    background: var(--or-accent);
-    border-color: var(--or-accent);
-    color: white;
-}
-.or-btn-coral:hover {
-    background: var(--or-accent-dark);
-    border-color: var(--or-accent-dark);
-    color: white;
 }
 
 /* ============================================================
@@ -599,18 +538,6 @@ select.or-select:focus {
     white-space: nowrap;
 }
 .or-period-chip i { font-size: 0.6rem; }
-
-.or-bereich-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 0.66rem;
-    font-weight: 700;
-    background: var(--or-canvas);
-    color: var(--or-text);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
 
 .or-amount {
     font-weight: 700;

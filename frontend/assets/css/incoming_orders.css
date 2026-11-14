@@ -220,36 +220,6 @@
     font-size: 0.85rem;
     pointer-events: none;
 }
-
-.be-filter-pills {
-    display: inline-flex;
-    background: var(--be-surface);
-    border: 1px solid var(--be-border);
-    border-radius: 8px;
-    overflow: hidden;
-    height: 36px;
-}
-.be-filter-pills button {
-    background: none;
-    border: none;
-    padding: 0 13px;
-    height: 100%;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--be-text-muted);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-right: 1px solid var(--be-border);
-    position: relative;
-    transition: color .15s ease, background .15s ease;
-}
-.be-filter-pills button:last-child { border-right: none; }
-.be-filter-pills button:hover {
-    color: var(--be-text);
-    background: var(--be-bg-soft);
-}
 .be-filter-pills button.active {
     color: var(--be-accent);
     background: var(--be-surface);
@@ -261,45 +231,6 @@
     height: 2px;
     background: var(--be-accent);
     border-radius: 2px 2px 0 0;
-}
-
-.be-filter-extra select {
-    height: 36px;
-    padding: 0 10px;
-    border: 1px solid var(--be-border);
-    border-radius: 8px;
-    background: var(--be-surface);
-    color: var(--be-text);
-    font-size: 0.82rem;
-    min-width: 140px;
-}
-.be-filter-extra select:focus {
-    outline: none;
-    border-color: var(--be-accent);
-    box-shadow: 0 0 0 3px var(--be-accent-tint);
-}
-
-.be-btn-create {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 16px;
-    height: 36px;
-    background: var(--be-accent);
-    color: #fff;
-    border: 1px solid var(--be-accent);
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background .15s ease;
-    white-space: nowrap;
-    box-shadow: 0 1px 2px rgba(124, 58, 237, 0.15);
-}
-.be-btn-create:hover {
-    background: var(--be-accent-hover);
-    border-color: var(--be-accent-hover);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.30);
 }
 
 /* ===== 4. List Table Card ===== */
@@ -618,10 +549,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid rgba(220,38,38,0.5); o
 .be-bc-chip-empty {
     color: var(--be-text-soft);
     font-style: italic;
-}
-.be-bc-chip-icon {
-    color: var(--be-accent);
-    font-size: 0.78rem;
 }
 .be-bc-chip strong { font-weight: 700; }
 /* Multi-service orders: artikel chips double as Tage-tab switchers in step 5 */
@@ -945,36 +872,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid rgba(220,38,38,0.5); o
     pointer-events: none;
 }
 
-/* ===== 13. Step 5 — Tage ===== */
-.be-shift-card {
-    background: var(--be-surface);
-    border: 1px solid var(--be-border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-}
-.be-shift-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    align-items: end;
-}
-.be-shift-grid > .be-shift-duration {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--be-mint-soft);
-    color: var(--be-mint-hover);
-    border: 1.5px solid var(--be-mint-line);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-weight: 800;
-    font-size: 1rem;
-    font-variant-numeric: tabular-nums;
-    min-height: 38px;
-    white-space: nowrap;
-}
-
 .be-weekday-pills {
     display: flex;
     flex-wrap: wrap;
@@ -1035,40 +932,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid rgba(220,38,38,0.5); o
     background: var(--be-accent-soft);
     border-color: var(--be-accent-line);
     color: var(--be-accent);
-}
-
-.be-actions-bar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 14px;
-    padding: 12px 14px;
-    background: var(--be-bg-soft);
-    border: 1px dashed var(--be-border-strong);
-    border-radius: 10px;
-}
-.be-actions-bar .or-sep {
-    color: var(--be-text-soft);
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0 4px;
-}
-.be-single-date-input {
-    width: 140px;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--be-border);
-    border-radius: 7px;
-    font-size: 0.85rem;
-    transition: border-color .15s ease;
-}
-.be-single-date-input:focus {
-    border-color: var(--be-accent);
-    outline: none;
-    box-shadow: 0 0 0 3px var(--be-accent-tint);
 }
 
 .be-days-table-wrap {
@@ -1396,11 +1259,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid rgba(220,38,38,0.5); o
 
 /* ── Anforderungen (Step 5 — structured staffing requirements) ── */
 .be-anf-hint { font-weight: 400; color: var(--be-text-muted); font-size: 0.8rem; }
-.be-anf-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
 .be-anf-positions {
     margin-top: 14px;
     border-top: 1px dashed var(--be-border);
@@ -1470,7 +1328,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid rgba(220,38,38,0.5); o
     vertical-align: middle;
 }
 @media (max-width: 768px) {
-    .be-anf-grid { grid-template-columns: 1fr; }
     .be-anf-pos-head-row { display: none; }
     .be-anf-pos-row {
         grid-template-columns: 60px 1fr 34px;
@@ -1586,14 +1443,6 @@ md-dialog.be-context [slot="headline"] {
     --md-icon-button-icon-size: 18px;
     width: 34px;
     height: 34px;
-}
-
-/* --- Actions bar: align MD3 buttons with native date inputs --- */
-.be-actions-bar md-filled-button,
-.be-actions-bar md-outlined-button {
-    --md-filled-button-container-height: 36px;
-    --md-outlined-button-container-height: 36px;
-    white-space: nowrap;
 }
 
 /* --- Days table live search (sits at the right end of the Zeitraum bar,

@@ -183,29 +183,29 @@ header('Expires: 0');
     </script>
     <!-- Material Design 3 — official design tokens (must load BEFORE all module sheets) -->
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20260729mob8">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261020mf1">
-    <link rel="stylesheet" href="assets/css/customers.css?v=20261018dm2">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3a">
     <link rel="stylesheet" href="assets/css/interessenten.css?v=crmpol20261102a">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261109sp1">
     <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261109prod1">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261019lag6">
     <link rel="stylesheet" href="assets/css/subcontractors.css?v=20260729mob8">
     <link rel="stylesheet" href="assets/css/price_history.css?v=20261018ph3">
-    <link rel="stylesheet" href="assets/css/workers.css?v=20261015sd1">
+    <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3a">
     <link rel="stylesheet" href="assets/css/absences.css?v=20261018abcal1">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20260731md3notif">
     <link rel="stylesheet" href="assets/css/tasks.css?v=20261020sb5">
     <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261110nav3">
-    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261018dm1">
-    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261014flt1">
-    <link rel="stylesheet" href="assets/css/orders.css?v=20261014desc1">
+    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/orders.css?v=20261114md3a">
     <link rel="stylesheet" href="assets/css/messages.css?v=20260921chat5">
-    <link rel="stylesheet" href="assets/css/worker_messages.css?v=20260730wmfab2">
+    <link rel="stylesheet" href="assets/css/worker_messages.css?v=20261114md3a">
     <link rel="stylesheet" href="assets/css/worker-panels.css?v=20260921safe1">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20261020cp5">
-    <link rel="stylesheet" href="assets/css/controlling.css?v=20261021dk1">
-    <link rel="stylesheet" href="assets/css/users.css?v=uperm20261101a">
-    <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261104hub1">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/controlling.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/users.css?v=20261114md3a">
+    <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261114md3a">
     <link rel="stylesheet" href="assets/css/company_documents.css?v=kontosticky20261028002137">
     <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20260729mob8">
     <link rel="stylesheet" href="assets/css/theme-unified.css?v=20260729mob8">

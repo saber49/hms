@@ -317,38 +317,6 @@
     margin-bottom: 6px;
     margin-inline: auto;
 }
-
-/* ---------- Today's schedule ---------- */
-.dash-sched-item {
-    display: grid;
-    grid-template-columns: 70px 1fr auto;
-    gap: 12px;
-    padding: 10px 8px;
-    border-bottom: 1px solid var(--gray-100);
-    align-items: center;
-    cursor: pointer;
-    transition: var(--transition);
-}
-.dash-sched-item:hover { background: var(--gray-50); }
-.dash-sched-item:last-child { border-bottom: 0; }
-.dash-sched-time {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--gray-700);
-    font-variant-numeric: tabular-nums;
-}
-.dash-sched-time .dash-sched-date {
-    display: block;
-    color: var(--accent);
-    font-weight: 600;
-}
-.dash-sched-time small {
-    display: block;
-    color: var(--gray-400);
-    font-size: 0.7rem;
-    font-weight: 500;
-}
-.dash-sched-info { min-width: 0; }
 .dash-sched-info .who {
     font-weight: 600;
     color: var(--gray-800);
@@ -374,16 +342,6 @@
     font-size: 13px;
     vertical-align: -2px;
 }
-.dash-pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-}
 .dash-pill.ja        { background: var(--success-light); color: var(--success); }
 .dash-pill.nein      { background: var(--danger-light); color: var(--danger); }
 .dash-pill.ausstehend{ background: var(--warning-light); color: var(--warning); }
@@ -394,22 +352,6 @@
     height: 180px;
     margin-top: 4px;
 }
-
-/* ---------- Top list (customers / objects) ---------- */
-.dash-top {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.dash-top li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 4px;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 0.85rem;
-}
-.dash-top li:last-child { border-bottom: 0; }
 .dash-top .rank {
     width: 22px;
     height: 22px;
@@ -440,22 +382,6 @@
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
-
-/* ---------- Recent activity feed ---------- */
-.dash-feed {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.dash-feed li {
-    display: flex;
-    gap: 10px;
-    padding: 8px 4px;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 0.84rem;
-    align-items: center;
-}
-.dash-feed li:last-child { border-bottom: 0; }
 .dash-feed .ic {
     width: 28px;
     height: 28px;
