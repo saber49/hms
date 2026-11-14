@@ -159,66 +159,6 @@
     gap: 8px;
     padding: 0;
 }
-.radio-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--gray-600);
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--md-sys-shape-corner-small);
-    transition: all 0.15s ease;
-    flex: 1;
-    justify-content: center;
-}
-.radio-label:hover {
-    border-color: var(--gray-300);
-    background: var(--white);
-}
-.radio-label input[type="radio"] {
-    accent-color: var(--accent);
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
-    margin: 0;
-}
-.radio-label:has(input[type="radio"]:checked) {
-    background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-    border-color: var(--accent);
-    color: var(--accent);
-}
-/* Input with icon on the right */
-.input-with-icon {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-.input-with-icon .form-control {
-    padding-right: 40px;
-    width: 100%;
-}
-.input-with-icon .field-icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-400);
-    font-size: 0.85rem;
-    pointer-events: none;
-    border-left: 1px solid var(--gray-200);
-}
-.input-with-icon:focus-within .field-icon {
-    color: var(--accent);
-    border-left-color: var(--accent);
-}
 /* Field error text */
 .modal.modal-wide .field-error {
     font-size: 0.72rem;
@@ -294,11 +234,6 @@
 .modal.modal-wide .data-table-card tbody td {
     padding: 10px 12px;
     font-size: 0.82rem;
-}
-.modal.modal-wide .data-table-card .btn-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 0.75rem;
 }
 .modal.modal-wide .data-table-card tbody td.text-right {
     text-align: right;
@@ -676,10 +611,6 @@
     gap: 6px;
     padding: 6px 12px 10px;
     border-top: 1px solid var(--gray-100);
-}
-.doc-actions .btn-icon {
-    font-size: 0.78rem;
-    padding: 4px 8px;
 }
 /* Empty state */
 .customer-docs-empty {
@@ -1199,46 +1130,6 @@ to { opacity: 1; transform: translateY(0); }
     border-radius: var(--md-sys-shape-corner-extra-small);
     border: 1px solid var(--gray-200);
 }
-/* Refined action buttons */
-.data-table-card .btn-group {
-    display: inline-flex;
-    gap: 4px;
-}
-.data-table-card .btn-icon {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: var(--md-sys-shape-corner-small);
-    border: 1px solid transparent;
-    background: transparent;
-    color: var(--gray-500);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.82rem;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-.data-table-card .btn-icon:hover {
-    background: var(--gray-100);
-    color: var(--accent);
-    border-color: var(--gray-200);
-}
-.data-table-card .btn-icon.text-warn:hover {
-    color: var(--warning);
-    background: var(--warning-light);
-    border-color: transparent;
-}
-.data-table-card .btn-icon.text-success:hover {
-    color: var(--success);
-    background: var(--success-light);
-    border-color: transparent;
-}
-.data-table-card .btn-icon.text-danger:hover {
-    color: var(--danger);
-    background: var(--danger-light);
-    border-color: transparent;
-}
 /* Status chip in table */
 .data-table-card .status-ja {
     display: inline-flex;
@@ -1359,32 +1250,6 @@ to { opacity: 1; transform: translateY(0); }
     position: absolute;
     opacity: 0;
     pointer-events: none;
-}
-.zuschlag-toggle-slider {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    background: rgba(255, 255, 255, 0.25);
-    border-radius: var(--md-sys-shape-corner-full);
-    transition: background 0.18s ease;
-}
-.zuschlag-toggle-slider::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
-    background: var(--white);
-    border-radius: 50%;
-    transition: transform 0.18s ease;
-    box-shadow: 0 2px 4px color-mix(in srgb, var(--md-sys-color-scrim) 20%, transparent);
-}
-.zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider {
-    background: var(--md-ext-color-success);
-}
-.zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider::after {
-    transform: translateX(20px);
 }
 .zuschlag-toggle-label {
     font-size: 0.85rem;

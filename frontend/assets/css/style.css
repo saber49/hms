@@ -768,19 +768,6 @@ tbody td {
     padding: 5px 10px;
     font-size: 0.78rem;
 }
-.btn-icon {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-sm);
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.8rem;
-}
 .btn-group {
     display: flex;
     gap: 6px;
@@ -984,24 +971,6 @@ md-outlined-select[class*="form-control"] {
     .nav-fav-item .nav-fav-star { opacity: 0.55; }
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-.modal-overlay.active {
-    display: flex;
-}
 .modal {
     background: var(--white);
     border-radius: var(--radius-lg);
@@ -1744,29 +1713,6 @@ to { transform: translateX(0); opacity: 1; }
     gap: 6px;
     flex-shrink: 0;
 }
-.btn-icon {
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border: 1px solid transparent;
-    border-radius: var(--md-sys-shape-corner-small);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-    font-size: 0.85rem;
-}
-.btn-icon:hover {
-    background: var(--gray-200);
-    color: var(--primary);
-}
-.btn-icon-danger:hover {
-    background: var(--md-sys-color-error-container);
-    color: var(--md-sys-color-error);
-    border-color: var(--md-sys-color-error-container);
-}
 @media (max-width: 720px) {
     .acc-grid-2,
 .acc-grid-3 { grid-template-columns: 1fr; }
@@ -1825,7 +1771,6 @@ to { transform: translateX(0); opacity: 1; }
 .sidebar,
     .topbar,
     .toolbar,
-    .modal-overlay,
     .toast-container,
     .filter-bar { display: none !important; }
 .main-content { margin-left: 0; }
@@ -2013,11 +1958,6 @@ th,
         width: 100%;
     }
     /* Modal */
-.modal-overlay {
-        left: 0;
-        padding: 10px;
-        align-items: flex-end;
-    }
 .modal {
         max-width: 100%;
         max-height: 85vh;
@@ -2309,8 +2249,6 @@ md-dialog > [slot="actions"] { padding: 10px 14px calc(14px + env(safe-area-inse
        index.php (Android native push / iOS env()); plain browsers → 0. */
 html.app-shell md-dialog > [slot="headline"] { padding-top: calc(14px + var(--sa-top, 0px)); }
 html.app-shell md-dialog > [slot="actions"] { padding-bottom: calc(14px + var(--sa-bottom, 0px)); }
-    /* Legacy bottom-sheet .modal: keep its footer above the home indicator. */
-html.app-shell .modal-overlay { padding-bottom: calc(10px + var(--sa-bottom, 0px)); }
     /* Filter toolbars are 3–5 rows tall on a phone — pinning them would
        eat half the screen. Scroll normally here (tablet/desktop stay sticky). */
     body .filter-bar, body .data-toolbar, body .wk-toolbar, body .ab-toolbar, body .oc-toolbar,

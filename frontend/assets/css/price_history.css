@@ -554,28 +554,6 @@
 .ph-delta-pill.up { background: var(--ph-positive-soft); color: var(--ph-positive); }
 .ph-delta-pill.down { background: var(--ph-negative-soft); color: var(--ph-negative); }
 .ph-delta-pill.flat { background: var(--ph-neutral-soft);  color: var(--ph-neutral); }
-.ph-tl-actions {
-    display: flex;
-    gap: 6px;
-}
-.ph-tl-actions .btn-icon {
-    width: 30px; height: 30px;
-    background: var(--ph-bg-soft);
-    border: 1px solid var(--ph-border);
-    color: var(--ph-text-muted);
-    border-radius: var(--md-sys-shape-corner-small);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.78rem;
-    transition: all .12s ease;
-}
-.ph-tl-actions .btn-icon:hover {
-    border-color: var(--ph-accent);
-    color: var(--ph-accent);
-    background: var(--ph-accent-soft);
-}
 /* ===== 6. Per-Article Table (Pro Artikel) ===== */
 .ph-art-table {
     background: var(--ph-surface);

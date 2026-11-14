@@ -1174,56 +1174,12 @@
     padding: 6px 10px 10px;
     border-top: 1px solid var(--wk-bg-strip);
 }
-/* Unified action buttons â€” all four (edit / view / download / delete)
-   share the same shape so the row stays balanced at any card width.
-   `flex: 1` + `min-width: 0` lets them shrink evenly on narrow laptop
-   screens, but `min-height: 30px` + centered flex guarantees the
-   FontAwesome glyph is always visible (no more "vanishing download
-   button" at ~480 px card widths). Works on both `<button>` and `<a>`
-   because the selector matches the class, not the tag. */
-.wk-doc-actions .btn-icon {
+/* Unified action buttons (edit / view / download / delete) share the
+   same shape so the row stays balanced at any card width.
+   `flex: 1` + `min-width: 0` lets them shrink evenly on narrow screens. */
+.wk-doc-actions md-icon-button {
     flex: 1 1 0;
     min-width: 0;
-    height: 32px;
-    background: var(--wk-bg-soft);
-    border: 1px solid var(--wk-border);
-    border-radius: var(--md-sys-shape-corner-small);
-    color: var(--wk-text-muted);
-    cursor: pointer;
-    font-size: 0.82rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: all .12s ease;
-}
-.wk-doc-actions .btn-icon:hover {
-    border-color: var(--wk-accent);
-    color: var(--wk-accent);
-    background: var(--wk-accent-soft);
-}
-.wk-doc-actions .btn-icon i { pointer-events: none; }
-/* Legacy `.btn-sm` kept as alias so anything still using the old class
-   keeps the same look (prevents a half-broken state after deploy). */
-.wk-doc-actions .btn-sm {
-    flex: 1 1 0;
-    min-width: 0;
-    height: 32px;
-    background: var(--wk-bg-soft);
-    border: 1px solid var(--wk-border);
-    border-radius: var(--md-sys-shape-corner-small);
-    color: var(--wk-text-muted);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.82rem;
-    transition: all .12s ease;
-}
-.wk-doc-actions .btn-sm:hover {
-    border-color: var(--wk-accent);
-    color: var(--wk-accent);
-    background: var(--wk-accent-soft);
 }
 /* ===== 12. Absences ===== */
 .wk-absence-stats {

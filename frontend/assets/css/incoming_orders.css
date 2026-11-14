@@ -347,60 +347,6 @@ button.be-dispo-storno:focus-visible { outline: 2px solid color-mix(in srgb, var
 .be-status-bearbeitet { background: var(--be-mint-soft); color: var(--be-mint-hover); border-color: color-mix(in srgb, var(--md-ext-color-success) 20%, transparent); }
 .be-status-abgesagt { background: var(--be-danger-soft); color: var(--be-danger); border-color: color-mix(in srgb, var(--md-sys-color-error) 20%, transparent); }
 .be-status-default { background: var(--be-bg-strip); color: var(--be-text-muted); border-color: var(--be-border); }
-/* ===== 5. Wizard Modal Accent Context ===== */
-/* Bestelleingang modals carry many wide tables (Einsatztage with up to
- * 11 columns plus a horizontal sum row). We widen the dialog past the
- * global modal-xl and round the radius slightly more.
- *
- * Important: we keep the default scroll-on-the-dialog (overflow-y:auto
- * inherited from .modal) and do NOT clip with overflow:hidden — custom
- * dropdowns inside the wizard need to escape the dialog bounds, otherwise
- * the picker flips upward when its menu is taller than the remaining
- * space below. With overflow-y:auto the rounded bottom corners are still
- * visually preserved as long as content fits within max-height, which is
- * the common case. */
-.modal.be-context {
-    max-width: min(1440px, 96vw);
-    border-radius: var(--md-sys-shape-corner-large);
-}
-.modal.be-context .modal-header {
-    border-radius: var(--md-sys-shape-corner-large) var(--md-sys-shape-corner-large) 0 0;
-}
-.modal.be-context .modal-title {
-    color: var(--be-text);
-}
-/* When a Bestelleingang modal is open we anchor the dialog near the top
- * of the viewport rather than centering it vertically. The wizard
- * contains native <select> dropdowns whose menu height is decided by
- * the browser based on available space below the field — centering a
- * short dialog leaves the select near the bottom of the viewport, so
- * the browser flips its dropdown UP and covers the modal title.
- * Anchoring to the top guarantees plenty of space below every field. */
-.modal-overlay:has(.modal.be-context) {
-    align-items: flex-start;
-    padding-top: 4vh;
-}
-.modal.be-context .form-control:focus {
-    border-color: var(--be-accent);
-    box-shadow: 0 0 0 3px var(--be-accent-tint);
-}
-.modal.be-context .btn-primary {
-    background: var(--be-accent);
-    border-color: var(--be-accent);
-}
-.modal.be-context .btn-primary:hover {
-    background: var(--be-accent-hover);
-    border-color: var(--be-accent-hover);
-}
-.modal.be-context .btn-success {
-    background: var(--be-mint);
-    border-color: var(--be-mint);
-    color: white;
-}
-.modal.be-context .btn-success:hover {
-    background: var(--be-mint-hover);
-    border-color: var(--be-mint-hover);
-}
 /* ===== 6. Wizard Stepper ===== */
 .be-stepper {
     display: flex;

@@ -183,20 +183,20 @@ header('Expires: 0');
     </script>
     <!-- Material Design 3 — official design tokens (must load BEFORE all module sheets) -->
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3h">
+    <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3h">
     <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/subcontractors.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/price_history.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/price_history.css?v=20261114md3h">
+    <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3h">
     <link rel="stylesheet" href="assets/css/absences.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/tasks.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3h">
     <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/orders.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/messages.css?v=20261114md3g">
@@ -208,7 +208,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/company_documents.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3h">
     <link rel="stylesheet" href="assets/css/search-field.css?v=20261114md3g">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <!-- Markdown rendering + sanitization for the AI assistant's rich replies.
