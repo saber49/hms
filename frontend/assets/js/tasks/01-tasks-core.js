@@ -72,6 +72,17 @@ function plannerWorkerName(worker) {
     return `${worker.vorname || ''} ${worker.name || ''}`.trim() || worker.dienst_nr;
 }
 
+// Avatar with initial-letter fallback — `default-avatar.png` doesn't exist
+// and a stored `foto` URL can still 404; onerror swaps the broken <img> for
+// a <span> holding the initial so the circle never shows a broken image.
+function plannerWorkerAvatarHtml(foto, nameSource, extraStyle = '') {
+    const ch = (nameSource || '?').toString().trim().charAt(0).toUpperCase() || '?';
+    const inner = foto
+        ? `<img src="${escapeHtml(foto)}" alt="${escapeHtml(ch)}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:this.alt}))">`
+        : `<span>${escapeHtml(ch)}</span>`;
+    return `<div class="planner-worker-avatar"${extraStyle ? ` style="${extraStyle}"` : ''}>${inner}</div>`;
+}
+
 function plannerStatusClass(status) {
     if (status === 'confirmed') return 'confirmed';
     if (status === 'rejected') return 'rejected';

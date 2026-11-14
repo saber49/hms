@@ -604,7 +604,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261114md3g');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261114md3h');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.

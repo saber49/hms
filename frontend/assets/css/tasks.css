@@ -3365,7 +3365,6 @@ to { opacity: 1; transform: translate(-50%, -50%); }
 .boerse-box-cta > .material-symbols-outlined { color: var(--accent); }
 .boerse-box-cta > span:nth-child(2) { flex: 1; min-width: 200px; }
 .boerse-req { display: flex; align-items: center; gap: 10px; padding: 8px 4px 2px; margin-top: 8px; border-top: 1px dashed var(--gray-200); }
-.boerse-req-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
 .boerse-req-main { flex: 1; min-width: 0; font-size: .86rem; }
 .boerse-req-main small { color: var(--gray-500); }
 .boerse-req-sub { font-size: .76rem; color: var(--gray-500); }

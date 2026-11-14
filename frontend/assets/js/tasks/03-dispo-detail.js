@@ -82,7 +82,7 @@ async function openPlannerTaskDetail(einsatzId) {
                         <div class="planner-team-header">Zugewiesene Mitarbeiter <span>${totalWorkerCount}</span></div>
                         <div class="planner-team-list">${assignedWorkers.map(w => `
                             <div class="planner-worker-item" style="pointer-events:none">
-                                <img class="planner-worker-avatar" src="${escapeHtml(w.foto || 'assets/img/default-avatar.png')}" alt="">
+                                ${plannerWorkerAvatarHtml(w.foto, w.vorname || w.name || w.dienst_nr)}
                                 <div class="planner-worker-info">
                                     <div class="planner-worker-name">${escapeHtml(w.vorname || '')} ${escapeHtml(w.name || '')}</div>
                                     <div class="planner-worker-meta">${escapeHtml(w.dienst_nr)}${w.bereich ? ' · ' + bereichDotHtml(w.bereich, false) + ' ' + escapeHtml(w.bereich) : ''}</div>
@@ -92,7 +92,7 @@ async function openPlannerTaskDetail(einsatzId) {
                             </div>
                         `).join('')}${nuAssigned.map(nw => `
                             <div class="planner-worker-item" style="pointer-events:none">
-                                <img class="planner-worker-avatar" src="${escapeHtml(nw.foto || 'assets/img/default-avatar.png')}" alt="" style="border:2px solid #2563eb">
+                                ${plannerWorkerAvatarHtml(nw.foto, nw.vorname || nw.name || nw.nu_firmenname, "border:2px solid #2563eb")}
                                 <div class="planner-worker-info">
                                     <div class="planner-worker-name">${escapeHtml(nw.vorname || '')} ${escapeHtml(nw.name || '')} <span style="font-size:0.65rem;background:#2563eb;color:white;padding:1px 5px;border-radius:6px;margin-left:4px">${escapeHtml(nw.nu_firmenname || 'NU')}</span></div>
                                     <div class="planner-worker-meta">${nw.personal_nr ? 'Nr. ' + escapeHtml(nw.personal_nr) : 'NU'}${nw.position_name ? ' · ' + escapeHtml(nw.position_name) : ''}</div>
@@ -107,7 +107,7 @@ async function openPlannerTaskDetail(einsatzId) {
             <button class="btn btn-danger" type="button" onclick="deleteTask('${task.einsatz_id}')"><span class="material-symbols-outlined">delete</span> Endgültig löschen</button>
             <button class="btn btn-outline" type="button" onclick="plannerDownloadBriefingPdf('${einsatzId}', this)"><span class="material-symbols-outlined">picture_as_pdf</span> Briefing PDF</button>
         `;
-        openModal(`Einsatz — ${task.bestell_id}`, readBody, readFooter, 'modal-xl');
+        openModal(`Einsatz — ${task.bestell_id || task.einsatz_id || ''}`, readBody, readFooter, 'modal-xl');
         const modalHeader = document.querySelector('#modalOverlay .modal-header');
         if (modalHeader) modalHeader.classList.add('planner-modal-header');
         return;
@@ -151,7 +151,7 @@ async function openPlannerTaskDetail(einsatzId) {
                         <div class="planner-team-header">Zugewiesene Mitarbeiter <span>${totalWorkerCount}</span></div>
                         <div class="planner-team-list">${assignedWorkers.map(w => `
                             <div class="planner-worker-item" style="pointer-events:none">
-                                <img class="planner-worker-avatar" src="${escapeHtml(w.foto || 'assets/img/default-avatar.png')}" alt="">
+                                ${plannerWorkerAvatarHtml(w.foto, w.vorname || w.name || w.dienst_nr)}
                                 <div class="planner-worker-info">
                                     <div class="planner-worker-name">${escapeHtml(w.vorname || '')} ${escapeHtml(w.name || '')}</div>
                                     <div class="planner-worker-meta">${escapeHtml(w.dienst_nr)}${w.bereich ? ' · ' + bereichDotHtml(w.bereich, false) + ' ' + escapeHtml(w.bereich) : ''}</div>
@@ -161,7 +161,7 @@ async function openPlannerTaskDetail(einsatzId) {
                             </div>
                         `).join('')}${nuAssigned.map(nw => `
                             <div class="planner-worker-item" style="pointer-events:none">
-                                <img class="planner-worker-avatar" src="${escapeHtml(nw.foto || 'assets/img/default-avatar.png')}" alt="" style="border:2px solid #2563eb">
+                                ${plannerWorkerAvatarHtml(nw.foto, nw.vorname || nw.name || nw.nu_firmenname, "border:2px solid #2563eb")}
                                 <div class="planner-worker-info">
                                     <div class="planner-worker-name">${escapeHtml(nw.vorname || '')} ${escapeHtml(nw.name || '')} <span style="font-size:0.65rem;background:#2563eb;color:white;padding:1px 5px;border-radius:6px;margin-left:4px">${escapeHtml(nw.nu_firmenname || 'NU')}</span></div>
                                     <div class="planner-worker-meta">${nw.personal_nr ? 'Nr. ' + escapeHtml(nw.personal_nr) : 'NU'}${nw.position_name ? ' · ' + escapeHtml(nw.position_name) : ''}</div>
@@ -277,7 +277,7 @@ async function openPlannerTaskDetail(einsatzId) {
         <button class="btn btn-outline" onclick="closeModal()">Abbrechen</button>
         <button class="btn btn-primary" id="plannerSaveBtn" onclick="savePlannerAssignment('${einsatzId}')">Speichern</button>
     `;
-    openModal(`Schicht bearbeiten — ${task.bestell_id}`, body, footer, 'modal-xl');
+    openModal(`Schicht bearbeiten — ${task.bestell_id || task.einsatz_id || ''}`, body, footer, 'modal-xl');
     const modalHeader = document.querySelector('#modalOverlay .modal-header');
     if (modalHeader) {
         modalHeader.classList.add('planner-modal-header');
@@ -496,7 +496,7 @@ function plannerWorkerOption(worker, assigned) {
         <div class="planner-worker-item ${assigned ? 'assigned' : ''}${isFav ? ' favorite' : ''}" data-worker-id="${escapeHtml(worker.dienst_nr)}" data-geschlecht="${escapeHtml(String(worker.geschlecht || '').trim().charAt(0).toLowerCase())}" data-worker-search="${escapeHtml(searchableName)}" data-assigned="${assigned ? '1' : '0'}" data-favorite="${isFav ? '1' : '0'}" style="${isFav ? 'box-shadow:inset 3px 0 0 #f59e0b' : ''}" onclick="${assigned ? '' : 'plannerToggleWorkerAssignment(this)'}">
             ${assigned ? `<button type="button" class="planner-worker-remove" onclick="event.stopPropagation(); plannerRemoveWorker(this)" title="Entfernen"><span class="material-symbols-outlined">close</span></button>` : ''}
             <div class="planner-worker-main">
-                <div class="planner-worker-avatar">${worker.foto ? `<img src="${escapeHtml(worker.foto)}" alt="${escapeHtml(plannerWorkerName(worker))}">` : `<span>${escapeHtml((worker.vorname || worker.name || worker.dienst_nr || '?').charAt(0).toUpperCase())}</span>`}</div>
+                ${plannerWorkerAvatarHtml(worker.foto, worker.vorname || worker.name || worker.dienst_nr)}
                 <div class="planner-worker-info">
                     <div class="planner-worker-name">${escapeHtml(plannerWorkerName(worker))}${isFav ? ' <span class="material-symbols-outlined md-filled" style="color:#f59e0b;font-size:0.9em;vertical-align:-1px" title="Stamm-Team / Favorit dieses Kunden">star</span>' : ''}</div>
                     <div class="planner-worker-subline">${escapeHtml(worker.dienst_nr)}${worker.bereich ? ` · ${bereichDotHtml(worker.bereich, false)} ${escapeHtml(worker.bereich)}` : ''}</div>
@@ -1211,7 +1211,7 @@ const BOERSE_API = API_BASE + '/schichtboerse';
 function boerseReqRowHtml(r, angebot, einsatzId) {
     const who = angebot.typ === 'abgabe' ? `übernimmt von <strong>${escapeHtml(angebot.anbieter_name || '')}</strong>` : 'möchte die offene Schicht';
     return `<div class="boerse-req">
-        <img class="boerse-req-avatar" src="${escapeHtml(r.foto || 'assets/img/default-avatar.png')}" alt="">
+        ${plannerWorkerAvatarHtml(r.foto, r.name || r.dienst_nr, 'width:34px;height:34px')}
         <div class="boerse-req-main"><strong>${escapeHtml(r.name || r.dienst_nr)}</strong> <small>${escapeHtml(r.dienst_nr)}</small>
             <div class="boerse-req-sub">${who}</div></div>
         <button type="button" class="btn btn-sm btn-success" onclick="plannerBoerseDecide(${parseInt(r.id, 10)}, true, '${escapeHtml(einsatzId || '')}')"><span class="material-symbols-outlined">check</span> Genehmigen</button>
