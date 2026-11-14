@@ -1,0 +1,102 @@
+/* ============================================================
+   Clood-X — Rechtliche Seiten (Impressum / Datenschutz / AGB)
+   Shared stylesheet, MD3-aligned with the login/register pages.
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Google Sans', 'Roboto', 'Segoe UI', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: #f6f8fc;
+    color: #1f1f1f;
+    min-height: 100vh;
+}
+
+.legal-hero {
+    background: linear-gradient(135deg, #062e6f 0%, #0b57d0 55%, #0842a0 100%);
+    padding: 48px 20px 72px;
+    text-align: center;
+    color: #fff;
+}
+.legal-hero .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.legal-hero .brand img {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    object-fit: cover;
+    background: rgba(255,255,255,.12);
+}
+.legal-hero .brand span { font-weight: 700; font-size: 1rem; letter-spacing: .2px; }
+.legal-hero h1 { font-size: 1.7rem; font-weight: 700; }
+.legal-hero p { color: rgba(255,255,255,.6); font-size: .9rem; margin-top: 6px; }
+
+.legal-container {
+    max-width: 860px;
+    margin: -40px auto 60px;
+    padding: 0 20px;
+}
+.legal-card {
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    padding: 44px 48px;
+}
+@media (max-width: 600px) { .legal-card { padding: 28px 22px; border-radius: 20px; } }
+
+.legal-card h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0b57d0;
+    margin: 30px 0 10px;
+}
+.legal-card h2:first-child { margin-top: 0; }
+.legal-card h3 { font-size: .98rem; font-weight: 600; margin: 18px 0 6px; }
+.legal-card p, .legal-card li { font-size: .93rem; line-height: 1.65; color: #3c4043; }
+.legal-card ul { padding-left: 22px; margin: 8px 0; }
+.legal-card a { color: #0b57d0; text-decoration: none; }
+.legal-card a:hover { text-decoration: underline; }
+.legal-card strong { color: #1f1f1f; }
+.legal-card .stand { color: #70757a; font-size: .82rem; margin-bottom: 20px; }
+
+.legal-address {
+    background: #f1f4f9;
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin: 10px 0 4px;
+    font-size: .93rem;
+    line-height: 1.7;
+}
+
+.legal-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 26px;
+}
+.legal-nav a {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    text-decoration: none;
+    font-size: .84rem;
+    font-weight: 600;
+    transition: background .15s;
+}
+.legal-nav a:hover, .legal-nav a.active { background: rgba(255,255,255,.26); }
+
+.legal-footer {
+    text-align: center;
+    color: #70757a;
+    font-size: .82rem;
+    padding: 0 20px 40px;
+}
+.legal-footer a { color: #0b57d0; text-decoration: none; margin: 0 6px; }

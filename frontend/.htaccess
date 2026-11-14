@@ -1,0 +1,36 @@
+# HMS System - Apache Configuration
+DirectoryIndex index.php index.html
+
+# Redirect old HTML files to PHP versions
+RewriteEngine On
+RewriteRule ^index\.html$ index.php [R=301,L]
+RewriteRule ^order_form\.html$ order_form.php [R=301,L]
+
+# Tenant slug URL routing: /{slug}/file -> /file, /{slug}/ -> /index.php
+RewriteCond %{REQUEST_URI} !^/(api|assets|worker|uploads|hms-backend|laravel-example)(/|$)
+RewriteRule ^([a-z0-9][-a-z0-9]*)/(.+)$ /$2 [L,QSA]
+
+RewriteCond %{REQUEST_URI} !^/(api|assets|worker|uploads|hms-backend|laravel-example)(/|$)
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]+$
+RewriteRule ^([a-z0-9][-a-z0-9]*)/?$ /index.php [L,QSA]
+
+# Block direct access to config files
+<FilesMatch "\.(php)$">
+    # Allow PHP execution
+</FilesMatch>
+
+<Files "db_credentials.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "auth_check.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Block access to setup.php after initial setup (uncomment after setup)
+# <Files "setup.php">
+#     Order Allow,Deny
+#     Deny from all
+# </Files>

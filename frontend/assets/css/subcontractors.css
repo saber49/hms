@@ -1,0 +1,863 @@
+/* ============================================================
+   Nachunternehmer (Subcontractors) — Dedicated Stylesheet
+   Identity: Slate (cool neutrals) + Amber (#d97706) accent
+   Different from Kunden/Objekte (which use blue accent + bento)
+   ============================================================
+   Sections:
+   1. NU theme variables
+   2. Stats grid (Partner cards)
+   3. NU toolbar (slate)
+   4. Filter pills (amber underline)
+   5. NU table card (slate header)
+   6. NU obj-badge variants
+   7. Portal-link bar
+   8. Modal accent context (.nu-context override)
+   9. Info / success boxes
+  10. Compliance checklist
+  11. Document expiry colors
+  12. NU Admin — Mitarbeiter tab + detail overlay
+   ============================================================ */
+
+/* ===== 1. NU Theme Variables ===== */
+:root {
+    --nu-accent:        #d97706;   /* amber-600 */
+    --nu-accent-hover:  #b45309;   /* amber-700 */
+    --nu-accent-soft:   #fef3c7;   /* amber-100 */
+    --nu-accent-line:   #fde68a;   /* amber-200 */
+    --nu-accent-tint:   rgba(217, 119, 6, 0.06);
+
+    --nu-surface:       var(--white);
+    --nu-bg-soft:       var(--gray-50);   /* slate-50 */
+    --nu-bg-strip:      var(--gray-100);   /* slate-100 */
+    --nu-border:        var(--gray-200);   /* slate-200 */
+    --nu-border-strong: var(--gray-300);
+
+    --nu-text:          var(--gray-900);
+    --nu-text-muted:    var(--gray-500);
+    --nu-text-soft:     var(--gray-400);
+
+    --nu-ok:            #059669;
+    --nu-ok-soft:       #d1fae5;
+    --nu-warn:          #d97706;
+    --nu-warn-soft:     #fef3c7;
+    --nu-danger:        #dc2626;
+    --nu-danger-soft:   #fee2e2;
+}
+
+/* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
+[data-theme="dark"] {
+    --nu-accent:        #fbbf24;   /* amber-400 */
+    --nu-accent-hover:  #fcd34d;   /* amber-300 */
+    --nu-accent-soft:   rgba(251, 191, 36, 0.16);
+    --nu-accent-line:   rgba(251, 191, 36, 0.35);
+    --nu-accent-tint:   rgba(251, 191, 36, 0.10);
+    --nu-ok:            #34d399;
+    --nu-ok-soft:       rgba(52, 211, 153, 0.16);
+    --nu-warn:          #fbbf24;
+    --nu-warn-soft:     rgba(251, 191, 36, 0.16);
+    --nu-danger:        #f87171;
+    --nu-danger-soft:   rgba(248, 113, 113, 0.16);
+}
+
+/* ===== 2. Stats Grid — "Partner Cards" ===== */
+.nu-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+@media (max-width: 1200px) { .nu-stats-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px)  { .nu-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .nu-stats-grid { grid-template-columns: 1fr; } }
+
+.nu-stat-card {
+    position: relative;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 12px;
+    padding: 14px 16px 12px;
+    cursor: pointer;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+.nu-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: transparent;
+    transition: background .2s ease;
+}
+.nu-stat-card:hover {
+    border-color: var(--nu-accent-line);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    transform: translateY(-1px);
+}
+.nu-stat-card:hover::before { background: var(--nu-accent); }
+.nu-stat-card.is-active::before { background: var(--nu-accent); }
+
+.nu-stat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.nu-stat-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+    background: var(--nu-bg-strip);
+    color: var(--nu-text-muted);
+    flex-shrink: 0;
+}
+.nu-stat-cue {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--nu-text-soft);
+}
+.nu-stat-num {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--nu-text);
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+}
+.nu-stat-num small {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--nu-text-soft);
+    margin-left: 3px;
+}
+.nu-stat-lbl {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--nu-text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+/* Variants */
+.nu-stat-total    .nu-stat-icon { background: var(--nu-bg-strip);  color: var(--nu-text-muted); }
+.nu-stat-active   .nu-stat-icon { background: var(--nu-ok-soft);   color: var(--nu-ok); }
+.nu-stat-active   .nu-stat-num  { color: var(--nu-ok); }
+.nu-stat-portal   .nu-stat-icon { background: var(--nu-accent-soft); color: var(--nu-accent); }
+.nu-stat-portal   .nu-stat-num  { color: var(--nu-accent); }
+.nu-stat-people   .nu-stat-icon { background: #e0e7ff; color: #4338ca; }
+.nu-stat-compliance .nu-stat-icon { background: var(--nu-ok-soft); color: var(--nu-ok); }
+.nu-stat-compliance.warn .nu-stat-icon { background: var(--nu-warn-soft); color: var(--nu-warn); }
+.nu-stat-compliance.warn .nu-stat-num  { color: var(--nu-warn); }
+.nu-stat-compliance.danger .nu-stat-icon { background: var(--nu-danger-soft); color: var(--nu-danger); }
+.nu-stat-compliance.danger .nu-stat-num  { color: var(--nu-danger); }
+
+/* ===== 3. NU Toolbar (slate strip) ===== */
+.nu-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--nu-bg-soft);
+    border: 1px solid var(--nu-border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+.nu-toolbar-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+.nu-toolbar-right {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.nu-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 340px;
+}
+.nu-search > i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--nu-text-soft);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+.nu-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px 0 34px;
+    border: 1px solid var(--nu-border);
+    border-radius: 8px;
+    background: var(--nu-surface);
+    color: var(--nu-text);
+    font-size: 0.85rem;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.nu-search input::placeholder { color: var(--nu-text-soft); }
+.nu-search input:focus {
+    outline: none;
+    border-color: var(--nu-accent);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.12);
+}
+
+/* ===== 4. Filter Pills (amber underline) ===== */
+.nu-filter-pills {
+    display: inline-flex;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 36px;
+}
+.nu-filter-pills button {
+    background: none;
+    border: none;
+    padding: 0 14px;
+    height: 100%;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--nu-text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-right: 1px solid var(--nu-border);
+    position: relative;
+    transition: color .15s ease, background .15s ease;
+}
+.nu-filter-pills button:last-child { border-right: none; }
+.nu-filter-pills button:hover {
+    color: var(--nu-text);
+    background: var(--nu-bg-soft);
+}
+.nu-filter-pills button.active {
+    color: var(--nu-accent);
+    background: var(--nu-surface);
+}
+.nu-filter-pills button.active::after {
+    content: '';
+    position: absolute;
+    left: 8px; right: 8px;
+    bottom: 0;
+    height: 2px;
+    background: var(--nu-accent);
+    border-radius: 2px 2px 0 0;
+}
+.nu-filter-pills button i { font-size: 0.78rem; }
+
+/* ===== 5. NU Table Card (slate header) ===== */
+.nu-table-card {
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.nu-table-card .table-container {
+    overflow-x: auto;
+}
+.nu-table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.nu-table-card thead {
+    background: var(--nu-bg-strip);
+    color: var(--nu-text);
+    border-bottom: 1px solid var(--nu-border);
+}
+.nu-table-card thead th {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--nu-text-muted);
+    white-space: nowrap;
+    border-right: 1px solid var(--nu-border);
+}
+.nu-table-card thead th:last-child { border-right: none; }
+.nu-table-card tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--nu-bg-strip);
+    color: var(--nu-text);
+    vertical-align: middle;
+}
+.nu-table-card tbody tr:last-child td { border-bottom: none; }
+.nu-table-card tbody tr {
+    transition: background .12s ease;
+}
+.nu-table-card tbody tr:hover {
+    background: var(--nu-accent-tint);
+}
+.nu-table-card tbody td strong { color: var(--nu-text); font-weight: 700; }
+
+/* ===== 6. NU Obj-Badge (slate-tinted, amber for partial) ===== */
+.nu-obj-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    line-height: 1.3;
+    background: var(--nu-bg-strip);
+    color: var(--nu-text-muted);
+    border: 1px solid var(--nu-border);
+}
+.nu-obj-badge.all-active {
+    background: var(--nu-ok-soft);
+    color: var(--nu-ok);
+    border-color: rgba(5, 150, 105, 0.2);
+}
+.nu-obj-badge.partial {
+    background: var(--nu-accent-soft);
+    color: var(--nu-accent-hover);
+    border-color: var(--nu-accent-line);
+}
+.nu-obj-badge.none-active {
+    background: var(--nu-danger-soft);
+    color: #b91c1c;
+    border-color: rgba(220, 38, 38, 0.2);
+}
+.nu-obj-badge.none {
+    background: transparent;
+    border-color: var(--nu-border);
+    color: var(--nu-text-soft);
+    font-weight: 400;
+}
+.nu-obj-badge .material-symbols-outlined { font-size: 13px; }
+
+/* ===== 7. Portal-Link Bar ===== */
+.nu-portal-link-bar {
+    background: var(--nu-bg-soft);
+    border: 1px solid var(--nu-accent-line);
+    border-left: 3px solid var(--nu-accent);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.nu-portal-link-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+.nu-portal-link-info > .material-symbols-outlined {
+    color: var(--nu-accent);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.nu-portal-link-label {
+    font-size: 0.7rem;
+    color: var(--nu-text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.nu-portal-link-url {
+    font-size: 0.85rem;
+    color: var(--nu-text);
+    font-family: ui-monospace, 'SF Mono', monospace;
+    word-break: break-all;
+    margin-top: 2px;
+}
+
+/* ===== 8. Modal Accent Context (.nu-context) =====
+   When the NU modal is open, override the blue accent with amber
+   for tabs, focus rings, section title icons, and primary buttons. */
+.sub-dialog-content .customer-form-section-title .material-symbols-outlined { color: var(--nu-accent); }
+.sub-dialog-content .cust-modal-tabs md-primary-tab[active] {
+    color: var(--nu-accent);
+}
+.sub-dialog-content .cust-modal-tabs md-primary-tab[active] md-icon {
+    color: var(--nu-accent);
+}
+.sub-dialog-content .req { color: var(--nu-danger); }
+
+/* Primary button inside NU dialog — amber */
+.sub-dialog-content md-filled-button {
+    --md-filled-button-container-color: var(--nu-accent);
+    --md-filled-button-label-text-color: #fff;
+}
+
+/* ===== 9. Info / Success Boxes ===== */
+.nu-info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--nu-bg-soft);
+    border: 1px solid var(--nu-border);
+    border-left: 3px solid var(--nu-accent);
+    border-radius: 8px;
+    padding: 11px 14px;
+    margin-bottom: 14px;
+    font-size: 0.83rem;
+    color: var(--nu-text);
+    line-height: 1.5;
+}
+.nu-info-box > .material-symbols-outlined {
+    color: var(--nu-accent);
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: 18px;
+}
+.nu-info-box a {
+    color: var(--nu-accent-hover);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.nu-success-box {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--nu-ok-soft);
+    border: 1px solid rgba(5, 150, 105, 0.25);
+    border-left: 3px solid var(--nu-ok);
+    border-radius: 8px;
+    font-size: 0.83rem;
+    color: #166534;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nu-success-box .material-symbols-outlined { color: var(--nu-ok); flex-shrink: 0; }
+
+.nu-hints-list {
+    font-size: 0.83rem;
+    color: var(--nu-text-muted);
+    line-height: 1.7;
+    padding-left: 18px;
+    margin: 0;
+}
+.nu-hints-list li { margin-bottom: 4px; }
+.nu-hints-list strong { color: var(--nu-text); font-weight: 700; }
+
+/* ===== 10. Compliance Checklist ===== */
+.nu-checklist-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--nu-border);
+}
+.nu-checklist-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+    align-items: center;
+}
+.nu-cs-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 100px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+.nu-cs-ok       { background: var(--nu-ok-soft);     color: var(--nu-ok);     border-color: rgba(5,150,105,0.2); }
+.nu-cs-warn     { background: var(--nu-warn-soft);   color: var(--nu-warn);   border-color: var(--nu-accent-line); }
+.nu-cs-expired  { background: var(--nu-danger-soft); color: #b91c1c;          border-color: rgba(220,38,38,0.2); }
+.nu-cs-missing  { background: var(--nu-bg-strip);    color: var(--nu-text-muted); border-color: var(--nu-border); }
+
+.nu-checklist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.nu-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 14px;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 8px;
+    border-left: 3px solid var(--nu-border-strong);
+    transition: background .12s ease;
+}
+.nu-checklist-item:hover { background: var(--nu-bg-soft); }
+.nu-checklist-item.nu-cs-ok       { border-left-color: var(--nu-ok); }
+.nu-checklist-item.nu-cs-expiring { border-left-color: var(--nu-warn);   background: #fffbeb; }
+.nu-checklist-item.nu-cs-expired  { border-left-color: var(--nu-danger); background: #fef2f2; }
+.nu-checklist-item.nu-cs-missing  { border-left-color: var(--nu-text-soft); }
+
+.nu-cs-icon .material-symbols-outlined { font-size: 20px; }
+.nu-cs-body { flex: 1; min-width: 0; }
+.nu-cs-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--nu-text);
+    margin-bottom: 2px;
+}
+.nu-cs-meta {
+    font-size: 0.74rem;
+    color: var(--nu-text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+}
+.nu-cs-status { font-weight: 700; }
+.nu-cs-actions { flex-shrink: 0; }
+
+/* ===== 11. Document expiry colors (status text) ===== */
+.nu-doc-ok       { color: var(--nu-ok); }
+.nu-doc-expiring { color: var(--nu-warn); font-weight: 600; }
+.nu-doc-expired  { color: var(--nu-danger); font-weight: 700; }
+
+.customer-doc-card.nu-doc-card-expired {
+    border-color: #fecaca;
+    background: #fef2f2;
+}
+
+/* ===== 12. NU Admin — Mitarbeiter Tab ===== */
+.nu-admin-workers-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--nu-border);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.nu-admin-workers-header h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--nu-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.nu-admin-workers-header h4 .material-symbols-outlined { color: var(--nu-accent); }
+.nu-admin-workers-sub { font-size: 0.78rem; color: var(--nu-text-muted); }
+
+.nu-admin-workers-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.nu-admin-stat {
+    background: var(--nu-bg-soft);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+.nu-admin-stat-num {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--nu-text);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.nu-admin-stat-lbl {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--nu-text-muted);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+.nu-admin-workers-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.nu-admin-workers-toolbar .search-input { flex: 1; min-width: 180px; }
+
+/* Worker card grid */
+.nu-admin-workers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+}
+.nu-admin-wcard {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: box-shadow .2s, border-color .2s, transform .15s;
+}
+.nu-admin-wcard:hover {
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    border-color: var(--nu-accent-line);
+    transform: translateY(-1px);
+}
+.nu-admin-wcard.inactive { opacity: 0.6; }
+.nu-admin-wcard-photo {
+    width: 64px;
+    height: 78px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--nu-bg-strip);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nu-admin-wcard-photo img { width: 100%; height: 100%; object-fit: cover; }
+.nu-admin-wcard-initials {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--nu-accent); color: white;
+    font-weight: 700; font-size: 1.2rem;
+}
+.nu-admin-wcard-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.nu-admin-wcard-name {
+    font-weight: 700; font-size: 0.9rem;
+    color: var(--nu-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.nu-admin-wcard-gender { font-size: 0.78rem; color: var(--nu-text-soft); font-weight: 400; margin-left: 3px; }
+.nu-admin-wcard-id {
+    font-family: ui-monospace, 'SF Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--nu-text-muted);
+    background: var(--nu-bg-strip);
+    padding: 1px 6px;
+    border-radius: 4px;
+    width: fit-content;
+}
+.nu-admin-wcard-meta {
+    display: flex; flex-wrap: wrap; gap: 4px 10px;
+    font-size: 0.7rem; color: var(--nu-text-muted);
+    margin-top: 2px;
+}
+.nu-admin-wcard-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.nu-admin-wcard-meta .material-symbols-outlined { font-size: 13px; color: var(--nu-text-soft); }
+.nu-admin-wcard-badges {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 4px;
+}
+.nu-admin-wcard-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 0.66rem; font-weight: 700;
+}
+.nu-admin-wcard-badge.ok { background: var(--nu-ok-soft); color: #166534; }
+.nu-admin-wcard-badge.warn,
+.nu-admin-wcard-badge.expiring { background: var(--nu-warn-soft); color: #92400e; }
+.nu-admin-wcard-badge.expired { background: var(--nu-danger-soft); color: #991b1b; }
+.nu-admin-wcard-arrow {
+    display: flex; align-items: center; color: var(--nu-text-soft);
+    font-size: 0.8rem;
+}
+.nu-admin-wcard:hover .nu-admin-wcard-arrow { color: var(--nu-accent); }
+
+.nu-admin-workers-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--nu-text-soft);
+}
+.nu-admin-workers-empty .material-symbols-outlined { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+.nu-admin-workers-empty p { font-size: 0.88rem; }
+
+/* Worker detail overlay */
+.nu-admin-detail-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+}
+@media (max-width: 700px) {
+    .nu-admin-detail-layout { grid-template-columns: 1fr; }
+}
+.nu-admin-detail-left {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 14px;
+    background: var(--nu-bg-soft);
+    border-radius: 12px;
+    border: 1px solid var(--nu-border);
+    height: fit-content;
+}
+.nu-admin-detail-photo {
+    width: 180px; height: 220px;
+    border-radius: 10px; overflow: hidden;
+    background: var(--nu-surface);
+    border: 1px solid var(--nu-border);
+    display: flex; align-items: center; justify-content: center;
+}
+.nu-admin-detail-photo img { width: 100%; height: 100%; object-fit: cover; }
+.nu-admin-detail-initials {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--nu-accent); color: white;
+    font-weight: 700; font-size: 3.5rem;
+}
+.nu-admin-detail-name {
+    font-size: 1.05rem; font-weight: 700; color: var(--nu-text);
+    text-align: center; margin-top: 6px;
+}
+.nu-admin-detail-id {
+    font-family: ui-monospace, 'SF Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--nu-text-muted);
+    background: var(--nu-surface);
+    padding: 3px 10px; border-radius: 6px;
+    border: 1px solid var(--nu-border);
+}
+.nu-admin-detail-badges {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    justify-content: center; margin-top: 4px;
+}
+.nu-admin-detail-right { min-width: 0; }
+.nu-admin-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+.nu-admin-detail-table tr { border-bottom: 1px solid var(--nu-bg-strip); }
+.nu-admin-detail-table tr:last-child { border-bottom: none; }
+.nu-admin-detail-table th {
+    text-align: left;
+    padding: 7px 12px 7px 0;
+    font-weight: 600;
+    color: var(--nu-text-muted);
+    font-size: 0.74rem;
+    width: 180px;
+    vertical-align: top;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.nu-admin-detail-table td {
+    padding: 7px 0;
+    color: var(--nu-text);
+    vertical-align: top;
+}
+
+/* ===== 13. MD3 Dialog Sizing ===== */
+#subMdDialog.sub-dialog-xl {
+    min-width: 900px;
+    max-width: 1100px;
+}
+.sub-dialog-content .form-group {
+    margin-bottom: 14px;
+}
+.sub-dialog-content .customer-form-layout {
+    display: flex;
+    gap: 24px;
+}
+.sub-dialog-content .customer-form-col {
+    flex: 1;
+    min-width: 0;
+}
+.sub-dialog-content .customer-form-row {
+    display: flex;
+    gap: 12px;
+}
+.sub-dialog-content .customer-form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--nu-text);
+    border-bottom: 1px solid var(--nu-border);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+}
+.sub-dialog-content .customer-form-section-title .material-symbols-outlined {
+    font-size: 18px;
+}
+.sub-dialog-content .cust-radio-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.sub-dialog-content .cust-radio-caption {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--nu-text-muted);
+    margin-right: 4px;
+}
+.sub-dialog-content .cust-radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.sub-dialog-content .cust-file-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--nu-text-muted);
+    margin-bottom: 4px;
+}
+.sub-dialog-content .customer-tab-content { display: none; }
+.sub-dialog-content .customer-tab-content.active { display: block; }
+.sub-dialog-content .cust-modal-tabs {
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--nu-border);
+}
+
+/* ===== 14. Dokumente tab — upload form ===== */
+/* The row bottom-aligns fields + button; extra form-group margins
+   inside it distort that alignment, so reset them here. */
+.sub-dialog-content .customer-doc-upload-form .customer-form-row {
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+}
+.sub-dialog-content .customer-doc-upload-form .form-group {
+    margin-bottom: 0;
+    min-width: 0;
+}
+/* Native date inputs inside md-outlined-text-field have an intrinsic
+   min-width — if the host is narrower they overflow the outline and
+   draw a second "ghost" box. Keep the groups wide enough. */
+.sub-dialog-content .customer-doc-upload-form .form-group:has(md-outlined-text-field[type="date"]) {
+    min-width: 160px;
+}
+/* Native file input: match the 56px MD3 outlined field height. */
+.sub-dialog-content .customer-doc-upload-form input[type="file"].form-control {
+    width: 100%;
+    height: 56px;
+    padding: 15px 12px;
+    border-radius: 4px;
+    border-color: var(--nu-border-strong);
+    background: var(--nu-surface);
+}
+
+/* Toolbar search field width */
+.nu-search { min-width: 220px; max-width: 340px; }

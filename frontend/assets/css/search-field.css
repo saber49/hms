@@ -1,0 +1,112 @@
+/* =====================================================================
+   search-field.css — ONE look for every page-level search bar.
+   Reference: Interessenten / Kunden / Objekte (MD3 outlined field,
+   20px rounded, 40px high, leading search icon).
+
+   Two kinds of markup are unified here — no JS involved:
+     A) <md-outlined-text-field class="…-search">   (MD3 component)
+     B) <div class="…-search"><icon/><input/></div> (plain input + icon)
+   Loaded after every page stylesheet; the `html body` prefix gives the
+   rules enough weight over the old per-page styles.
+   NOTE: never corner-full (9999px) on outlined fields — the border is
+   drawn from 3 panels whose side widths equal the corner radius.
+===================================================================== */
+
+/* ── A) MD3 search fields ─────────────────────────────────────────── */
+html body md-outlined-text-field:is(.cust-search, .be-search, .or-search, .nu-search,
+        .wk-search, .ma-search, .cdocs-search, #u_search) {
+    flex: 1 1 240px;
+    min-width: 200px;
+    max-width: 340px;
+    width: auto;
+    height: auto;
+    --md-outlined-text-field-container-shape: 20px;
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+}
+
+/* ── B) plain input + icon wrappers ───────────────────────────────── */
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    flex: 1 1 240px;
+    min-width: 200px;
+    max-width: 340px;
+    height: 40px;
+    margin: 0;
+    padding: 0 14px 0 12px;
+    background: var(--md-sys-color-surface, #fff);
+    border: 1px solid var(--md-sys-color-outline, #79747e);
+    border-radius: 20px;
+    box-shadow: none;
+    transition: border-color .15s ease;
+}
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):hover {
+    border-color: var(--md-sys-color-on-surface, #1d1b20);
+}
+/* Focus = 2px primary outline (padding −1px so nothing jumps). */
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):focus-within {
+    border: 2px solid var(--md-sys-color-primary, #0b57d0);
+    padding: 0 13px 0 11px;
+}
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap)
+        > :is(.material-symbols-outlined, i, svg):first-child {
+    position: static;
+    transform: none;
+    flex: 0 0 auto;
+    width: 24px;
+    font-size: 24px !important;
+    line-height: 1;
+    color: var(--md-sys-color-on-surface-variant, #49454f);
+    pointer-events: none;
+}
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    height: 100%;
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: var(--md-sys-color-on-surface, #1d1b20);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-appearance: none;
+    appearance: none;
+}
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::placeholder {
+    color: var(--md-sys-color-on-surface-variant, #49454f);
+    opacity: 1;
+}
+html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+/* Dispo "x" (clear) button stays inside the pill on the right. */
+html body .dispo-search-wrap .dispo-search-clear {
+    position: static;
+    transform: none;
+    flex: 0 0 auto;
+    margin-right: -6px;
+}
+/* tasks.css sets display:flex on it, which beat the [hidden] attribute —
+   the "x" showed on an empty field. */
+html body .dispo-search-wrap .dispo-search-clear[hidden] { display: none !important; }
+
+/* ── Phones: search takes the full row (same as Interessenten) ─────── */
+@media (max-width: 640px) {
+    html body md-outlined-text-field:is(.cust-search, .be-search, .or-search, .nu-search,
+            .wk-search, .ma-search, .cdocs-search, #u_search),
+    html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) {
+        flex: 1 1 100%;
+        max-width: none;
+        min-width: 0;
+    }
+}

@@ -1,0 +1,64 @@
+/* Clood-X — Wachbuch + Dienstanweisungen (shared by worker app and Objekt-Terminal) */
+.wqm-loading, .wqm-empty { text-align: center; padding: 40px 16px; color: var(--text-secondary, #6b7280); }
+.wqm-empty i { font-size: 2rem; margin-bottom: 10px; opacity: .6; }
+.wqm-muted { color: var(--text-secondary, #6b7280); font-size: .84rem; }
+.wqm-tabs { display: flex; gap: 6px; margin: 4px 0 12px; }
+.wqm-tabs button { flex: 1; border: 1px solid var(--border, #e5e7eb); background: var(--card-bg, #fff); color: var(--text-primary, inherit); border-radius: 12px; padding: 10px 8px; font: inherit; font-weight: 600; font-size: .88rem; }
+.wqm-tabs button.on { background: var(--primary, #2563eb); border-color: var(--primary, #2563eb); color: var(--md-sys-color-on-primary, #fff); }
+.wqm-badge { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; background: #dc2626; color: #fff; font-size: .72rem; }
+.wqm-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; background: var(--card-bg, #fff); color: var(--text-primary, inherit); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.wqm-pending { font-size: .78rem; color: #b45309; }
+.wqm-hinweis { display: flex; gap: 10px; align-items: flex-start; background: rgba(37, 99, 235, .1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+.wqm-hinweis > div { flex: 1; }
+.wqm-hinweis button { border: 0; background: var(--primary, #2563eb); color: var(--md-sys-color-on-primary, #fff); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: .82rem; }
+.wqm-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.wqm-art { display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--border, #e5e7eb); background: var(--card-bg, #fff); color: inherit;
+    border-radius: 14px; padding: 12px 4px; font: inherit; font-size: .76rem; font-weight: 600; }
+.wqm-art i { font-size: 1.25rem; color: var(--primary, #2563eb); }
+.wqm-art-vorkommnis i { color: #d97706; }
+.wqm-art-alarm { border-color: #fca5a5; }
+.wqm-art-alarm i { color: #dc2626; }
+.wqm-list { display: flex; flex-direction: column; gap: 6px; }
+.wqm-e { display: grid; grid-template-columns: 50px 1fr auto; gap: 8px; background: var(--card-bg, #fff); color: var(--text-primary, inherit); border-radius: 12px; padding: 10px 12px; border-left: 3px solid var(--border, #e5e7eb); }
+.wqm-e-time { font-weight: 700; display: flex; flex-direction: column; font-size: .9rem; }
+.wqm-e-time small { font-weight: 400; opacity: .6; }
+.wqm-e-head { font-size: .88rem; }
+.wqm-e-text { white-space: pre-line; margin-top: 2px; font-size: .9rem; }
+.wqm-e-fotos { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.wqm-e-fotos img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; background: rgba(0, 0, 0, .06); }
+.wqm-e-fix { border: 0; background: none; color: var(--text-secondary, #6b7280); padding: 4px; }
+.wqm-e-vorkommnis { border-left-color: #f59e0b; } .wqm-e-alarm { border-left-color: #dc2626; }
+.wqm-e-dienstbeginn, .wqm-e-dienstende { border-left-color: #16a34a; } .wqm-e-hinweis, .wqm-e-uebergabe { border-left-color: #2563eb; }
+.wqm-struck .wqm-e-text, .wqm-struck strong { text-decoration: line-through; opacity: .6; }
+.wqm-chip { display: inline-block; font-size: .7rem; padding: 1px 7px; border-radius: 9px; background: rgba(0, 0, 0, .07); margin-left: 4px; }
+.wqm-ok { background: rgba(22, 163, 74, .15); color: #15803d; } .wqm-warn { background: rgba(245, 158, 11, .18); color: #b45309; }
+
+.wqm-sheet-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); z-index: 3000; display: flex; align-items: flex-end; justify-content: center; }
+.wqm-sheet { background: var(--card-bg, #fff); color: var(--text-primary, #111); width: min(560px, 100%); max-height: 92vh; overflow: auto; border-radius: 20px 20px 0 0;
+    padding: 16px 16px calc(16px + var(--safe-bottom, env(safe-area-inset-bottom, 0px))); }
+.wqm-sheet-title { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
+.wqm-sheet-title button { border: 0; background: none; font-size: 1.6rem; line-height: 1; color: inherit; }
+.wqm-label { display: block; font-size: .8rem; color: var(--text-secondary, #6b7280); margin: 10px 0 4px; }
+.wqm-input { width: 100%; box-sizing: border-box; border: 1px solid var(--border, #d1d5db); border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 16px; background: var(--input-bg, #fff); color: inherit; }
+.wqm-row { display: flex; gap: 6px; } .wqm-time { max-width: 90px; }
+.wqm-check { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: .9rem; }
+.wqm-err { color: #dc2626; font-size: .86rem; min-height: 1em; margin: 8px 0; }
+.wqm-primary, .wqm-secondary { width: 100%; border: 0; border-radius: 12px; padding: 13px; font: inherit; font-weight: 700; margin-top: 8px; }
+.wqm-primary { background: var(--primary, #2563eb); color: var(--md-sys-color-on-primary, #fff); }
+.wqm-primary:disabled { opacity: .45; }
+.wqm-secondary { background: rgba(37, 99, 235, .1); color: var(--primary, #2563eb); }
+.wqm-da { background: var(--card-bg, #fff); color: var(--text-primary, inherit); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+.wqm-fokus { outline: 2px solid var(--primary, #2563eb); }
+.wqm-da-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.wqm-kurz { margin: 0 0 6px 18px; padding: 0; line-height: 1.55; font-size: .92rem; }
+
+/* Keep the view below the status bar / app header (safe area). */
+.wqm-root { display: block; padding: calc(8px + var(--safe-top, env(safe-area-inset-top, 0px))) 12px 0; }
+
+/* Dark-mode bridge: the worker app names the vars --card / --text, the
+   Terminal --card-bg / own palette. Map once, keep both working. */
+.wqm-root, .wqm-sheet {
+    --card-bg: var(--card, #fff);
+    --input-bg: var(--card, #fff);
+    --text-primary: var(--text, inherit);
+}

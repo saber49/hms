@@ -1,0 +1,499 @@
+/* ============================================
+   HMS Gruppe — Anträge & Urlaub (central absence management)
+   Material Design 3 — uses md3-tokens.css variables so light/dark
+   both work without hard-coded colors.
+   ============================================ */
+
+.ab-page {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* --- Segmented view switch --- */
+.ab-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.ab-segments {
+    display: inline-flex;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.ab-segment {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.ab-segment .material-symbols-outlined { font-size: 18px; }
+
+.ab-segment.active {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.ab-segment-count {
+    background: var(--md-sys-color-error, #dc2626);
+    color: var(--md-sys-color-on-error, #fff);
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+}
+.ab-segment-count:empty { display: none; }
+
+/* --- Request cards (approvals inbox) --- */
+.ab-req-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ab-req-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--md-sys-color-tertiary, #d97706);
+    flex-wrap: wrap;
+}
+
+/* Deep-link target: card that a notification pointed at */
+.ab-req-card.ab-focus {
+    border-left-color: var(--md-sys-color-primary, #6366f1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .35), var(--shadow-sm);
+}
+
+.ab-req-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.ab-req-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.ab-req-main { flex: 1; min-width: 240px; }
+
+.ab-req-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.ab-req-name { font-weight: 700; font-size: 15px; color: var(--text); }
+
+.ab-kat-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--kat-color);
+    background: color-mix(in srgb, var(--kat-color) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--kat-color) 30%, transparent);
+    border-radius: 8px;
+    padding: 3px 9px;
+}
+
+.ab-req-bereich { font-size: 12px; color: var(--text-muted); }
+
+.ab-req-details {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text);
+}
+.ab-req-details .material-symbols-outlined { vertical-align: -2px; color: var(--text-muted); }
+.ab-req-created { color: var(--text-muted); }
+
+.ab-req-note {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ab-konto {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+}
+.ab-konto span { display: inline-flex; align-items: center; gap: 4px; }
+
+.ab-req-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.ab-reject-inline {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* --- Verlauf (decision log) --- */
+.ab-hist-card.ab-hist-approved { border-left-color: #10b981; }
+.ab-hist-card.ab-hist-rejected { border-left-color: #ef4444; }
+
+.ab-status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 3px 9px;
+}
+
+.ab-status-approved {
+    color: #059669;
+    background: color-mix(in srgb, #10b981 12%, transparent);
+    border: 1px solid color-mix(in srgb, #10b981 30%, transparent);
+}
+
+.ab-status-rejected {
+    color: #dc2626;
+    background: color-mix(in srgb, #ef4444 12%, transparent);
+    border: 1px solid color-mix(in srgb, #ef4444 30%, transparent);
+}
+
+.ab-hist-decision {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.ab-hist-decision strong { color: var(--text); }
+
+/* --- Team calendar --- */
+.ab-cal-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px 18px;
+}
+.ab-cal-scroll { overflow-x: auto; }
+
+.ab-cal-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.ab-cal-month {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 150px;
+    text-align: center;
+}
+
+.ab-cal-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.ab-legend-item { display: inline-flex; align-items: center; gap: 5px; }
+
+.ab-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    background: var(--kat-color);
+    display: inline-block;
+}
+
+.ab-cal-grid { min-width: 780px; }
+
+.ab-cal-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+.ab-cal-row:last-child { border-bottom: none; }
+.ab-cal-header-row { border-bottom: 2px solid var(--md-sys-color-outline-variant); }
+
+.ab-cal-worker {
+    width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 8px 8px 0;
+}
+
+.ab-cal-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.ab-cal-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.ab-cal-worker-info { display: flex; flex-direction: column; min-width: 0; }
+.ab-cal-worker-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ab-cal-worker-meta { font-size: 11px; color: var(--text-muted); }
+
+.ab-cal-days {
+    display: flex;
+    flex: 1;
+}
+
+.ab-cal-daycell,
+.ab-cal-cell {
+    flex: 1;
+    min-width: 20px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.ab-cal-we { background: var(--gray-50); }
+
+.ab-cal-today {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    border-radius: 8px;
+}
+
+.ab-cal-dot {
+    width: 80%;
+    height: 16px;
+    border-radius: 5px;
+    background: var(--kat-color);
+    display: block;
+    cursor: default;
+}
+
+.ab-cal-dot-pending {
+    background: repeating-linear-gradient(
+        45deg,
+        var(--kat-color),
+        var(--kat-color) 4px,
+        color-mix(in srgb, var(--kat-color) 35%, transparent) 4px,
+        color-mix(in srgb, var(--kat-color) 35%, transparent) 8px
+    );
+}
+
+@media (max-width: 720px) {
+    .ab-req-card { flex-direction: column; }
+    .ab-req-actions { align-self: stretch; }
+    .ab-cal-worker { width: 140px; }
+}
+
+/* Phones: the three view tabs share the full width instead of overflowing */
+@media (max-width: 640px) {
+    .ab-toolbar { display: block; }
+    .ab-segments { display: flex; width: 100%; box-sizing: border-box; }
+    .ab-segment {
+        flex: 1 1 0;
+        min-width: 0;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 6px;
+        font-size: 13px;
+        line-height: 1.2;
+        text-align: center;
+    }
+}
+
+/* --- Team calendar: toolbar additions --- */
+.ab-cal-todaybtn {
+    height: 32px; padding: 0 12px; margin-left: 4px;
+    border: 1px solid var(--md-sys-color-outline-variant); border-radius: 999px;
+    background: transparent; color: var(--text); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.ab-cal-todaybtn:hover { background: var(--gray-50); }
+.ab-cal-mode {
+    display: inline-flex; margin-left: 10px; padding: 3px; gap: 2px;
+    border: 1px solid var(--md-sys-color-outline-variant); border-radius: 999px;
+}
+.ab-cal-mode button {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 28px; padding: 0 12px; border: 0; border-radius: 999px;
+    background: transparent; color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.ab-cal-mode button .material-symbols-outlined { font-size: 16px; }
+.ab-cal-mode button.active {
+    background: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+/* --- Team calendar: month grid (Mo–So, one box per day) --- */
+.ab-month-wd,
+.ab-month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.ab-month-wd > div {
+    padding: 6px 8px; font-size: 11px; font-weight: 700; letter-spacing: .4px;
+    text-transform: uppercase; color: var(--text-muted);
+}
+.ab-month-grid {
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    border-left: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 10px; overflow: hidden;
+}
+.ab-day {
+    min-height: 118px; padding: 6px;
+    border-right: 1px solid var(--md-sys-color-outline-variant);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    display: flex; flex-direction: column; gap: 4px; min-width: 0;
+}
+.ab-day.has-items { cursor: pointer; transition: background .12s; }
+.ab-day.has-items:hover { background: color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent); }
+.ab-day-out { background: var(--gray-50); opacity: .55; }
+.ab-day-we { background: var(--gray-50); }
+.ab-day-head { display: flex; align-items: center; justify-content: space-between; }
+.ab-day-num {
+    min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text);
+}
+.ab-day-today .ab-day-num { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.ab-day-today { box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
+.ab-day-count {
+    font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 999px;
+    background: var(--md-sys-color-surface-container-high, var(--gray-100)); color: var(--text-muted);
+}
+.ab-day-list { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.ab-day-chip {
+    display: flex; align-items: center; gap: 5px; min-width: 0;
+    padding: 2px 6px 2px 2px; border-radius: 7px;
+    border-left: 3px solid var(--kat-color);
+    background: color-mix(in srgb, var(--kat-color) 14%, transparent);
+    font-size: 11.5px; font-weight: 600; color: var(--text); line-height: 1.2;
+}
+.ab-day-chip.is-pending {
+    border-left-style: dashed;
+    background: repeating-linear-gradient(45deg,
+        color-mix(in srgb, var(--kat-color) 14%, transparent) 0 6px,
+        color-mix(in srgb, var(--kat-color) 4%, transparent) 6px 12px);
+}
+.ab-day-av {
+    width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);
+    font-size: 8px; font-weight: 700;
+}
+.ab-day-av img { width: 100%; height: 100%; object-fit: cover; }
+.ab-day-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ab-day-kat { font-size: 13px !important; color: var(--kat-color); flex-shrink: 0; }
+.ab-day-more { font-size: 11px; font-weight: 700; color: var(--md-sys-color-primary); padding: 1px 4px; }
+
+/* Day details dialog */
+.ab-dd-count {
+    margin-left: 8px; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; vertical-align: 3px;
+    background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);
+}
+.ab-dd-list { display: flex; flex-direction: column; gap: 8px; min-width: min(520px, 80vw); }
+.ab-dd-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px;
+    border-left: 4px solid var(--kat-color); background: color-mix(in srgb, var(--kat-color) 9%, transparent);
+}
+.ab-dd-main { flex: 1; min-width: 0; }
+.ab-dd-name { font-weight: 700; font-size: 14px; color: var(--text); }
+.ab-dd-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.ab-dd-desc { font-size: 12px; color: var(--text); margin-top: 4px; font-style: italic; }
+.ab-dd-kat {
+    display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
+    padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    color: var(--kat-color); background: color-mix(in srgb, var(--kat-color) 16%, transparent);
+}
+.ab-dd-kat.is-pending { outline: 1px dashed var(--kat-color); }
+
+/* Phones: 7 columns are too narrow for names — show a day-by-day agenda. */
+.ab-agenda { display: none; }
+@media (max-width: 760px) {
+    .ab-month { display: none; }
+    .ab-agenda { display: flex; flex-direction: column; gap: 8px; }
+    .ab-agenda-day {
+        border: 1px solid var(--md-sys-color-outline-variant); border-radius: 12px; padding: 10px; cursor: pointer;
+    }
+    .ab-agenda-day.ab-day-today { box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
+    .ab-agenda-date {
+        display: flex; align-items: center; justify-content: space-between;
+        font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px;
+    }
+    .ab-agenda-list { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ab-agenda-list .ab-day-chip { flex: 0 1 auto; max-width: 100%; }
+    .ab-cal-mode { margin-left: 0; }
+    .ab-cal-legend { margin-left: 0; width: 100%; }
+    .ab-dd-list { min-width: 0; }
+    .ab-dd-row { flex-wrap: wrap; }
+}

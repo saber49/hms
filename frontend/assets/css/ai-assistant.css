@@ -1,0 +1,786 @@
+/* ============================================================
+   AI Assistant — floating chat widget
+   ------------------------------------------------------------
+   A bottom-right launcher that expands into a chat panel.
+   Mobile-friendly: panel becomes near-full-screen on small
+   viewports. z-index sits above the sidebar overlay but below
+   modal dialogs so it never blocks critical confirmations.
+   ============================================================ */
+
+.ai-launcher {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4),
+                0 2px 6px  rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    z-index: 9000;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ai-launcher:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 12px 32px rgba(99, 102, 241, 0.55);
+}
+.ai-launcher .ai-launcher-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.ai-panel {
+    position: fixed;
+    right: 24px;
+    bottom: 94px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    height: 560px;
+    max-height: calc(100vh - 120px);
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18),
+                0 4px 12px  rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9001;
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.ai-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+/* Expanded mode — near full-screen so wide tables are fully visible.
+   Toggled by the header expand button; preference persists. */
+.ai-panel.expanded {
+    width: min(900px, calc(100vw - 48px));
+    height: calc(100vh - 120px);
+    transition: opacity 0.18s ease, transform 0.18s ease,
+                width 0.2s ease, height 0.2s ease;
+}
+
+.ai-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+}
+.ai-panel-header .ai-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+.ai-panel-header .ai-title {
+    flex: 1;
+    line-height: 1.2;
+}
+.ai-panel-header .ai-title strong {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.92rem;
+}
+.ai-panel-header .ai-title small  {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72rem;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+.ai-badge-pro {
+    display: inline-block;
+    background: linear-gradient(135deg, #fbbf24 0%, #f97316 100%);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(249, 115, 22, 0.4);
+}
+.ai-status-dot {
+    color: #34d399 !important;
+    font-size: 7px !important;
+    animation: ai-pulse 2.2s infinite ease-in-out;
+}
+@keyframes ai-pulse {
+    0%, 100% { opacity: 0.65; }
+    50%      { opacity: 1; }
+}
+.ai-panel-header .ai-close,
+.ai-panel-header .ai-expand,
+.ai-panel-header .ai-clear {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.ai-panel-header .ai-close:hover,
+.ai-panel-header .ai-expand:hover,
+.ai-panel-header .ai-clear:hover { background: rgba(255, 255, 255, 0.18); }
+
+.ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    background: var(--gray-50);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.ai-msg {
+    max-width: 86%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+.ai-msg.user {
+    align-self: flex-end;
+    background: #6366f1;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+.ai-msg.assistant {
+    align-self: flex-start;
+    background: var(--white);
+    color: #1f2937;
+    border: 1px solid var(--gray-200);
+    border-bottom-left-radius: 4px;
+    /* Wider than user bubbles so tables / multi-section answers
+       breathe instead of wrapping awkwardly. */
+    max-width: 96%;
+}
+.ai-msg.error {
+    align-self: stretch;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    font-size: 0.8rem;
+}
+.ai-msg.typing {
+    align-self: flex-start;
+    color: var(--gray-500);
+    font-style: italic;
+    font-size: 0.82rem;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.ai-msg.typing .ai-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #6366f1;
+    animation: ai-bounce 1s infinite ease-in-out;
+}
+.ai-msg.typing .ai-dot:nth-child(2) { animation-delay: 0.15s; }
+.ai-msg.typing .ai-dot:nth-child(3) { animation-delay: 0.30s; }
+@keyframes ai-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+    40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+.ai-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+}
+.ai-input {
+    flex: 1;
+    resize: none;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 9px 11px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    max-height: 90px;
+    min-height: 38px;
+    font-family: inherit;
+    outline: none;
+    /* Smooth grow/shrink as the user types — the JS sets inline height
+       from scrollHeight on every keystroke, the transition makes that
+       movement feel natural instead of jumpy. */
+    transition: height 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.15s ease,
+                box-shadow 0.15s ease;
+}
+.ai-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.ai-send {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    width: 40px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.15s ease;
+}
+.ai-send:hover:not(:disabled) { background: #4f46e5; }
+.ai-send:disabled { background: #c7d2fe; cursor: not-allowed; }
+
+.ai-footnote {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    padding: 4px 8px 8px;
+    background: var(--white);
+}
+
+/* ───────────────────────── ATTACH BUTTON ───────────────────────── */
+.ai-attach {
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    width: 40px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+.ai-attach:hover:not(:disabled) {
+    background: #eef2ff;
+    color: #4338ca;
+    border-color: #a5b4fc;
+}
+.ai-attach:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ───────────────────────── ATTACHMENT CHIPS (above input) ───────────────────────── */
+.ai-attachments {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 12px 6px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+.ai-attachments.has-items { display: flex; }
+
+.ai-att-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+    padding: 4px 6px 4px 4px;
+    max-width: 240px;
+    position: relative;
+}
+.ai-att-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--white);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid #e0e7ff;
+}
+.ai-att-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.ai-att-thumb i {
+    color: #ef4444; font-size: 18px;
+}
+.ai-att-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.15;
+}
+.ai-att-meta strong {
+    font-size: 0.78rem;
+    color: #1f2937;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+}
+.ai-att-meta span {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+}
+.ai-att-remove {
+    background: transparent;
+    border: none;
+    color: var(--gray-500);
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    transition: all 0.15s ease;
+}
+.ai-att-remove:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* ───────────────────────── INLINE IMAGE/FILE IN CHAT BUBBLE ───────────────────────── */
+.ai-msg.has-att { padding: 6px 6px 8px; }
+.ai-msg-img {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    cursor: pointer;
+    line-height: 0;
+    max-width: 220px;
+}
+.ai-msg-img img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.15s ease;
+}
+.ai-msg-img:hover img { opacity: 0.92; }
+.ai-msg-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 0.78rem;
+    margin-bottom: 4px;
+}
+.ai-msg.assistant .ai-msg-file {
+    background: var(--gray-50);
+    border-color: var(--gray-200);
+    color: var(--gray-600);
+}
+.ai-msg-file i { color: #ef4444; }
+.ai-msg.user .ai-msg-file i { color: #fff; }
+.ai-msg-text { padding: 4px 8px 0; }
+.ai-msg.has-att .ai-msg-text:empty { display: none; }
+
+/* ───────────────────────── ACTION CONFIRMATION CARD ───────────────────────── */
+.ai-action-card {
+    align-self: stretch;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    font-size: 0.85rem;
+    color: #1f2937;
+    transition: opacity 0.2s ease;
+}
+.ai-action-card.busy { opacity: 0.6; pointer-events: none; }
+
+.ai-action-card.pending {
+    border-left: 4px solid #6366f1;
+    background: linear-gradient(135deg, #eef2ff 0%, #fff 30%);
+}
+.ai-action-card-title {
+    font-weight: 700;
+    color: #4338ca;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.92rem;
+}
+.ai-action-card-title i { color: #6366f1; }
+
+.ai-action-card-body {
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    display: grid;
+    gap: 4px;
+}
+.ai-action-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    padding: 2px 0;
+    border-bottom: 1px dotted var(--gray-200);
+}
+.ai-action-row:last-child { border-bottom: 0; }
+.ai-action-row span { color: var(--gray-500); font-weight: 500; }
+.ai-action-row strong { color: var(--gray-900); font-weight: 600; word-break: break-word; }
+
+/* Bulk-import preview table — used by bulk_create_einsaetze. */
+.ai-action-table-wrap {
+    margin: 10px 0;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    overflow: auto;
+    max-height: 300px;
+    background: var(--white);
+}
+.ai-action-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+.ai-action-table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 2px solid #d1d5db;
+    white-space: nowrap;
+}
+.ai-action-table tbody td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+    color: #1f2937;
+    word-break: break-word;
+}
+.ai-action-table tbody tr:last-child td { border-bottom: 0; }
+.ai-action-table tbody tr:hover { background: #fafafa; }
+
+.ai-action-hint {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.78rem;
+    margin-bottom: 10px;
+}
+
+.ai-action-card-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+.ai-action-confirm,
+.ai-action-cancel {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s ease;
+}
+.ai-action-confirm {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(16,185,129,0.3);
+}
+.ai-action-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16,185,129,0.4);
+}
+.ai-action-cancel {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+.ai-action-cancel:hover { background: var(--gray-200); color: #1f2937; }
+
+.ai-action-card.done {
+    border-left: 4px solid #10b981;
+    background: linear-gradient(135deg, #ecfdf5 0%, #fff 50%);
+    color: #065f46;
+    font-weight: 500;
+}
+.ai-action-card.done i { color: #10b981; margin-right: 6px; }
+
+.ai-action-card.cancelled {
+    border-left: 4px solid #9ca3af;
+    background: var(--gray-50);
+    color: var(--gray-500);
+}
+.ai-action-card.cancelled i { color: var(--gray-400); margin-right: 6px; }
+
+.ai-action-card.failed {
+    border-left: 4px solid #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #fff 50%);
+    color: #991b1b;
+}
+.ai-action-card.failed i { color: #ef4444; margin-right: 6px; }
+
+/* ───────────────────────── MARKDOWN INSIDE ASSISTANT BUBBLES ─────────────────────────
+   The assistant's reply bubble (.ai-msg.assistant) gets `.ai-md` on its
+   inner text container when we render Markdown. We selectively override
+   the `white-space: pre-wrap` from `.ai-msg` so paragraphs/tables/lists
+   collapse correctly, then style each tag for a Claude-like clean look.
+*/
+.ai-msg.assistant .ai-md {
+    white-space: normal;
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+.ai-msg.assistant .ai-md > *:first-child { margin-top: 0; }
+.ai-msg.assistant .ai-md > *:last-child  { margin-bottom: 0; }
+
+/* Headings — progressively larger, all in the brand indigo */
+.ai-md h1, .ai-md h2, .ai-md h3, .ai-md h4 {
+    font-weight: 700;
+    color: #1e1b4b;
+    line-height: 1.25;
+    margin: 0.95em 0 0.4em;
+    letter-spacing: -0.01em;
+}
+.ai-md h1 { font-size: 1.18rem; }
+.ai-md h2 {
+    font-size: 1.06rem;
+    border-bottom: 1px solid #e0e7ff;
+    padding-bottom: 4px;
+}
+.ai-md h3 { font-size: 0.98rem; color: #4338ca; }
+.ai-md h4 { font-size: 0.9rem;  color: #6366f1; }
+
+/* Paragraphs + inline emphasis */
+.ai-md p   { margin: 0.45em 0; }
+.ai-md strong { color: #312e81; font-weight: 700; }
+.ai-md em     { color: var(--gray-600); font-style: italic; }
+.ai-md mark   { background: #fef3c7; color: #92400e; padding: 0 3px; border-radius: 3px; }
+.ai-md del    { color: var(--gray-400); }
+
+/* Lists — coloured bullets/numbers + breathing room */
+.ai-md ul, .ai-md ol {
+    margin: 0.5em 0;
+    padding-left: 1.4em;
+}
+.ai-md li { margin: 0.22em 0; }
+.ai-md ul li::marker { color: #6366f1; }
+.ai-md ol li::marker { color: #6366f1; font-weight: 600; }
+.ai-md li > ul, .ai-md li > ol { margin: 0.2em 0; }
+
+/* Tables — the headliner of the new rich rendering. Sticky header look
+   with an indigo gradient, zebra rows, hover highlight on each row. */
+.ai-md table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0.7em 0;
+    font-size: 0.82rem;
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+                0 0 0 1px var(--gray-200) inset;
+}
+.ai-md thead { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+.ai-md th {
+    color: #fff;
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+.ai-md td {
+    padding: 6px 10px;
+    border-top: 1px solid var(--gray-100);
+    color: #1f2937;
+    vertical-align: top;
+}
+.ai-md tbody tr:nth-child(even) td { background: var(--gray-50); }
+.ai-md tbody tr:hover td           { background: #eef2ff; }
+.ai-md th:first-child, .ai-md td:first-child { padding-left: 12px; }
+.ai-md th:last-child,  .ai-md td:last-child  { padding-right: 12px; }
+/* Right-align numeric-looking columns: marked sets align="right" when
+   the markdown header uses `---:` syntax. */
+.ai-md th[align="right"], .ai-md td[align="right"] { text-align: right; }
+.ai-md th[align="center"], .ai-md td[align="center"] { text-align: center; }
+
+/* Inline code + code blocks */
+.ai-md code {
+    background: var(--gray-100);
+    color: #be185d;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.82em;
+}
+.ai-md pre {
+    background: #0f172a;
+    color: var(--gray-100);
+    padding: 10px 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0.6em 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.ai-md pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+}
+.ai-md kbd {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: inherit;
+    font-size: 0.78em;
+    color: #1f2937;
+}
+
+/* Blockquotes — soft purple side-bar */
+.ai-md blockquote {
+    border-left: 3px solid #c7d2fe;
+    background: #f5f3ff;
+    padding: 6px 12px;
+    margin: 0.55em 0;
+    color: var(--gray-600);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+.ai-md blockquote > *:first-child { margin-top: 0; }
+.ai-md blockquote > *:last-child  { margin-bottom: 0; }
+
+/* HR + Links */
+.ai-md hr {
+    border: 0;
+    border-top: 1px dashed var(--gray-200);
+    margin: 0.9em 0;
+}
+.ai-md a {
+    color: #6366f1;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    word-break: break-word;
+}
+.ai-md a:hover { color: #4338ca; }
+
+/* ---- Feedback row (thumbs up/down under assistant replies) ---- */
+.ai-feedback {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    align-items: center;
+}
+.ai-fb-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--gray-400);
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: color .15s, background .15s;
+}
+.ai-fb-btn:hover { color: #6366f1; background: #eef2ff; }
+.ai-feedback.rated {
+    color: var(--gray-400);
+    font-size: 11px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+.ai-feedback.rated i { color: #6366f1; }
+
+/* ---- Quick-start chips (empty chat) ---- */
+.ai-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 14px;
+    padding: 20px;
+}
+.ai-welcome-title {
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 600;
+}
+.ai-quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.ai-quick-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s;
+}
+.ai-quick-chip:hover {
+    border-color: #6366f1;
+    background: #eef2ff;
+    color: #4338ca;
+}
+.ai-quick-chip i { color: #6366f1; font-size: 12px; }
+
+/* Mobile — make the panel nearly full-screen */
+@media (max-width: 640px) {
+    .ai-panel,
+    .ai-panel.expanded {
+        right: 8px;
+        left:  8px;
+        bottom: 84px;
+        width: auto;
+        height: calc(100vh - 110px);
+    }
+    .ai-launcher { right: 14px; bottom: 14px; width: 54px; height: 54px; }
+    .ai-action-row { grid-template-columns: 90px 1fr; }
+}

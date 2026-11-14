@@ -1,0 +1,394 @@
+/* ============================================================
+   Material Design 3 — Official Design Token Layer
+   ------------------------------------------------------------
+   Source of truth for the whole app. Generated from seed
+   color #0B57D0 (Google Blue) via the M3 tonal-palette algo.
+
+   Load order: FIRST stylesheet in index.php, so every legacy
+   variable in style.css / module sheets can alias into these.
+
+   Structure:
+     1. Reference palettes  (--md-ref-palette-*)
+     2. Light color scheme  (--md-sys-color-*)
+     3. Dark color scheme   ([data-theme="dark"])
+     4. Typography scale    (--md-sys-typescale-*)
+     5. Shape scale         (--md-sys-shape-*)
+     6. Elevation           (--md-sys-elevation-*)
+     7. State layers        (--md-sys-state-*)
+     8. Motion              (--md-sys-motion-*)
+     9. Legacy alias bridge (--primary, --accent, --gray-*, …)
+   ============================================================ */
+
+/* ── 1. Reference tonal palettes (seed #0B57D0) ── */
+:root {
+    /* Primary palette */
+    --md-ref-palette-primary0:   #000000;
+    --md-ref-palette-primary10:  #041e49;
+    --md-ref-palette-primary20:  #062e6f;
+    --md-ref-palette-primary30:  #0842a0;
+    --md-ref-palette-primary40:  #0b57d0;
+    --md-ref-palette-primary50:  #1b6ef3;
+    --md-ref-palette-primary60:  #4c8df6;
+    --md-ref-palette-primary70:  #7cacf8;
+    --md-ref-palette-primary80:  #a8c7fa;
+    --md-ref-palette-primary90:  #d3e3fd;
+    --md-ref-palette-primary95:  #ecf3fe;
+    --md-ref-palette-primary99:  #fafbff;
+    --md-ref-palette-primary100: #ffffff;
+
+    /* Secondary palette (muted blue-grey) */
+    --md-ref-palette-secondary10:  #001d35;
+    --md-ref-palette-secondary20:  #003355;
+    --md-ref-palette-secondary30:  #004a77;
+    --md-ref-palette-secondary40:  #00639b;
+    --md-ref-palette-secondary80:  #7fcfff;
+    --md-ref-palette-secondary90:  #c2e7ff;
+    --md-ref-palette-secondary95:  #dff3ff;
+
+    /* Tertiary palette (green) */
+    --md-ref-palette-tertiary10:  #072711;
+    --md-ref-palette-tertiary20:  #0a3818;
+    --md-ref-palette-tertiary30:  #0f5223;
+    --md-ref-palette-tertiary40:  #146c2e;
+    --md-ref-palette-tertiary80:  #6dd58c;
+    --md-ref-palette-tertiary90:  #c4eed0;
+    --md-ref-palette-tertiary95:  #e7f8ed;
+
+    /* Error palette */
+    --md-ref-palette-error10:  #410e0b;
+    --md-ref-palette-error20:  #601410;
+    --md-ref-palette-error30:  #8c1d18;
+    --md-ref-palette-error40:  #b3261e;
+    --md-ref-palette-error50:  #dc362e;
+    --md-ref-palette-error80:  #f2b8b5;
+    --md-ref-palette-error90:  #f9dedc;
+    --md-ref-palette-error95:  #fceeee;
+
+    /* Neutral palette */
+    --md-ref-palette-neutral0:   #000000;
+    --md-ref-palette-neutral4:   #0e0e0e;
+    --md-ref-palette-neutral6:   #131314;
+    --md-ref-palette-neutral10:  #1f1f1f;
+    --md-ref-palette-neutral12:  #232323;
+    --md-ref-palette-neutral17:  #2d2d2d;
+    --md-ref-palette-neutral20:  #303030;
+    --md-ref-palette-neutral22:  #343434;
+    --md-ref-palette-neutral24:  #383838;
+    --md-ref-palette-neutral30:  #474747;
+    --md-ref-palette-neutral40:  #5e5e5e;
+    --md-ref-palette-neutral50:  #757575;
+    --md-ref-palette-neutral60:  #8f8f8f;
+    --md-ref-palette-neutral70:  #ababab;
+    --md-ref-palette-neutral80:  #c7c7c7;
+    --md-ref-palette-neutral87:  #dedede;
+    --md-ref-palette-neutral90:  #e3e3e3;
+    --md-ref-palette-neutral92:  #e9e8e8;
+    --md-ref-palette-neutral94:  #efedee;
+    --md-ref-palette-neutral95:  #f2f2f2;
+    --md-ref-palette-neutral96:  #f5f5f5;
+    --md-ref-palette-neutral98:  #faf9f9;
+    --md-ref-palette-neutral99:  #fdfcfc;
+    --md-ref-palette-neutral100: #ffffff;
+
+    /* Neutral-variant palette (blue-tinted greys — Gmail canvas) */
+    --md-ref-palette-neutral-variant10:  #191d23;
+    --md-ref-palette-neutral-variant20:  #2e3138;
+    --md-ref-palette-neutral-variant30:  #44474e;
+    --md-ref-palette-neutral-variant40:  #5c5f66;
+    --md-ref-palette-neutral-variant50:  #75777f;
+    --md-ref-palette-neutral-variant60:  #8f9099;
+    --md-ref-palette-neutral-variant70:  #aaabb4;
+    --md-ref-palette-neutral-variant80:  #c5c6d0;
+    --md-ref-palette-neutral-variant90:  #e1e2ec;
+    --md-ref-palette-neutral-variant95:  #f0f0fa;
+    --md-ref-palette-neutral-variant99:  #fdfbff;
+}
+
+/* ── 2. System color scheme — LIGHT (default) ── */
+:root,
+[data-theme="light"] {
+    color-scheme: light;
+
+    --md-sys-color-primary:              var(--md-ref-palette-primary40);
+    --md-sys-color-on-primary:           var(--md-ref-palette-primary100);
+    --md-sys-color-primary-container:    var(--md-ref-palette-primary90);
+    --md-sys-color-on-primary-container: var(--md-ref-palette-primary10);
+
+    --md-sys-color-secondary:              var(--md-ref-palette-secondary40);
+    --md-sys-color-on-secondary:           #ffffff;
+    --md-sys-color-secondary-container:    var(--md-ref-palette-secondary90);
+    --md-sys-color-on-secondary-container: var(--md-ref-palette-secondary10);
+
+    --md-sys-color-tertiary:              var(--md-ref-palette-tertiary40);
+    --md-sys-color-on-tertiary:           #ffffff;
+    --md-sys-color-tertiary-container:    var(--md-ref-palette-tertiary90);
+    --md-sys-color-on-tertiary-container: var(--md-ref-palette-tertiary10);
+
+    --md-sys-color-error:              var(--md-ref-palette-error40);
+    --md-sys-color-on-error:           #ffffff;
+    --md-sys-color-error-container:    var(--md-ref-palette-error90);
+    --md-sys-color-on-error-container: var(--md-ref-palette-error10);
+
+    --md-sys-color-surface:                    var(--md-ref-palette-neutral98);
+    --md-sys-color-on-surface:                 var(--md-ref-palette-neutral10);
+    --md-sys-color-surface-variant:            var(--md-ref-palette-neutral-variant90);
+    --md-sys-color-on-surface-variant:         var(--md-ref-palette-neutral-variant30);
+    --md-sys-color-surface-dim:                #d9dade;
+    --md-sys-color-surface-bright:             var(--md-ref-palette-neutral98);
+    --md-sys-color-surface-container-lowest:   var(--md-ref-palette-neutral100);
+    --md-sys-color-surface-container-low:      #f3f4f8;
+    --md-sys-color-surface-container:          #eef0f4;
+    --md-sys-color-surface-container-high:     #e8eaee;
+    --md-sys-color-surface-container-highest:  #e2e4e9;
+
+    --md-sys-color-outline:          var(--md-ref-palette-neutral-variant50);
+    --md-sys-color-outline-variant:  var(--md-ref-palette-neutral-variant80);
+
+    --md-sys-color-inverse-surface:    var(--md-ref-palette-neutral20);
+    --md-sys-color-inverse-on-surface: var(--md-ref-palette-neutral95);
+    --md-sys-color-inverse-primary:    var(--md-ref-palette-primary80);
+
+    --md-sys-color-scrim:  #000000;
+    --md-sys-color-shadow: #000000;
+
+    /* Semantic extensions (not in spec, app-level: success/warning/info) */
+    --md-ext-color-success:              #146c2e;
+    --md-ext-color-on-success:           #ffffff;
+    --md-ext-color-success-container:    #c4eed0;
+    --md-ext-color-on-success-container: #072711;
+    --md-ext-color-warning:              #974e00;
+    --md-ext-color-on-warning:           #ffffff;
+    --md-ext-color-warning-container:    #ffdcc2;
+    --md-ext-color-on-warning-container: #311300;
+    --md-ext-color-info:                 #00639b;
+    --md-ext-color-on-info:              #ffffff;
+    --md-ext-color-info-container:       #c2e7ff;
+    --md-ext-color-on-info-container:    #001d35;
+}
+
+/* ── 3. System color scheme — DARK ── */
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --md-sys-color-primary:              var(--md-ref-palette-primary80);
+    --md-sys-color-on-primary:           var(--md-ref-palette-primary20);
+    --md-sys-color-primary-container:    var(--md-ref-palette-primary30);
+    --md-sys-color-on-primary-container: var(--md-ref-palette-primary90);
+
+    --md-sys-color-secondary:              var(--md-ref-palette-secondary80);
+    --md-sys-color-on-secondary:           var(--md-ref-palette-secondary20);
+    --md-sys-color-secondary-container:    var(--md-ref-palette-secondary30);
+    --md-sys-color-on-secondary-container: var(--md-ref-palette-secondary90);
+
+    --md-sys-color-tertiary:              var(--md-ref-palette-tertiary80);
+    --md-sys-color-on-tertiary:           var(--md-ref-palette-tertiary20);
+    --md-sys-color-tertiary-container:    var(--md-ref-palette-tertiary30);
+    --md-sys-color-on-tertiary-container: var(--md-ref-palette-tertiary90);
+
+    --md-sys-color-error:              var(--md-ref-palette-error80);
+    --md-sys-color-on-error:           var(--md-ref-palette-error20);
+    --md-sys-color-error-container:    var(--md-ref-palette-error30);
+    --md-sys-color-on-error-container: var(--md-ref-palette-error90);
+
+    --md-sys-color-surface:                    var(--md-ref-palette-neutral6);
+    --md-sys-color-on-surface:                 var(--md-ref-palette-neutral90);
+    --md-sys-color-surface-variant:            var(--md-ref-palette-neutral-variant30);
+    --md-sys-color-on-surface-variant:         var(--md-ref-palette-neutral-variant80);
+    --md-sys-color-surface-dim:                var(--md-ref-palette-neutral6);
+    --md-sys-color-surface-bright:             var(--md-ref-palette-neutral24);
+    --md-sys-color-surface-container-lowest:   var(--md-ref-palette-neutral4);
+    --md-sys-color-surface-container-low:      var(--md-ref-palette-neutral10);
+    --md-sys-color-surface-container:          var(--md-ref-palette-neutral12);
+    --md-sys-color-surface-container-high:     var(--md-ref-palette-neutral17);
+    --md-sys-color-surface-container-highest:  var(--md-ref-palette-neutral22);
+
+    --md-sys-color-outline:          var(--md-ref-palette-neutral-variant60);
+    --md-sys-color-outline-variant:  var(--md-ref-palette-neutral-variant30);
+
+    --md-sys-color-inverse-surface:    var(--md-ref-palette-neutral90);
+    --md-sys-color-inverse-on-surface: var(--md-ref-palette-neutral20);
+    --md-sys-color-inverse-primary:    var(--md-ref-palette-primary40);
+
+    --md-sys-color-scrim:  #000000;
+    --md-sys-color-shadow: #000000;
+
+    --md-ext-color-success:              #6dd58c;
+    --md-ext-color-on-success:           #0a3818;
+    --md-ext-color-success-container:    #0f5223;
+    --md-ext-color-on-success-container: #c4eed0;
+    --md-ext-color-warning:              #ffb77c;
+    --md-ext-color-on-warning:           #502400;
+    --md-ext-color-warning-container:    #723600;
+    --md-ext-color-on-warning-container: #ffdcc2;
+    --md-ext-color-info:                 #7fcfff;
+    --md-ext-color-on-info:              #003355;
+    --md-ext-color-info-container:       #004a77;
+    --md-ext-color-on-info-container:    #c2e7ff;
+}
+
+/* ── 4. Typography scale ── */
+:root {
+    --md-ref-typeface-brand: 'Google Sans', 'Roboto', 'Segoe UI', -apple-system, sans-serif;
+    --md-ref-typeface-plain: 'Roboto', 'Segoe UI', -apple-system, sans-serif;
+
+    --md-sys-typescale-display-large-font:    var(--md-ref-typeface-brand);
+    --md-sys-typescale-display-large-size:    57px;
+    --md-sys-typescale-display-large-line-height: 64px;
+    --md-sys-typescale-display-large-weight:  400;
+
+    --md-sys-typescale-display-medium-size:   45px;
+    --md-sys-typescale-display-medium-line-height: 52px;
+    --md-sys-typescale-display-small-size:    36px;
+    --md-sys-typescale-display-small-line-height: 44px;
+
+    --md-sys-typescale-headline-large-font:   var(--md-ref-typeface-brand);
+    --md-sys-typescale-headline-large-size:   32px;
+    --md-sys-typescale-headline-large-line-height: 40px;
+    --md-sys-typescale-headline-large-weight: 400;
+    --md-sys-typescale-headline-medium-size:  28px;
+    --md-sys-typescale-headline-medium-line-height: 36px;
+    --md-sys-typescale-headline-small-size:   24px;
+    --md-sys-typescale-headline-small-line-height: 32px;
+
+    --md-sys-typescale-title-large-font:      var(--md-ref-typeface-brand);
+    --md-sys-typescale-title-large-size:      22px;
+    --md-sys-typescale-title-large-line-height: 28px;
+    --md-sys-typescale-title-large-weight:    400;
+    --md-sys-typescale-title-medium-size:     16px;
+    --md-sys-typescale-title-medium-line-height: 24px;
+    --md-sys-typescale-title-medium-weight:   500;
+    --md-sys-typescale-title-small-size:      14px;
+    --md-sys-typescale-title-small-line-height: 20px;
+    --md-sys-typescale-title-small-weight:    500;
+
+    --md-sys-typescale-body-large-font:       var(--md-ref-typeface-plain);
+    --md-sys-typescale-body-large-size:       16px;
+    --md-sys-typescale-body-large-line-height: 24px;
+    --md-sys-typescale-body-large-weight:     400;
+    --md-sys-typescale-body-medium-size:      14px;
+    --md-sys-typescale-body-medium-line-height: 20px;
+    --md-sys-typescale-body-medium-weight:    400;
+    --md-sys-typescale-body-small-size:       12px;
+    --md-sys-typescale-body-small-line-height: 16px;
+    --md-sys-typescale-body-small-weight:     400;
+
+    --md-sys-typescale-label-large-font:      var(--md-ref-typeface-plain);
+    --md-sys-typescale-label-large-size:      14px;
+    --md-sys-typescale-label-large-line-height: 20px;
+    --md-sys-typescale-label-large-weight:    500;
+    --md-sys-typescale-label-medium-size:     12px;
+    --md-sys-typescale-label-medium-line-height: 16px;
+    --md-sys-typescale-label-medium-weight:   500;
+    --md-sys-typescale-label-small-size:      11px;
+    --md-sys-typescale-label-small-line-height: 16px;
+    --md-sys-typescale-label-small-weight:    500;
+}
+
+/* ── 5. Shape scale ── */
+:root {
+    --md-sys-shape-corner-none:        0px;
+    --md-sys-shape-corner-extra-small: 4px;
+    --md-sys-shape-corner-small:       8px;
+    --md-sys-shape-corner-medium:      12px;
+    --md-sys-shape-corner-large:       16px;
+    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-full:        9999px;
+}
+
+/* ── 6. Elevation (M3 dual-shadow: key + ambient) ── */
+:root {
+    --md-sys-elevation-level0: none;
+    --md-sys-elevation-level1: 0 1px 2px 0 rgba(0,0,0,0.30), 0 1px 3px 1px rgba(0,0,0,0.15);
+    --md-sys-elevation-level2: 0 1px 2px 0 rgba(0,0,0,0.30), 0 2px 6px 2px rgba(0,0,0,0.15);
+    --md-sys-elevation-level3: 0 1px 3px 0 rgba(0,0,0,0.30), 0 4px 8px 3px rgba(0,0,0,0.15);
+    --md-sys-elevation-level4: 0 2px 3px 0 rgba(0,0,0,0.30), 0 6px 10px 4px rgba(0,0,0,0.15);
+    --md-sys-elevation-level5: 0 4px 4px 0 rgba(0,0,0,0.30), 0 8px 12px 6px rgba(0,0,0,0.15);
+}
+
+/* ── 7. State layer opacities ── */
+:root {
+    --md-sys-state-hover-state-layer-opacity:   0.08;
+    --md-sys-state-focus-state-layer-opacity:   0.12;
+    --md-sys-state-pressed-state-layer-opacity: 0.12;
+    --md-sys-state-dragged-state-layer-opacity: 0.16;
+}
+
+/* ── 8. Motion ── */
+:root {
+    --md-sys-motion-easing-standard:            cubic-bezier(0.2, 0, 0, 1);
+    --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+    --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+    --md-sys-motion-easing-emphasized:          cubic-bezier(0.2, 0, 0, 1);
+    --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+    --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+    --md-sys-motion-duration-short2:  100ms;
+    --md-sys-motion-duration-short4:  200ms;
+    --md-sys-motion-duration-medium2: 300ms;
+    --md-sys-motion-duration-medium4: 400ms;
+    --md-sys-motion-duration-long2:   500ms;
+}
+
+/* ── 9. Legacy alias bridge ──
+   Every pre-existing app variable now resolves to an official
+   MD3 system token, so all 20 module stylesheets pick up the
+   scheme (incl. dark mode) without individual edits. */
+:root,
+[data-theme="dark"] {
+    /* style.css core */
+    --primary:        var(--md-sys-color-on-surface);
+    --primary-light:  var(--md-sys-color-on-surface-variant);
+    --primary-dark:   var(--md-sys-color-on-primary-container);
+    --accent:         var(--md-sys-color-primary);
+    --accent-hover:   var(--md-ref-palette-primary30);
+    --accent-pressed: var(--md-ref-palette-primary20);
+    --accent-soft:    var(--md-sys-color-primary-container);
+    --accent-line:    var(--md-ref-palette-primary80);
+    --success:        var(--md-ext-color-success);
+    --success-light:  var(--md-ext-color-success-container);
+    --warning:        var(--md-ext-color-warning);
+    --warning-light:  var(--md-ext-color-warning-container);
+    --danger:         var(--md-sys-color-error);
+    --danger-light:   var(--md-sys-color-error-container);
+    --info:           var(--md-ext-color-info);
+    --info-light:     var(--md-ext-color-info-container);
+    --orange:         var(--md-ext-color-warning);
+    --orange-light:   var(--md-ext-color-warning-container);
+    --bg:             var(--md-sys-color-surface-container-low);
+    --white:          var(--md-sys-color-surface-container-lowest);
+
+    --gray-50:  var(--md-sys-color-surface-container-low);
+    --gray-100: var(--md-sys-color-surface-container);
+    --gray-200: var(--md-sys-color-surface-container-highest);
+    --gray-300: var(--md-sys-color-outline-variant);
+    --gray-400: var(--md-ref-palette-neutral-variant70);
+    --gray-500: var(--md-sys-color-outline);
+    --gray-600: var(--md-sys-color-on-surface-variant);
+    --gray-700: var(--md-ref-palette-neutral-variant30);
+    --gray-800: var(--md-sys-color-on-surface);
+    --gray-900: var(--md-sys-color-on-surface);
+
+    --shadow:    var(--md-sys-elevation-level1);
+    --shadow-md: var(--md-sys-elevation-level2);
+    --shadow-lg: var(--md-sys-elevation-level3);
+
+    --radius:    var(--md-sys-shape-corner-large);
+    --radius-sm: var(--md-sys-shape-corner-medium);
+    --radius-lg: var(--md-sys-shape-corner-extra-large);
+
+    --transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    --font: var(--md-ref-typeface-brand);
+}
+
+/* Dark-mode corrections for bridge aliases that point at STATIC palette
+   steps (which don't flip with the scheme). Without these, gray-700 text
+   (e.g. sidebar nav items) stays dark-on-dark. */
+[data-theme="dark"] {
+    --gray-400:       var(--md-ref-palette-neutral-variant60);
+    --gray-500:       var(--md-ref-palette-neutral-variant70);
+    --gray-600:       var(--md-ref-palette-neutral-variant80);
+    --gray-700:       var(--md-ref-palette-neutral-variant90);
+    --gray-900:       var(--md-ref-palette-neutral95);
+    --accent-hover:   var(--md-ref-palette-primary70);
+    --accent-pressed: var(--md-ref-palette-primary60);
+    --accent-line:    var(--md-ref-palette-primary40);
+}

@@ -1,0 +1,26 @@
+# macOS junk
+.DS_Store
+._*
+
+# live-server backup files (never part of the repo)
+*.bak.*
+
+# ---- backend runtime ----
+backend/.env
+backend/.env.*
+!backend/.env.example
+backend/vendor/
+backend/node_modules/
+backend/storage/
+backend/bootstrap/cache/
+backend/public/storage
+backend/auth.json
+backend/frankenphp
+backend/frankenphp-worker.php
+backend/.phpunit.result.cache
+backend/*.log
+
+# ---- frontend runtime / data ----
+frontend/uploads/
+frontend/desktop/
+frontend/phpmyadmin/

@@ -1,0 +1,447 @@
+/* ============================================
+   HMS Gruppe - MA-Nachrichten (Worker Messages) Styles
+   Backend: api/worker_messages.php
+   ============================================ */
+
+/* ============================================
+   WORKER MESSAGES (MA-Nachrichten)
+   ============================================ */
+.wm-page {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.wm-inbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 12px;
+}
+
+.wm-inbox-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.wm-unread-total {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* ============================================
+   Search bar — filters the inbox client-side
+   ============================================ */
+.wm-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.wm-search-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--text-muted);
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.wm-search-input {
+    flex: 1;
+    width: 100%;
+    padding: 10px 38px 10px 38px;
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    font-size: 14px;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.wm-search-input::placeholder {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.wm-search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(202, 138, 4, 0.12);
+}
+
+.wm-search-clear {
+    position: absolute;
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gray-100, var(--gray-100));
+    color: var(--text-muted);
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+
+.wm-search-clear:hover {
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary);
+}
+
+.wm-thread-prefix {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.wm-thread {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.wm-thread:hover {
+    background: var(--hover);
+    box-shadow: var(--shadow);
+}
+
+.wm-thread-unread {
+    border-left: 3px solid var(--accent);
+}
+
+.wm-thread-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.wm-thread-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wm-thread-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.wm-thread-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.wm-thread-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.wm-thread-time {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.wm-thread-preview {
+    font-size: 13px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
+}
+
+.wm-thread-badge {
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary);
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    flex-shrink: 0;
+}
+
+/* Thread chat view */
+.wm-chat {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 140px);
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.wm-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary);
+}
+
+.wm-back-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.wm-chat-header-info strong {
+    display: block;
+    font-size: 15px;
+}
+
+.wm-chat-header-info small {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.wm-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--gray-100);
+}
+
+.wm-bubble {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.45;
+    word-break: break-word;
+}
+
+.wm-bubble-out {
+    align-self: flex-end;
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary);
+    border-bottom-right-radius: 4px;
+}
+
+.wm-bubble-in {
+    align-self: flex-start;
+    background: var(--white);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.wm-bubble-sender {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    opacity: 0.7;
+}
+
+.wm-bubble-text {
+    white-space: pre-wrap;
+}
+
+.wm-bubble-time {
+    font-size: 10px;
+    margin-top: 4px;
+    opacity: 0.6;
+    text-align: right;
+}
+
+.wm-chat-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+}
+
+.wm-chat-input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    font-size: 14px;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--gray-50);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.wm-chat-input:focus {
+    border-color: var(--accent);
+    background: var(--white);
+}
+
+.wm-chat-send {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.wm-chat-send:hover {
+    background: var(--accent-hover);
+}
+
+/* ============================================================
+   MD3 migration support (official @material/web components)
+   ============================================================ */
+
+/* --- Inbox search: MD3 outlined text field --- */
+.wm-search-wrap md-outlined-text-field.wm-search-md {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+    --md-outlined-text-field-container-shape: 10px;
+    --md-outlined-text-field-focus-outline-color: var(--accent);
+}
+/* Leave room for the floating "×" clear button */
+.wm-search-wrap .wm-search-clear { z-index: 1; }
+
+/* --- New chat: MD3 FAB + worker picker dialog --- */
+md-fab.wm-new-chat-fab {
+    position: fixed;
+    right: 24px;
+    bottom: 100px; /* above the AI assistant launcher (bottom: 24px, 58px tall) */
+    z-index: 60;
+    --md-fab-container-color: var(--accent);
+    --md-fab-icon-color: var(--md-sys-color-on-primary);
+    --md-fab-label-text-color: var(--md-sys-color-on-primary);
+    --md-fab-container-shape: 16px;
+}
+
+md-dialog.wm-new-chat-dialog {
+    max-width: 440px;
+    width: calc(100vw - 32px);
+    --md-dialog-container-shape: 24px;
+}
+
+md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
+    width: 100%;
+    margin-bottom: 12px;
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+    --md-outlined-text-field-container-shape: 10px;
+    --md-outlined-text-field-focus-outline-color: var(--accent);
+}
+
+.wm-picker-list {
+    max-height: 46vh;
+    min-height: 120px;
+    overflow-y: auto;
+    margin: 0 -8px;
+    padding: 0 8px;
+}
+
+.wm-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.wm-picker-row:hover {
+    background: var(--hover);
+}
+
+.wm-picker-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.wm-picker-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wm-picker-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wm-picker-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--md-sys-color-on-primary-container);
+    background: var(--md-sys-color-primary-container);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 8px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* --- Material Symbols alignment in chat chrome --- */
+.wm-search-clear .material-symbols-outlined,
+.wm-chat-send .material-symbols-outlined,
+.wm-back-btn .material-symbols-outlined { display: block; }
+.empty-state .material-symbols-outlined {
+    font-size: 2.4rem;
+    color: var(--gray-300, #cbd5e1);
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

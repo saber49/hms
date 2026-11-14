@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https: data:; connect-src 'self' https://clood-x.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://clood-x.com">
+    <meta name="theme-color" content="#f3f4f8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Clood-X — Anmelden</title>
+    <!-- Dark mode — apply saved/system theme BEFORE first paint -->
+    <script>
+    (function () {
+        try {
+            var t = localStorage.getItem('worker_theme');
+            if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        } catch (e) { /* default: light */ }
+    })();
+    </script>
+    <!-- MD3 design tokens — provides --accent/--bg/--card/… via the alias bridge -->
+    <link rel="stylesheet" href="assets/css/md3-tokens.css">
+    <!-- Material Symbols (self-hosted subset) — replaces Font Awesome -->
+    <link rel="stylesheet" href="assets/css/ms-icons.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html {
+            height: 100%;
+        }
+        body {
+            min-height: 100%;
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            /* --safe-top/--safe-bottom are injected natively on Android;
+               env() covers iOS and the standalone PWA. */
+            padding-top: calc(20px + var(--safe-top, env(safe-area-inset-top, 0px)));
+            padding-bottom: calc(20px + var(--safe-bottom, env(safe-area-inset-bottom, 0px)));
+            -webkit-font-smoothing: antialiased;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* While the on-screen keyboard is open, top-align the content so the
+           form and the login button are never hidden behind it (fixes the
+           App Store Guideline 4 rejection on iPad where "Anmelden" was covered). */
+        body.kb-open {
+            justify-content: flex-start;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            flex: 0 0 auto;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-logo-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: var(--md-sys-shape-corner-extra-large);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            overflow: hidden;
+        }
+        .login-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .login-logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .login-logo p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .login-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        .input-wrap input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: var(--font);
+            color: var(--text);
+            background: var(--bg);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-wrap input:focus {
+            border-color: var(--accent);
+            background: var(--card);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 4px;
+        }
+        .btn-login:hover { background: var(--accent-hover); }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+        .error-msg {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid var(--md-sys-color-error-container);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .error-msg.visible { display: flex; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <div class="login-logo-icon"><img src="assets/icons/clood-x-logo.png" alt="Clood-X"></div>
+            <h1 id="companyName">Clood-X</h1>
+            <p>Melden Sie sich mit E-Mail oder Benutzername an</p>
+        </div>
+        <div class="login-card">
+            <div class="error-msg" id="errorMsg">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>E-Mail oder Benutzername</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" id="emailInput" placeholder="name@firma.de" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Passwort</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Passwort eingeben" autocomplete="current-password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login" id="btnLogin">
+                    <i class="fas fa-sign-in-alt"></i> Anmelden
+                </button>
+            </form>
+            <a href="https://clood-x.com/worker/forgot-password.php" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:16px;color:#3b82f6;text-decoration:none;font-size:0.88rem;font-weight:500">Passwort vergessen?</a>
+        </div>
+    </div>
+
+    <script src="assets/js/storage.js"></script>
+    <script>
+        const W_API_BASE = 'https://clood-x.com/api';
+
+        // Kundenportal session (customer login) — opened on clood-x.com in the
+        // same WebView; the token travels in the URL fragment only.
+        const KP_BASE = W_API_BASE.replace(/\/api$/, '');
+        function openKundenPortal(token, slug) {
+            window.location.replace(KP_BASE + '/' + (slug ? encodeURIComponent(slug) + '/' : '')
+                + 'kunden_portal.php#kp_sso=1&t=' + encodeURIComponent(token));
+        }
+
+        // If already logged in (token in secure storage), go straight to the app.
+        (async () => {
+            if (window.WStore) { await WStore.init(); if (WStore.getToken()) { window.location.href = 'index.html'; return; } }
+            else if (localStorage.getItem('w_token')) { window.location.href = 'index.html'; return; }
+            // Remembered customer session: reopen the portal if still valid.
+            const kpt = localStorage.getItem('w_kp_token');
+            if (kpt) {
+                try {
+                    const r = await fetch(W_API_BASE + '/kunden-portal/me', { headers: { 'Accept': 'application/json', 'Authorization': 'Bearer ' + kpt } });
+                    if (r.ok) { openKundenPortal(kpt, localStorage.getItem('w_kp_slug')); return; }
+                    if (r.status === 401) { localStorage.removeItem('w_kp_token'); localStorage.removeItem('w_kp_slug'); }
+                } catch (e) { /* offline — stay on login */ }
+            }
+        })();
+
+        // Keep the password field AND the login button visible above the
+        // on-screen keyboard on every device. Fixes the App Store Guideline 4
+        // rejection (iPad Air M3 / iPadOS 26): the keyboard overlapped the
+        // password field. Uses deterministic visualViewport math instead of the
+        // unreliable scrollIntoView() so it works regardless of WebView resize mode.
+        (function () {
+            const vv = window.visualViewport;
+            let kbActive = false;
+
+            function syncKeyboardSpace() {
+                if (!kbActive) {
+                    document.body.classList.remove('kb-open');
+                    document.body.style.paddingBottom = '';
+                    return;
+                }
+                document.body.classList.add('kb-open');
+                let inset = 0;
+                if (vv) inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+                // Fallback when the WebView already resized (inset ≈ 0) or VV is missing.
+                if (inset < 80) inset = 340;
+                // Reserve enough scroll room below the form to lift it above the keyboard.
+                document.body.style.paddingBottom = (inset + 32) + 'px';
+            }
+
+            // Scroll so the BOTTOM of the login button sits above the keyboard.
+            // Because the button is below the password field, this guarantees the
+            // password field is visible too.
+            function revealForm() {
+                const btn = document.getElementById('btnLogin');
+                if (!btn) return;
+                const margin = 24;
+                const visibleBottom = (vv ? vv.offsetTop + vv.height : window.innerHeight);
+                const overflow = btn.getBoundingClientRect().bottom - (visibleBottom - margin);
+                if (overflow > 0) window.scrollBy({ top: overflow, behavior: 'smooth' });
+            }
+
+            if (vv) {
+                vv.addEventListener('resize', () => { syncKeyboardSpace(); if (kbActive) revealForm(); });
+                vv.addEventListener('scroll', syncKeyboardSpace);
+            }
+
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', () => {
+                    kbActive = true;
+                    syncKeyboardSpace();
+                    // Re-check after the keyboard slide-up animation completes.
+                    setTimeout(() => { syncKeyboardSpace(); revealForm(); }, 350);
+                    setTimeout(revealForm, 650);
+                });
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        const ae = document.activeElement;
+                        if (!ae || ae.tagName !== 'INPUT') {
+                            kbActive = false;
+                            syncKeyboardSpace();
+                        }
+                    }, 150);
+                });
+            });
+        })();
+
+        // Clean up any legacy tenant-slug state from previous app versions.
+        localStorage.removeItem('w_tenant_slug');
+
+        // Android edge-to-edge: the WebView draws behind the system bars but
+        // env(safe-area-inset-*) is unreliable there — pull the real insets
+        // from the native side and mirror them into the CSS vars.
+        (async () => {
+            try {
+                if (!window.Capacitor || !Capacitor.getPlatform || Capacitor.getPlatform() !== 'android') return;
+                const DV = Capacitor.Plugins && Capacitor.Plugins.DocumentViewer;
+                if (DV && DV.getSafeAreaInsets) {
+                    const r = await DV.getSafeAreaInsets();
+                    if (r) {
+                        const s = document.documentElement.style;
+                        s.setProperty('--safe-top', (r.top || 0) + 'px');
+                        s.setProperty('--safe-bottom', (r.bottom || 0) + 'px');
+                    }
+                }
+                if (DV && DV.setSystemBarStyle) {
+                    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+                    DV.setSystemBarStyle({ darkIcons: !dark });
+                }
+            } catch (e) { /* best-effort */ }
+        })();
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const errorDiv = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Anmelden...';
+            errorDiv.classList.remove('visible');
+
+            try {
+                const res = await fetch(W_API_BASE + '/worker-app/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        email: document.getElementById('emailInput').value.trim(),
+                        password: document.getElementById('password').value
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success && data.token) {
+                    localStorage.removeItem('w_is_admin');
+                    if (window.WStore) { await WStore.setSession(data.token, data.user || {}); }
+                    else { localStorage.setItem('w_token', data.token); localStorage.setItem('w_user', JSON.stringify(data.user || {})); }
+                    window.location.href = 'index.html';
+                } else {
+                    // Zweiter Versuch: Admin-Konto des Hauptsystems. Erfolgreiche
+                    // Admins sehen in der App ein Dashboard statt der Worker-Screens.
+                    let admin = null;
+                    try {
+                        const res2 = await fetch(W_API_BASE + '/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify({
+                                email: document.getElementById('emailInput').value.trim(),
+                                password: document.getElementById('password').value
+                            })
+                        });
+                        const d2 = await res2.json();
+                        if (d2 && d2.success && d2.token) admin = d2;
+                    } catch (e2) { /* Verbindungsfehler — Original-Fehler anzeigen */ }
+
+                    if (admin) {
+                        const u = admin.user || {};
+                        const session = {
+                            is_admin: true,
+                            name: u.full_name || u.username || '',
+                            email: u.email || '',
+                            role: u.role || '',
+                            tenant_name: (admin.tenant && admin.tenant.name) ? admin.tenant.name : ''
+                        };
+                        localStorage.setItem('w_is_admin', '1');
+                        if (window.WStore) { await WStore.setSession(admin.token, session); }
+                        else { localStorage.setItem('w_token', admin.token); localStorage.setItem('w_user', JSON.stringify(session)); }
+                        window.location.href = 'index.html';
+                        return;
+                    }
+
+                    // Dritter Versuch: Kundenportal-Zugang (Benutzername des Kunden).
+                    try {
+                        const res3 = await fetch(W_API_BASE + '/kunden-portal/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            body: JSON.stringify({
+                                username: document.getElementById('emailInput').value.trim(),
+                                password: document.getElementById('password').value
+                            })
+                        });
+                        const d3 = await res3.json();
+                        if (d3 && d3.success && d3.token) {
+                            localStorage.setItem('w_kp_token', d3.token);
+                            localStorage.setItem('w_kp_slug', d3.tenant_slug || '');
+                            openKundenPortal(d3.token, d3.tenant_slug);
+                            return;
+                        }
+                    } catch (e3) { /* Verbindungsfehler — Original-Fehler anzeigen */ }
+
+                    errorText.textContent = data.error || 'Anmeldung fehlgeschlagen';
+                    errorDiv.classList.add('visible');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Anmelden';
+                }
+            } catch (err) {
+                errorText.textContent = 'Verbindungsfehler. Bitte versuchen Sie es erneut.';
+                errorDiv.classList.add('visible');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Anmelden';
+            }
+        }
+    </script>
+</body>
+</html>

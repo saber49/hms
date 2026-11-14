@@ -1,0 +1,1517 @@
+/* ============================================================================
+   PDF Editor — order_form.css
+   Professional editing UI for Auftragsbestätigung
+============================================================================ */
+
+:root {
+    /* Brand colours — user-configurable, set inline on <html> by
+       applySettingsToDocument() in order_form.js. Defaults match the
+       shipped design. */
+    --primary: #1a2744;
+    --accent:  #3b82f6;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger:  #dc2626;
+    /* Neutral surfaces map onto the MD3 token bridges (md3-tokens.css) so
+       the whole chrome flips automatically under [data-theme="dark"]. */
+    --bg:      var(--gray-50);
+    --card:    var(--white);
+    --border:  var(--gray-300);
+    --text:    var(--gray-800);
+    --muted:   var(--gray-600);
+    --topbar-h: 56px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+/* Material Symbols on <i> tags (the FA→MS shim in order_form.php swaps the
+   classes; these rules give the ligature font + sizing parity with the old
+   FontAwesome glyphs). */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.05em;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+.material-symbols-outlined.ms-spin { animation: msSpin 1s linear infinite; }
+@keyframes msSpin { to { transform: rotate(360deg); } }
+
+/* ════════ TOPBAR ════════ */
+.topbar {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--topbar-h);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    gap: 8px;
+}
+.topbar-left, .topbar-center, .topbar-right { display: flex; align-items: center; gap: 4px; }
+.topbar-center { flex: 1; justify-content: center; gap: 6px; }
+
+.tb-back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); color: #fff; border-radius: 8px; transition: background 0.15s; }
+.tb-back:hover { background: rgba(255,255,255,0.16); }
+
+.tb-brand { display: flex; align-items: center; gap: 10px; margin-left: 8px; }
+.tb-brand > i { font-size: 1.25rem; color: var(--accent); }
+.tb-title { font-size: 0.85rem; font-weight: 700; line-height: 1.1; }
+.tb-subtitle { font-size: 0.72rem; color: var(--gray-400); line-height: 1.1; margin-top: 2px; }
+
+.tb-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px; border-radius: 7px;
+    background: rgba(255,255,255,0.08); color: #fff;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer; font-size: 0.78rem; font-weight: 600;
+    transition: all 0.15s; white-space: nowrap; position: relative;
+}
+.tb-btn:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
+.tb-btn:active { transform: translateY(0); }
+.tb-btn.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 2px 8px rgba(59,130,246,0.35); }
+.tb-btn.tb-primary { background: var(--accent); border-color: var(--accent); }
+.tb-btn.tb-primary:hover { background: #2563eb; }
+.tb-btn.tb-share { background: var(--success); border-color: var(--success); }
+.tb-btn.tb-share:hover { background: #15803d; }
+.tb-btn.tb-secondary { background: rgba(255,255,255,0.06); }
+.tb-btn.tb-ghost { width: 36px; padding: 7px; justify-content: center; }
+.tb-edit-toggle.active { background: var(--warning); border-color: var(--warning); }
+.tb-edit-toggle.active i { animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.55; } }
+
+.tb-badge { background: var(--danger); color: #fff; font-size: 0.65rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; margin-left: 2px; }
+
+/* Hide labels on smaller screens — only icons remain */
+@media (max-width: 1100px) {
+    .tb-btn span:not(.tb-badge) { display: none; }
+    .tb-btn { padding: 7px 10px; }
+}
+
+/* ════════ FLOATING FORMAT BAR ════════ */
+.format-bar {
+    position: fixed; top: -80px; left: 50%; transform: translateX(-50%);
+    z-index: 200;
+    background: #1e293b; color: #fff;
+    padding: 8px 10px;
+    border-radius: 10px;
+    display: flex; align-items: center; gap: 4px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+    transition: top 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+}
+.format-bar.visible { top: calc(var(--topbar-h) + 12px); opacity: 1; }
+.fmt-btn {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px; color: #fff; cursor: pointer; font-size: 0.75rem;
+    transition: background 0.15s;
+}
+.fmt-btn:hover { background: rgba(255,255,255,0.2); }
+.fmt-btn.active { background: var(--accent); border-color: var(--accent); }
+.fmt-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.18); margin: 0 4px; }
+.format-bar select { padding: 4px 6px; border: 1px solid rgba(255,255,255,0.15); border-radius: 5px; background: rgba(255,255,255,0.06); color: #fff; font-size: 0.7rem; cursor: pointer; }
+.format-bar select option { background: #1e293b; color: #fff; }
+.format-bar input[type="color"] { width: 26px; height: 26px; border: 2px solid rgba(255,255,255,0.15); border-radius: 5px; cursor: pointer; padding: 0; background: transparent; }
+
+/* ════════ LAYOUT ════════ */
+.editor-layout { display: flex; min-height: calc(100vh - var(--topbar-h)); }
+
+/* SIDEBAR */
+.sidebar {
+    width: 280px; background: var(--card); border-right: 1px solid var(--border);
+    padding: 16px; overflow-y: auto; transition: width 0.3s, padding 0.3s;
+    flex-shrink: 0;
+}
+.sidebar.collapsed { width: 0; padding: 0 0; overflow: hidden; }
+.sb-section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.sb-section:last-child { border-bottom: none; }
+.sb-section-title { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.sb-section-title i { color: var(--accent); }
+
+.sb-field { margin-bottom: 10px; }
+.sb-field label { display: block; font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+.sb-field input[type=text], .sb-field input[type=color], .sb-field select, .sb-field textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 7px;
+    font-size: 0.82rem; background: var(--white); color: var(--text); font-family: inherit;
+}
+.sb-field input[type=color] { height: 36px; padding: 4px; cursor: pointer; }
+.sb-field textarea { resize: vertical; min-height: 70px; }
+
+.sb-toggle { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 0.82rem; color: var(--text); cursor: pointer; }
+.sb-toggle input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.sb-action {
+    width: 100%; padding: 10px 14px; background: var(--accent); color: #fff; border: none;
+    border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s;
+}
+.sb-action:hover { background: #2563eb; }
+.sb-action.danger { background: var(--white); color: var(--danger); border: 1px solid #fecaca; }
+.sb-action.danger:hover { background: #fee2e2; }
+
+.logo-upload {
+    border: 2px dashed var(--border); border-radius: 10px; padding: 18px;
+    text-align: center; cursor: pointer; transition: all 0.15s; background: var(--gray-50);
+}
+.logo-upload:hover { border-color: var(--accent); background: #eff6ff; }
+.logo-upload i { font-size: 1.6rem; color: var(--muted); margin-bottom: 6px; display: block; }
+.logo-upload div { color: var(--muted); font-size: 0.78rem; }
+.logo-upload img { max-width: 100%; max-height: 80px; display: block; margin: 0 auto; }
+
+/* CANVAS */
+.canvas { flex: 1; padding: 24px; overflow-y: auto; }
+.canvas-info {
+    max-width: 800px; margin: 0 auto 16px; padding: 10px 16px;
+    background: #fef3c7; color: #92400e; border-radius: 8px; font-size: 0.85rem;
+    display: flex; align-items: center; gap: 10px;
+}
+.canvas-info i { color: var(--warning); font-size: 1.1rem; }
+
+/* ════════ VIEWER-ONLY MODE (editor temporarily disabled) ════════
+   Triggered by ?view=1 on order_form.php, which adds `body.viewer-mode`.
+   Hides every editing affordance (edit toolbar, sidebar, format bar,
+   inspector, edit-hint banner) and shows just the rendered document, while
+   keeping the top-right view/share/download/print actions. To bring the full
+   editor back, simply drop the `?view=1` param (see orders.js openOrderForm). */
+body.viewer-mode .topbar-center,
+body.viewer-mode .sidebar,
+body.viewer-mode .format-bar,
+body.viewer-mode .fe-inspector,
+body.viewer-mode .canvas-info { display: none !important; }
+body.viewer-mode .editor-layout { display: block; min-height: calc(100vh - var(--topbar-h)); }
+body.viewer-mode .canvas { padding: 24px; }
+
+/* HEADLESS render mode (?headless=1) — an off-screen iframe used by other
+   pages to produce PDFs/HTML with this renderer. Only the sheet remains. */
+body.headless .topbar, body.headless .sidebar, body.headless .format-bar,
+body.headless .fe-inspector, body.headless .canvas-info, body.headless #toastHost,
+body.headless .modal, body.headless .wizard-overlay { display: none !important; }
+body.headless .editor-layout { display: block; min-height: 0; }
+body.headless .canvas { padding: 0; }
+
+/* PDF PAGE — A4 ratio */
+.page {
+    /* The sheet is paper: pin every neutral var the document markup uses to
+       fixed light values so [data-theme="dark"] never darkens the printable
+       artifact (also keeps html2pdf/print output identical in both themes).
+       --primary/--accent are NOT pinned — they inherit the user's chosen
+       branding colours from <html>. */
+    --white:   #ffffff;
+    --gray-50: #f8fafc;
+    --gray-100:#f1f5f9;
+    --gray-200:#e2e8f0;
+    --gray-400:#94a3b8;
+    --gray-500:#64748b;
+    --gray-600:#475569;
+    --gray-800:#1e293b;
+    --border:  #e2e8f0;
+    --muted:   #64748b;
+    --text:    #1e293b;
+    color: #1e293b;
+    max-width: 800px; margin: 0 auto;
+    background: var(--white);
+    /* Bottom padding intentionally smaller than the top/side padding so
+     * the legal footer sits close to the bottom edge of the virtual A4
+     * sheet (matches the printed-letter look the customer wants). */
+    padding: 40px 40px 16px 40px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    border-radius: 4px; position: relative;
+    min-height: 1130px; /* A4 portrait ratio approx at 800px wide */
+    display: flex; flex-direction: column;
+}
+/* Custom AI-generated design controls the whole sheet — drop the default
+ * .page padding so the generated template's own layout/margins apply. */
+.page.custom-design { padding: 0; }
+
+/* ════════ RESPONSIVE FIT — scale-to-width ════════════════════════
+   fitPageToViewport() (order_form.js) wraps .page in #pageScaleWrap on
+   narrow screens and scales the sheet down like a PDF viewer's
+   "fit width". Inside the wrap the sheet is pinned to its true 800px
+   design width so the document renders identically to the printed
+   version — just smaller. */
+/* align-items:flex-start — the wrap gets an explicit (scaled) height, and
+   the default `stretch` would pin the sheet to max(wrap height, min-height)
+   = 1130px, so longer documents spilled signature + footer below it. */
+#pageScaleWrap { width: 100%; display: flex; justify-content: center; align-items: flex-start; }
+#pageScaleWrap > .page {
+    width: 800px; max-width: 800px; flex-shrink: 0; margin: 0;
+    transform-origin: top center;
+}
+@media (max-width: 640px) {
+    .canvas, body.viewer-mode .canvas { padding: 12px 8px; }
+    /* Slim the topbar so brand + actions fit a phone screen */
+    .topbar { padding: 0 8px; }
+    .tb-brand { margin-left: 4px; gap: 8px; }
+    .tb-title { font-size: 0.78rem; }
+    .tb-subtitle { display: none; }
+    /* Viewer on a phone: the doc itself carries the title — drop the brand
+       block and print so the six action buttons (back, Mitarbeiter,
+       NU-Firma, PDFs, save, download, share) fit one row. */
+    body.viewer-mode .tb-brand,
+    body.viewer-mode .tb-ghost { display: none; }
+    /* More actions than fit one row: swipe them sideways instead of
+       pushing the last button (and the whole page) off-screen. */
+    .topbar-left { flex: none; }
+    .topbar-right { min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .topbar-right::-webkit-scrollbar { display: none; }
+    .topbar-right > * { flex: none; }
+}
+.header { border-bottom: 3px solid var(--primary); padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; position: relative; }
+/* Header rule as its own (movable / hideable) element — same look as the
+   former border: 16px padding, 3px rule, 24px gap. */
+.header.has-rule { border-bottom: 0; margin-bottom: 0; }
+.header-rule { height: 3px; background: var(--primary); margin-bottom: 24px; }
+.page.edit-mode .header-rule { position: relative; }
+.page.edit-mode .header-rule::before {
+    content: ''; position: absolute; left: 0; right: 0;
+    top: calc(-8px * var(--fe-inv, 1)); bottom: calc(-8px * var(--fe-inv, 1));
+}
+.header-text { flex: 1; }
+.header-logo { max-width: 120px; max-height: 70px; object-fit: contain; }
+.company-name { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+.company-info { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+/* Logo-Position (Design): left = logo above the company name, center = logo only centered, right = default row. */
+.header:not(.logo-left) { padding-top: 74px; }
+.header:not(.logo-left) .header-logo {
+    position: absolute;
+    top: 0;
+}
+.header:not(.logo-left):not(.logo-center) .header-logo { right: 0; }
+.header.logo-left   { flex-direction: column; align-items: flex-start; gap: 12px; }
+.header.logo-left   .header-logo { order: -1; }
+.header.logo-left   .header-text { flex: none; width: 100%; }
+.header.logo-center .header-logo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.doc-title { font-size: 1.3rem; font-weight: 700; margin: 20px 0 16px; color: var(--primary); }
+.meta-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+.meta-label { color: var(--muted); font-weight: 600; }
+
+.section { margin: 24px 0; }
+.section-title { background: var(--primary); color: white; padding: 8px 16px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.section-body { padding: 12px 16px; border: 1px solid var(--border); border-top: none; }
+.detail-row { display: flex; padding: 6px 0; border-bottom: 1px solid var(--gray-100); }
+.detail-row:last-child { border-bottom: none; }
+.detail-label { width: 140px; font-weight: 600; color: var(--muted); font-size: 0.85rem; }
+.detail-value { flex: 1; font-size: 0.9rem; }
+.detail-value.highlight { background: #fef9c3; padding: 2px 8px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+thead { background: var(--primary); color: white; }
+th { padding: 8px 10px; text-align: left; font-weight: 600; font-size: 0.78rem; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) { background: var(--gray-50); }
+tfoot td { font-weight: bold; border-top: 2px solid var(--primary); background: var(--white); }
+
+/* ── Auftragsbestätigung layout (order_form.js buildAbTemplate) ── */
+.ocd-sender { font-size: 0.68rem; color: var(--muted); text-decoration: underline; margin: 18px 0 6px; }
+.ocd-addr { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 8px; font-size: 0.88rem; line-height: 1.45; }
+.ocd-recipient { flex: 1 1 55%; }
+.ocd-recipient strong { font-size: 0.95rem; }
+.ocd-sender-block { flex: 0 1 40%; color: var(--gray-600); font-size: 0.8rem; }
+.ocd-sender-block strong { color: var(--text, #1e293b); }
+.ocd-meta { display: flex; gap: 24px; margin-bottom: 12px; }
+.ocd-meta > div { flex: 1; }
+.ocd-meta-row { display: flex; gap: 8px; font-size: 0.82rem; margin-bottom: 3px; }
+.ocd-meta-label { color: var(--muted); min-width: 130px; }
+.ocd-meta-value { font-weight: 700; }
+.ocd-ort { font-size: 0.85rem; margin: 6px 0 14px; }
+.ocd-text { font-size: 0.9rem; margin: 10px 0; line-height: 1.5; }
+.ocd-pos .ocd-num, .ocd-totals .ocd-num { text-align: right; white-space: nowrap; }
+.ocd-pos-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.ocd-totals { width: 45%; margin: 10px 0 0 auto; font-size: 0.85rem; }
+.ocd-totals tr:nth-child(even) { background: transparent; }
+.ocd-totals td { border-bottom: none; padding: 4px 10px; }
+.ocd-totals .ocd-grand td { border-top: 2px solid var(--primary); font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+.ocd-notes { font-size: 0.82rem; white-space: pre-line; }
+.ocd-closing { font-size: 0.9rem; margin: 24px 0 8px; }
+
+/* ── Stundennachweis layout (order_form.js buildWorkerTemplate) ── */
+.wkd-info { display: flex; flex-wrap: wrap; gap: 10px 28px; background: var(--gray-50); border: 1px solid var(--border); border-radius: 4px; padding: 10px 14px; margin: 4px 0 6px; }
+.wkd-info > div { display: flex; flex-direction: column; font-size: 0.72rem; color: var(--muted); }
+.wkd-info strong { font-size: 0.9rem; color: var(--text, #1e293b); }
+.wkd-summary { display: flex; justify-content: flex-end; gap: 24px; padding: 10px 14px; background: var(--primary); color: #fff; border-radius: 4px; font-size: 0.85rem; margin: 6px 0 24px; }
+.wkd-summary strong { font-size: 1rem; }
+
+.badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; }
+.badge-feiertag { background: #fef3c7; color: #b45309; }
+.badge-sonntag  { background: #dbeafe; color: #1e40af; }
+.badge-nacht    { background: #ede9fe; color: #6d28d9; }
+.badge-tag      { background: var(--gray-100); color: var(--gray-600); }
+.zusch-cell { font-weight: 600; color: var(--success); }
+
+.summary-section { margin-top: 32px; padding-top: 16px; border-top: 2px solid var(--border); }
+.summary-grid { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
+.summary-box { flex: 1; background: var(--gray-50); border: 1px solid var(--border); border-radius: 6px; padding: 8px 8px; text-align: center; }
+.summary-box .label { font-size: 0.62rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.summary-box .value { font-size: 1rem; font-weight: 700; color: var(--primary); margin-top: 3px; }
+.summary-box.success .value { color: var(--success); }
+.summary-grid-std { margin-top: 10px; }
+.summary-grid-std .summary-box .label { font-size: 0.56rem; }
+.summary-grid-std .summary-box .value { font-size: 0.9rem; }
+/* Compact summary table — replaces the scattered .summary-box cards.
+ * Same visual language as the document (dark section header, muted
+ * label rows, primary values) but as one bordered table. */
+.summary-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 10px; }
+.summary-table th, .summary-table td { border: 1px solid var(--border); text-align: center; }
+.summary-table .st-head th {
+    background: var(--primary); color: #fff; border-color: var(--primary);
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 6px 8px;
+}
+.summary-table .st-labels td {
+    background: var(--gray-50); font-size: 0.58rem; color: var(--muted);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
+    padding: 4px 3px; border-top: 0;
+}
+.summary-table .st-values td {
+    font-size: 0.92rem; font-weight: 700; color: var(--primary); padding: 6px 3px;
+}
+
+.signature-section { margin-top: 40px; display: flex; justify-content: space-between; gap: 60px; }
+.signature-block { flex: 1; text-align: center; position: relative; }
+.signature-line { border-top: 1px solid var(--primary); margin-top: 48px; padding-top: 8px; font-size: 0.8rem; color: var(--muted); }
+/* Uploaded signature/stamp images overlay the free signing space above
+ * the company-side signature line — absolutely anchored so they never
+ * push the line (or anything below) further down the page. */
+.sig-media {
+    position: absolute; left: 0; right: 0; bottom: 20px;
+    display: flex; align-items: flex-end; justify-content: center; gap: 14px;
+}
+/* Draggable/resizable doc assets (signature + stamp). Inline wraps live
+ * inside .sig-media; once dragged they switch to position:absolute and
+ * are appended at page level (see docFloats()/assetWrapHtml()). */
+.doc-asset-wrap {
+    position: relative;
+    touch-action: none;        /* let Pointer Events drive drag on touch */
+    cursor: grab;
+}
+.doc-asset-wrap.doc-asset-active { cursor: grabbing; }
+.doc-asset-img {
+    width: 100%;
+    display: block;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;      /* pointerdown lands on the wrap, not the img */
+}
+.doc-asset-grip {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.35);
+    cursor: nwse-resize;
+    opacity: .8;
+    touch-action: none;
+    z-index: 2;
+}
+.doc-asset-wrap:hover .doc-asset-grip { opacity: 1; }
+/* Red ✕ removes the asset from the document (same as the topbar toggle
+ * off) — top-right corner, mirrored against the resize grip. */
+.doc-asset-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #dc2626;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.35);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 12px;
+    text-align: center;
+    cursor: pointer;
+    opacity: .85;
+    touch-action: none;
+    z-index: 2;
+}
+.doc-asset-wrap:hover .doc-asset-remove { opacity: 1; }
+.doc-asset-remove:hover { background: #b91c1c; }
+/* Rotate handle — top-left, mirrored against the ✕ remove button.
+ * Dragging it rotates the asset around its own center (atan2 pointer
+ * math, Shift snaps to 15°). Rotates with the wrap like the other
+ * chrome — standard design-tool behavior. */
+.doc-asset-rot {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.35);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    text-align: center;
+    cursor: crosshair;
+    opacity: .8;
+    touch-action: none;
+    z-index: 2;
+}
+.doc-asset-wrap:hover .doc-asset-rot { opacity: 1; }
+/* Dashed outline only while dragging/resizing — never exported. */
+.doc-asset-wrap.doc-asset-active { outline: 1.5px dashed var(--accent); outline-offset: 3px; }
+/* The resize grip is a UI affordance — it must never land in the PDF or
+ * the printout, so it is hidden both for @media print and for the
+ * html2pdf capture path (.page.exporting). */
+@media print {
+    .doc-asset-grip, .doc-asset-remove, .doc-asset-rot { display: none !important; }
+    .doc-asset-wrap.doc-asset-active { outline: none !important; }
+}
+.page.exporting .doc-asset-grip, .page.exporting .doc-asset-remove, .page.exporting .doc-asset-rot { display: none !important; }
+.page.exporting .doc-asset-wrap.doc-asset-active { outline: none !important; }
+.footer-note { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--gray-400); text-align: center; }
+/* Three-column legal footer (Impressum) — visually mirrors the
+ * "Datum, Unterschrift" signature lines above (same thin primary
+ * divider, same muted slate text colour, same ~0.8rem font) so the
+ * page reads as one consistent block. Stays in sync with the
+ * @media print overrides further down and the server-side blade. */
+.footer-legal {
+    margin-top: auto;
+    padding-top: 6px;
+    /* Wider, darker divider — clearly separates the legal/Impressum
+     * block from the signature lines above. */
+    border-top: 2px solid #000;
+    border-bottom: 0;
+    /* Compact Impressum text — kept deliberately small so the three
+     * legal columns sit on one page without competing with the main
+     * order content. */
+    font-size: 0.45rem !important;
+    color: var(--muted);
+    line-height: 1.2;
+    font-weight: normal;
+}
+/* Force the small font-size onto every descendant of the legal footer.
+ * Without these, the global `table { font-size: 0.85rem }` rule above
+ * wins by specificity over the inherited size from `.footer-legal`,
+ * and the legal text ends up rendering at ~14px instead of ~7px. */
+.footer-legal table,
+.footer-legal td,
+.footer-legal .footer-line { font-size: 0.45rem !important; line-height: 1.2 !important; }
+.footer-legal-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+/* Reset the global `td { border-bottom: 1px solid var(--border) }`
+ * rule for footer cells — that rule was designed for the
+ * order-line tables, not for the legal footer, and was painting a
+ * grey hairline under every footer line. */
+.footer-legal-col {
+    vertical-align: top;
+    padding: 0 12px;
+    width: 33.33%;
+    border: 0 !important;
+    background: transparent !important;
+}
+.footer-legal-col:first-child { padding-left: 0; }
+.footer-legal-col:last-child  { padding-right: 0; }
+.footer-legal-table tr { background: transparent !important; }
+.footer-line { padding: 0; margin: 0; word-break: break-word; color: var(--muted); }
+/* Bigger air between the signature block and the legal footer so the
+ * two sections don't visually collide. The flex layout still pushes
+ * the footer to the bottom — this just raises the minimum gap. */
+.signature-section + .footer-legal,
+.signature-section + #extraNoteSection + .footer-legal { margin-top: 64px; }
+.loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+/* EDIT MODE: contenteditable hover/focus styling */
+/* No border-radius here: table cells, signature lines and section titles
+   draw their own borders/backgrounds — rounding them in edit mode left
+   white notches in dark table headers. The outline sits outside anyway. */
+.page.edit-mode [data-editable] {
+    outline: 1px dashed transparent;
+    outline-offset: -1px;
+    transition: outline-color 0.15s, background 0.15s;
+    cursor: text;
+}
+.page.edit-mode [data-editable]:hover { outline-color: rgba(245,158,11,0.45); background: rgba(245,158,11,0.04); }
+.page.edit-mode [data-editable]:focus { outline: 2px solid var(--warning); background: rgba(245,158,11,0.08); }
+.page:not(.edit-mode) [data-editable] { cursor: default; }
+
+/* ════════ MODALS ════════ */
+.modal { display: none; position: fixed; inset: 0; z-index: 1000; align-items: center; justify-content: center; }
+.modal.show { display: flex; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(2px); }
+.modal-content {
+    position: relative; background: var(--white); border-radius: 14px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    max-width: 560px; width: 92vw; max-height: 90vh; display: flex; flex-direction: column;
+    animation: modalIn 0.2s ease;
+}
+.modal-content.modal-lg { max-width: 920px; }
+.modal-content.modal-sm { max-width: 440px; }
+@keyframes modalIn { from { transform: translateY(20px) scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.modal-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.modal-title { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+.modal-subtitle { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+.modal-close { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 4px 8px; border-radius: 6px; }
+.modal-close:hover { background: var(--bg); color: var(--text); }
+.modal-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+.btn { padding: 9px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #2563eb; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg); color: var(--text); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+
+/* ════════ TEMPLATE GALLERY ════════ */
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.template-card {
+    background: var(--white); border: 2px solid var(--border); border-radius: 12px;
+    padding: 18px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+}
+.template-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+.template-card.active { border-color: var(--accent); background: #eff6ff; }
+.template-card.system-template::before {
+    content: 'Standard'; position: absolute; top: 8px; right: 8px;
+    font-size: 0.65rem; padding: 2px 7px; background: var(--accent); color: #fff;
+    border-radius: 8px; font-weight: 700;
+}
+.template-card.custom-template::before {
+    content: 'Eigene'; position: absolute; top: 8px; right: 8px;
+    font-size: 0.65rem; padding: 2px 7px; background: var(--success); color: #fff;
+    border-radius: 8px; font-weight: 700;
+}
+.tpl-preview-emoji { font-size: 2.4rem; margin-bottom: 8px; line-height: 1; }
+.tpl-name { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.tpl-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; min-height: 38px; }
+.tpl-color-strip { display: flex; gap: 4px; margin-top: 10px; }
+.tpl-color-strip span { flex: 1; height: 4px; border-radius: 2px; }
+.tpl-actions { display: flex; gap: 6px; margin-top: 10px; }
+.tpl-actions button { flex: 1; font-size: 0.72rem; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--white); cursor: pointer; color: var(--text); }
+.tpl-actions button:hover { background: var(--bg); }
+.tpl-actions button.tpl-apply { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tpl-actions button.tpl-apply:hover { background: #2563eb; }
+.tpl-actions button.tpl-delete { color: var(--danger); border-color: #fecaca; }
+.tpl-actions button.tpl-delete:hover { background: #fee2e2; }
+
+/* ════════ SAVED PDFS LIST ════════ */
+.pdf-row { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; transition: background 0.15s; }
+.pdf-row:hover { background: var(--bg); }
+.pdf-icon { font-size: 1.6rem; color: #dc2626; }
+.pdf-info { flex: 1; min-width: 0; }
+.pdf-name { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+.pdf-meta { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+.pdf-actions { display: flex; gap: 4px; }
+.pdf-actions button { width: 32px; height: 32px; border-radius: 7px; border: 1px solid var(--border); background: var(--white); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.pdf-actions button:hover { background: var(--bg); color: var(--text); }
+.pdf-actions button.danger:hover { background: #fee2e2; color: var(--danger); border-color: #fecaca; }
+.pdf-actions button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pdf-actions button.primary:hover { background: #2563eb; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-state i { font-size: 2.5rem; color: #cbd5e1; margin-bottom: 8px; }
+.empty-state h3 { font-size: 1rem; color: var(--text); margin: 8px 0 4px; }
+.empty-state p { font-size: 0.85rem; }
+
+/* ════════ SHARE MODAL ════════ */
+.share-content { text-align: center; padding: 6px 0; }
+.share-link-box { display: flex; align-items: center; gap: 8px; padding: 10px; background: var(--gray-50); border: 1px solid var(--border); border-radius: 8px; margin: 14px 0; }
+.share-link-box input { flex: 1; border: none; background: transparent; font-size: 0.78rem; color: var(--text); font-family: monospace; }
+.share-link-box button { padding: 6px 12px; background: var(--accent); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+.share-link-box button:hover { background: #2563eb; }
+.share-actions { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.share-actions button { padding: 9px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); display: inline-flex; align-items: center; gap: 6px; }
+.share-actions button:hover { background: var(--bg); }
+.share-actions button.email { background: #f0f9ff; color: #0369a1; border-color: #bae6fd; }
+.share-actions button.whatsapp { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.share-info { font-size: 0.78rem; color: var(--muted); margin-top: 8px; }
+
+/* ════════ EMOJI PICKER (in save template modal) ════════ */
+.emoji-picker { display: flex; gap: 6px; margin-top: 6px; }
+.emoji-btn { width: 38px; height: 38px; font-size: 1.3rem; background: var(--gray-50); border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; }
+.emoji-btn:hover { background: var(--white); border-color: var(--accent); }
+.emoji-btn.selected { background: #eff6ff; border-color: var(--accent); }
+
+/* ════════ TOAST ════════ */
+#toastHost { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+#toastHost .toast {
+    background: #1e293b; color: #fff;
+    padding: 12px 18px; border-radius: 10px; font-size: 0.85rem;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+    animation: toastIn 0.25s ease;
+    min-width: 220px;
+    border: 0;
+}
+#toastHost .toast.success { background: var(--success); }
+#toastHost .toast.error { background: var(--danger); }
+#toastHost .toast.warning { background: var(--warning); }
+@keyframes toastIn { from { transform: translateX(80px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ════════════════════════════════════════════════════════════════
+   FLOATING ELEMENTS (Insert mode: lines, rects, textboxes, tables)
+═══════════════════════════════════════════════════════════════ */
+.floating-element {
+    position: absolute;
+    cursor: default;
+    box-sizing: border-box;
+    user-select: none;
+}
+.page.edit-mode .floating-element:not(.fe-locked) { cursor: move; }
+.page.edit-mode .floating-element:not(.fe-locked):hover { outline: 1px dashed rgba(59,130,246,0.4); }
+
+/* Existing document elements marked draggable show a grab hint in edit mode */
+.page.edit-mode [data-draggable] { cursor: grab; transition: outline 0.15s; }
+/* Touch drag (pointer events): stop the browser from scrolling instead. */
+.page.fe-edit .floating-element:not(.fe-locked), .page.fe-edit [data-draggable] { touch-action: none; }
+.page.edit-mode [data-draggable]:hover { outline: 1px dashed rgba(245,158,11,0.55); outline-offset: 2px; border-radius: 3px; }
+.page.edit-mode [data-draggable]:active { cursor: grabbing; }
+.page.edit-mode [data-draggable][data-fe-floated="1"] { outline: 1px dashed rgba(59,130,246,0.4); outline-offset: 2px; }
+.floating-element.selected { outline: 2px solid var(--accent) !important; outline-offset: 1px; }
+.floating-element.fe-dragging { opacity: 0.85; outline: 2px dashed var(--warning) !important; }
+
+.fe-textbox { user-select: text; }
+.fe-textbox[contenteditable="true"] { cursor: text; }
+/* Text lives in .fe-text; the padding around it is a grab zone (move). */
+.fe-textbox .fe-text { min-height: 100%; outline: none; }
+.fe-textbox .fe-text[contenteditable="true"] { cursor: text; }
+
+/* RESIZE HANDLES — only visible when selected */
+.fe-handle {
+    position: absolute;
+    /* --fe-inv = 1 / sheet scale: handles keep their on-screen size on a
+       shrunk sheet (phones). Centred on the edge via translate. */
+    width: calc(12px * var(--fe-inv, 1)); height: calc(12px * var(--fe-inv, 1));
+    background: var(--white);
+    border: calc(2px * var(--fe-inv, 1)) solid var(--accent);
+    border-radius: 50%;
+    box-sizing: border-box;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 10000;
+}
+@media (pointer: coarse) {
+    .fe-handle { width: calc(22px * var(--fe-inv, 1)); height: calc(22px * var(--fe-inv, 1)); }
+}
+.floating-element.selected .fe-handle { display: block; }
+.page:not(.edit-mode) .fe-handle, .fe-locked .fe-handle { display: none !important; }
+
+.fe-handle-nw { top: 0;    left: 0;    cursor: nwse-resize; }
+.fe-handle-n  { top: 0;    left: 50%;  cursor: ns-resize; }
+.fe-handle-ne { top: 0;    left: 100%; cursor: nesw-resize; }
+.fe-handle-e  { top: 50%;  left: 100%; cursor: ew-resize; }
+.fe-handle-se { top: 100%; left: 100%; cursor: nwse-resize; }
+.fe-handle-s  { top: 100%; left: 50%;  cursor: ns-resize; }
+.fe-handle-sw { top: 100%; left: 0;    cursor: nesw-resize; }
+.fe-handle-w  { top: 50%;  left: 0;    cursor: ew-resize; }
+/* Lines: only the two end handles (length). Thickness = Inspector. */
+.fe-line[data-orient="h"] .fe-handle:not(.fe-handle-e):not(.fe-handle-w),
+.fe-line[data-orient="v"] .fe-handle:not(.fe-handle-n):not(.fe-handle-s) { display: none !important; }
+/* Lines are 1–3 px thin: an invisible ±8 px grab zone makes them easy to
+   pick and drag (the visible line is unchanged). */
+.page.fe-edit .fe-line:not(.fe-locked)::before {
+    content: ''; position: absolute;
+    left: calc(-4px * var(--fe-inv, 1)); right: calc(-4px * var(--fe-inv, 1));
+    top: calc(-8px * var(--fe-inv, 1)); bottom: calc(-8px * var(--fe-inv, 1));
+}
+.page.fe-edit .fe-line[data-orient="v"]:not(.fe-locked)::before {
+    left: calc(-8px * var(--fe-inv, 1)); right: calc(-8px * var(--fe-inv, 1));
+    top: calc(-4px * var(--fe-inv, 1)); bottom: calc(-4px * var(--fe-inv, 1));
+}
+
+/* TOOLBAR — appears above selected element */
+.fe-toolbar {
+    position: absolute;
+    bottom: calc(100% + 10px * var(--fe-inv, 1));
+    left: 50%; transform: translateX(-50%) scale(var(--fe-inv, 1));
+    transform-origin: bottom center;
+    background: #1e293b;
+    color: #fff;
+    padding: 4px;
+    border-radius: 8px;
+    display: none;
+    gap: 2px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    z-index: 10001;
+    white-space: nowrap;
+}
+.floating-element.selected .fe-toolbar { display: flex; }
+.page:not(.edit-mode) .fe-toolbar { display: none !important; }
+.fe-toolbar button {
+    width: 26px; height: 26px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+}
+.fe-toolbar button:hover { background: rgba(255,255,255,0.2); }
+.fe-toolbar button.danger:hover { background: var(--danger); }
+.fe-toolbar button.fe-grip { cursor: move; touch-action: none; background: var(--accent); }
+
+/* ════════════════════════════════════════════════════════════════
+   INSERT MENU (dropdown from "Einfügen" toolbar button)
+═══════════════════════════════════════════════════════════════ */
+.insert-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%; transform: translateX(-50%);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 6px;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    display: none;
+    z-index: 500;
+}
+.insert-menu.show { display: block; }
+.insert-menu-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 0.85rem;
+    transition: background 0.12s;
+}
+.insert-menu-item:hover { background: var(--bg); }
+.insert-menu-item i {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: #eff6ff; color: var(--accent);
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+.insert-menu-item .imi-meta { font-size: 0.7rem; color: var(--muted); margin-top: 1px; }
+.insert-menu-divider { height: 1px; background: var(--border); margin: 4px 6px; }
+
+/* "Einfügen" button wrapper relative for the dropdown */
+.tb-btn-wrap { position: relative; }
+
+/* ════════════════════════════════════════════════════════════════
+   INSPECTOR PANEL (right sidebar — properties for selected element)
+═══════════════════════════════════════════════════════════════ */
+.fe-inspector {
+    position: fixed;
+    right: -320px;
+    top: calc(var(--topbar-h) + 12px);
+    bottom: 12px;
+    width: 300px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    padding: 16px;
+    overflow-y: auto;
+    transition: right 0.25s;
+    z-index: 50;
+}
+.fe-inspector.show { right: 12px; }
+.fe-inspector-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+.fe-inspector-title { font-size: 0.92rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.fe-inspector-title i { color: var(--accent); }
+.fe-inspector-close { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; }
+.fe-inspector-section { margin-bottom: 14px; }
+.fe-insp-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.fe-insp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.fe-insp-row input[type=text],
+.fe-insp-row input[type=number],
+.fe-insp-row select { flex: 1; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; font-family: inherit; min-width: 0; }
+.fe-insp-row input[type=color] { width: 34px; height: 30px; border-radius: 6px; cursor: pointer; padding: 2px; border: 1px solid var(--border); }
+.fe-insp-row label { font-size: 0.78rem; color: var(--text); min-width: 60px; }
+.fe-insp-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.fe-insp-actions button { padding: 7px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--white); color: var(--text); cursor: pointer; font-size: 0.78rem; }
+.fe-insp-actions button:hover { background: var(--bg); }
+.fe-insp-actions button.danger { color: var(--danger); border-color: #fecaca; }
+.fe-insp-actions button.danger:hover { background: #fee2e2; }
+
+/* Edit-mode hint banner shows insert capability */
+.page.edit-mode { background: linear-gradient(180deg, #fffbeb 0px, #ffffff 2px) !important; background-size: 100% 24px !important; }
+
+/* ════════════════════════════════════════════════════════════════
+   PDF EXPORT (client-side html2pdf) — html2canvas does NOT apply the
+   @media print rules below. The oversized on-screen .page
+   (min-height:1130px ≈ 299mm > A4) would spill the legal footer onto a
+   second page. We toggle this `.exporting` class around the capture to
+   drop the min-height so the page collapses to its real content height
+   (one A4 page for a short document) instead of forcing ~299mm.
+═══════════════════════════════════════════════════════════════ */
+.page.exporting {
+    min-height: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: var(--white) !important;
+    transform: none !important; /* never let the fit-to-width scale leak into the PDF */
+}
+.page.exporting.edit-mode { background: var(--white) !important; }
+/* Footer flows right after the content (no flex push-to-bottom) so the
+ * document stays compact and the legal block isn't clipped/pushed off. */
+.page.exporting .footer-legal { margin-top: 28px !important; }
+
+/* Page-break hints for the client-side html2pdf export ('css' pagebreak
+ * mode reads the computed break-inside value). Rows, sections and the
+ * summary/signature/footer blocks are kept whole when a page boundary
+ * would split them; anything taller than one page still splits naturally.
+ * Absolutely-positioned/floating elements never match these selectors, so
+ * they can no longer trigger spacer insertion (the blank-page bug). */
+.page.exporting tr,
+.page.exporting .section,
+.page.exporting .summary-section,
+.page.exporting .signature-section,
+.page.exporting .footer-legal {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+/* …except the Einsätze table section: it is allowed to FLOW across the
+ * page boundary so page 1 fills up instead of jumping the whole table to
+ * page 2 and leaving a half-empty page (rows still stay whole via the
+ * `tr` rule above). */
+.page.exporting .section-flow {
+    page-break-inside: auto;
+    break-inside: auto;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PRINT (browser print: Strg+P / Datei › Drucken / print-all window)
+   The „Drucken“ button prints the generated PDF itself (printDoc in
+   order_form.js); these rules make the plain browser print look the same:
+   the sheet keeps its 800px design width (zoomed onto A4), colours and
+   backgrounds are printed, the table header repeats on every page and the
+   „Gesamt“ row appears ONCE after the last entry.
+═══════════════════════════════════════════════════════════════ */
+@page {
+    /* Page 1 has no top margin (the sheet's own padding is the margin):
+     * Chromium then reserves no room for its URL/date header — and decides
+     * that for the whole document from page 1. Continuation pages get a
+     * real top margin so rows never start at the paper edge. */
+    size: A4 portrait;
+    margin: 12mm 0 12mm 0;
+}
+@page :first { margin: 0 0 12mm 0; }
+@media print {
+    html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+    /* Without this the browser drops every background (section bars, table
+     * header, badges, summary) unless „Hintergrundgrafiken“ is ticked —
+     * white text on white paper. */
+    html, body, .page, .page * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .topbar, .sidebar, .format-bar, .canvas-info, #toastHost, .modal, .dd-sb-scrim, .dd-preview-bar,
+    .insert-menu, .fe-handle, .fe-toolbar, .fe-inspector, .fe-hist-pill, .wizard-overlay { display: none !important; }
+    .editor-layout { display: block !important; min-height: 0 !important; padding: 0 !important; margin: 0 !important; }
+    .canvas, body.viewer-mode .canvas, body.dd-mode .canvas { padding: 0 !important; margin: 0 !important; overflow: visible !important; }
+    #pageScaleWrap { display: block !important; height: auto !important; overflow: visible !important; }
+    /* Same geometry as the screen sheet and the PDF export: 800px wide with
+     * its normal padding, zoomed onto the 210mm paper (793.7px). The old
+     * narrower print box pushed the Zuschlag column off the paper. */
+    .page, #pageScaleWrap > .page {
+        width: 800px !important;
+        max-width: none !important;
+        /* --pz < 0.9921 when printZoomFor() (order_form.js) fits a slightly
+         * too long document onto ONE page, like the PDF export does. */
+        zoom: var(--pz, 0.9921);
+        transform: none !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        background: #fff !important;
+        /* One-page document: stretched to the printable height of page 1
+         * (297mm − 12mm bottom margin, compensated for the zoom) so the
+         * legal footer (margin-top:auto) sits at the bottom. Longer
+         * documents grow and paginate. */
+        height: auto !important;
+        min-height: calc(285mm / var(--pz, 0.9921) - 2mm) !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: flex;
+        flex-direction: column;
+        orphans: 3;
+        widows: 3;
+    }
+    .page.edit-mode { background: #fff !important; }
+    thead { display: table-header-group; }
+    /* table-footer-group would repeat „Gesamt“ at the bottom of EVERY
+     * printed page — the total belongs once, after the last row. */
+    tfoot { display: table-row-group; }
+    tr, .summary-table, .wkd-summary { page-break-inside: avoid; break-inside: avoid; }
+    .section, .signature-section, .summary-section, .footer-legal, .ocd-totals, .ocd-closing {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    .section-flow { page-break-inside: auto; break-inside: auto; }
+    .section-title { page-break-after: avoid; break-after: avoid; }
+    /* Closing part stays together: no page break between the last two rows,
+     * the totals and everything after the table (legend, summary,
+     * signature, legal footer) — the browser moves the last rows to the
+     * next page instead of leaving the signature alone there. */
+    .section-flow tbody tr:nth-last-child(-n+2), .section-flow tfoot, .section-flow .wkd-legend,
+    .section-flow ~ * { page-break-before: avoid; break-before: avoid; }
+    /* Forced break set by markPrintTail() (order_form.js) before the last rows. */
+    .section-flow tbody tr.print-break { page-break-before: always !important; break-before: page !important; }
+    .floating-element { outline: none !important; }
+    .doc-asset-grip, .doc-asset-remove, .doc-asset-rot { display: none !important; }
+    .doc-asset-wrap.doc-asset-active { outline: none !important; }
+
+    .footer-legal {
+        margin-top: auto !important;
+        padding-top: 6px;
+        border-top: 2px solid #000 !important;
+        border-bottom: 0 !important;
+        font-size: 0.45rem !important;
+        line-height: 1.2;
+        color: var(--muted);
+        font-weight: normal;
+        background: #fff;
+    }
+    .footer-legal table,
+    .footer-legal td,
+    .footer-legal .footer-line { font-size: 0.45rem !important; line-height: 1.2 !important; }
+    .footer-legal-col { padding: 0 10px; border: 0 !important; }
+    .footer-line { color: var(--muted); }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FIRST-RUN WIZARD — branding onboarding (colours, font, logo)
+═══════════════════════════════════════════════════════════════ */
+.wizard-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(15, 23, 42, .55);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.wizard-overlay.show { display: flex; }
+.wizard {
+    width: 100%; max-width: 520px; background: var(--white); border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .3); overflow: hidden;
+    display: flex; flex-direction: column; max-height: 92vh;
+    animation: wzIn .25s ease;
+}
+@keyframes wzIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+.wizard-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 0; }
+.wizard-steps { display: flex; gap: 6px; }
+.wz-dot { width: 26px; height: 5px; border-radius: 3px; background: var(--gray-200); transition: background .2s; }
+.wz-dot.done { background: var(--primary, #1a2744); }
+.wz-dot.active { background: var(--accent, #3b82f6); }
+.wizard-skip { background: none; border: none; color: var(--gray-400); font-size: .8rem; cursor: pointer; }
+.wizard-skip:hover { color: var(--gray-600); text-decoration: underline; }
+
+.wizard-step { display: none; padding: 14px 28px 8px; overflow-y: auto; }
+.wizard-step.active { display: block; }
+.wz-icon {
+    width: 54px; height: 54px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary, #1a2744), var(--accent, #3b82f6));
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin: 6px auto 12px;
+}
+.wizard-step h2 { font-size: 1.15rem; text-align: center; color: var(--gray-800); margin-bottom: 6px; }
+.wz-sub { font-size: .85rem; color: var(--gray-500); text-align: center; margin-bottom: 18px; line-height: 1.45; }
+
+.wz-field { margin-bottom: 14px; }
+.wz-field > label { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--gray-500); font-weight: 700; margin-bottom: 6px; }
+.wz-row { display: flex; gap: 12px; }
+.wz-row .wz-field { flex: 1; }
+.wz-field input[type=color] { width: 100%; height: 40px; border: 1px solid var(--gray-200); border-radius: 8px; cursor: pointer; padding: 2px; background: var(--white); }
+.wz-field select { width: 100%; padding: 9px 10px; border: 1px solid var(--gray-200); border-radius: 8px; font-size: .9rem; background: var(--white); }
+
+.wz-palettes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.wz-palette {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 8px 6px; border: 2px solid var(--gray-200); border-radius: 10px;
+    background: var(--white); cursor: pointer; transition: all .15s;
+}
+.wz-palette:hover { border-color: #cbd5e1; transform: translateY(-2px); }
+.wz-palette.active { border-color: var(--accent, #3b82f6); box-shadow: 0 0 0 3px rgba(59, 130, 246, .15); }
+.wz-palette .wz-sw { width: 100%; height: 14px; border-radius: 3px; display: block; }
+.wz-palette .wz-sw + .wz-sw { margin-top: -10px; width: 60%; }
+.wz-pname { font-size: .68rem; color: var(--gray-600); margin-top: 8px; text-align: center; }
+
+.wz-preview { margin-top: 16px; border: 1px solid var(--gray-200); border-radius: 10px; padding: 16px; background: #fafbfc; }
+.wz-prev-title { font-size: 1.05rem; font-weight: 800; letter-spacing: .5px; color: var(--primary, #1a2744); }
+.wz-prev-bar { height: 4px; border-radius: 2px; background: var(--accent, #3b82f6); margin: 8px 0 10px; }
+.wz-prev-text { font-size: .82rem; color: var(--gray-600); }
+.wz-prev-row { margin-top: 8px; font-size: .8rem; color: var(--gray-800); }
+.wz-prev-row b { display: inline-block; min-width: 70px; color: var(--gray-500); font-weight: 600; }
+.wz-prev-hl { background: #fff7cd; padding: 1px 6px; border-radius: 4px; }
+
+.wz-logo-upload { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; color: var(--gray-500); transition: all .15s; }
+.wz-logo-upload:hover { border-color: var(--accent, #3b82f6); background: var(--gray-50); }
+.wz-logo-upload i { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+.wz-logo-upload img { max-height: 80px; max-width: 100%; }
+
+.wz-tips { list-style: none; padding: 0; margin: 8px 0; }
+.wz-tips li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; font-size: .86rem; color: var(--gray-700); }
+.wz-tips li i { color: var(--accent, #3b82f6); margin-top: 3px; width: 16px; text-align: center; }
+
+.wizard-foot { display: flex; justify-content: space-between; gap: 10px; padding: 14px 28px 20px; border-top: 1px solid var(--gray-100); margin-top: 8px; }
+.wz-btn { padding: 10px 20px; border-radius: 9px; font-size: .88rem; font-weight: 700; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity .15s; }
+.wz-btn.primary { background: linear-gradient(135deg, var(--primary, #1a2744), var(--accent, #3b82f6)); color: #fff; }
+.wz-btn.primary:hover { opacity: .92; }
+.wz-btn.ghost { background: var(--gray-100); color: var(--gray-600); }
+.wz-btn.ghost:hover { background: var(--gray-200); }
+
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — chrome only (activated by data-theme="dark" on <html>,
+   set from hms_theme like index.php). The .page sheet is excluded:
+   its vars are pinned to light values inside the .page rule above,
+   so the printable document renders identically in both themes.
+   Surfaces using var(--white/--card/--border/--text/--muted/--bg)
+   flip automatically via md3-tokens bridges; only hard-coded pastel
+   accents need explicit dark variants below.
+════════════════════════════════════════════════════════════════ */
+[data-theme="dark"] .logo-upload:hover { background: rgba(59,130,246,0.14); }
+[data-theme="dark"] .canvas-info { background: rgba(245,158,11,0.16); color: #fcd34d; }
+[data-theme="dark"] .template-card.active { background: rgba(59,130,246,0.14); }
+[data-theme="dark"] .tpl-actions button.tpl-delete { border-color: rgba(220,38,38,0.45); }
+[data-theme="dark"] .tpl-actions button.tpl-delete:hover { background: rgba(220,38,38,0.14); }
+[data-theme="dark"] .pdf-actions button.danger:hover { background: rgba(220,38,38,0.14); border-color: rgba(220,38,38,0.45); }
+[data-theme="dark"] .fe-insp-actions button.danger { border-color: rgba(220,38,38,0.45); }
+[data-theme="dark"] .fe-insp-actions button.danger:hover { background: rgba(220,38,38,0.14); }
+[data-theme="dark"] .sb-action.danger { border-color: rgba(220,38,38,0.45); }
+[data-theme="dark"] .sb-action.danger:hover { background: rgba(220,38,38,0.14); }
+[data-theme="dark"] .share-actions button.email { background: rgba(3,105,161,0.18); color: #7dd3fc; border-color: rgba(125,211,252,0.35); }
+[data-theme="dark"] .share-actions button.whatsapp { background: rgba(21,128,61,0.18); color: #86efac; border-color: rgba(134,239,172,0.35); }
+[data-theme="dark"] .emoji-btn.selected { background: rgba(59,130,246,0.14); }
+[data-theme="dark"] .insert-menu-item i { background: rgba(59,130,246,0.14); }
+[data-theme="dark"] .empty-state i { color: var(--gray-500); }
+[data-theme="dark"] .pdf-icon { color: #f87171; }
+[data-theme="dark"] .wz-prev-hl { background: rgba(251,191,36,0.28); color: #fef3c7; }
+[data-theme="dark"] .wz-logo-upload { border-color: var(--gray-400); }
+[data-theme="dark"] .wz-preview { background: var(--gray-100); }
+[data-theme="dark"] #toastHost .toast { background: var(--md-sys-color-surface-container-high, #262c36); color: var(--md-sys-color-on-surface, #e2e8f0); border: 1px solid var(--md-sys-color-outline-variant, rgba(255,255,255,0.14)); border-left: 4px solid var(--accent); }
+[data-theme="dark"] #toastHost .toast.success { border-left-color: var(--success); }
+[data-theme="dark"] #toastHost .toast.error   { border-left-color: var(--danger); }
+[data-theme="dark"] #toastHost .toast.warning { border-left-color: var(--warning); }
+[data-theme="dark"] .format-bar select option { background: var(--gray-800); }
+[data-theme="dark"] .modal-close:hover { color: var(--gray-800); }
+
+/* Simple viewer: per-PDF column switches ("Einstellungen") */
+.pdfcols-panel {
+    display: none; position: absolute; top: calc(100% + 6px); right: 0; z-index: 300;
+    width: 250px; background: var(--white, #fff); color: var(--text, #1f2937);
+    border: 1px solid var(--gray-200, #e2e8f0); border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18); padding: 12px 14px; text-align: left;
+}
+.pdfcols-panel.show { display: block; }
+.pdfcols-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted, #64748b); margin-bottom: 6px; }
+.pdfcols-panel .sb-toggle input:disabled + * { opacity: .5; }
+.pdfcols-hint { font-size: 0.74rem; color: var(--muted, #64748b); line-height: 1.4; margin-top: 8px; }
+
+/* Column checkboxes (Sichtbarkeit + simple-viewer panel) */
+.sb-subtitle { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted, #64748b); margin: 10px 0 2px; }
+.sb-toggle.is-disabled { opacity: .5; cursor: not-allowed; }
+.pdfcols-panel #pcCols { max-height: 50vh; overflow-y: auto; }
+
+/* Undo / Redo — only while editing */
+#btnUndo, #btnRedo { display: none; }
+body.fe-editing #btnUndo, body.fe-editing #btnRedo { display: inline-flex; }
+#btnUndo:disabled, #btnRedo:disabled { opacity: 0.4; cursor: default; }
+
+/* Phones / tablets: the Inspector opens as a bottom sheet instead of a
+   side panel that would cover the sheet or sit outside the screen. */
+/* Below ~1420px a 300px side panel would cover the 800px sheet. */
+@media (max-width: 1420px) {
+    .fe-inspector {
+        top: auto; left: 0; right: 0; bottom: -75vh;
+        width: auto; max-height: 55vh;
+        box-sizing: border-box;
+        border-radius: 16px 16px 0 0;
+        transition: bottom 0.25s, max-height 0.25s;
+        z-index: 10010; /* above placed elements (z 100+) and their handles */
+    }
+    .fe-inspector.show { right: 0; bottom: 0; }
+    /* Collapsed bar first, so the sheet never covers the element being
+       edited; tap the header for the options. */
+    .fe-inspector.show:not(.expanded) { max-height: 58px; overflow: hidden; padding-top: 12px; }
+    .fe-inspector-header { cursor: pointer; }
+    .fe-inspector:not(.expanded) .fe-inspector-title::after {
+        content: 'expand_less'; font-family: 'Material Symbols Outlined'; font-size: 20px; color: var(--muted); margin-left: 4px;
+    }
+}
+/* Undo / Redo below 1440px: floating pair instead of top-bar buttons
+   (the top bar has no room left there). */
+.fe-hist-pill { display: none; }
+@media (max-width: 1440px) {
+    body.fe-editing #btnUndo, body.fe-editing #btnRedo { display: none; }
+    body.fe-editing:not(.viewer-mode) .fe-hist-pill {
+        display: flex; gap: 4px; position: fixed; left: 12px; bottom: 16px; z-index: 10009;
+        background: #1e293b; padding: 4px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    body.fe-editing.fe-insp-open .fe-hist-pill { bottom: 70px; }
+    .fe-hist-pill button {
+        width: 40px; height: 40px; border: 0; border-radius: 9px; background: rgba(255,255,255,0.1); color: #fff;
+        display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .fe-hist-pill button:disabled { opacity: 0.35; cursor: default; }
+}
+
+/* ============================================================================
+   TEXTBAUSTEINE on the sheet (all modes — part of the company template)
+============================================================================ */
+.doc-baustein { font-size: 0.88rem; line-height: 1.55; color: var(--text); margin: 14px 0; white-space: normal; }
+.doc-baustein-closing { margin-top: 18px; }
+/* AB: intro sentence + Dank/Gruß are Textbausteine now — keep the letter look. */
+.page .doc-baustein.ocd-text { font-size: 0.9rem; margin: 10px 0; line-height: 1.5; }
+.page .doc-baustein.ocd-closing { font-size: 0.9rem; margin: 24px 0 8px; line-height: 1.5; }
+
+/* ============================================================================
+   STANDARD TEMPLATES (layout.design) — .page.tpl-<id>; "klassisch" = base.
+   Plain CSS on the sheet so editor, headless PDFs and print look the same.
+============================================================================ */
+/* ── Modern ── */
+.page.tpl-modern .header-rule { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.page.tpl-modern .company-name { font-weight: 700; letter-spacing: -0.3px; }
+.page.tpl-modern .doc-title { font-size: 1.45rem; font-weight: 800; letter-spacing: 0.4px; }
+.page.tpl-modern .section-title { background: var(--gray-50); color: var(--primary); border-left: 4px solid var(--accent); border-radius: 0 6px 6px 0; }
+.page.tpl-modern .section-body { border: 1px solid var(--border); border-top: 0; border-radius: 0 0 8px 8px; }
+.page.tpl-modern table thead th:first-child { border-top-left-radius: 8px; }
+.page.tpl-modern table thead th:last-child  { border-top-right-radius: 8px; }
+.page.tpl-modern thead { background: transparent; }
+.page.tpl-modern thead th { background: var(--primary); }
+.page.tpl-modern tr:nth-child(even) { background: #f3f7fe; }
+.page.tpl-modern tfoot td { border-top-color: var(--accent); }
+.page.tpl-modern .detail-value.highlight { background: #e0f2f1; border-radius: 4px; }
+.page.tpl-modern .summary-table .st-head th { background: linear-gradient(90deg, var(--primary), var(--accent)); border-color: var(--primary); }
+.page.tpl-modern .wkd-info { border-radius: 10px; }
+.page.tpl-modern .wkd-summary { border-radius: 10px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.page.tpl-modern .doc-baustein:not(.ocd-text):not(.ocd-closing) { padding: 10px 14px; background: var(--gray-50); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; }
+
+/* ── DIN 5008 (sachlicher Geschäftsbrief) ── */
+.page.tpl-din5008 { padding-left: 95px; padding-right: 76px; }   /* ≈ 25 mm / 20 mm Rand */
+.page.tpl-din5008 .header-rule { height: 1px; background: var(--primary); }
+.page.tpl-din5008 .company-name { font-size: 1.3rem; font-weight: 700; }
+.page.tpl-din5008 .company-info { font-size: 0.74rem; }
+.page.tpl-din5008 .doc-title { font-size: 1.1rem; font-weight: 700; letter-spacing: 0; margin: 28px 0 14px; }
+.page.tpl-din5008 .section { margin: 18px 0; }
+.page.tpl-din5008 .section-title { background: transparent; color: var(--primary); padding: 4px 0; border-bottom: 1px solid var(--primary); letter-spacing: 0; font-size: 0.8rem; }
+.page.tpl-din5008 .section-body { border: 0; padding: 6px 0; }
+.page.tpl-din5008 .detail-value.highlight { background: transparent; padding: 0; font-weight: 600; }
+.page.tpl-din5008 thead { background: transparent; color: var(--primary); }
+.page.tpl-din5008 th { border-bottom: 1.5px solid var(--primary); padding-left: 4px; }
+.page.tpl-din5008 td { padding-left: 4px; border-bottom-color: #d1d5db; }
+.page.tpl-din5008 tr:nth-child(even) { background: transparent; }
+.page.tpl-din5008 tfoot td { border-top: 1.5px solid var(--primary); }
+.page.tpl-din5008 .summary-table .st-head th { background: transparent; color: var(--primary); border-color: var(--border); }
+.page.tpl-din5008 .summary-table .st-values td { color: var(--text); }
+.page.tpl-din5008 .wkd-info { background: transparent; border-radius: 0; border-width: 1px 0; }
+.page.tpl-din5008 .wkd-summary { background: transparent; color: var(--text); border-top: 1.5px solid var(--primary); border-radius: 0; }
+.page.tpl-din5008 .ocd-sender { margin-top: 36px; }   /* Anschriftfeld ~45 mm (Fensterumschlag) */
+.page.tpl-din5008 .ocd-grand td { color: var(--text); }
+.page.tpl-din5008 .badge { background: transparent !important; color: var(--text) !important; border: 1px solid #9ca3af; }
+
+/* ============================================================================
+   DOKUMENT-DESIGN CHROME (body.dd-mode, ?design=1) — same look as the app:
+   light MD3 surfaces, pill buttons, underline tabs, outlined cards.
+   Uses --md-sys-* (the document's --primary/--accent are the PDF brand).
+============================================================================ */
+body:is(.dd-mode, .viewer-mode) {
+    --topbar-h: 64px;
+    --dd-p: var(--md-sys-color-primary, #0b57d0);
+    --dd-on-p: var(--md-sys-color-on-primary, #fff);
+    --dd-surface: var(--md-sys-color-surface, #fff);
+    --dd-low: var(--md-sys-color-surface-container-low, #f3f6fc);
+    --dd-high: var(--md-sys-color-surface-container-high, #e7ebf3);
+    --dd-on: var(--md-sys-color-on-surface, #1f1f1f);
+    --dd-var: var(--md-sys-color-on-surface-variant, #444746);
+    --dd-line: var(--md-sys-color-outline-variant, #c4c7c5);
+    --dd-outline: var(--md-sys-color-outline, #747775);
+    --dd-pc: var(--md-sys-color-primary-container, #d3e3fd);
+    --dd-on-pc: var(--md-sys-color-on-primary-container, #041e49);
+    --dd-sb-w: 368px;
+    background: var(--dd-low);
+}
+body:is(.dd-mode, .viewer-mode) .topbar {
+    background: var(--dd-surface); color: var(--dd-on);
+    box-shadow: none; border-bottom: 1px solid var(--dd-line); padding: var(--safe-top, 0px) 16px 0 12px;
+}
+body:is(.dd-mode, .viewer-mode) .tb-back { width: 40px; height: 40px; border-radius: 50%; background: transparent; color: var(--dd-on); text-decoration: none; }
+body:is(.dd-mode, .viewer-mode) .tb-back:hover { background: var(--dd-high); }
+body:is(.dd-mode, .viewer-mode) .tb-brand > .material-symbols-outlined {
+    width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: var(--dd-p); color: var(--dd-on-p); font-size: 22px;
+}
+body:is(.dd-mode, .viewer-mode) .tb-title { font-size: 1.1rem; font-weight: 500; line-height: 1.2; }
+body:is(.dd-mode, .viewer-mode) .tb-subtitle { font-size: 0.8rem; color: var(--dd-var); margin-top: 2px; }
+body:is(.dd-mode, .viewer-mode) .topbar-right { gap: 8px; }
+body:is(.dd-mode, .viewer-mode) .tb-btn {
+    height: 40px; padding: 0 20px 0 16px; border-radius: 20px; gap: 8px;
+    background: transparent; color: var(--dd-p); border: 1px solid var(--dd-outline);
+    font-size: 0.875rem; font-weight: 500; letter-spacing: 0.1px;
+}
+body:is(.dd-mode, .viewer-mode) .tb-btn .material-symbols-outlined { font-size: 18px; }
+body:is(.dd-mode, .viewer-mode) .tb-btn:hover { background: color-mix(in srgb, var(--dd-p) 8%, transparent); transform: none; }
+body:is(.dd-mode, .viewer-mode) .tb-btn.tb-primary { background: var(--dd-p); color: var(--dd-on-p); border-color: transparent; }
+body:is(.dd-mode, .viewer-mode) .tb-btn.tb-primary:hover { background: var(--dd-p); box-shadow: var(--md-sys-elevation-level1, 0 1px 3px rgba(0,0,0,.2)); }
+body.dd-mode .dd-sb-toggle { display: none; }
+body.dd-mode .format-bar, body.dd-mode .fe-inspector, body.dd-mode .fe-hist-pill, body.dd-mode .canvas-info { display: none !important; }
+body:is(.dd-mode, .viewer-mode) .canvas { padding: 28px 32px; }
+body:is(.dd-mode, .viewer-mode) .page { box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 28px rgba(0,0,0,.08); border-radius: 2px; }
+/* Preview only: no text caret / editing affordances on the sheet. */
+body.dd-mode #orderForm [data-editable] { cursor: default; }
+
+/* Sidebar */
+body.dd-mode .dd-sidebar {
+    width: var(--dd-sb-w); padding: 0; background: var(--dd-surface); border-right: 1px solid var(--dd-line);
+    position: sticky; top: var(--topbar-h); height: calc(100vh - var(--topbar-h)); overflow-y: auto;
+    color: var(--dd-on);
+}
+.dd-sheet-handle, .dd-sb-scrim { display: none; }
+.dd-tabs {
+    position: sticky; top: 0; z-index: 2; display: flex; background: var(--dd-surface);
+    border-bottom: 1px solid var(--dd-line);
+}
+.dd-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 4px 10px; background: none; border: 0; border-bottom: 3px solid transparent;
+    color: var(--dd-var); font: 500 0.85rem/1.2 'Roboto', system-ui, sans-serif; cursor: pointer;
+}
+.dd-tab .material-symbols-outlined { font-size: 22px; }
+@media (hover: hover) { .dd-tab:hover { background: color-mix(in srgb, var(--dd-on) 5%, transparent); } }
+.dd-tab.active { color: var(--dd-p); border-bottom-color: var(--dd-p); }
+.dd-panel { display: none; padding: 16px; }
+.dd-panel.active { display: block; }
+body.dd-mode .sb-section {
+    background: var(--dd-surface); border: 1px solid var(--dd-line); border-radius: 16px;
+    padding: 16px; margin-bottom: 12px;
+}
+body.dd-mode .sb-section:last-child { border-bottom: 1px solid var(--dd-line); }
+body.dd-mode .sb-section-title { color: var(--dd-var); font-size: 0.72rem; letter-spacing: 1px; font-weight: 600; margin-bottom: 12px; }
+body.dd-mode .sb-field label, .dd-lbl { display: block; font-size: 0.78rem; color: var(--dd-var); margin: 10px 0 6px; font-weight: 500; }
+body.dd-mode .sb-field { margin-bottom: 4px; }
+body.dd-mode .sb-field select, body.dd-mode .sb-field input[type=color], .dd-input {
+    width: 100%; min-height: 40px; padding: 8px 12px; border: 1px solid var(--dd-outline); border-radius: 12px;
+    background: var(--dd-surface); color: var(--dd-on); font: 400 0.875rem/1.4 'Roboto', system-ui, sans-serif;
+}
+body.dd-mode .sb-field input[type=color] { padding: 4px 6px; }
+.dd-input:focus, body.dd-mode .sb-field select:focus { outline: 2px solid var(--dd-p); outline-offset: -1px; border-color: transparent; }
+textarea.dd-input { resize: vertical; margin-top: 8px; }
+select.dd-input + textarea.dd-input { margin-top: 8px; }
+.dd-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+body.dd-mode .sb-toggle { color: var(--dd-on); font-size: 0.875rem; padding: 7px 0; }
+body.dd-mode .sb-toggle input { accent-color: var(--dd-p); width: 18px; height: 18px; }
+body.dd-mode .sb-action { height: 40px; border-radius: 20px; background: var(--dd-p); font-weight: 500; }
+body.dd-mode .sb-action.danger { background: transparent; color: var(--md-sys-color-error, #b3261e); border: 1px solid var(--dd-outline); }
+body.dd-mode .sb-action.danger:hover { background: color-mix(in srgb, var(--md-sys-color-error, #b3261e) 8%, transparent); }
+body.dd-mode .logo-upload { border-radius: 12px; border: 1px dashed var(--dd-outline); background: var(--dd-low); }
+body.dd-mode .logo-upload:hover { border-color: var(--dd-p); background: color-mix(in srgb, var(--dd-p) 6%, var(--dd-low)); }
+body.dd-mode .logo-upload .material-symbols-outlined { font-size: 28px; color: var(--dd-var); display: block; margin-bottom: 4px; }
+.dd-hint { font-size: 0.8rem; line-height: 1.45; color: var(--dd-var); margin: 0 2px 12px; }
+
+/* Template cards */
+.dd-tpls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.dd-tpl {
+    position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 4px; text-align: left;
+    padding: 8px 8px 10px; border: 1px solid var(--dd-line); border-radius: 12px; background: var(--dd-surface);
+    cursor: pointer; color: var(--dd-on); font-family: 'Roboto', system-ui, sans-serif;
+}
+.dd-tpl:hover { border-color: var(--dd-outline); }
+.dd-tpl.active { border: 2px solid var(--dd-p); padding: 7px 7px 9px; background: color-mix(in srgb, var(--dd-p) 5%, var(--dd-surface)); }
+.dd-tpl-name { font-size: 0.82rem; font-weight: 600; margin-top: 2px; }
+.dd-tpl-desc { font-size: 0.68rem; line-height: 1.3; color: var(--dd-var); }
+.dd-tpl-check { position: absolute; top: 4px; right: 4px; font-size: 18px; color: var(--dd-p); opacity: 0; font-variation-settings: 'FILL' 1; }
+.dd-tpl.active .dd-tpl-check { opacity: 1; }
+/* Mini sheet: 5 bars = name, rule, title, section bar, table */
+.dd-tpl-thumb { display: flex; flex-direction: column; gap: 4px; height: 92px; padding: 9px 8px; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb; }
+.dd-tpl-thumb i { display: block; border-radius: 1px; }
+.dd-tpl-thumb i:nth-child(1) { width: 55%; height: 6px; background: var(--tp); }
+.dd-tpl-thumb i:nth-child(2) { height: 2px; background: var(--tp); }
+.dd-tpl-thumb i:nth-child(3) { width: 70%; height: 4px; background: var(--tp); opacity: .8; margin-top: 4px; }
+.dd-tpl-thumb i:nth-child(4) { height: 8px; background: var(--tp); margin-top: 4px; }
+.dd-tpl-thumb i:nth-child(5) { flex: 1; background: repeating-linear-gradient(#fff 0 5px, #eef2f7 5px 10px); }
+.dd-thumb-modern i:nth-child(2) { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--tp), var(--ta)); }
+.dd-thumb-modern i:nth-child(4) { background: #eef2f7; border-left: 3px solid var(--ta); border-radius: 0 3px 3px 0; }
+.dd-thumb-din5008 { padding-left: 12px; }
+.dd-thumb-din5008 i:nth-child(2) { height: 1px; }
+.dd-thumb-din5008 i:nth-child(4) { height: 1px; background: var(--tp); margin-top: 8px; }
+.dd-thumb-din5008 i:nth-child(5) { background: repeating-linear-gradient(#fff 0 5px, #d1d5db 5px 6px); }
+
+/* Switch rows (Unterschrift / Stempel) + MD switch */
+.dd-switch-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; cursor: pointer; }
+.dd-switch-row + .dd-switch-row { border-top: 1px solid var(--dd-line); }
+.dd-sr-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--dd-pc); color: var(--dd-on-pc); font-size: 22px; flex: none; }
+.dd-sr-text { flex: 1; font-size: 0.9rem; font-weight: 500; display: flex; flex-direction: column; gap: 2px; }
+.dd-sr-text small { font-size: 0.74rem; font-weight: 400; color: var(--dd-var); line-height: 1.3; }
+.dd-switch { position: relative; flex: none; width: 52px; height: 32px; }
+.dd-switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.dd-switch > span { position: absolute; inset: 0; border-radius: 16px; background: var(--dd-high); border: 2px solid var(--dd-outline); transition: background .15s, border-color .15s; }
+.dd-switch > span::after { content: ""; position: absolute; top: 6px; left: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--dd-outline); transition: all .15s; }
+.dd-switch input:checked + span { background: var(--dd-p); border-color: var(--dd-p); }
+.dd-switch input:checked + span::after { left: 22px; top: 2px; width: 24px; height: 24px; background: var(--dd-on-p); }
+.dd-switch input:focus-visible + span { outline: 2px solid var(--dd-p); outline-offset: 2px; }
+
+/* Textbausteine */
+.dd-seg { display: flex; border: 1px solid var(--dd-outline); border-radius: 20px; overflow: hidden; margin-bottom: 14px; }
+.dd-seg button {
+    flex: 1; height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 0; background: transparent; color: var(--dd-on); font: 500 0.875rem 'Roboto', system-ui, sans-serif; cursor: pointer;
+}
+.dd-seg button + button { border-left: 1px solid var(--dd-outline); }
+.dd-seg button .material-symbols-outlined { font-size: 18px; }
+.dd-seg button.active { background: var(--md-sys-color-secondary-container, #c2e7ff); color: var(--md-sys-color-on-secondary-container, #001d35); }
+.dd-segpanel { display: none; }
+.dd-segpanel.active { display: block; }
+.dd-bs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.dd-bs-title { font-size: 0.95rem; font-weight: 500; }
+.dd-bs-sub { font-size: 0.76rem; color: var(--dd-var); margin-top: 2px; }
+.dd-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.dd-chip {
+    height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--dd-outline); background: var(--dd-surface);
+    color: var(--dd-var); font: 500 0.78rem 'Roboto', system-ui, sans-serif; cursor: pointer;
+}
+.dd-chip:hover { background: color-mix(in srgb, var(--dd-p) 8%, var(--dd-surface)); color: var(--dd-p); border-color: var(--dd-p); }
+.dd-warn { display: flex; gap: 8px; margin-top: 10px; padding: 10px 12px; border-radius: 12px; font-size: 0.78rem; line-height: 1.4;
+    background: var(--md-ext-color-warning-container, #fff4d6); color: var(--md-ext-color-on-warning-container, #5c3d00); }
+.dd-warn .material-symbols-outlined { font-size: 18px; }
+.dd-mail-prev { font-size: 0.84rem; color: var(--dd-on); }
+.dd-mp-row { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--dd-line); }
+.dd-mp-row > span:first-child { width: 56px; flex: none; color: var(--dd-var); }
+.dd-mp-att { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 8px; background: var(--dd-low); font-size: 0.76rem; }
+.dd-mp-att .material-symbols-outlined { font-size: 16px; color: #d93025; }
+.dd-mp-body { white-space: pre-wrap; line-height: 1.5; padding: 12px 0 8px; word-break: break-word; }
+.dd-mp-sig { font-size: 0.74rem; line-height: 1.45; color: var(--dd-var); border-top: 1px dashed var(--dd-line); padding-top: 8px; }
+
+@media (max-width: 1100px) { body.dd-mode .tb-btn span:not(.tb-badge) { display: inline-block; } }
+/* Phones / small tablets: sidebar becomes a bottom sheet */
+@media (max-width: 900px) {
+    body.dd-mode .dd-sb-toggle { display: inline-flex; }
+    body.dd-mode .dd-sidebar {
+        position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; height: 78vh; z-index: 160;
+        border: 0; border-radius: 28px 28px 0 0; box-shadow: 0 -8px 32px rgba(0,0,0,.18);
+        transform: translateY(105%); transition: transform .25s ease; padding-bottom: var(--safe-bottom, 0px);
+    }
+    body.dd-mode.dd-sb-open .dd-sidebar { transform: none; }
+    body.dd-mode .dd-sheet-handle { display: flex; justify-content: center; padding: 10px 0 2px; cursor: pointer; background: var(--dd-surface); }
+    body.dd-mode .dd-sheet-handle span { width: 32px; height: 4px; border-radius: 2px; background: var(--dd-outline); }
+    body.dd-mode.dd-sb-open .dd-sb-scrim { display: block; position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,.32); }
+    body.dd-mode .canvas { padding: 16px 10px; }
+}
+@media (max-width: 640px) {
+    body.dd-mode .tb-btn { padding: 0 12px; }
+    body.dd-mode .tb-btn span:not(.material-symbols-outlined) { display: none; }
+    body.dd-mode .tb-brand > .material-symbols-outlined { display: none; }
+}
+
+/* Viewer (?view=1, Bestellungen → Auftragsblatt): same app chrome as
+   Dokument-Design — toggles show their state as a tonal pill. */
+body.viewer-mode .tb-btn.active { background: var(--md-sys-color-secondary-container, #c2e7ff); color: var(--md-sys-color-on-secondary-container, #001d35); border-color: transparent; box-shadow: none; }
+body.viewer-mode .tb-btn.tb-ghost { width: 40px; padding: 0; justify-content: center; }
+body.viewer-mode .pdfcols-panel { border-radius: 16px; border: 1px solid var(--dd-line); background: var(--dd-surface); color: var(--dd-on); box-shadow: var(--md-sys-elevation-level2, 0 4px 16px rgba(0,0,0,.14)); }
+body.viewer-mode .pdfcols-panel .sb-toggle { color: var(--dd-on); }
+body.viewer-mode .pdfcols-panel .sb-toggle input { accent-color: var(--dd-p); }
+@media (max-width: 1100px) { body.viewer-mode .tb-btn { padding: 0 11px; } }
+@media (max-width: 640px) {
+    body.viewer-mode .topbar { padding: var(--safe-top, 0px) 8px 0; }
+    body.viewer-mode .canvas { padding: 12px 8px; }
+}
+
+/* Signature cell per Einsatz row (Leistungsnachweis column "Unterschrift",
+   hideable via Tabellenspalten like every other column). */
+.page th.wk-sig-cell, .page td.wk-sig-cell { width: 130px; min-width: 120px; border-left: 1px solid var(--border); }
+.page tbody td.wk-sig-cell { height: 34px; }
+/* Stundennachweis with the Plan column: slimmer cells so the table fits
+   the 720px content width instead of running off the sheet. */
+.page table:has(th[data-key="wk.th.plan"]) :is(th, td) { padding-left: 6px; padding-right: 6px; }
+/* Leistungsnachweis (11 columns incl. Schicht/Zuschlag): same slimming so
+   the sheet keeps its 720px content width. */
+.page table:has(th[data-key="th.unterschrift"]) :is(th, td) { padding-left: 6px; padding-right: 6px; }
+.page table:has(th[data-key="th.unterschrift"]) .wk-sig-cell { width: 96px; min-width: 84px; }
+/* Worker signature from the app (Mitarbeiter-Unterschrift per App): fits
+   the 34px row, so signed and unsigned sheets paginate identically. */
+.page td.wk-sig-cell:has(.wk-sig-img) { padding: 1px 4px; text-align: center; vertical-align: middle; }
+.page .wk-sig-img { display: block; margin: 0 auto; max-width: 100%; max-height: 30px; }
+
+/* Dialog "Unterschrift der Mitarbeiter per App" */
+.sigreq-info { font-size: 0.85rem; line-height: 1.5; color: var(--muted); margin: 0 0 14px; }
+.sigreq-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); }
+.sigreq-row:first-child { border-top: 0; }
+.sigreq-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.sigreq-main input { width: 18px; height: 18px; flex: none; accent-color: var(--accent); }
+.sigreq-main b { display: block; font-size: 0.9rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sigreq-main small { display: block; font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+.sigreq-row.is-off .sigreq-main { cursor: default; }
+.sigreq-chip { flex: none; font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); white-space: nowrap; }
+.sigreq-chip.ok   { background: #dcfce7; color: #166534; }
+.sigreq-chip.wait { background: #dbeafe; color: #1e40af; }
+.sigreq-chip.bad  { background: #fee2e2; color: #991b1b; }
+.sigreq-chip.warn { background: #fef3c7; color: #92400e; }
+.sigreq-x { flex: none; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; }
+.sigreq-x:hover { background: #fee2e2; color: #991b1b; }
+.sigreq-note { font-size: 0.78rem; line-height: 1.45; color: var(--muted); padding: 0 0 10px 28px; }
+.sigreq-row + .sigreq-note { margin-top: -4px; }
+#sigReqSend:disabled { opacity: .5; cursor: not-allowed; }
+.sigreq-note.is-foot { padding: 12px 0 0; border-top: 1px solid var(--border); }
+#sigReqBadge { background: var(--accent); }
+#sigReqBadge.ok { background: var(--success, #16a34a); }
+/* The extra topbar button needs room: the toggles next to it fall back to
+   their icons (tooltips stay) before anything is pushed off screen. */
+@media (min-width: 1101px) and (max-width: 1480px) {
+    body.viewer-mode.has-sigreq :is(#btnAnonymize, #btnAnonymizeNu, #btnStamp) > span { display: none; }
+}
+@media (min-width: 1101px) and (max-width: 1250px) {
+    body.viewer-mode.has-sigreq :is(#btnSignature, #btnArchiv) > span { display: none; }
+}
+@media (max-width: 560px) {
+    .sigreq-row { flex-wrap: wrap; }
+    .sigreq-main { flex-basis: 100%; }
+    .sigreq-chip { margin-left: 28px; }
+}
+
+/* Dokumentvorlagen: autosave status (replaces Speichern / Vorschau-PDF). */
+.dd-save-state { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px;
+    font: 500 0.8rem 'Roboto', system-ui, sans-serif; color: var(--dd-var); background: var(--dd-low); white-space: nowrap; }
+.dd-save-state .material-symbols-outlined { font-size: 18px; }
+.dd-save-state[data-state="saved"] .material-symbols-outlined { color: var(--md-ext-color-success, #146c2e); }
+.dd-save-state[data-state="error"] { color: var(--md-sys-color-on-error-container, #410e0b); background: var(--md-sys-color-error-container, #f9dedc); }
+@media (max-width: 640px) { .dd-save-state .dd-ss-text { display: none; } }
+
+/* ════════ Dokumentvorlagen — Verlauf (template versions) ════════ */
+.dd-hist {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 8px;
+    border: 1px solid var(--dd-line, #e2e8f0); border-radius: 12px; background: var(--dd-surface, #fff);
+}
+.dd-hist.current { border-color: var(--accent, #3b82f6); }
+.dd-hist.previewing { background: color-mix(in srgb, var(--accent, #3b82f6) 10%, transparent); border-color: var(--accent, #3b82f6); }
+.dd-hist-main { flex: 1; min-width: 0; }
+.dd-hist-when { font-size: .85rem; font-weight: 600; }
+.dd-hist-who { font-size: .75rem; opacity: .7; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-hist-badge { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 10px; font-size: .68rem; font-weight: 700; background: var(--accent, #3b82f6); color: #fff; vertical-align: 1px; }
+.dd-hist-actions { display: flex; gap: 6px; }
+.dd-hist-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--dd-line, #e2e8f0); background: transparent;
+    color: inherit; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+}
+.dd-hist-btn .material-symbols-outlined { font-size: 18px; }
+.dd-hist-btn.primary { background: var(--accent, #3b82f6); border-color: var(--accent, #3b82f6); color: #fff; }
+.dd-preview-bar {
+    position: sticky; top: 8px; z-index: 5; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+    max-width: 800px; margin: 0 auto 12px; padding: 10px 14px; border-radius: 14px;
+    background: #fef3c7; color: #78350f; box-shadow: 0 4px 16px rgba(0,0,0,.12); font-size: .85rem; font-weight: 600;
+}
+.dd-preview-bar[hidden] { display: none; }
+.dd-pv-text { flex: 1; min-width: 160px; }
+.dd-pv-btn { padding: 7px 14px; border-radius: 18px; border: 1px solid #b45309; background: transparent; color: #78350f; font-weight: 600; cursor: pointer; }
+.dd-pv-btn.primary { background: #b45309; color: #fff; }
+/* While a stored version is previewed, the other panels are read-only. */
+body.dd-previewing .dd-panel:not([data-panel="verlauf"]) { pointer-events: none; opacity: .45; }

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firmendaten — Clood-X</title>
+    <script>
+    (function () {
+        var t = localStorage.getItem('hms_theme');
+        document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/md3-tokens.css?v=20260729mob8">
+    <link rel="stylesheet" href="/assets/css/style.css?v=20261020mf1">
+    <style>
+        body { display: block; background: var(--bg); }
+        .hidden { display: none !important; }
+        .ob-top { position: sticky; top: 0; z-index: 10; height: var(--topbar-height); background: var(--white); border-bottom: 1px solid var(--gray-200); }
+        .ob-top-in { max-width: 860px; margin: 0 auto; height: 100%; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .ob-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--gray-800); font-size: 1.05rem; }
+        .ob-logo img { width: 32px; height: 32px; object-fit: contain; }
+        .ob-top-r { display: flex; align-items: center; gap: 14px; color: var(--gray-600); font-size: .85rem; }
+        .ob-wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 48px; }
+        .ob-head { text-align: center; margin-bottom: 24px; }
+        .ob-head h1 { font-size: 1.6rem; font-weight: 700; color: var(--gray-800); margin: 0 0 6px; }
+        .ob-head p { color: var(--gray-600); margin: 0; font-size: .95rem; }
+        .ob-card { padding: 28px; overflow: visible; }
+        .ob-info { display: flex; gap: 12px; background: var(--accent-soft); color: var(--md-sys-color-on-primary-container); border-radius: var(--radius-sm); padding: 12px 16px; font-size: .85rem; line-height: 1.5; margin-bottom: 8px; }
+        .ob-info i { margin-top: 3px; }
+        .ob-sec { display: flex; align-items: center; gap: 8px; font-size: .9rem; font-weight: 600; color: var(--accent); margin: 26px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
+        .ob-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 16px; }
+        .ob-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .span2 { grid-column: span 2; } .span3 { grid-column: 1 / -1; }
+        .form-control { width: 100%; box-sizing: border-box; }
+        .form-control.err { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+        .req::after { content: ' *'; color: var(--danger); }
+        .ob-hint { font-size: .75rem; color: var(--gray-500); }
+        .ob-error { margin-top: 20px; background: var(--danger-light); color: var(--md-sys-color-on-error-container); border-radius: var(--radius-sm); padding: 12px 16px; font-size: .85rem; }
+        .ob-submit { width: 100%; justify-content: center; margin-top: 26px; padding: 12px 18px; font-size: .95rem; }
+        [data-theme="dark"] .ob-submit { color: var(--md-sys-color-on-primary); }
+        .ob-center { text-align: center; padding: 40px 28px; color: var(--gray-600); }
+        .ob-center i.big { font-size: 2rem; color: var(--gray-400); margin-bottom: 12px; }
+        @media (max-width: 640px) {
+            .ob-grid, .ob-grid.two { grid-template-columns: 1fr; }
+            .span2, .span3 { grid-column: auto; }
+            .ob-card { padding: 20px 16px; }
+            .ob-head h1 { font-size: 1.35rem; }
+            #tenantName { display: none; }
+        }
+    </style>
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
+</head>
+<body>
+
+<header class="ob-top">
+    <div class="ob-top-in">
+        <div class="ob-logo"><img src="/assets/img/clood-x-logo.png" alt="Clood-X"><span>Clood-X</span></div>
+        <div class="ob-top-r">
+            <span id="tenantName"></span>
+            <button type="button" class="btn btn-outline btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Abmelden</button>
+        </div>
+    </div>
+</header>
+
+<main class="ob-wrap">
+    <div class="ob-head">
+        <h1>Willkommen bei Clood-X!</h1>
+        <p>Ein letzter Schritt: die gesetzlichen Pflichtangaben Ihrer Firma.</p>
+    </div>
+
+    <div id="loading" class="card ob-center"><i class="fas fa-spinner fa-spin"></i></div>
+
+    <div id="notOwner" class="card ob-center hidden">
+        <i class="fas fa-lock big"></i>
+        <h3 style="margin:0 0 6px;color:var(--gray-800)">Einrichtung noch nicht abgeschlossen</h3>
+        <p style="margin:0">Der Firmen-Inhaber muss zuerst die Firmendaten hinterlegen. Bitte versuchen Sie es danach erneut.</p>
+    </div>
+
+    <form id="companyForm" class="card ob-card hidden" novalidate onsubmit="save(event)">
+        <div class="ob-info">
+            <i class="fas fa-scale-balanced"></i>
+            <span>Diese Angaben erscheinen auf Rechnungen, Leistungsnachweisen und Auftragsbestätigungen und sind gesetzlich vorgeschrieben (§ 14 UStG, Impressumspflicht). Sie können sie später jederzeit unter <b>Konto &amp; Firma</b> ändern.</span>
+        </div>
+
+        <div class="ob-sec"><i class="fas fa-building"></i> Firma</div>
+        <div class="ob-grid">
+            <div class="form-group span2">
+                <label class="req" for="name">Firmenname</label>
+                <input class="form-control" id="name" maxlength="200" autocomplete="organization">
+                <span class="ob-hint">Wie im Handelsregister bzw. Gewerbeschein</span>
+            </div>
+            <div class="form-group">
+                <label class="req" for="rechtsform">Rechtsform</label>
+                <select class="form-control" id="rechtsform" onchange="toggleRegister()"></select>
+            </div>
+            <div class="form-group span3">
+                <label class="req" for="geschaeftsfuehrer" id="gfLabel">Geschäftsführer / Inhaber</label>
+                <input class="form-control" id="geschaeftsfuehrer" maxlength="200" placeholder="Vor- und Nachname">
+                <span class="ob-hint">Bei mehreren Personen mit Komma trennen</span>
+            </div>
+        </div>
+
+        <div class="ob-sec"><i class="fas fa-location-dot"></i> Anschrift &amp; Kontakt</div>
+        <div class="ob-grid">
+            <div class="form-group span3">
+                <label class="req" for="company_address">Straße und Hausnummer</label>
+                <input class="form-control" id="company_address" maxlength="255" autocomplete="street-address">
+            </div>
+            <div class="form-group">
+                <label class="req" for="company_zip">PLZ</label>
+                <input class="form-control" id="company_zip" maxlength="10" autocomplete="postal-code" inputmode="numeric">
+            </div>
+            <div class="form-group span2">
+                <label class="req" for="company_city">Ort</label>
+                <input class="form-control" id="company_city" maxlength="100" autocomplete="address-level2">
+            </div>
+            <div class="form-group span2">
+                <label class="req" for="company_email">E-Mail der Firma</label>
+                <input class="form-control" id="company_email" type="email" maxlength="100" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="company_phone">Telefon</label>
+                <input class="form-control" id="company_phone" type="tel" maxlength="50" autocomplete="tel">
+            </div>
+        </div>
+
+        <div id="registerSec">
+            <div class="ob-sec"><i class="fas fa-landmark"></i> Registereintrag</div>
+            <div class="ob-grid two">
+                <div class="form-group">
+                    <label class="req" for="registergericht">Registergericht</label>
+                    <input class="form-control" id="registergericht" maxlength="100" placeholder="z. B. Amtsgericht Leipzig">
+                </div>
+                <div class="form-group">
+                    <label class="req" for="handelsregister_nr" id="hrLabel">Registernummer</label>
+                    <input class="form-control" id="handelsregister_nr" maxlength="50" placeholder="z. B. HRB 12345">
+                </div>
+            </div>
+        </div>
+
+        <div class="ob-sec"><i class="fas fa-receipt"></i> Steuer</div>
+        <div class="ob-grid two">
+            <div class="form-group">
+                <label for="ust_id">USt-IdNr.</label>
+                <input class="form-control" id="ust_id" maxlength="30" placeholder="DE123456789">
+            </div>
+            <div class="form-group">
+                <label for="steuernummer">Steuernummer</label>
+                <input class="form-control" id="steuernummer" maxlength="30" placeholder="z. B. 231/123/45678">
+            </div>
+            <span class="ob-hint span3"><i class="fas fa-circle-info"></i> Mindestens eines der beiden Felder ist Pflicht (Angabe auf jeder Rechnung).</span>
+        </div>
+
+        <div id="formError" class="ob-error hidden"></div>
+
+        <button type="submit" id="saveBtn" class="btn btn-primary ob-submit">
+            <span id="saveTxt"><i class="fas fa-check"></i> Speichern und loslegen</span>
+            <i class="fas fa-spinner fa-spin hidden" id="saveSpin"></i>
+        </button>
+    </form>
+</main>
+
+<script>
+const API_BASE = '/api';
+const token = localStorage.getItem('hms_token');
+const tenant = JSON.parse(localStorage.getItem('hms_tenant') || '{}');
+const FIELDS = ['name', 'rechtsform', 'geschaeftsfuehrer', 'company_address', 'company_zip', 'company_city',
+    'company_email', 'company_phone', 'registergericht', 'handelsregister_nr', 'ust_id', 'steuernummer'];
+let REGISTER = [];
+
+if (!token) window.location.href = '/login.php';
+document.getElementById('tenantName').textContent = tenant.name || '';
+if (tenant.slug && !window.location.pathname.startsWith('/' + tenant.slug)) {
+    window.history.replaceState(null, '', '/' + tenant.slug + '/onboarding.html');
+}
+const appUrl = () => (tenant.slug ? '/' + tenant.slug : '') + '/';
+
+async function apiFetch(url, options = {}) {
+    const res = await fetch(`${API_BASE}${url}`, {
+        ...options,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}`, ...(options.headers || {}) },
+    });
+    let data = {};
+    try { data = await res.json(); } catch (e) { /* empty body */ }
+    return { res, data };
+}
+
+function toggleRegister() {
+    const rf = document.getElementById('rechtsform').value;
+    const show = REGISTER.includes(rf);
+    document.getElementById('registerSec').classList.toggle('hidden', !show);
+    const verein = rf === 'e.V.', eg = rf === 'Genossenschaft (eG)';
+    document.getElementById('handelsregister_nr').placeholder = verein ? 'z. B. VR 1234' : (eg ? 'z. B. GnR 123' : (['OHG', 'KG', 'e.K.', 'GmbH & Co. KG'].includes(rf) ? 'z. B. HRA 12345' : 'z. B. HRB 12345'));
+    document.getElementById('gfLabel').textContent = ['Einzelunternehmen', 'e.K.'].includes(rf) ? 'Inhaber' : (verein ? 'Vorstand' : 'Geschäftsführer / Inhaber');
+}
+
+async function init() {
+    const { res, data } = await apiFetch('/onboarding/status');
+    document.getElementById('loading').classList.add('hidden');
+    if (res.status === 401) { window.location.href = '/login.php'; return; }
+    if (data.onboarding_completed) { markDone(data.company && data.company.name); return; }
+    if (!data.can_edit) { document.getElementById('notOwner').classList.remove('hidden'); return; }
+
+    REGISTER = data.registerpflichtig || [];
+    document.getElementById('rechtsform').innerHTML = '<option value="">Bitte wählen…</option>' +
+        (data.rechtsformen || []).map(r => `<option value="${r}">${r}</option>`).join('');
+    const c = data.company || {};
+    FIELDS.forEach(f => { const el = document.getElementById(f); if (el && c[f]) el.value = c[f]; });
+    toggleRegister();
+    const form = document.getElementById('companyForm');
+    form.addEventListener('input', e => {
+        e.target.classList.remove('err');
+        if (['ust_id', 'steuernummer'].includes(e.target.id)) ['ust_id', 'steuernummer'].forEach(f => document.getElementById(f).classList.remove('err'));
+        if (!form.querySelector('.err')) document.getElementById('formError').classList.add('hidden');
+    });
+    form.classList.remove('hidden');
+}
+
+function markDone(name) {
+    const t = JSON.parse(localStorage.getItem('hms_tenant') || '{}');
+    t.onboarding_completed = true;
+    if (name) t.name = name;
+    localStorage.setItem('hms_tenant', JSON.stringify(t));
+    window.location.href = appUrl();
+}
+
+async function save(ev) {
+    ev.preventDefault();
+    const body = {};
+    FIELDS.forEach(f => { body[f] = (document.getElementById(f).value || '').trim(); });
+    if (!REGISTER.includes(body.rechtsform)) { body.registergericht = ''; body.handelsregister_nr = ''; }
+    body.company_country = 'DE';
+
+    // Quick client-side check (the server validates the same rules).
+    const missing = ['name', 'rechtsform', 'geschaeftsfuehrer', 'company_address', 'company_zip', 'company_city', 'company_email']
+        .concat(REGISTER.includes(body.rechtsform) ? ['registergericht', 'handelsregister_nr'] : [])
+        .filter(f => !body[f]);
+    FIELDS.forEach(f => document.getElementById(f).classList.toggle('err', missing.includes(f)));
+    if (missing.length) return showError('Bitte alle Pflichtfelder (*) ausfüllen.');
+    if (!body.ust_id && !body.steuernummer) {
+        ['ust_id', 'steuernummer'].forEach(f => document.getElementById(f).classList.add('err'));
+        return showError('Bitte USt-IdNr. oder Steuernummer angeben (Pflicht auf Rechnungen).');
+    }
+
+    setBusy(true);
+    try {
+        const { res, data } = await apiFetch('/onboarding/company-profile', { method: 'POST', body: JSON.stringify(body) });
+        if (res.ok && data.success) return markDone(data.tenant && data.tenant.name);
+        if (data.errors) {
+            Object.keys(data.errors).forEach(f => document.getElementById(f)?.classList.add('err'));
+            return showError(Object.values(data.errors).flat().join(' '));
+        }
+        showError(data.error || data.message || 'Speichern fehlgeschlagen.');
+    } catch (e) {
+        showError('Verbindungsfehler. Bitte versuchen Sie es erneut.');
+    } finally {
+        setBusy(false);
+    }
+}
+
+function setBusy(b) {
+    document.getElementById('saveBtn').disabled = b;
+    document.getElementById('saveTxt').classList.toggle('hidden', b);
+    document.getElementById('saveSpin').classList.toggle('hidden', !b);
+}
+
+function showError(msg) {
+    const el = document.getElementById('formError');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function logout() {
+    try { await apiFetch('/auth/logout', { method: 'POST', body: '{}' }); } catch (e) { /* ignore */ }
+    ['hms_token', 'hms_user', 'hms_tenant'].forEach(k => localStorage.removeItem(k));
+    window.location.href = '/login.php';
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+/* Objekt-Terminal — tablet/PC at the gate (large touch targets) */
+:root { --primary: #0b57d0; --card-bg: #fff; --border: #dfe3ea; --text-secondary: #5c6370; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Roboto, system-ui, -apple-system, sans-serif; background: #eef2f8; color: #1f2328; }
+.t-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 18px; background: #0b2a5b; color: #fff; }
+.t-sub { font-size: .82rem; opacity: .8; }
+.t-top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.t-person { font-weight: 600; }
+.t-btn { border: 0; border-radius: 20px; padding: 9px 14px; background: rgba(255, 255, 255, .16); color: #fff; font: inherit; font-size: .88rem; }
+#tMain { max-width: 900px; margin: 0 auto; padding: 16px; }
+.t-card { background: #fff; border-radius: 18px; padding: 20px; }
+.t-login { max-width: 420px; margin: 6vh auto 0; }
+.t-login h1, .t-card h2 { margin: 0 0 8px; }
+.t-pin { font-size: 1.6rem !important; letter-spacing: .5em; text-align: center; }
+.t-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+.t-p { display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--border); background: #f8fafc; border-radius: 16px; padding: 18px 10px; font: inherit; }
+.t-p i { font-size: 1.8rem; color: var(--primary); }
+.t-p span { font-size: .84rem; color: var(--text-secondary); }
+.t-bar { display: flex; justify-content: center; margin-bottom: 12px; }
+.t-big { border: 0; border-radius: 16px; padding: 16px 32px; font: inherit; font-size: 1.15rem; font-weight: 700; color: #fff; }
+.t-in { background: #16a34a; } .t-out { background: #b91c1c; }
+.wqm-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+.t-toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #1f2937; color: #fff; padding: 12px 18px; border-radius: 12px; z-index: 4000; max-width: 90vw; }
+.t-toast-err { background: #b91c1c; }

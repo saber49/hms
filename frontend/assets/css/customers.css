@@ -1,0 +1,2258 @@
+/* ============================================
+   HMS Gruppe — Kunden Extended Styles
+   ============================================ */
+
+/* Wide modal for customer two-column form
+   — flex column layout so body scrolls internally while header/footer stay fixed */
+.modal.modal-wide {
+    max-width: 900px;
+    width: 95%;
+    max-height: 90vh;
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.modal.modal-wide .modal-header {
+    flex-shrink: 0;
+    padding: 18px 24px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+}
+.modal.modal-wide .modal-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.2px;
+}
+.modal.modal-wide .modal-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
+    padding: 22px 24px 24px;
+    background: var(--gray-50);
+}
+.modal.modal-wide .modal-footer {
+    flex-shrink: 0;
+    padding: 14px 24px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--white);
+    gap: 10px;
+}
+
+/* Smooth scrollbar inside the modal body */
+.modal.modal-wide .modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+.modal.modal-wide .modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.modal.modal-wide .modal-body::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 100px;
+}
+.modal.modal-wide .modal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-400);
+}
+
+/* Two-column layout inside modal */
+.customer-form-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 700px) {
+    .customer-form-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+.customer-form-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 18px 18px 10px;
+}
+
+/* Section titles inside the form — refined classical */
+.customer-form-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-200);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.customer-form-section-title i {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    color: var(--accent);
+    background: rgba(59, 130, 246, 0.10);
+    border-radius: 8px;
+}
+
+/* Form groups inside customer modal */
+.modal.modal-wide .form-group {
+    margin-bottom: 12px;
+    gap: 5px;
+}
+.modal.modal-wide .form-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gray-500);
+}
+.modal.modal-wide .form-group label .req {
+    color: var(--danger);
+}
+
+/* Form controls — refined */
+.modal.modal-wide .form-control {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.modal.modal-wide textarea.form-control {
+    height: auto;
+    min-height: 72px;
+    padding: 10px 12px;
+    line-height: 1.5;
+}
+.modal.modal-wide select.form-control {
+    padding-right: 32px;
+    cursor: pointer;
+}
+.modal.modal-wide .form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+.modal.modal-wide .form-control:hover:not(:focus) {
+    border-color: var(--gray-300);
+}
+
+/* Inline row for street+land, plz+ort */
+.customer-form-row {
+    display: flex;
+    gap: 10px;
+}
+.customer-form-row .form-group {
+    flex: 1;
+    margin-bottom: 12px;
+}
+
+/* Radio group — pill style */
+.radio-group {
+    display: flex;
+    gap: 8px;
+    padding: 0;
+}
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--gray-600);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    flex: 1;
+    justify-content: center;
+}
+.radio-label:hover {
+    border-color: var(--gray-300);
+    background: var(--white);
+}
+.radio-label input[type="radio"] {
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    margin: 0;
+}
+.radio-label:has(input[type="radio"]:checked) {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Input with icon on the right */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-with-icon .form-control {
+    padding-right: 40px;
+    width: 100%;
+}
+.input-with-icon .field-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    font-size: 0.85rem;
+    pointer-events: none;
+    border-left: 1px solid var(--gray-200);
+}
+.input-with-icon:focus-within .field-icon {
+    color: var(--accent);
+    border-left-color: var(--accent);
+}
+
+/* Field error text */
+.modal.modal-wide .field-error {
+    font-size: 0.72rem;
+    color: var(--danger);
+    margin-top: 3px;
+    min-height: 0;
+    display: block;
+}
+.modal.modal-wide .form-control.input-error {
+    border-color: var(--danger);
+    background: var(--danger-light, #fef2f2);
+}
+
+/* -------------------- Objekt modal: Artikel section -------------------- */
+.objekt-artikel-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--gray-200);
+}
+.objekt-artikel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.objekt-artikel-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    margin-left: 6px;
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary, #fff);
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 100px;
+    letter-spacing: 0;
+}
+
+/* Info box (replacing acc-info-box) */
+.objekt-info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 8px;
+    color: var(--gray-700);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.objekt-info-box i {
+    color: var(--accent);
+    margin-top: 2px;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+/* Tighter table inside modal (articles) */
+.modal.modal-wide .data-table-card {
+    border-radius: 10px;
+}
+.modal.modal-wide .data-table-card table {
+    font-size: 0.82rem;
+}
+.modal.modal-wide .data-table-card thead th {
+    padding: 10px 12px;
+    font-size: 0.65rem;
+}
+.modal.modal-wide .data-table-card tbody td {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+}
+.modal.modal-wide .data-table-card .btn-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+}
+.modal.modal-wide .data-table-card tbody td.text-right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.modal.modal-wide .data-table-card thead th.text-right {
+    text-align: right;
+}
+
+/* Customer tabs — refined */
+.customer-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--gray-100);
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    border: none;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+.customer-tab {
+    padding: 9px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 7px;
+    margin-bottom: 0;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.customer-tab:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.5);
+}
+.customer-tab.active {
+    background: var(--white);
+    color: var(--accent);
+    border-bottom-color: transparent;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+.customer-tab i {
+    font-size: 0.82rem;
+}
+
+/* Bereich badge in the table */
+.bereich-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+.bereich-sicherheit {
+    background: var(--info-light, #dbeafe);
+    color: var(--md-ext-color-on-info-container, #1d4ed8);
+}
+.bereich-reinigung {
+    background: var(--success-light, #d1fae5);
+    color: var(--md-ext-color-on-success-container, #059669);
+}
+.bereich-beides {
+    background: var(--warning-light, #fef3c7);
+    color: var(--md-ext-color-on-warning-container, #b45309);
+}
+.bereich-badge:not(.bereich-sicherheit):not(.bereich-reinigung):not(.bereich-beides) {
+    background: #f3e8ff;
+    color: #7c3aed;
+}
+[data-theme="dark"] .bereich-badge:not(.bereich-sicherheit):not(.bereich-reinigung):not(.bereich-beides) {
+    background: rgba(167, 139, 250, .16);
+    color: #c4b5fd;
+}
+
+/* Toolbar filter dropdown */
+.toolbar-filter {
+    max-width: 180px;
+    height: 38px;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   Stats overview (top of page)
+   ============================================ */
+.kunden-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+}
+@media (max-width: 900px) {
+    .kunden-stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .kunden-stats-row { grid-template-columns: 1fr; }
+}
+.kunden-stat-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: box-shadow 0.18s ease, transform 0.15s ease, border-color 0.18s ease;
+}
+.kunden-stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+    border-color: var(--accent);
+}
+.kunden-stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    flex-shrink: 0;
+}
+.kunden-stat-total .kunden-stat-icon { background: var(--info-light, #dbeafe); color: var(--md-ext-color-on-info-container, #1d4ed8); }
+.kunden-stat-active .kunden-stat-icon { background: var(--success-light, #d1fae5); color: var(--md-ext-color-on-success-container, #059669); }
+.kunden-stat-archiv .kunden-stat-icon { background: var(--gray-100); color: var(--gray-500); }
+.kunden-stat-objekte .kunden-stat-icon { background: var(--warning-light, #fef3c7); color: var(--md-ext-color-on-warning-container, #b45309); }
+.kunden-stat-body { min-width: 0; }
+.kunden-stat-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.1;
+}
+.kunden-stat-lbl {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-top: 2px;
+}
+
+/* Filter toggle (Aktiv / Archiv / Alle) */
+.kunden-filter-toggle {
+    display: inline-flex;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--white);
+    height: 38px;
+}
+.kunden-filter-toggle button {
+    background: none;
+    border: none;
+    padding: 0 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-right: 1px solid var(--gray-200);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.kunden-filter-toggle button:last-child { border-right: none; }
+.kunden-filter-toggle button:hover {
+    background: var(--gray-50);
+    color: var(--primary);
+}
+.kunden-filter-toggle button.active {
+    background: var(--accent);
+    color: white;
+}
+
+/* Objekte badge in customers table */
+.kunden-obj-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: var(--gray-100);
+    color: var(--gray-500);
+}
+.kunden-obj-badge.all-active {
+    background: var(--success-light, #d1fae5);
+    color: var(--md-ext-color-on-success-container, #059669);
+}
+.kunden-obj-badge.partial {
+    background: var(--warning-light, #fef3c7);
+    color: var(--md-ext-color-on-warning-container, #b45309);
+}
+.kunden-obj-badge.none-active {
+    background: var(--danger-light, #fee2e2);
+    color: var(--md-sys-color-on-error-container, #b91c1c);
+}
+.kunden-obj-badge.none {
+    background: transparent;
+    color: var(--gray-400);
+    font-weight: 400;
+}
+
+/* Field validation errors */
+.field-error {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--danger, #b91c1c);
+    min-height: 0;
+}
+.input-error,
+.form-control.input-error {
+    border-color: var(--danger, #dc2626) !important;
+    background: var(--danger-light, #fef2f2);
+}
+.req {
+    color: var(--danger, #dc2626);
+    font-weight: 700;
+}
+
+/* Status colors */
+.status.status-nein { background: var(--gray-100); color: var(--gray-500); }
+.text-warn { color: var(--warning, #d97706) !important; }
+.text-warn:hover { background: var(--warning-light, #fef3c7); }
+.text-success { color: var(--success, #059669) !important; }
+.text-success:hover { background: var(--success-light, #d1fae5); }
+
+/* ============================================
+   Customer "Übersicht" stats panel
+   ============================================ */
+.customer-stats-container {
+    padding: 4px;
+}
+.customer-stats-loading {
+    text-align: center;
+    padding: 30px;
+    color: var(--gray-500);
+}
+.customer-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.customer-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+}
+.customer-stat-icon {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+.customer-stat-info { min-width: 0; }
+.customer-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.1;
+}
+.customer-stat-value small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+.customer-stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+}
+.customer-stats-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gray-200);
+}
+
+/* ============================================
+   Delete preview modal
+   ============================================ */
+.delete-preview {
+    padding: 8px 4px;
+}
+.delete-preview-header {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 14px;
+}
+.delete-preview-header > i {
+    font-size: 2rem;
+    color: var(--danger, #dc2626);
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+.delete-preview-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+.delete-preview-sub {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-top: 4px;
+}
+.delete-preview-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
+}
+@media (max-width: 500px) {
+    .delete-preview-list { grid-template-columns: 1fr; }
+}
+.delete-preview-list li {
+    background: var(--danger-light, #fef2f2);
+    border: 1px solid #fecaca;
+    color: var(--md-sys-color-on-error-container, #991b1b);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+.delete-preview-list li strong {
+    font-size: 1rem;
+    margin-right: 4px;
+}
+.delete-preview-confirm label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+}
+.delete-preview-confirm code {
+    background: var(--gray-100);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--danger, #b91c1c);
+}
+
+/* Btn danger */
+.btn-danger {
+    background: #dc2626;
+    border: 1px solid #dc2626;
+    color: white;
+}
+.btn-danger:hover:not(:disabled) {
+    background: #b91c1c;
+    border-color: #b91c1c;
+}
+.btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* NU-specific styles moved to subcontractors.css */
+
+/* Tab content visibility */
+.customer-tab-content {
+    display: none;
+}
+.customer-tab-content.active {
+    display: block;
+}
+
+/* ============================================
+   Customer Documents
+   ============================================ */
+.customer-docs-header {
+    margin-bottom: 12px;
+}
+.customer-docs-header h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.customer-docs-header h4 i {
+    color: var(--accent);
+}
+
+.customer-doc-upload-form {
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+}
+.customer-doc-upload-form .customer-form-row {
+    align-items: flex-end;
+}
+
+/* Document grid */
+.customer-docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+}
+@media (max-width: 500px) {
+    .customer-docs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Document card */
+.customer-doc-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+    display: flex;
+    flex-direction: column;
+}
+.customer-doc-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Thumbnail area */
+.doc-thumb {
+    width: 100%;
+    height: 130px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--gray-200);
+}
+.doc-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.doc-thumb-img:hover {
+    transform: scale(1.05);
+}
+.doc-thumb-icon {
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.doc-thumb-pdf {
+    color: var(--danger, #dc2626);
+    background: var(--danger-light, #fef2f2);
+}
+.doc-thumb-word {
+    color: var(--info, #2563eb);
+    background: var(--info-light, #eff6ff);
+}
+.doc-thumb-excel {
+    color: var(--success, #16a34a);
+    background: var(--success-light, #f0fdf4);
+}
+.doc-thumb-generic {
+    color: var(--gray-400);
+    background: var(--gray-100);
+}
+
+/* Document info */
+.doc-info {
+    padding: 10px 12px 6px;
+    flex: 1;
+}
+.doc-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+.doc-meta {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Document actions */
+.doc-actions {
+    display: flex;
+    gap: 6px;
+    padding: 6px 12px 10px;
+    border-top: 1px solid var(--gray-100);
+}
+.doc-actions .btn-icon {
+    font-size: 0.78rem;
+    padding: 4px 8px;
+}
+
+/* Empty state */
+.customer-docs-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-400);
+    grid-column: 1 / -1;
+}
+.customer-docs-empty i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: block;
+}
+.customer-docs-empty p {
+    font-size: 0.9rem;
+}
+
+/* (NU admin worker detail overlay and other NU-specific styles moved to subcontractors.css) */
+
+/* ============================================================
+   DATA PAGE v4 — Classical & Refined Edition
+   Shared across: Kunden, Objekte, (future) Nachunternehmer
+   • Bento grid with solid navy numbers (no gradient text)
+   • Soft accent tints per category
+   • Refined toolbar with better search / dropdown / toggle
+   • Classical table with light header & hairline borders
+   ============================================================ */
+
+/* -------------------- Bento Grid (Classical) -------------------- */
+.data-bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(108px, auto);
+    gap: 12px;
+    margin-bottom: 18px;
+}
+@media (max-width: 1100px) {
+    .data-bento { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .data-bento { grid-template-columns: 1fr; }
+}
+
+.customer-bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+@media (max-width: 700px) {
+    .customer-bento { grid-template-columns: repeat(2, 1fr); }
+    .customer-bento .bento-tile-hero { grid-column: span 2; grid-row: span 2; }
+}
+@media (max-width: 500px) {
+    .customer-bento { grid-template-columns: 1fr; }
+    .customer-bento .bento-tile-hero { grid-column: span 1; grid-row: span 1; }
+}
+
+/* Base tile */
+.bento-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 108px;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+    animation: bentoFadeUp 0.4s ease-out both;
+}
+
+/* Subtle top accent line (revealed on hover) */
+.bento-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--bento-accent, var(--accent));
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bento-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    border-color: var(--gray-300);
+}
+.bento-tile:hover::before {
+    transform: scaleX(1);
+}
+
+@keyframes bentoFadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.data-bento > .bento-tile:nth-child(1) { animation-delay: 0.00s; }
+.data-bento > .bento-tile:nth-child(2) { animation-delay: 0.05s; }
+.data-bento > .bento-tile:nth-child(3) { animation-delay: 0.10s; }
+.data-bento > .bento-tile:nth-child(4) { animation-delay: 0.15s; }
+
+/* Head (icon + label for hero) */
+.bento-tile-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: var(--gray-600);
+    flex-shrink: 0;
+}
+.bento-tile-head i {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bento-accent-soft, rgba(59, 130, 246, 0.1));
+    color: var(--bento-accent, var(--accent));
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* Icon chip for small tiles */
+.bento-tile-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.92rem;
+    background: var(--bento-accent-soft, rgba(59, 130, 246, 0.1));
+    color: var(--bento-accent, var(--accent));
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+/* Numbers — classical solid navy (compact) */
+.bento-tile-number {
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -1.8px;
+    color: var(--primary);
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin: 0;
+}
+.bento-tile-number small {
+    font-size: 0.38em;
+    font-weight: 600;
+    color: var(--gray-400);
+    letter-spacing: -0.5px;
+}
+.bento-tile-number-sm {
+    font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--primary);
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+}
+.bento-tile-number-sm small {
+    font-size: 0.55em;
+    font-weight: 600;
+    color: var(--gray-400);
+}
+
+/* Body wrapper (centers content vertically) */
+.bento-tile-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.bento-tile-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--gray-500);
+}
+
+/* Meta line (below progress or number) */
+.bento-tile-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-100);
+}
+
+/* Footer pills (in hero) */
+.bento-tile-foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--gray-100);
+    flex-shrink: 0;
+}
+.bento-foot-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: var(--gray-50);
+    color: var(--gray-700);
+    border: 1px solid var(--gray-200);
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.bento-foot-pill:hover {
+    background: var(--white);
+    border-color: var(--bento-accent, var(--accent));
+}
+.bento-foot-pill i {
+    color: var(--bento-accent, var(--accent));
+    font-size: 0.7rem;
+}
+
+/* Progress bar — classical (no shimmer) */
+.bento-progress {
+    height: 5px;
+    border-radius: 100px;
+    background: var(--gray-100);
+    overflow: hidden;
+    margin-top: auto;
+}
+.bento-progress-bar {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--bento-accent, var(--accent));
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* -------------------- Span variants -------------------- */
+.bento-tile-hero {
+    grid-column: span 2;
+    grid-row: span 2;
+    padding: 18px 20px;
+    justify-content: space-between;
+}
+.bento-tile-hero .bento-tile-number {
+    flex: 1;
+    align-items: center;
+    margin: 0;
+}
+
+.bento-tile-wide {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+}
+.bento-tile-wide .bento-tile-body {
+    flex: 1;
+}
+.bento-tile-wide .bento-tile-meta {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 14px;
+    border-top: none;
+    border-left: 1px solid var(--gray-200);
+    flex-shrink: 0;
+    align-self: stretch;
+    align-items: center;
+    gap: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    font-size: 0.7rem;
+}
+
+@media (max-width: 500px) {
+    .bento-tile-hero,
+    .bento-tile-wide {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .bento-tile-hero .bento-tile-number { font-size: 3.5rem; }
+    .bento-tile-wide {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .bento-tile-wide .bento-tile-meta {
+        padding-left: 0;
+        border-left: none;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--gray-200);
+        align-self: stretch;
+        flex-direction: row;
+        text-align: left;
+    }
+}
+
+.customer-bento .bento-tile { cursor: default; }
+.customer-bento .bento-tile[data-clickable="1"] { cursor: pointer; }
+
+/* -------------------- Color themes (subtle, classical) -------------------- */
+.bento-tile-total {
+    --bento-accent: #4f46e5;
+    --bento-accent-soft: rgba(79, 70, 229, 0.10);
+}
+.bento-tile-active {
+    --bento-accent: #059669;
+    --bento-accent-soft: rgba(5, 150, 105, 0.10);
+}
+.bento-tile-archiv {
+    --bento-accent: #64748b;
+    --bento-accent-soft: rgba(100, 116, 139, 0.10);
+}
+.bento-tile-objekte {
+    --bento-accent: #d97706;
+    --bento-accent-soft: rgba(217, 119, 6, 0.10);
+}
+.bento-tile-objekte-hero {
+    --bento-accent: #0284c7;
+    --bento-accent-soft: rgba(2, 132, 199, 0.10);
+}
+.bento-tile-artikel {
+    --bento-accent: #d97706;
+    --bento-accent-soft: rgba(217, 119, 6, 0.10);
+}
+.bento-tile-orders {
+    --bento-accent: #059669;
+    --bento-accent-soft: rgba(5, 150, 105, 0.10);
+}
+.bento-tile-einsaetze {
+    --bento-accent: #7c3aed;
+    --bento-accent-soft: rgba(124, 58, 237, 0.10);
+}
+.bento-tile-last {
+    --bento-accent: #dc2626;
+    --bento-accent-soft: rgba(220, 38, 38, 0.10);
+}
+.bento-tile-docs {
+    --bento-accent: #0891b2;
+    --bento-accent-soft: rgba(8, 145, 178, 0.10);
+}
+
+/* -------------------- Refined toolbar (shared data pages) -------------------- */
+.data-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.data-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.data-toolbar .search-input {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 320px;
+}
+.data-toolbar .search-input i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+.data-toolbar .search-input input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px 0 36px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.data-toolbar .search-input input::placeholder { color: var(--gray-400); }
+.data-toolbar .search-input input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.data-toolbar .toolbar-filter {
+    height: 38px;
+    padding: 0 34px 0 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: var(--white)
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%2394a3b8' d='M6 8L2 4h8z'/></svg>")
+        no-repeat right 12px center;
+    background-size: 10px;
+    appearance: none;
+    color: var(--gray-700);
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 160px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.data-toolbar .toolbar-filter:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* Segmented control (Aktiv / Archiv / Alle) */
+.data-toolbar .kunden-filter-toggle {
+    display: inline-flex;
+    height: 38px;
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+}
+.data-toolbar .kunden-filter-toggle button {
+    background: transparent;
+    border: none;
+    padding: 0 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+.data-toolbar .kunden-filter-toggle button:hover {
+    color: var(--primary);
+}
+.data-toolbar .kunden-filter-toggle button.active {
+    background: var(--white);
+    color: var(--accent);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+.data-toolbar .kunden-filter-toggle button i {
+    font-size: 0.8rem;
+}
+
+/* -------------------- Refined table (classical light) -------------------- */
+.data-table-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.data-table-card .table-container {
+    overflow-x: auto;
+}
+.data-table-card table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.85rem;
+}
+.data-table-card thead {
+    background: var(--gray-50);
+    color: var(--gray-600);
+}
+.data-table-card thead th {
+    padding: 13px 16px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-500);
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    white-space: nowrap;
+    background: var(--gray-50);
+}
+.data-table-card tbody tr {
+    transition: background 0.15s ease;
+    border-bottom: none;
+}
+.data-table-card tbody tr:hover {
+    background: rgba(59, 130, 246, 0.04);
+}
+.data-table-card tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 0.86rem;
+    color: var(--gray-800);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.data-table-card tbody tr:last-child td {
+    border-bottom: none;
+}
+.data-table-card tbody td strong {
+    color: var(--primary);
+    font-weight: 700;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    background: var(--gray-50);
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--gray-200);
+}
+
+/* Refined action buttons */
+.data-table-card .btn-group {
+    display: inline-flex;
+    gap: 4px;
+}
+.data-table-card .btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--gray-500);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.data-table-card .btn-icon:hover {
+    background: var(--gray-100);
+    color: var(--accent);
+    border-color: var(--gray-200);
+}
+.data-table-card .btn-icon.text-warn:hover {
+    color: var(--warning);
+    background: var(--warning-light);
+    border-color: transparent;
+}
+.data-table-card .btn-icon.text-success:hover {
+    color: var(--success);
+    background: var(--success-light);
+    border-color: transparent;
+}
+.data-table-card .btn-icon.text-danger:hover {
+    color: var(--danger);
+    background: var(--danger-light);
+    border-color: transparent;
+}
+
+/* Status chip in table */
+.data-table-card .status-ja {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: var(--success-light);
+    color: var(--success);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.data-table-card .status-ja::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+}
+.data-table-card .status-nein {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.data-table-card .status-nein::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gray-400);
+}
+
+/* Empty state styling for table */
+.data-table-card .empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--gray-400);
+}
+.data-table-card .empty-state i {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+.data-table-card .empty-state p {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .bento-tile,
+    .bento-tile::before,
+    .bento-progress-bar {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* =================================================================== */
+/* ZUSCHLÄGE (Schicht- & Feiertagszuschläge) — Artikel modal section   */
+/* =================================================================== */
+
+.zuschlag-section {
+    margin-top: 24px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--white) 0%, var(--gray-50) 100%);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.zuschlag-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d4f7a 100%);
+    color: #fff;
+    flex-wrap: wrap;
+}
+
+.zuschlag-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.zuschlag-title > i {
+    font-size: 1.4rem;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.zuschlag-title-main {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.zuschlag-title-sub {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+/* iOS-style toggle switch */
+.zuschlag-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.zuschlag-toggle input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.zuschlag-toggle-slider {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    transition: background 0.18s ease;
+}
+
+.zuschlag-toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform 0.18s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider {
+    background: #34d399;
+}
+
+.zuschlag-toggle input[type="checkbox"]:checked + .zuschlag-toggle-slider::after {
+    transform: translateX(20px);
+}
+
+.zuschlag-toggle-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ---------- Body ---------- */
+.zuschlag-body {
+    padding: 18px 20px 20px;
+    transition: opacity 0.2s ease;
+}
+
+.zuschlag-body.zuschlag-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.zuschlag-body.zuschlag-disabled input,
+.zuschlag-body.zuschlag-disabled .zt-row {
+    cursor: not-allowed;
+}
+
+/* Night-window editor */
+.zuschlag-night-window {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    background: #f4f7fb;
+    border: 1px solid #e4ebf5;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 0.86rem;
+}
+
+.zuschlag-night-label {
+    font-weight: 600;
+    color: var(--gray-700, #374151);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.zuschlag-night-label i {
+    color: var(--accent, #2d4f7a);
+}
+
+.zuschlag-time {
+    width: 90px !important;
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+    height: auto !important;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.zuschlag-night-arrow {
+    color: var(--gray-500, #6b7280);
+    font-weight: 700;
+}
+
+.zuschlag-night-hint {
+    color: var(--gray-500, #6b7280);
+    font-size: 0.76rem;
+    font-style: italic;
+    margin-left: auto;
+}
+
+/* ---------- The actual Zuschlag table ---------- */
+.zuschlag-table-wrap {
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.zuschlag-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.zuschlag-table thead th {
+    background: linear-gradient(180deg, #1e3a5f 0%, #243f63 100%);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border: none;
+    text-align: left;
+}
+
+.zuschlag-table thead th.zt-col-pct,
+.zuschlag-table thead th.zt-col-auf,
+.zuschlag-table thead th.zt-col-end {
+    text-align: right;
+}
+
+.zuschlag-table .zt-col-art { width: 38%; }
+.zuschlag-table .zt-col-pct { width: 18%; }
+.zuschlag-table .zt-col-auf { width: 22%; }
+.zuschlag-table .zt-col-end { width: 22%; }
+
+.zuschlag-table tbody tr {
+    border-bottom: 1px solid #eef1f5;
+    transition: background 0.14s ease;
+}
+
+.zuschlag-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.zuschlag-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+.zuschlag-table tbody tr.zt-row-base {
+    background: #f4f7fb;
+}
+
+.zuschlag-table tbody tr.zt-row-base:hover {
+    background: #eaf0f8;
+}
+
+.zuschlag-table tbody tr.zt-row-combo {
+    background: #fbfdff;
+}
+
+.zuschlag-table tbody td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    border: none;
+}
+
+.zuschlag-table strong {
+    color: var(--gray-900, #111827);
+    font-weight: 600;
+}
+
+/* Schichtart icon in the first column */
+.zt-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #eef2f7 0%, #e4ebf5 100%);
+    color: #2d4f7a;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.zt-icon i + i {
+    font-size: 0.55rem;
+    margin-left: 1px;
+}
+
+/* Combo rows get a distinct icon background */
+.zt-row-combo .zt-icon {
+    background: linear-gradient(135deg, #fff4e6 0%, #ffe7c4 100%);
+    color: #c2570a;
+}
+
+/* Tagdienst row keeps the warm "sun" tone */
+.zt-row-base .zt-icon {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffeaa6 100%);
+    color: #b45309;
+}
+
+/* Small inline badge after the title */
+.zt-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 6px;
+    background: #e4ebf5;
+    color: #2d4f7a;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    vertical-align: middle;
+}
+
+.zt-row-base .zt-tag {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.zt-row-combo .zt-tag {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+/* The 0 % "fixed" pill on the Tagdienst row */
+.zt-pct-fixed {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--gray-200);
+    color: var(--gray-500);
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Editable percentage input + % suffix */
+.zt-pct-input {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--white);
+    border: 1px solid var(--gray-300, #d1d5db);
+    border-radius: 6px;
+    padding: 0 10px 0 4px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.zt-pct-input:focus-within {
+    border-color: var(--accent, #2d4f7a);
+    box-shadow: 0 0 0 3px rgba(45, 79, 122, 0.15);
+}
+
+.zt-pct-input input {
+    border: none !important;
+    background: transparent !important;
+    width: 60px !important;
+    padding: 5px 4px !important;
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    height: auto !important;
+    box-shadow: none !important;
+}
+
+.zt-pct-input input:focus {
+    outline: none;
+    box-shadow: none !important;
+}
+
+.zt-pct-input span {
+    color: var(--gray-500, #6b7280);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Aufschlag (in-between column) */
+.zt-aufschlag {
+    color: #047857;
+    font-weight: 500;
+}
+
+/* Endpreis (last column) */
+.zt-end {
+    color: var(--gray-900, #111827);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.zt-row-base .zt-end {
+    color: #b45309;
+}
+
+.zt-row-combo .zt-end {
+    color: #c2410c;
+}
+
+.zt-mono {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ---------- Foot info ---------- */
+.zuschlag-foot-info {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--warning-light, #fef9e7);
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    color: var(--md-ext-color-on-warning-container, #78350f);
+    font-size: 0.81rem;
+    line-height: 1.5;
+}
+
+.zuschlag-foot-info i {
+    color: var(--warning, #b45309);
+    font-size: 1rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.zuschlag-foot-info strong {
+    color: var(--md-ext-color-on-warning-container, #78350f);
+}
+
+/* Blue info variant (object modal "So funktioniert es") */
+.zuschlag-foot-info.zuschlag-foot-info-blue {
+    background: var(--info-light, #eff6ff);
+    border-color: #bfdbfe;
+    color: var(--md-ext-color-on-info-container, #1e40af);
+}
+.zuschlag-foot-info.zuschlag-foot-info-blue .material-symbols-outlined { color: var(--info, #2563eb); }
+.zuschlag-foot-info.zuschlag-foot-info-blue strong { color: var(--md-ext-color-on-info-container, #1e40af); }
+
+/* ---------- Dark mode — Zuschläge section ---------- */
+[data-theme="dark"] .zuschlag-table thead th {
+    background: var(--md-sys-color-surface-container-high) !important;
+    color: var(--md-sys-color-on-surface) !important;
+}
+[data-theme="dark"] .zuschlag-table tbody tr { border-bottom-color: rgba(255, 255, 255, 0.08); }
+[data-theme="dark"] .zuschlag-table tbody tr:hover { background: rgba(255, 255, 255, 0.06); }
+[data-theme="dark"] .zuschlag-table tbody tr.zt-row-base { background: rgba(255, 255, 255, 0.05); }
+[data-theme="dark"] .zuschlag-table tbody tr.zt-row-base:hover { background: rgba(255, 255, 255, 0.08); }
+[data-theme="dark"] .zuschlag-table tbody tr.zt-row-combo { background: rgba(255, 255, 255, 0.03); }
+[data-theme="dark"] .zt-icon {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93c5fd;
+}
+[data-theme="dark"] .zt-row-combo .zt-icon {
+    background: rgba(249, 115, 22, 0.15);
+    color: #fdba74;
+}
+[data-theme="dark"] .zt-row-base .zt-icon {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+}
+[data-theme="dark"] .zt-tag {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93c5fd;
+}
+[data-theme="dark"] .zt-row-base .zt-tag {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+}
+[data-theme="dark"] .zt-row-combo .zt-tag {
+    background: rgba(249, 115, 22, 0.15);
+    color: #fdba74;
+}
+[data-theme="dark"] .zt-aufschlag { color: #34d399; }
+[data-theme="dark"] .zt-row-base .zt-end { color: #fbbf24; }
+[data-theme="dark"] .zt-row-combo .zt-end { color: #fb923c; }
+[data-theme="dark"] .zt-pct-input:focus-within {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.15);
+}
+[data-theme="dark"] .zuschlag-night-label i,
+[data-theme="dark"] .zuschlag-night-label .material-symbols-outlined { color: #93c5fd; }
+[data-theme="dark"] .zuschlag-foot-info {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(251, 191, 36, 0.4);
+    color: var(--gray-800);
+}
+[data-theme="dark"] .zuschlag-foot-info i,
+[data-theme="dark"] .zuschlag-foot-info .material-symbols-outlined { color: #fbbf24; }
+[data-theme="dark"] .zuschlag-foot-info strong { color: #fcd34d; }
+[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(96, 165, 250, 0.35);
+    color: #bfdbfe;
+}
+[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue .material-symbols-outlined { color: #93c5fd; }
+[data-theme="dark"] .zuschlag-foot-info.zuschlag-foot-info-blue strong { color: #93c5fd; }
+
+/* ---------- Mobile reflow ---------- */
+@media (max-width: 720px) {
+    .zuschlag-table thead th.zt-col-auf,
+    .zuschlag-table tbody td:nth-child(3) {
+        display: none;
+    }
+    .zuschlag-night-hint {
+        margin-left: 0;
+        flex-basis: 100%;
+    }
+    .zt-icon {
+        display: none;
+    }
+}
+
+/* =================================================================== */
+/* SCHICHTART BADGE — used in Aufgaben list and Controlling details    */
+/* =================================================================== */
+
+.schichtart-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.schichtart-badge i {
+    font-size: 0.62rem;
+}
+
+.schichtart-tagdienst      { background: #fef3c7; color: #92400e; }
+.schichtart-nachtdienst    { background: #e0e7ff; color: #3730a3; }
+.schichtart-sonntag        { background: #d1fae5; color: #065f46; }
+.schichtart-feiertag       { background: #fee2e2; color: #991b1b; }
+.schichtart-nacht_sonntag  { background: linear-gradient(90deg, #e0e7ff 0%, #d1fae5 100%); color: #1e3a8a; }
+.schichtart-nacht_feiertag { background: linear-gradient(90deg, #e0e7ff 0%, #fee2e2 100%); color: #7c2d12; }
+
+/* =================================================================== */
+/* MD3 MIGRATION — Kunden module (mirrors users.css patterns)          */
+/* =================================================================== */
+
+/* ---------- MD3 dialog (official <md-dialog>) ---------- */
+/* Same rules as md-dialog.users-dialog-xl: the host uses
+   width:fit-content internally, so wide dialogs are sized via
+   min/max-width and centered within the content area, not the
+   full viewport (would collide with the fixed sidebar). */
+md-dialog.customers-dialog-xl,
+md-dialog.objects-dialog-xl {
+    --dlg-w: min(1040px, calc(100vw - 48px));
+    min-width: var(--dlg-w);
+    max-width: var(--dlg-w);
+    max-height: calc(100vh - 48px);
+}
+@media (min-width: 769px) {
+    md-dialog.customers-dialog-xl,
+    md-dialog.objects-dialog-xl {
+        --dlg-w: min(1040px, calc(100vw - var(--sidebar-width, 260px) - 48px));
+        margin-left: calc(var(--sidebar-width, 260px)
+                          + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
+    }
+}
+.customers-dialog-content,
+.objects-dialog-content { font-size: 0.9rem; }
+
+/* Modal tab strip */
+md-tabs.cust-modal-tabs {
+    margin-bottom: 16px;
+    --md-primary-tab-container-color: transparent;
+}
+
+/* MD3 fields fill their form groups */
+.customer-form-col .form-group md-outlined-text-field,
+.customer-form-col .form-group md-outlined-select,
+.customer-doc-upload-form md-outlined-text-field,
+.customer-doc-upload-form md-outlined-select,
+.delete-preview-confirm md-outlined-text-field {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Vertical rhythm: the old spacing rule was scoped to the removed
+   `.modal.modal-wide` shell — without it the outlined fields stack
+   flush and each floating label collides with the field above. */
+.customers-dialog-content .form-group,
+.objects-dialog-content .form-group {
+    margin-bottom: 16px;
+}
+.customers-dialog-content .customer-form-row,
+.objects-dialog-content .customer-form-row {
+    margin-bottom: 0;
+}
+.customers-dialog-content .customer-form-row .form-group,
+.objects-dialog-content .customer-form-row .form-group {
+    margin-bottom: 16px;
+}
+
+/* Artikel modal grid (acc-grid): MD3 fields fill their cells,
+   the grid gap provides the rhythm — no extra margins needed. */
+.objects-dialog-content .acc-grid .form-group { margin-bottom: 0; }
+.objects-dialog-content .acc-grid md-outlined-text-field,
+.objects-dialog-content .acc-grid md-outlined-select {
+    width: 100%;
+}
+
+/* ---------- Toolbar (list page) ---------- */
+/* NOTE: never corner-full (9999px) on outlined fields — the border is
+   drawn from 3 panels whose side widths equal the corner radius. */
+.data-toolbar .cust-search {
+    flex: 1 1 240px;
+    min-width: 200px;
+    max-width: 340px;
+    --md-outlined-text-field-container-shape: 20px;
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+}
+.data-toolbar .cust-bereich-select {
+    min-width: 170px;
+    --md-outlined-select-text-field-container-shape: 20px;
+    --md-outlined-select-text-field-top-space: 8px;
+    --md-outlined-select-text-field-bottom-space: 8px;
+}
+.data-toolbar md-chip-set { min-width: 0; }
+
+/* ---------- Table row + document actions ---------- */
+.cust-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.cust-row-actions md-icon-button,
+.doc-actions md-icon-button {
+    width: 34px;
+    height: 34px;
+    --md-icon-button-state-layer-width: 34px;
+    --md-icon-button-state-layer-height: 34px;
+    --md-icon-button-icon-size: 18px;
+}
+.cust-row-actions md-icon-button.danger,
+.doc-actions md-icon-button.danger {
+    --md-icon-button-icon-color: var(--md-sys-color-error, #b3261e);
+    --md-icon-button-hover-icon-color: var(--md-sys-color-error, #b3261e);
+    --md-icon-button-hover-state-layer-color: var(--md-sys-color-error, #b3261e);
+}
+.cust-row-actions md-icon-button.warn {
+    --md-icon-button-icon-color: var(--warning, #b45309);
+    --md-icon-button-hover-icon-color: var(--warning, #b45309);
+    --md-icon-button-hover-state-layer-color: var(--warning, #b45309);
+}
+.cust-row-actions md-icon-button.ok {
+    --md-icon-button-icon-color: var(--success, #059669);
+    --md-icon-button-hover-icon-color: var(--success, #059669);
+    --md-icon-button-hover-state-layer-color: var(--success, #059669);
+}
+
+/* Danger filled button (delete confirmation) */
+md-filled-button.cust-danger-btn {
+    --md-filled-button-container-color: var(--md-sys-color-error, #b3261e);
+    --md-filled-button-label-text-color: var(--md-sys-color-on-error, #fff);
+    --md-filled-button-hover-label-text-color: var(--md-sys-color-on-error, #fff);
+    --md-filled-button-focus-label-text-color: var(--md-sys-color-on-error, #fff);
+    --md-filled-button-pressed-label-text-color: var(--md-sys-color-on-error, #fff);
+    --md-filled-button-icon-color: var(--md-sys-color-on-error, #fff);
+    --md-filled-button-hover-icon-color: var(--md-sys-color-on-error, #fff);
+}
+
+/* ---------- Material Symbols in existing shells ---------- */
+/* Additive selectors: the fa `i` rules stay for pages not yet migrated. */
+.bento-tile-head .material-symbols-outlined {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bento-accent-soft, rgba(59, 130, 246, 0.1));
+    color: var(--bento-accent, var(--accent));
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.bento-tile-icon .material-symbols-outlined { font-size: 19px; }
+.bento-foot-pill .material-symbols-outlined {
+    color: var(--bento-accent, var(--accent));
+    font-size: 14px;
+}
+.kunden-obj-badge .material-symbols-outlined { font-size: 13px; }
+.customer-form-section-title .material-symbols-outlined {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: var(--accent);
+    background: rgba(59, 130, 246, 0.10);
+    border-radius: 8px;
+}
+.customer-docs-header h4 .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 19px;
+}
+.customer-docs-empty .material-symbols-outlined {
+    font-size: 42px;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.doc-thumb-icon .material-symbols-outlined { font-size: 42px; }
+.delete-preview-header > .material-symbols-outlined {
+    font-size: 32px;
+    color: var(--danger, #dc2626);
+    flex-shrink: 0;
+    margin-top: 4px;
+    font-variation-settings: 'FILL' 1;
+}
+.empty-state .material-symbols-outlined {
+    font-size: 42px;
+    display: block;
+    margin: 0 auto 10px;
+    color: var(--gray-300);
+}
+.customer-stats-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* ---------- MD3 radio group (Anschrift-Typ) ---------- */
+.cust-radio-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 6px 2px;
+}
+.cust-radio-caption {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gray-600);
+}
+.cust-radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--gray-800);
+    cursor: pointer;
+}
+.cust-radio-label md-radio { --md-radio-icon-size: 18px; }
+
+/* Plain label above the native file input (upload form) */
+.cust-file-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+}
+
+/* ---------- Objekte module: Material Symbols in existing shells ---------- */
+.objekt-info-box .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 18px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+.zuschlag-title > .material-symbols-outlined {
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+.zuschlag-night-label .material-symbols-outlined {
+    color: var(--accent, #2d4f7a);
+    font-size: 15px;
+    vertical-align: -3px;
+}
+.zt-icon .material-symbols-outlined { font-size: 15px; }
+.zt-icon .material-symbols-outlined + .material-symbols-outlined {
+    font-size: 10px;
+    margin-left: 1px;
+}
+.zuschlag-foot-info .material-symbols-outlined {
+    color: #b45309;
+    font-size: 17px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+/* md-switch inside the zuschlag header toggle */
+.zuschlag-toggle md-switch {
+    --md-switch-track-width: 44px;
+    --md-switch-track-height: 24px;
+}

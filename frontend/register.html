@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrieren — Clood-X</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
+    <script>
+        // MD3 tonal palette (seed #0B57D0) — same tokens as the whole system.
+        tailwind.config = {
+            theme: { extend: { colors: {
+                primary: {50:'#ecf3fe',100:'#d3e3fd',200:'#a8c7fa',300:'#7cabf8',400:'#4c8df6',500:'#0b57d0',600:'#0842a0',700:'#062e6f',800:'#041e49',900:'#041e49'},
+                dark: {800:'#062e6f',900:'#041e49'}
+            }}}
+        }
+    </script>
+    <style>
+        body { font-family:'Google Sans','Roboto','Segoe UI',-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+        .gradient-bg { background: linear-gradient(135deg, #062e6f 0%, #0b57d0 55%, #0842a0 100%); }
+        /* MD3 outlined text field focus: primary, double-width border */
+        .input-field { transition: border-color 0.15s, box-shadow 0.15s; }
+        .input-field:focus { border-color: #0b57d0; box-shadow: inset 0 0 0 1px #0b57d0; }
+        .step-indicator.active { background: #0b57d0; color: white; }
+        .step-indicator.completed { background: #1e8e3e; color: white; }
+        .shake { animation: shake 0.5s; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+        .password-strength-bar { transition: width 0.3s, background 0.3s; }
+        /* MD3 shapes: card corner-extra-large, pill buttons */
+        .md3-card { border-radius: 28px !important; }
+        #btnNext, #btnSubmit { border-radius: 9999px !important; font-weight: 500; }
+        #btnSubmit { background: #1e8e3e !important; }
+        #btnSubmit:hover { background: #196c34 !important; }
+        .brand-mark-img { width:40px; height:40px; border-radius:12px; object-fit:cover; display:block; }
+    </style>
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-lg">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+        <a href="/landing.html" class="inline-flex items-center gap-2">
+            <img src="assets/img/clood-x-logo.png" alt="Clood-X Logo" class="brand-mark-img">
+            <span class="text-white font-bold text-xl">Clood-X</span>
+        </a>
+    </div>
+
+    <!-- Registration Card -->
+    <div class="bg-white rounded-2xl md3-card shadow-2xl overflow-hidden">
+        <!-- Progress Steps -->
+        <div class="bg-gray-50 px-8 py-5 border-b flex items-center justify-between">
+            <div class="flex items-center gap-3" id="steps">
+                <div class="step-indicator active w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" data-step="1">1</div>
+                <div class="h-px w-8 bg-gray-300" id="line1"></div>
+                <div class="step-indicator bg-gray-200 text-gray-500 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" data-step="2">2</div>
+                <div class="h-px w-8 bg-gray-300" id="line2"></div>
+                <div class="step-indicator bg-gray-200 text-gray-500 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" data-step="3">3</div>
+            </div>
+            <span class="text-sm text-gray-400" id="stepLabel">Schritt 1 von 3</span>
+        </div>
+
+        <div class="p-8">
+            <!-- Step 1: Company -->
+            <div id="step1" class="step-content">
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">Sicherheitsunternehmen registrieren</h2>
+                <p class="text-gray-500 mb-6">14 Tage kostenlos testen. Keine Kreditkarte nötig.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Firmenname *</label>
+                        <div class="relative">
+                            <input type="text" id="company_name" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none" placeholder="z.B. Sicherheitsdienst Müller GmbH" required>
+                            <span id="companyCheck" class="absolute right-3 top-3 text-sm hidden"></span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1" id="slugPreview"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Für Sicherheitsdienste: Objektschutz, Empfangs- und Pfortendienst, Revierdienst sowie Veranstaltungs- und Stadionsicherheit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Account -->
+            <div id="step2" class="step-content hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">Ihr Konto erstellen</h2>
+                <p class="text-gray-500 mb-6">Diese Daten verwenden Sie zum Anmelden.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Vollständiger Name *</label>
+                        <input type="text" id="full_name" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none" placeholder="Max Mustermann" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">E-Mail-Adresse *</label>
+                        <div class="relative">
+                            <input type="email" id="email" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none" placeholder="max@firma.de" required>
+                            <span id="emailCheck" class="absolute right-3 top-3 text-sm hidden"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Telefon (optional)</label>
+                        <input type="tel" id="phone" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none" placeholder="+49 123 456789">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Passwort *</label>
+                        <div class="relative">
+                            <input type="password" id="password" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none pr-10" placeholder="Mindestens 8 Zeichen" required>
+                            <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="passwordStrength" class="password-strength-bar h-full w-0 rounded-full"></div>
+                        </div>
+                        <p class="text-xs mt-1" id="passwordLabel"></p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Passwort bestätigen *</label>
+                        <input type="password" id="password_confirmation" class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm outline-none" placeholder="Passwort wiederholen" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirm -->
+            <div id="step3" class="step-content hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">Alles bereit!</h2>
+                <p class="text-gray-500 mb-6">Überprüfen Sie Ihre Angaben und starten Sie.</p>
+
+                <div class="bg-gray-50 rounded-xl p-5 space-y-3 mb-6">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Firma</span>
+                        <span class="font-medium" id="confirmCompany"></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Name</span>
+                        <span class="font-medium" id="confirmName"></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">E-Mail</span>
+                        <span class="font-medium" id="confirmEmail"></span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Plan</span>
+                        <span class="font-medium text-primary-600" id="confirmPlan">14 Tage Testversion</span>
+                    </div>
+                </div>
+
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" id="accept_terms" class="mt-1 w-4 h-4 text-primary-500 rounded border-gray-300">
+                    <span class="text-sm text-gray-600">Ich akzeptiere die <a href="#" class="text-primary-500 underline">AGB</a> und <a href="#" class="text-primary-500 underline">Datenschutzerklärung</a>.</span>
+                </label>
+            </div>
+
+            <!-- Error message -->
+            <div id="errorMsg" class="hidden mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+            <!-- Buttons -->
+            <div class="flex items-center justify-between mt-8">
+                <button id="btnBack" class="hidden text-gray-500 hover:text-gray-700 text-sm font-medium" onclick="prevStep()">
+                    <i class="fas fa-arrow-left mr-1"></i> Zurück
+                </button>
+                <div class="flex-1"></div>
+                <button id="btnNext" class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold transition" onclick="nextStep()">
+                    Weiter <i class="fas fa-arrow-right ml-1"></i>
+                </button>
+                <button id="btnSubmit" class="hidden bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold transition" onclick="submitRegistration()">
+                    <span id="btnSubmitText">Jetzt starten</span>
+                    <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login link -->
+    <p class="text-center text-white/60 text-sm mt-6">
+        Bereits registriert? <a href="/login.php" class="text-white underline hover:text-primary-300">Anmelden</a>
+    </p>
+</div>
+
+<script>
+const API_BASE = '/api';
+let currentStep = 1;
+let checkTimeout = null;
+let selectedPlan = new URLSearchParams(window.location.search).get('plan') || 'trial';
+
+let storedUser = {};
+try {
+    storedUser = JSON.parse(localStorage.getItem('hms_user') || '{}');
+} catch (e) {}
+if (storedUser.username === 'demo-viewer') {
+    localStorage.removeItem('hms_token');
+    localStorage.removeItem('hms_user');
+    localStorage.removeItem('hms_tenant');
+    storedUser = {};
+}
+
+// Already logged in → leave the signup wizard. Unverified owners go to the
+// verification screen, everyone else into the app.
+if (localStorage.getItem('hms_token')) {
+    window.location.href = (storedUser.email_verified === false) ? 'verify-email.php' : '/index.php';
+}
+
+// Step navigation
+function showStep(step) {
+    document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById(`step${step}`).classList.remove('hidden');
+
+    document.querySelectorAll('.step-indicator').forEach(el => {
+        const s = parseInt(el.dataset.step);
+        el.classList.remove('active', 'completed');
+        if (s < step) el.classList.add('completed');
+        else if (s === step) el.classList.add('active');
+        if (s < step) el.innerHTML = '<i class="fas fa-check text-xs"></i>';
+        else el.textContent = s;
+    });
+
+    document.getElementById('stepLabel').textContent = `Schritt ${step} von 3`;
+    document.getElementById('btnBack').classList.toggle('hidden', step === 1);
+    document.getElementById('btnNext').classList.toggle('hidden', step === 3);
+    document.getElementById('btnSubmit').classList.toggle('hidden', step !== 3);
+
+    if (step === 3) populateConfirmation();
+    hideError();
+}
+
+function nextStep() {
+    if (!validateStep(currentStep)) return;
+    currentStep = Math.min(3, currentStep + 1);
+    showStep(currentStep);
+}
+
+function prevStep() {
+    currentStep = Math.max(1, currentStep - 1);
+    showStep(currentStep);
+}
+
+function validateStep(step) {
+    if (step === 1) {
+        const company = document.getElementById('company_name').value.trim();
+        if (!company) return showError('Bitte geben Sie einen Firmennamen ein.');
+        if (company.length < 2) return showError('Firmenname muss mindestens 2 Zeichen lang sein.');
+        return true;
+    }
+    if (step === 2) {
+        const name = document.getElementById('full_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const pw = document.getElementById('password').value;
+        const pwc = document.getElementById('password_confirmation').value;
+        if (!name) return showError('Bitte geben Sie Ihren Namen ein.');
+        if (!email) return showError('Bitte geben Sie Ihre E-Mail-Adresse ein.');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+        if (!pw || pw.length < 8) return showError('Passwort muss mindestens 8 Zeichen lang sein.');
+        if (pw !== pwc) return showError('Passwörter stimmen nicht überein.');
+        return true;
+    }
+    return true;
+}
+
+function populateConfirmation() {
+    document.getElementById('confirmCompany').textContent = document.getElementById('company_name').value;
+    document.getElementById('confirmName').textContent = document.getElementById('full_name').value;
+    document.getElementById('confirmEmail').textContent = document.getElementById('email').value;
+    const planLabels = { trial: '14 Tage Testversion', basic: 'Basic (49€/Monat)', pro: 'Professional (99€/Monat)', enterprise: 'Enterprise' };
+    document.getElementById('confirmPlan').textContent = planLabels[selectedPlan] || '14 Tage Testversion';
+}
+
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 500);
+    return false;
+}
+
+function hideError() {
+    document.getElementById('errorMsg').classList.add('hidden');
+}
+
+// Password strength
+document.getElementById('password').addEventListener('input', function() {
+    const pw = this.value;
+    let strength = 0;
+    if (pw.length >= 8) strength++;
+    if (pw.length >= 12) strength++;
+    if (/[A-Z]/.test(pw)) strength++;
+    if (/[0-9]/.test(pw)) strength++;
+    if (/[^A-Za-z0-9]/.test(pw)) strength++;
+
+    const bar = document.getElementById('passwordStrength');
+    const label = document.getElementById('passwordLabel');
+    const levels = [
+        { w: '0%', bg: '', text: '', color: '' },
+        { w: '20%', bg: 'bg-red-500', text: 'Sehr schwach', color: 'text-red-500' },
+        { w: '40%', bg: 'bg-orange-500', text: 'Schwach', color: 'text-orange-500' },
+        { w: '60%', bg: 'bg-yellow-500', text: 'Mittel', color: 'text-yellow-500' },
+        { w: '80%', bg: 'bg-green-400', text: 'Stark', color: 'text-green-500' },
+        { w: '100%', bg: 'bg-green-500', text: 'Sehr stark', color: 'text-green-600' },
+    ];
+    const level = levels[strength];
+    bar.style.width = level.w;
+    bar.className = `password-strength-bar h-full rounded-full ${level.bg}`;
+    label.textContent = level.text;
+    label.className = `text-xs mt-1 ${level.color}`;
+});
+
+// Company name availability check
+document.getElementById('company_name').addEventListener('input', function() {
+    clearTimeout(checkTimeout);
+    const val = this.value.trim();
+    const preview = document.getElementById('slugPreview');
+    const check = document.getElementById('companyCheck');
+
+    if (val.length < 2) { preview.textContent = ''; check.classList.add('hidden'); return; }
+
+    preview.textContent = 'Wird geprüft...';
+    checkTimeout = setTimeout(async () => {
+        try {
+            const res = await fetch(`${API_BASE}/check-availability?company_name=${encodeURIComponent(val)}`);
+            const data = await res.json();
+            preview.textContent = `Ihre URL: ${data.suggested_slug}.clood-x.com`;
+            check.classList.remove('hidden');
+            if (data.company_available) {
+                check.innerHTML = '<i class="fas fa-check-circle text-green-500"></i>';
+            } else {
+                check.innerHTML = '<i class="fas fa-times-circle text-red-500"></i>';
+                preview.textContent = 'Dieser Firmenname ist bereits vergeben.';
+            }
+        } catch(e) { preview.textContent = ''; }
+    }, 500);
+});
+
+// Email availability check
+document.getElementById('email').addEventListener('blur', async function() {
+    const email = this.value.trim();
+    const check = document.getElementById('emailCheck');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { check.classList.add('hidden'); return; }
+
+    try {
+        const res = await fetch(`${API_BASE}/check-availability?company_name=test&email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+        check.classList.remove('hidden');
+        check.innerHTML = data.email_available
+            ? '<i class="fas fa-check-circle text-green-500"></i>'
+            : '<i class="fas fa-times-circle text-red-500"></i>';
+        if (!data.email_available) showError('Diese E-Mail-Adresse ist bereits registriert.');
+    } catch(e) {}
+});
+
+// Toggle password visibility
+function togglePassword(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// Submit registration
+async function submitRegistration() {
+    if (!document.getElementById('accept_terms').checked) {
+        return showError('Bitte akzeptieren Sie die AGB und Datenschutzerklärung.');
+    }
+
+    const btn = document.getElementById('btnSubmit');
+    const btnText = document.getElementById('btnSubmitText');
+    const spinner = document.getElementById('btnSpinner');
+
+    btn.disabled = true;
+    btnText.textContent = 'Wird erstellt...';
+    spinner.classList.remove('hidden');
+    hideError();
+
+    try {
+        const res = await fetch(`${API_BASE}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+                company_name: document.getElementById('company_name').value.trim(),
+                full_name: document.getElementById('full_name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim() || null,
+                password: document.getElementById('password').value,
+                password_confirmation: document.getElementById('password_confirmation').value,
+                plan: selectedPlan,
+                branche: 'sicherheitsdienst',
+                accept_terms: true,
+            })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            // Persist the session so the verification screen can use the
+            // authenticated "resend" endpoint.
+            localStorage.setItem('hms_token', data.token);
+            localStorage.setItem('hms_user', JSON.stringify(data.user || {}));
+            localStorage.setItem('hms_tenant', JSON.stringify(data.tenant || {}));
+
+            // Email confirmation is mandatory before app access (EnsureEmailVerified
+            // gate). Send the new owner to the verification screen — it proceeds to
+            // onboarding/app automatically once the address is confirmed — instead
+            // of dropping them straight into onboarding (which the backend blocks).
+            const verifyEmail = document.getElementById('email').value.trim();
+            window.location.href = 'verify-email.php?email=' + encodeURIComponent(verifyEmail);
+        } else {
+            const errors = data.errors ? Object.values(data.errors).flat().join(' ') : (data.error || 'Registrierung fehlgeschlagen.');
+            showError(errors);
+        }
+    } catch(e) {
+        showError('Verbindungsfehler. Bitte versuchen Sie es erneut.');
+    } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Jetzt starten';
+        spinner.classList.add('hidden');
+    }
+}
+
+// Init
+showStep(1);
+</script>
+</body>
+</html>

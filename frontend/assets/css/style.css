@@ -1,0 +1,2718 @@
+/* ============================================
+   HMS Gruppe GmbH & Co. KG — System Styles
+   ============================================ */
+
+:root {
+    /* Material Design 3 — all values resolve to the official
+       --md-sys-* token layer defined in md3-tokens.css (loaded first).
+       The legacy names are kept as aliases so 20 module sheets keep
+       working; NEVER hardcode colors here again — edit md3-tokens.css. */
+    --primary:        var(--md-sys-color-on-surface);
+    --primary-light:  var(--md-sys-color-on-surface-variant);
+    --primary-dark:   var(--md-sys-color-on-primary-container);
+    --accent:         var(--md-sys-color-primary);
+    --accent-hover:   var(--md-ref-palette-primary30);
+    --accent-pressed: var(--md-ref-palette-primary20);
+    --accent-soft:    var(--md-sys-color-primary-container);
+    --accent-line:    var(--md-ref-palette-primary80);
+    --success:        var(--md-ext-color-success);
+    --success-light:  var(--md-ext-color-success-container);
+    --warning:        var(--md-ext-color-warning);
+    --warning-light:  var(--md-ext-color-warning-container);
+    --danger:         var(--md-sys-color-error);
+    --danger-light:   var(--md-sys-color-error-container);
+    --info:           var(--md-ext-color-info);
+    --info-light:     var(--md-ext-color-info-container);
+    --orange:         var(--md-ext-color-warning);
+    --orange-light:   var(--md-ext-color-warning-container);
+    --bg:             var(--md-sys-color-surface-container-low);
+    --white:          var(--md-sys-color-surface-container-lowest);
+    --gray-50:  var(--md-sys-color-surface-container-low);
+    --gray-100: var(--md-sys-color-surface-container);
+    --gray-200: var(--md-sys-color-surface-container-highest);
+    --gray-300: var(--md-sys-color-outline-variant);
+    --gray-400: var(--md-ref-palette-neutral-variant70);
+    --gray-500: var(--md-sys-color-outline);
+    --gray-600: var(--md-sys-color-on-surface-variant);
+    --gray-700: var(--md-ref-palette-neutral-variant30);
+    --gray-800: var(--md-sys-color-on-surface);
+    --gray-900: var(--md-sys-color-on-surface);
+    --shadow:    var(--md-sys-elevation-level1);
+    --shadow-md: var(--md-sys-elevation-level2);
+    --shadow-lg: var(--md-sys-elevation-level3);
+    --radius:    var(--md-sys-shape-corner-large);
+    --radius-sm: var(--md-sys-shape-corner-medium);
+    --radius-lg: var(--md-sys-shape-corner-extra-large);
+    --sidebar-width: 260px;
+    --topbar-height: 60px;
+    --transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    --font: var(--md-ref-typeface-brand);
+}
+
+/* Dark-mode corrections — MUST mirror md3-tokens.css. The :root block
+   above re-declares aliases that point at STATIC palette steps
+   (e.g. gray-700 = neutral-variant30, dark). Because this sheet loads
+   AFTER md3-tokens.css and :root ties with [data-theme="dark"] on
+   specificity, the corrections there get cancelled without this block. */
+[data-theme="dark"] {
+    --gray-400:       var(--md-ref-palette-neutral-variant60);
+    --gray-500:       var(--md-ref-palette-neutral-variant70);
+    --gray-600:       var(--md-ref-palette-neutral-variant80);
+    --gray-700:       var(--md-ref-palette-neutral-variant90);
+    --gray-900:       var(--md-ref-palette-neutral95);
+    --accent-hover:   var(--md-ref-palette-primary70);
+    --accent-pressed: var(--md-ref-palette-primary60);
+    --accent-line:    var(--md-ref-palette-primary40);
+}
+
+/* ── Material Symbols (icon font) ── */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-variation-settings: 'opsz' 24;
+    -webkit-font-smoothing: antialiased;
+}
+.material-symbols-outlined.md-filled { font-variation-settings: 'FILL' 1, 'opsz' 24; }
+
+/* IMPORTANT: never use `* { margin:0; padding:0 }` here. Document rules
+   beat shadow-DOM `:host` styles, so a universal reset strips the internal
+   paddings/margins of EVERY Material Web component (buttons hug their text,
+   dialogs lose their centering). Reset only native elements instead. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+body, h1, h2, h3, h4, h5, h6, p, blockquote, figure, figcaption, hr,
+dl, dd, ol, ul, menu, form, fieldset, legend, input, button, textarea,
+select, optgroup, table, th, td, pre, a, span, div, label, small, strong {
+    margin: 0;
+    padding: 0;
+}
+
+/* MD3 <md-dialog> centers itself with `margin: auto` on a fixed-inset
+   host — the universal margin reset above kills that and pins every
+   dialog to the top-left corner. Restore it for all MD3 dialogs. */
+md-dialog {
+    margin: auto;
+    /* System look: white card surface (default surface-container-high is
+       a grey tone that clashes with the app's white cards). */
+    --md-dialog-container-color: var(--md-sys-color-surface-container-lowest);
+    --md-dialog-container-shape: var(--md-sys-shape-corner-extra-large);
+    --md-dialog-headline-color: var(--md-sys-color-on-surface);
+    --md-dialog-headline-size: 1.25rem;
+    --md-dialog-supporting-text-color: var(--md-sys-color-on-surface-variant);
+}
+/* The dialog's inner paddings live in shadow `::slotted()` rules, which
+   LOSE the cascade against any matching document rule — so the universal
+   `* { padding: 0 }` reset above strips them all (headline glued to the
+   corner, action buttons overflowing the rounded edge). Re-declare the
+   spec paddings at document level, where they win again. */
+md-dialog > [slot="headline"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    box-sizing: border-box;
+    padding: 24px 24px 0;
+}
+md-dialog > [slot="content"] {
+    box-sizing: border-box;
+    padding: 24px;
+}
+md-dialog > [slot="actions"] {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    padding: 16px 24px 24px;
+}
+/* The md-dialog itself lives in the browser top layer (always on top),
+   but its dimming scrim is a plain fixed div with z-index:1 inside the
+   component — so the sidebar (z:100) and topbar (z:90) float ABOVE the
+   scrim and look "attached" to the dialog. While any MD3 dialog is open,
+   drop the chrome below the scrim. Interaction is already blocked by
+   the native modal inertness, this is purely visual. */
+body:has(md-dialog[open]) .sidebar,
+body:has(md-dialog[open]) .topbar,
+/* …and the sticky module toolbars (search/filter bars) for the same reason */
+body:has(md-dialog[open]) .filter-bar,
+body:has(md-dialog[open]) .data-toolbar,
+body:has(md-dialog[open]) .wk-toolbar,
+body:has(md-dialog[open]) .ab-toolbar,
+body:has(md-dialog[open]) .oc-toolbar,
+body:has(md-dialog[open]) .be-toolbar,
+body:has(md-dialog[open]) .or-toolbar,
+body:has(md-dialog[open]) .ph-filter-bar,
+body:has(md-dialog[open]) .ctrl-filters,
+body:has(md-dialog[open]) .users-filters,
+body:has(md-dialog[open]) .cdocs-toolbar,
+body:has(md-dialog[open]) .ma-toolbar {
+    z-index: 0;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--gray-800);
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+html {
+    /* Reserve the scrollbar gutter so locking the page (.modal-open)
+       doesn't shift the layout when the scrollbar is removed. */
+    scrollbar-gutter: stable;
+}
+
+/* While any dialog overlay is open, the page behind it must not scroll.
+   .modal-open is toggled on <html> from app.js (syncBodyScrollLock).
+   Fine pointers (mouse/trackpad): overflow:hidden kills every scroll
+   path incl. keyboard keys and scrollbar drags. Coarse pointers (touch):
+   app.js gates the touchmove+wheel events instead — CSS locking there is
+   BOTH ignored by iOS rubber-banding AND froze md-dialog's own scroller
+   in the app WebView (host is display:contents; the scroll box lives in
+   the shadow <dialog> on the top layer). Never lock <body> here. */
+@media (pointer: fine) {
+    html.modal-open,
+    html.modal-open body {
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+}
+/* Scroll chaining: reaching the end of a dialog's scroller must never
+   spill into the page behind it. NOT on md-dialog's [slot="content"]: on
+   phones it gets overflow-x:hidden (→ overflow-y computes to auto), making
+   it a non-scrolling scroll container that, with `contain`, swallowed every
+   swipe before it reached the real shadow `.scroller` — the dialog froze.
+   That scroller gets `contain` from enhanceDialog() in app.js instead. */
+dialog,
+.modal-body,
+.wp-panel,
+.chat-panel-body { overscroll-behavior: contain; }
+
+/* Thin, modern scrollbars everywhere (main content) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 6px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--gray-400); }
+
+/* ============================================
+   Sidebar — modern dark UI
+   ============================================ */
+.sidebar {
+    width: var(--sidebar-width);
+    /* Distinct white drawer — clearly separated from the tonal canvas */
+    background: var(--white);
+    color: var(--gray-800);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-right: 1px solid var(--gray-200);
+    box-shadow: 1px 0 6px rgba(60,64,67,0.10);
+}
+
+/* Thin custom scrollbar (sidebar only) */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 3px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+.sidebar { scrollbar-width: thin; scrollbar-color: var(--gray-300) transparent; }
+
+.sidebar-header {
+    padding: 20px 18px 18px;
+    border-bottom: none;
+    position: relative;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    min-width: 0; /* allow the name to shrink/wrap inside the flex row */
+}
+
+/* The mark is a square tile that either holds the fallback FA icon
+   or a tenant-uploaded image. Same footprint either way so the
+   sidebar layout never jumps. */
+.logo .logo-mark {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.logo .logo-mark i {
+    font-size: 1.05rem;
+    color: var(--accent);
+}
+.logo .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 4px;
+    background: var(--white);
+}
+
+/* The name auto-shrinks based on length via classes set in JS.
+   Word-break + line-height keep long company names like
+   "HMS Gruppe GmbH & Co. KG" readable on two lines. */
+.logo .logo-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    color: var(--gray-800);
+}
+.logo .logo-name.logo-name-md { font-size: 0.95rem; }
+.logo .logo-name.logo-name-sm { font-size: 0.85rem; }
+.logo .logo-name.logo-name-xs { font-size: 0.78rem; line-height: 1.1; }
+
+/* Account modal — company logo uploader */
+.company-logo-uploader {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    background: var(--gray-50);
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
+.company-logo-uploader .logo-preview {
+    flex: 0 0 96px;
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--gray-400);
+    font-size: 2rem;
+}
+.company-logo-uploader .logo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 6px;
+}
+.company-logo-uploader .logo-actions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.company-logo-uploader .logo-actions .hint {
+    color: var(--gray-500);
+    font-size: 0.78rem;
+}
+.company-logo-uploader .logo-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Signatur & Stempel uploaders (Mein Profil) — checkerboard preview so
+   transparent PNGs are actually visible against the card. */
+.doc-assets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+.doc-asset-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    background: var(--gray-50);
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
+.doc-asset-preview {
+    width: 100%;
+    height: 110px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+    background:
+        conic-gradient(#e2e8f0 25%, #ffffff 0 50%, #e2e8f0 0 75%, #ffffff 0) 0 0 / 16px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--gray-400);
+    font-size: 2.2rem;
+}
+.doc-asset-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.doc-asset-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray-600);
+}
+/* Per-user vs company-default badge under each asset card */
+.doc-asset-status {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+}
+.doc-asset-status.asset-own     { background: #dcfce7; color: #15803d; }
+.doc-asset-status.asset-default { background: #e0e7ff; color: #4338ca; }
+.doc-asset-status.asset-none    { background: var(--gray-100); color: var(--gray-400); }
+.doc-asset-scope {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    cursor: pointer;
+    user-select: none;
+}
+.doc-asset-scope input { cursor: pointer; }
+@media (max-width: 560px) {
+    .doc-assets-grid { grid-template-columns: 1fr; }
+}
+
+.sidebar-subtitle {
+    display: inline-block;
+    margin-top: 6px;
+    margin-left: 52px;
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 2px 10px;
+    background: var(--info-light);
+    border-radius: 999px;
+    letter-spacing: 0.4px;
+}
+
+.sidebar-nav {
+    padding: 14px 10px;
+    flex: 1;
+}
+
+.nav-section {
+    margin-bottom: 14px;
+}
+
+.nav-section-title {
+    padding: 8px 16px 6px;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--gray-600);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nav-section-title::after {
+    content: none;
+}
+
+/* Each nav row */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    color: var(--gray-700);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 999px;
+    margin: 2px 0;
+    transition: background 0.15s ease, color 0.15s ease;
+    position: relative;
+    border: none;
+}
+
+/* Icon now lives in its own subtle tile */
+.nav-item i {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--gray-600);
+    background: none;
+    border: none;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.nav-item:hover {
+    background: rgba(68,71,70,0.08);
+    color: var(--gray-900);
+}
+.nav-item:hover i {
+    color: var(--gray-800);
+}
+
+/* Active state — Gmail-style tonal pill */
+.nav-item.active {
+    background: var(--accent-soft);
+    color: var(--md-sys-color-on-primary-container);
+    font-weight: 700;
+    box-shadow: none;
+}
+.nav-item.active::before {
+    content: none;
+}
+.nav-item.active i {
+    color: var(--md-sys-color-on-primary-container);
+}
+
+.nav-item:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-line);
+}
+
+.badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: white;
+    font-size: 0.66rem;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+    line-height: 1.2;
+    min-width: 18px;
+    text-align: center;
+}
+
+.badge:empty, .badge[data-count="0"] {
+    display: none;
+}
+
+/* ============================================
+   Main Content
+   ============================================ */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100vw - var(--sidebar-width));
+    /* `overflow-x: hidden` here used to break position:sticky on the
+       inner .topbar in Chrome by turning .main-content into a scroll
+       container. The horizontal-overflow guard is preserved by
+       `body { overflow-x: hidden }` (line ~57) so removing it from
+       this level is safe and lets the topbar stay glued to the top
+       on scroll. */
+    min-width: 0;
+}
+
+.topbar {
+    height: var(--topbar-height);
+    background: var(--bg);
+    border-bottom: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    /* Stays glued to the top of the viewport while the user scrolls
+       through long Mitarbeiter / Compliance pages. `-webkit-sticky`
+       fallback is harmless on modern Chrome but rescues older Safari
+       (Mac 12-, iPad). z-index is bumped to 90 so it always wins
+       over the worker-profile-sidebar (sticky, default z-index) and
+       any docs/cards that may carry their own stacking context. */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    box-shadow: none;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--gray-600);
+    cursor: pointer;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.current-date {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+}
+
+.content {
+    padding: 24px;
+    flex: 1;
+    /* fill-mode MUST be backwards, not both: a lingering `transform:
+       translateY(0)` on .content would make every position:fixed descendant
+       (e.g. the worker-messages FAB) position relative to .content instead
+       of the viewport — i.e. it would scroll with the page. */
+    animation: pageFadeIn 0.28s ease backwards;
+}
+
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   Cards & Panels
+   ============================================ */
+.card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body.no-pad {
+    padding: 0;
+}
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-left: 4px solid var(--accent);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-card.green { border-left-color: var(--success); }
+.kpi-card.orange { border-left-color: var(--orange); }
+.kpi-card.red { border-left-color: var(--danger); }
+.kpi-card.blue { border-left-color: var(--accent); }
+.kpi-card.info { border-left-color: var(--info); }
+
+.kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.kpi-card.green .kpi-icon { background: var(--success-light); color: var(--success); }
+.kpi-card.orange .kpi-icon { background: var(--warning-light); color: var(--warning); }
+.kpi-card.red .kpi-icon { background: var(--danger-light); color: var(--danger); }
+.kpi-card.blue .kpi-icon { background: var(--accent-soft); color: var(--accent); }
+.kpi-card.info .kpi-icon { background: var(--info-light); color: var(--info); }
+
+.kpi-content h4 {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+thead {
+    background: var(--gray-50);
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--gray-500);
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--gray-200);
+    transition: var(--transition);
+}
+
+tbody tr:hover {
+    background: var(--gray-50);
+}
+
+tbody td {
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--accent-line);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+.btn-primary:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow);
+}
+.btn-primary:active { background: var(--accent-pressed); }
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+.btn-success:hover { background: #137333; box-shadow: var(--shadow); }
+
+.btn-warning {
+    background: var(--warning);
+    color: white;
+}
+.btn-warning:hover { background: #b25e00; box-shadow: var(--shadow); }
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+.btn-danger:hover { background: #b3261e; box-shadow: var(--shadow); }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--gray-300);
+    color: var(--accent);
+}
+.btn-outline:hover { background: var(--info-light); border-color: var(--accent-line); color: var(--accent-hover); }
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.8rem;
+}
+
+.btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+/* ============================================
+   Forms
+   ============================================ */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.form-control {
+    padding: 9px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    background: var(--white);
+    color: var(--gray-800);
+    font-family: inherit;
+}
+
+.form-control:hover:not(:focus) {
+    border-color: var(--gray-400);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+/* ============================================
+   Status Badges
+   ============================================ */
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-offen { background: #fef3c7; color: #92400e; }
+.status-unbearbeitet { background: #fee2e2; color: #991b1b; }
+.status-bearbeitet { background: #d1fae5; color: #065f46; }
+.status-in_bearbeitung { background: #dbeafe; color: #1e40af; }
+.status-abgeschlossen { background: #d1fae5; color: #065f46; }
+.status-storniert { background: var(--gray-100); color: var(--gray-500); }
+.status-ausstehend { background: #dbeafe; color: #1d4ed8; }
+.status-geplant { background: #fde68a; color: #92400e; }
+.status-ja { background: #d1fae5; color: #065f46; }
+.status-nein { background: #fee2e2; color: #991b1b; }
+.status-erledigt { background: #d1fae5; color: #065f46; }
+
+/* ============================================
+   Filter Bar
+   ============================================ */
+.filter-bar {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.filter-bar .form-group {
+    min-width: 150px;
+    flex: 1;
+}
+
+.filter-bar .form-group label {
+    font-size: 0.7rem;
+}
+
+.filter-bar .form-control {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+}
+
+
+/* ============================================
+   Modal
+   ============================================ */
+/* ============================================
+   Sidebar favorites (star + "Favoriten" section)
+   ============================================ */
+.nav-item .nav-fav-star {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--gray-400);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.nav-item .badge ~ .nav-fav-star { margin-left: 4px; }
+.nav-item .nav-fav-star i {
+    width: auto;
+    height: auto;
+    font-size: 0.78rem;
+    color: inherit;
+}
+.nav-item:hover .nav-fav-star,
+.nav-item .nav-fav-star:focus-visible { opacity: 1; }
+.nav-item .nav-fav-star:hover { background: rgba(68,71,70,0.10); color: #f59e0b; }
+.nav-item.is-fav .nav-fav-star,
+.nav-fav-item .nav-fav-star { opacity: 1; color: #f59e0b; }
+.nav-item.is-fav:not(:hover) .nav-fav-star { opacity: 0.55; }
+.nav-fav-item:not(:hover) .nav-fav-star { opacity: 0; }
+.nav-fav-hint {
+    margin: 2px 16px 6px;
+    padding: 8px 10px;
+    border: 1px dashed var(--gray-300);
+    border-radius: 10px;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--gray-500);
+}
+.nav-fav-hint i { color: #f59e0b; margin-right: 4px; }
+@media (hover: none) {
+    .nav-item .nav-fav-star { opacity: 0.55; }
+    .nav-fav-item .nav-fav-star { opacity: 0.55; }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15,23,42,0.45);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: var(--shadow-lg);
+    animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Attention blink: played when the user tries to interact with the
+   rest of the app (e.g. sidebar) while a modal is open. Horizontal
+   shake + a blue ring flash, like a native OS dialog refusing focus. */
+@keyframes modalAttentionShake {
+    0%   { transform: translateX(0); }
+    15%  { transform: translateX(-10px); }
+    30%  { transform: translateX(8px); }
+    45%  { transform: translateX(-6px); }
+    60%  { transform: translateX(4px); }
+    75%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+}
+@keyframes modalAttentionRing {
+    0%, 100% { box-shadow: var(--shadow-lg); }
+    20%, 60% { box-shadow: 0 0 0 4px var(--accent-line), 0 0 24px rgba(11,87,208,0.35), var(--shadow-lg); }
+}
+.modal-attention {
+    animation: modalAttentionShake 0.5s ease, modalAttentionRing 0.9s ease;
+}
+
+.modal.modal-xl {
+    max-width: 1280px;
+}
+
+.modal.modal-lg {
+    max-width: 920px;
+}
+
+/* Fullscreen toggle for the legacy #modalOverlay modal — mirrors the
+   md-dialog .dlg-max behaviour so every modal can be maximized. */
+.modal.modal-max {
+    max-width: none !important;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+}
+
+.modal-max-btn {
+    /* Absorb the flex free space so the button always sits directly
+       next to the X, no matter what else is in the header. */
+    margin-left: auto;
+    margin-right: 10px;
+}
+.modal-max-btn .material-symbols-outlined {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    z-index: 1;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.modal-close:hover { color: var(--gray-700); }
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* ============================================
+   System Confirm Dialog
+   ============================================ */
+.system-confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(4px);
+}
+.system-confirm-overlay.active { opacity: 1; }
+.system-confirm-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 36px 32px 28px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.92);
+    transition: transform 0.2s ease;
+}
+.system-confirm-overlay.active .system-confirm-box { transform: scale(1); }
+.system-confirm-icon { font-size: 2.8rem; margin-bottom: 16px; }
+.system-confirm-title { font-size: 1.15rem; font-weight: 700; color: var(--gray-900); margin-bottom: 10px; }
+.system-confirm-message { font-size: 0.9rem; color: var(--gray-500); line-height: 1.6; margin-bottom: 28px; }
+.system-confirm-actions { display: flex; gap: 12px; justify-content: center; }
+.system-confirm-actions .btn { min-width: 130px; padding: 11px 22px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+
+/* ============================================
+   Toast Notifications
+   ============================================ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 300;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* When shown as a manual popover (top layer, above md-dialog modals) the UA
+   applies default popover styles — reset them and keep the top-right spot. */
+.toast-container:popover-open,
+.toast-container[popover] {
+    position: fixed !important;
+    inset: auto !important;
+    top: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    color: inherit !important;
+    overflow: visible !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.toast {
+    background: rgba(255,255,255,0.96);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 280px;
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-left: 4px solid var(--accent);
+}
+
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+
+/* Dark mode — elevated dark surface instead of the hardcoded white */
+[data-theme="dark"] .toast {
+    background: var(--md-sys-color-surface-container-high);
+    border-color: var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface);
+}
+
+.toast-message {
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+
+/* ============================================
+   Dashboard Grid
+   ============================================ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.dashboard-grid .card {
+    min-height: 200px;
+}
+
+.report-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.quick-stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.quick-stat:last-child { border-bottom: none; }
+
+.quick-stat-label {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.quick-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray-400);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   Toolbar (above tables)
+   ============================================ */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.toolbar-left {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.search-input {
+    position: relative;
+}
+
+.search-input input {
+    padding: 8px 14px 8px 36px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    min-width: 250px;
+    background: #eaf1fb;
+    font-family: inherit;
+    transition: var(--transition);
+}
+.search-input input:focus {
+    outline: none;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    border-color: transparent;
+}
+
+.search-input i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   Sidebar User Section
+   ============================================ */
+/* Sidebar Close Button (mobile) */
+.sidebar-close {
+    display: none;
+    background: var(--gray-200);
+    border: none;
+    color: var(--gray-600);
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.sidebar-close:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Sidebar Overlay (mobile) */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 299;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.sidebar-user {
+    padding: 12px 14px;
+    margin: 8px 10px 14px;
+    border-radius: var(--radius);
+    background: #f2f6fc;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    transition: background 0.18s ease;
+}
+.sidebar-user:hover {
+    background: #e8f0fe;
+}
+[data-theme="dark"] .sidebar-user {
+    background: var(--md-sys-color-surface-container-high);
+}
+[data-theme="dark"] .sidebar-user:hover {
+    background: var(--md-sys-color-surface-container-highest);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    flex: 1;
+    cursor: pointer;
+}
+
+/* Avatar tile (using the FA user-circle icon as a glyph) */
+.user-info > i {
+    font-size: 1.05rem;
+    color: #ffffff;
+    background: var(--accent);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.user-info > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.user-name {
+    font-size: 0.84rem;
+    color: var(--gray-800);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.1px;
+}
+
+.user-role {
+    display: inline-block;
+    font-size: 0.62rem;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--gray-100);
+    padding: 1px 7px;
+    border-radius: 999px;
+    margin-top: 3px;
+    font-weight: 600;
+}
+
+.btn-logout {
+    background: var(--gray-100);
+    border: none;
+    color: var(--gray-600);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+
+.btn-logout:hover {
+    background: var(--danger-light);
+    color: var(--danger);
+}
+
+.user-info:hover .user-name { color: var(--accent); }
+
+/* Account Modal */
+.account-profile {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 20px 0;
+}
+.account-avatar {
+    flex-shrink: 0;
+}
+.account-avatar i {
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 0.8;
+}
+.account-details {
+    flex: 1;
+    min-width: 0;
+}
+.account-detail-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+.account-detail-row:last-child { border-bottom: none; }
+.account-label {
+    width: 160px;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    font-weight: 500;
+}
+.account-label i {
+    width: 18px;
+    text-align: center;
+    margin-right: 6px;
+    font-size: 0.78rem;
+}
+.account-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+.role-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.role-badge.role-admin { background: #dbeafe; color: #1d4ed8; }
+.role-badge.role-viewer { background: var(--gray-100); color: var(--gray-500); }
+.role-badge.role-editor { background: #d1fae5; color: #059669; }
+.account-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin: 24px 0 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-200);
+}
+.account-section-title i { margin-right: 6px; color: var(--primary); }
+.account-password-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+}
+@media (max-width: 640px) {
+    .account-profile { flex-direction: column; align-items: center; text-align: center; }
+    .account-detail-row { flex-direction: column; gap: 2px; }
+    .account-label { width: auto; }
+    .account-password-form { grid-template-columns: 1fr; }
+}
+
+/* Redesigned Account Modal — Tabs */
+.acc-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: -4px 0;
+}
+.role-badge.role-tenant_admin { background: #ede9fe; color: #6d28d9; }
+.role-badge.role-manager { background: #fef3c7; color: #b45309; }
+
+.acc-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 24px;
+    padding: 0 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.acc-tabs::-webkit-scrollbar { display: none; }
+
+.acc-tab {
+    background: none;
+    border: none;
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: -1px;
+}
+.acc-tab i { font-size: 0.95rem; }
+.acc-tab:hover { color: var(--gray-700); background: var(--gray-50); border-radius: 6px 6px 0 0; }
+.acc-tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: transparent;
+}
+
+.acc-tab-content {
+    padding: 4px 4px 8px;
+    min-height: 280px;
+}
+
+.acc-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray-500);
+    font-size: 0.95rem;
+}
+.acc-loading i { margin-right: 8px; color: var(--primary); }
+
+.acc-section {
+    margin-bottom: 28px;
+}
+.acc-section:last-child { margin-bottom: 0; }
+
+.acc-section-header {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    padding: 0 0 10px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.acc-section-header i {
+    color: var(--primary);
+    font-size: 0.95rem;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-soft, #eff6ff);
+    border-radius: 5px;
+}
+
+.acc-grid {
+    display: grid;
+    gap: 14px;
+}
+.acc-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.acc-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.acc-span-2 { grid-column: span 2; }
+
+.acc-info-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.acc-info-box i {
+    color: #3b82f6;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.acc-hint {
+    display: block;
+    color: var(--gray-500);
+    font-size: 0.72rem;
+    margin-top: 4px;
+}
+
+/* ============================================================
+   Account modal — Documents tab
+   (Gewerbeschein, Handelsregisterauszug, Steuerbescheid, …)
+   ============================================================ */
+.docs-uploader {
+    background: var(--gray-50);
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 4px;
+}
+.docs-uploader-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.6fr 1.6fr;
+    gap: 12px;
+}
+.docs-uploader-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.docs-empty {
+    text-align: center;
+    padding: 28px 16px;
+    color: var(--gray-400);
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-200);
+    border-radius: 10px;
+}
+.docs-empty i {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+}
+
+.docs-count {
+    margin-left: 4px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 10px;
+}
+
+.doc-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+}
+.doc-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+.doc-icon {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--gray-100);
+    font-size: 1.4rem;
+}
+
+/* Tenant-doc card preview thumbnail (replaces the .doc-icon when the
+   document is a PDF / image and a thumb has been generated). */
+.doc-card .doc-thumb {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    font-size: 1.6rem;
+    color: #dc2626;
+    position: relative;
+}
+.doc-card .doc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.doc-card .doc-thumb.doc-thumb-loaded {
+    background: var(--white);
+    border-color: #cbd5e1;
+}
+
+/* Generic styling for thumbnail <img> injected by the shared
+   secure-thumbnail loader. Each module styles the surrounding container
+   itself; we just make sure the image fills it neatly and the icon
+   placeholder gets hidden once the JPG arrives. */
+.doc-thumb img,
+.wk-doc-thumb img,
+.doc-thumb-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: inherit;
+}
+.doc-thumb-loaded i,
+.wk-doc-thumb.doc-thumb-loaded i,
+.doc-thumb-icon.doc-thumb-loaded i {
+    display: none;
+}
+.doc-meta {
+    flex: 1;
+    min-width: 0;
+}
+.doc-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.doc-sub {
+    margin-top: 3px;
+    font-size: 0.76rem;
+    color: var(--gray-500);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+.doc-cat {
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+}
+.doc-dot { color: #cbd5e1; }
+.doc-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-size: 0.85rem;
+}
+.btn-icon:hover {
+    background: var(--gray-200);
+    color: var(--primary);
+}
+.btn-icon-danger:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+@media (max-width: 720px) {
+    .acc-grid-2,
+    .acc-grid-3 { grid-template-columns: 1fr; }
+    .acc-span-2 { grid-column: span 1; }
+    .acc-tab { padding: 10px 12px; font-size: 0.82rem; }
+    .acc-tab span,
+    .acc-tab { gap: 6px; }
+    .docs-uploader-row { grid-template-columns: 1fr; }
+    .doc-card { flex-wrap: wrap; }
+    .doc-actions { width: 100%; justify-content: flex-end; }
+}
+
+/* Topbar Chat Icon */
+.topbar-icon-btn {
+    position: relative;
+    background: none;
+    border: 1px solid var(--gray-200);
+    color: var(--gray-600);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.topbar-icon-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.chat-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.chat-badge.visible {
+    display: flex;
+}
+
+
+/* ============================================
+   Print styles
+   ============================================ */
+.print-only { display: none; }
+
+@media print {
+    .sidebar, .topbar, .toolbar, .modal-overlay, .toast-container, .filter-bar { display: none !important; }
+    .main-content { margin-left: 0; }
+    .content { padding: 0; }
+    .print-only { display: block; }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 640px) {
+    /* CRITICAL: overflowing content must never widen the layout
+       viewport on Android (content would render zoomed-out).
+       `clip`, NOT `hidden`: overflow-x:hidden on <body> turns body into a
+       scroll container, which silently disables position:sticky on the
+       topbar (title + icons scrolled away on phones). */
+    html, body {
+        overflow-x: clip;
+        max-width: 100vw;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 300;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0;
+        max-width: 100vw;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .sidebar-header {
+        position: relative;
+    }
+    .sidebar-close {
+        display: flex;
+        width: 44px;
+        height: 44px;
+        top: 12px;
+        right: 12px;
+    }
+
+    /* Touch targets: min. 44x44 (Apple HIG) */
+    .menu-toggle {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: -8px;
+    }
+    .topbar-icon-btn {
+        width: 44px;
+        height: 44px;
+    }
+    .btn-logout {
+        width: 44px;
+        height: 44px;
+    }
+    .nav-item {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Readability: raise tiny sidebar fonts */
+    .nav-section-title {
+        font-size: 0.72rem;
+    }
+    .user-role {
+        font-size: 0.7rem;
+    }
+
+    /* Topbar: allow wrapping — module-injected controls (month nav,
+       filters) drop to a second row instead of widening the page */
+    .topbar {
+        padding: 4px 12px;
+        gap: 4px 8px;
+        height: auto;
+        min-height: 50px;
+        flex-wrap: wrap;
+    }
+    /* Row 1 is ALWAYS: ☰ · section title · icons (never wraps).
+       Anything a module injects into the topbar (month nav, week nav…)
+       becomes row 2: full width, swipes horizontally, never wraps. */
+    .menu-toggle  { order: 0; flex: 0 0 auto; }
+    .page-title   { order: 1; flex: 1 1 0; min-width: 0; font-size: 1rem;
+                    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topbar-right { order: 2; flex: 0 0 auto; margin-left: auto; gap: 6px; }
+    .topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right) {
+        order: 3;
+        flex: 1 1 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin: 0 0 4px;
+    }
+    .topbar > *:not(.menu-toggle):not(.page-title):not(.topbar-right)::-webkit-scrollbar { display: none; }
+    .topbar > * > * { flex-wrap: nowrap !important; }
+    /* App shell: the fixed-height rule (60px + inset) made the wrapped
+       rows spill over the page content — grow with the content instead.
+       --sa-top is defined by index.php (Android native push / iOS env()). */
+    html.app-shell .topbar {
+        height: auto;
+        min-height: calc(50px + var(--sa-top, 0px));
+    }
+    .current-date {
+        display: none;
+    }
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+    }
+
+    /* Content */
+    .content {
+        padding: 12px;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    .kpi-card {
+        padding: 12px;
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .kpi-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+    .kpi-content h4 {
+        font-size: 0.65rem;
+        word-break: break-word;
+        white-space: normal;
+    }
+    .kpi-value {
+        font-size: 1.2rem;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* Cards */
+    .card-header {
+        padding: 12px;
+    }
+    .card-body {
+        padding: 12px;
+    }
+
+    /* Tables */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    table {
+        min-width: 600px;
+    }
+    th, td {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+    }
+
+    /* Toolbar */
+    .toolbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .toolbar .btn {
+        font-size: 0.78rem;
+        padding: 7px 12px;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+    }
+    .filter-bar .form-group {
+        min-width: unset;
+        width: 100%;
+    }
+
+    /* Modal */
+    .modal-overlay {
+        left: 0;
+        padding: 10px;
+        align-items: flex-end;
+    }
+    .modal {
+        max-width: 100%;
+        max-height: 85vh;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .modal-header {
+        padding: 12px 16px;
+    }
+    .modal-body {
+        padding: 12px 16px;
+    }
+    .modal-footer {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+    }
+    .modal-footer .btn {
+        flex: 1;
+        min-width: 100px;
+    }
+
+    /* Forms */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* Search */
+    .search-input input {
+        max-width: 100%;
+    }
+
+    /* Sidebar user section */
+    .sidebar-user {
+        padding: 12px 16px;
+    }
+
+    /* Report KPI Grid */
+    .report-kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .quick-stat {
+        padding: 8px 0;
+    }
+    .quick-stat-label {
+        font-size: 0.78rem;
+    }
+    .quick-stat-value {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    .topbar {
+        padding: 0 8px;
+    }
+    .content {
+        padding: 8px;
+    }
+}
+
+/* ============================================
+   iPad / Tablet Anpassungen (641px-1024px)
+   Sidebar bleibt sichtbar, Topbar darf umbrechen
+   ============================================ */
+@media (min-width: 641px) and (max-width: 1024px) {
+    /* Sidebar schmaler, aber sichtbar. The variable is what every
+       module dialog (md-dialog.*-xl) uses to size/center itself beside
+       the sidebar — keep it truthful so dialogs don't get cut off. */
+    :root { --sidebar-width: 200px; }
+    .sidebar {
+        width: var(--sidebar-width);
+    }
+    .main-content {
+        margin-left: var(--sidebar-width);
+    }
+
+    /* Topbar: erlaube Umbrechen, damit Week-Nav + Actions nicht
+       abgeschnitten werden */
+    .topbar {
+        padding: 6px 16px;
+        gap: 6px 10px;
+        height: auto;
+        min-height: 50px;
+        flex-wrap: wrap;
+    }
+    .page-title {
+        font-size: 1rem;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+    }
+    .topbar-right {
+        gap: 10px;
+    }
+    .current-date {
+        display: none;
+    }
+
+    /* Content-Padding etwas kompakter */
+    .content {
+        padding: 16px;
+    }
+
+    /* Touch-Targets für iPad-Touch */
+    .topbar-icon-btn {
+        width: 40px;
+        height: 40px;
+    }
+    .nav-item {
+        min-height: 40px;
+    }
+}
+
+/* Tablet PORTRAIT (641px-900px, iPad 768/810/820/834):
+   a permanent sidebar eats 180px of a ~800px screen — the content
+   (7-column Dispo grid, tables) becomes unusable. Behave like mobile
+   here: off-canvas sidebar behind the ☰ button, content full width. */
+@media (min-width: 641px) and (max-width: 900px) {
+    /* Off-canvas → it occupies 0px of layout; dialogs must center on
+       the full viewport. */
+    :root { --sidebar-width: 0px; }
+    .sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        z-index: 300;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0;
+        max-width: 100vw;
+    }
+    .menu-toggle {
+        display: flex;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+        margin-left: -8px;
+    }
+    .sidebar-header {
+        position: relative;
+    }
+    .sidebar-close {
+        display: flex;
+        width: 44px;
+        height: 44px;
+        top: 12px;
+        right: 12px;
+    }
+    .topbar {
+        padding: 4px 12px;
+    }
+    .content {
+        padding: 12px;
+    }
+}
+
+/* ============================================
+   Kleine Laptops & große Tablets QUER (1025px–1440px)
+   z.B. 12.4"-Tablet landscape (~1280px), 13"-Laptop mit Windows-
+   Skalierung 125% (~1093px), iPad Pro 12.9" (1366px).
+   Bisher galt hier die Desktop-Regel (Topbar fix 60px, kein Umbruch):
+   Module wie die Dispo injizieren Woche-Nav + Aktionsbuttons in die
+   Topbar, die dann INNERHALB der 60px umbrachen und wegen
+   align-items:center oben aus dem Viewport ragten (Titel/Nav
+   abgeschnitten). Lösung: die Topbar darf wachsen und umbrechen —
+   passt alles in eine Zeile, bleibt sie exakt 60px wie am Desktop.
+   Sticky-Offsets (--topbar-height) werden von app.js per
+   ResizeObserver live nachgeführt.
+   ============================================ */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .topbar {
+        height: auto;
+        min-height: var(--topbar-height);
+        flex-wrap: wrap;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        row-gap: 6px;
+    }
+    .page-title {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+    }
+}
+
+/* ============================================
+   Sticky page toolbars / filter bars (all modules)
+   Same behaviour as Monatsabschluss: the KPI/stat cards above scroll
+   away, the search/filter row pins right under the global topbar while
+   the list scrolls. --topbar-height is kept live by app.js.
+   ============================================ */
+.filter-bar,
+.data-toolbar,
+.wk-toolbar,
+.ab-toolbar,
+.oc-toolbar,
+.be-toolbar,
+.or-toolbar,
+.ph-filter-bar,
+.ctrl-filters,
+.users-filters,
+.cdocs-toolbar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: var(--topbar-height, 60px);
+    z-index: 20;
+}
+/* Bars without their own surface colour need one so content
+   doesn't show through while pinned. */
+.ab-toolbar,
+.cdocs-toolbar {
+    background: var(--bg);
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+/* Sticky elements must not be clipped by an overflow on the page wrapper. */
+.content { overflow: visible; }
+
+/* ============================================
+   Dialogs on tablets (≤1024px)
+   Companies work on iPads: creating/editing customers, orders,
+   workers must be comfortable. Dialogs go near-fullscreen, two-column
+   form layouts collapse to one, steppers & position rows wrap, and
+   nothing may overflow the dialog horizontally.
+   ============================================ */
+@media (max-width: 1024px) {
+    /* Near-fullscreen dialog, centered on the *content* area (the
+       --sidebar-width variable is truthful per breakpoint: 200px on
+       tablet landscape, 0 when the sidebar is off-canvas). */
+    md-dialog[class*="-dialog-xl"],
+    md-dialog.be-context,
+    md-dialog.or-context,
+    md-dialog.ph-context,
+    md-dialog.pdfd-context {
+        --dlg-w: calc(100vw - var(--sidebar-width, 0px) - 24px);
+        min-width: var(--dlg-w) !important;
+        max-width: var(--dlg-w) !important;
+        max-height: calc(100vh - 24px) !important;
+        max-height: calc(100dvh - 24px) !important;
+        margin-left: calc(var(--sidebar-width, 0px) + 12px) !important;
+        margin-right: 12px !important;
+        --md-dialog-container-max-block-size: calc(100vh - 24px);
+        --md-dialog-container-max-block-size: calc(100dvh - 24px);
+    }
+    md-dialog > [slot="headline"] { padding: 18px 18px 0; }
+    md-dialog > [slot="content"]  { padding: 16px 18px; overflow-x: hidden; }
+    md-dialog > [slot="actions"]  { padding: 12px 18px 18px; }
+
+    /* Legacy .modal (non-MD3) dialogs */
+    .modal { width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; max-height: calc(100dvh - 24px); }
+    .modal-body { overflow-x: hidden; }
+
+    /* Everything inside a dialog stays within its width */
+    md-dialog [slot="content"] *,
+    .modal-body * { min-width: 0; }
+    md-dialog [slot="content"] img,
+    md-dialog [slot="content"] table { max-width: 100%; }
+    /* …except tables that live in their own horizontal scroller — those
+       must be allowed to grow wider than the dialog and scroll sideways. */
+    md-dialog [slot="content"] .or-sub-table-wrap > table,
+    md-dialog [slot="content"] .or-table-wrap > table,
+    md-dialog [slot="content"] .ph-detail-table-wrap > table,
+    md-dialog [slot="content"] .table-container > table { max-width: none; }
+}
+
+/* PHONES (≤640px): the sidebar is off-canvas but --sidebar-width stays
+   260px (the drawer itself is sized from it) — so dialogs must NOT be
+   shifted by it. Fullscreen sheet, no side margins. */
+@media (max-width: 640px) {
+    md-dialog[class*="-dialog-xl"],
+    md-dialog.be-context,
+    md-dialog.or-context,
+    md-dialog.ph-context,
+    md-dialog.pdfd-context {
+        --dlg-w: 100vw;
+        min-width: 100vw !important;
+        max-width: 100vw !important;
+        /* dvh follows the dynamic toolbar; vh is the fallback for WebViews
+           that predate dvh support (an invalid dvh declaration must not
+           leave the dialog height unconstrained). */
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+        margin: 0 !important;
+        --md-dialog-container-shape: 0px;
+        --md-dialog-container-max-block-size: 100vh;
+        --md-dialog-container-max-block-size: 100dvh;
+    }
+    md-dialog > [slot="headline"] { padding: 14px 14px 0; font-size: 1.05rem; }
+    md-dialog > [slot="content"]  { padding: 12px 14px; }
+    md-dialog > [slot="actions"]  { padding: 10px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
+    /* App shell (edge-to-edge WebView): a fullscreen sheet starts at the very
+       top of the screen — push its headline below the status bar / Dynamic
+       Island, and its actions above the home indicator. --sa-* is defined by
+       index.php (Android native push / iOS env()); plain browsers → 0. */
+    html.app-shell md-dialog > [slot="headline"] { padding-top: calc(14px + var(--sa-top, 0px)); }
+    html.app-shell md-dialog > [slot="actions"]  { padding-bottom: calc(14px + var(--sa-bottom, 0px)); }
+    /* Legacy bottom-sheet .modal: keep its footer above the home indicator. */
+    html.app-shell .modal-overlay { padding-bottom: calc(10px + var(--sa-bottom, 0px)); }
+
+    /* Filter toolbars are 3–5 rows tall on a phone — pinning them would
+       eat half the screen. Scroll normally here (tablet/desktop stay sticky). */
+    body .filter-bar, body .data-toolbar, body .wk-toolbar, body .ab-toolbar, body .oc-toolbar,
+    body .be-toolbar, body .or-toolbar, body .ph-filter-bar, body .ctrl-filters,
+    body .users-filters, body .cdocs-toolbar, body .ma-toolbar {
+        position: static;
+    }
+}
+
+/* Tablet portrait & below (≤900px): single-column forms in dialogs */
+@media (max-width: 900px) {
+    .customer-form-layout,
+    .or-form-grid,
+    .wk-data-grid,
+    .be-anf-grid,
+    md-dialog .form-grid,
+    .modal .form-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+
+    /* Wizard stepper: wrap into two rows instead of horizontal scroll */
+    .be-stepper { flex-wrap: wrap; overflow-x: visible; gap: 8px 0; padding-bottom: 12px; }
+    .be-stepper-step { flex: 1 1 33%; min-width: 0; }
+    .be-stepper-step::before,
+    .be-stepper-step::after { display: none; }
+    .be-stepper-label { font-size: 0.66rem; }
+
+    /* Staffing position rows: 2 fields per line instead of 6 columns */
+    .be-anf-pos-head-row { display: none; }
+    .be-anf-pos-row {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 6px;
+        padding: 10px;
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        background: var(--gray-50);
+    }
+    .be-anf-pos-row > *:nth-child(2) { grid-column: 1 / -1; }
+    .be-anf-pos-remove { justify-self: end; }
+
+    /* Breadcrumb chips in the wizard may wrap */
+    .be-breadcrumb, .be-bc { flex-wrap: wrap; }
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.text-muted { color: var(--gray-500); }
+.fw-bold { font-weight: 700; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.gap-1 { gap: 8px; }
+.d-flex { display: flex; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.w-100 { width: 100%; }
+.mt-1 { margin-top: 8px; }
+.currency::after { content: ' €'; }
+
+
+/* ============================================
+   Viewer-mode gating
+   --------------------------------------------
+   When the current user only has *.view (but not *.edit) permission
+   for the active page, <body> gets the viewer-mode class (added by
+   applyEditGating() in app.js). Any element tagged .perm-needs-edit
+   is hidden. The server is still the ground-truth enforcer (see
+   routes/api.php + EnsurePermission middleware) - this is purely UX
+   so view-only users don't see buttons that would 403 on click.
+   ============================================ */
+body.viewer-mode .perm-needs-edit,
+body.viewer-mode [data-perm="edit"] { display: none !important; }
+
+body.viewer-mode .perm-readonly-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   Top horizontal scrollbar for wide tables
+   --------------------------------------------
+   A synced scrollbar injected ABOVE each scrollable .table-container
+   (see initTopScrollbars() in app.js) so users can scroll right to
+   reach hidden columns / action buttons without first scrolling to
+   the bottom of a long table.
+   ============================================ */
+.table-top-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    /* Must be exactly as wide as the table container it mirrors — if the
+       bar itself grows (block parent with min-width:auto on WebKit), its
+       scroll range exceeds the container's and the sync pushes the table
+       PAST its last column (iPad: half the card empty after "scroll right"). */
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.table-top-scroll-inner {
+    height: 1px;
+}
+.table-top-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+.table-top-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.table-top-scroll::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.45);
+    border-radius: 6px;
+}
+.table-top-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.7);
+}
+/* Hide the now-redundant native bottom scrollbar once the top one is active */
+.table-container.has-top-scroll {
+    scrollbar-width: none;
+}
+.table-container.has-top-scroll::-webkit-scrollbar {
+    height: 0;
+}
+
+/* ============================================
+   Floating left/right scroll buttons for wide tables
+   --------------------------------------------
+   Injected by addNavButtons() in app.js (appended to <body>).
+   The buttons are position:fixed; JS tracks the visible slice of the
+   table and keeps them vertically centered on it, so they are always
+   reachable no matter how deep the user has scrolled.
+   ============================================ */
+.hscroll-nav {
+    position: static;
+}
+.hscroll-btn {
+    position: fixed;
+    z-index: 1080;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: var(--md-sys-color-primary-container, #d3e3fd);
+    color: var(--md-sys-color-on-primary-container, #0842a0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.88;
+    transition: opacity 0.15s, transform 0.15s;
+}
+.hscroll-btn:hover {
+    opacity: 1;
+    transform: scale(1.08);
+}
+.hscroll-btn .material-symbols-outlined {
+    font-size: 22px;
+}
+.hscroll-btn.is-hidden { display: none; }
+/* While ANY modal/dialog is open (html.modal-open, kept in sync by
+   syncBodyScrollLock in app.js) the floating page helpers must not
+   bleed through: scroll arrows of background tables sit at z-index
+   1080 and the AI launcher at 9000 — both above the modal overlay
+   (200), covering its content and footer buttons. */
+html.modal-open .hscroll-nav,
+html.modal-open .hscroll-btn,
+html.modal-open .ai-launcher,
+html.modal-open .ai-panel { display: none !important; }
+/* Same for the off-canvas sidebar on phones/tablets (z-index 300): the
+   table scroll arrows (1080) and the AI launcher (9000) floated on top of
+   the open drawer. `.sidebar.open` is toggled by the menu button. */
+body:has(.sidebar.open) .hscroll-nav,
+body:has(.sidebar.open) .hscroll-btn,
+body:has(.sidebar.open) .ai-launcher,
+body:has(.sidebar.open) .ai-panel,
+body:has(.sidebar.open) md-fab.wm-new-chat-fab { display: none !important; }
+@media print {
+    .hscroll-nav { display: none !important; }
+}
+
+/* ============================================
+   Global <md-dialog> enhancements
+   --------------------------------------------
+   Maximize/restore toggle injected into every dialog headline by
+   app.js; .dlg-max expands the dialog to (almost) the full page.
+   ============================================ */
+md-dialog [slot="headline"] {
+    position: relative;
+    padding-right: 84px;
+}
+.dlg-max-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    color: var(--md-sys-color-on-surface-variant, #64748b);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.dlg-max-btn:hover {
+    background: color-mix(in srgb, var(--md-sys-color-on-surface, #1e293b) 8%, transparent);
+}
+.dlg-max-btn .material-symbols-outlined { font-size: 22px; }
+.dlg-close-btn { right: 0; }
+md-dialog [slot="headline"] .dlg-max-btn:not(.dlg-close-btn) { right: 40px; }
+md-dialog.dlg-max {
+    --dlg-w: calc(100vw - 24px);
+    min-width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    min-height: calc(100vh - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    margin: auto !important;
+}
+
+/* Mobile drawer: scrolling inside the menu (or touching the dimmed area)
+   must never scroll the page behind it. */
+.sidebar { overscroll-behavior: contain; }
+.sidebar-overlay { touch-action: none; overscroll-behavior: contain; }
+@media (max-width: 900px) {
+    html:has(.sidebar.open) { overflow: hidden; }
+}
+
+/* Legacy #modal (openModal): header + footer stay put, ONLY the body scrolls.
+   Before, the whole .modal scrolled while phones gave .modal-body
+   overflow-x:hidden (→ a non-scrolling scroll container) together with
+   overscroll-behavior:contain — it swallowed every swipe: the dialog froze
+   and its lower part + footer stayed cut off below the screen. */
+#modal { display: flex; flex-direction: column; overflow: hidden; }
+#modal > .modal-header,
+#modal > .modal-footer { flex-shrink: 0; }
+#modal > .modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+@media (max-width: 1024px) {
+    #modal { max-height: calc(100dvh - 24px - var(--sa-top, 0px) - var(--sa-bottom, 0px)); }
+}

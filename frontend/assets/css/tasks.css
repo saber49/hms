@@ -1,0 +1,3670 @@
+/* ============================================
+   HMS Gruppe - Tasks (Einsätze / Dispo) Styles
+   Backend: api/tasks.php + api/disposition.php
+   ============================================ */
+
+/* ============================================
+   Planner (Einsätze / Dispo / Abschluss)
+   ============================================ */
+.planner-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.planner-toolbar {
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.planner-week-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.planner-topbar-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.planner-topbar-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+}
+
+.planner-week-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.planner-week-range {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+.planner-toolbar-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.planner-overview-cards {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   Disposition: Search + Filters bar
+   Sits in the same row as the overview pills (Ausstehend / Geplant /
+   Bestätigt) and provides client-side filtering of the visible cards.
+   ============================================ */
+.dispo-overview-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.dispo-filterbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+    min-width: 280px;
+}
+
+.dispo-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 220px;
+    max-width: 320px;
+}
+
+.dispo-search-icon {
+    position: absolute;
+    left: 12px;
+    color: var(--gray-400, #9ca3af);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.dispo-search-input {
+    width: 100%;
+    padding: 8px 32px 8px 34px;
+    border: 1px solid var(--gray-200, var(--gray-200));
+    border-radius: 10px;
+    background: var(--white, #fff);
+    font-size: 0.86rem;
+    color: var(--gray-800, #1f2937);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dispo-search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.dispo-search-input::placeholder {
+    color: var(--gray-400, #9ca3af);
+}
+
+.dispo-search-clear {
+    position: absolute;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: var(--gray-100, var(--gray-100));
+    color: var(--gray-500, #6b7280);
+    border-radius: 50%;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+
+.dispo-search-clear:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.dispo-filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px 28px 8px 12px;
+    border: 1px solid var(--gray-200, var(--gray-200));
+    border-radius: 10px;
+    background: var(--white, #fff)
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 6'><path fill='%236b7280' d='M0 0l5 6 5-6z'/></svg>") no-repeat right 10px center;
+    font-size: 0.85rem;
+    color: var(--gray-800, #1f2937);
+    cursor: pointer;
+    max-width: 200px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dispo-filter-select:hover {
+    border-color: #93c5fd;
+}
+
+.dispo-filter-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Visual hint: a select that has a value picked is tinted blue. */
+/* (handled by JS-applied classes — see below) */
+
+.dispo-reset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.dispo-reset-btn:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+}
+
+/* Bereich filter — compact select in the filter bar (replaces the old
+   full-width chip row so search/filters sit one row higher). */
+.dispo-bereich-select {
+    min-width: 120px;
+}
+/* Active selection is tinted like the old active chip. */
+.dispo-bereich-select.has-value {
+    border-color: #93c5fd;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+[data-theme="dark"] .dispo-bereich-select.has-value {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #93c5fd;
+    border-color: rgba(96, 165, 250, 0.45);
+}
+
+.dispo-filter-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--gray-600, #4b5563);
+}
+
+.dispo-filter-summary:empty {
+    display: none;
+}
+
+.dispo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ===== Bereich quick-filter squares (Dispo) ===== */
+.dispo-bereich-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.dispo-bereich-chip {
+    --chip-bg: var(--gray-100);
+    --chip-fg: var(--gray-600);
+    --chip-bd: var(--gray-300);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--chip-bd);
+    background: var(--white);
+    color: var(--chip-fg);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1.2;
+    transition: background 0.13s ease, box-shadow 0.13s ease, transform 0.05s ease, border-color 0.13s ease;
+}
+.dispo-bereich-chip .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--chip-fg);
+    flex: 0 0 auto;
+}
+.dispo-bereich-chip .cnt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--chip-bg);
+    color: var(--chip-fg);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+.dispo-bereich-chip:hover {
+    background: var(--chip-bg);
+    box-shadow: 0 1px 6px rgba(15, 23, 42, 0.1);
+}
+.dispo-bereich-chip:active { transform: scale(0.97); }
+.dispo-bereich-chip.active {
+    background: var(--chip-bg);
+    border-color: var(--chip-fg);
+    box-shadow: 0 0 0 2px var(--chip-bd);
+}
+.dispo-bereich-chip.active .cnt {
+    background: var(--chip-fg);
+    color: #fff;
+}
+.dispo-bereich-all {
+    --chip-bg: #e0e7ff;
+    --chip-fg: #4338ca;
+    --chip-bd: #c7d2fe;
+}
+.dispo-bereich-none {
+    --chip-bg: var(--gray-100);
+    --chip-fg: var(--gray-500);
+    --chip-bd: var(--gray-300);
+}
+.dispo-bereich-reopen {
+    --chip-bg: var(--gray-100);
+    --chip-fg: var(--gray-600);
+    --chip-bd: var(--gray-300);
+    padding: 7px 11px;
+}
+
+/* ===== Floating Bereich selection window (frosted overlay) ===== */
+.dispo-bereich-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.dispo-bereich-gate.open { opacity: 1; }
+.dispo-gate-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+.dispo-gate-panel {
+    position: relative;
+    z-index: 1;
+    width: min(900px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--white);
+    border-radius: 22px;
+    padding: 32px 32px 36px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.38);
+    transform: translateY(14px) scale(0.97);
+    transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.dispo-bereich-gate.open .dispo-gate-panel { transform: none; }
+.dispo-gate-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.13s ease, color 0.13s ease;
+}
+.dispo-gate-close:hover { background: var(--gray-200); color: var(--gray-900); }
+.dispo-gate-head {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.dispo-gate-head i { color: #4338ca; }
+.dispo-gate-sub {
+    color: var(--gray-500);
+    font-size: 0.92rem;
+    margin: 8px 0 24px;
+}
+.dispo-gate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+.dispo-gate-square {
+    --g-bg: #eef2ff;
+    --g-fg: #4338ca;
+    --g-bd: #c7d2fe;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 158px;
+    padding: 26px 16px;
+    border-radius: 18px;
+    border: 2px solid var(--g-bd);
+    background: var(--g-bg);
+    color: var(--g-fg);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    transition: transform 0.13s ease, box-shadow 0.13s ease;
+}
+.dispo-gate-square:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
+}
+.dispo-gate-square:active { transform: translateY(-1px) scale(0.99); }
+.dispo-gate-ico {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    color: var(--g-fg);
+    font-size: 1.45rem;
+    box-shadow: inset 0 0 0 2px var(--g-bd);
+}
+.dispo-gate-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.dispo-gate-count {
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+.dispo-gate-all { --g-bg: #eef2ff; --g-fg: #4338ca; --g-bd: #c7d2fe; }
+.dispo-gate-none { --g-bg: var(--gray-100); --g-fg: #64748b; --g-bd: #cbd5e1; }
+
+/* Dark mode — translucent tints instead of light pastels */
+[data-theme="dark"] .dispo-gate-square,
+[data-theme="dark"] .dispo-gate-all {
+    --g-bg: rgba(129, 140, 248, 0.14);
+    --g-fg: #a5b4fc;
+    --g-bd: rgba(129, 140, 248, 0.45);
+}
+[data-theme="dark"] .dispo-gate-none {
+    --g-bg: var(--gray-100);
+    --g-fg: var(--gray-500);
+    --g-bd: var(--gray-300);
+}
+[data-theme="dark"] .dispo-gate-head i { color: #a5b4fc; }
+
+@media (max-width: 620px) {
+    .dispo-gate-panel { padding: 24px 18px 28px; border-radius: 18px; }
+    .dispo-gate-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .dispo-gate-square { min-height: 128px; padding: 18px 10px; }
+    .dispo-gate-head { font-size: 1.2rem; }
+}
+
+@media (max-width: 880px) {
+    .dispo-overview-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .dispo-filterbar {
+        justify-content: flex-start;
+    }
+    .dispo-search-wrap {
+        max-width: none;
+    }
+    .dispo-filter-select {
+        flex: 1 1 calc(50% - 4px);
+        max-width: none;
+    }
+    .dispo-bereich-chips {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+    }
+    .dispo-bereich-chip { flex: 0 0 auto; }
+}
+
+.planner-calendar {
+    /* `clip` (not `hidden`) keeps the rounded-corner clipping WITHOUT
+       creating a scroll container — otherwise position:sticky on the
+       day headers would stick to this card instead of the page. */
+    overflow: clip;
+}
+
+.planner-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(180px, 1fr));
+    gap: 0;
+    /* The PAGE scrolls normally: the calendar rises under the sticky
+       topbar and the day headers pin right below it. */
+    overflow: visible;
+}
+
+/* Narrow screens: 7 columns don't fit, so the grid must scroll
+   horizontally. That makes it a scroll container (breaking the
+   page-level sticky), so vertical scrolling moves inside too and
+   headers stick to the grid's own top edge instead. */
+/* Only for mouse/trackpad devices (narrow desktop windows). On touch
+   devices (iPad/tablets) an inner scroll container is wrong: a swipe on
+   the Einsatz cards would scroll the grid while the filters stay put.
+   There the PAGE scrolls — see the (pointer: coarse) rule below. */
+@media (max-width: 1500px) and (hover: hover) and (pointer: fine) {
+    .planner-grid {
+        /* Horizontal scroll ONLY. No max-height: the grid takes its full
+           content height so the mouse wheel scrolls the PAGE (filters and
+           KPI cards rise away) instead of a boxed inner scroller — the
+           earlier max-height turned the grid into its own viewport and
+           trapped the wheel inside it. */
+        overflow-x: auto;
+        overflow-y: visible;
+        max-height: none;
+        overscroll-behavior-x: contain;
+    }
+    /* Higher specificity than the base `.planner-day-header` rule below
+       (same specificity + later in the file would otherwise win and pin
+       the header 60px below the grid's top edge, leaving a gap through
+       which the Einsatz cards show above the weekday row). */
+    .planner-grid .planner-day-header { top: 0; }
+}
+
+/* Overflow-driven fallback: the media queries above switch the grid into
+   an inner scroll container only at fixed breakpoints — but whether the
+   7×180px columns fit actually depends on the CONTENT width (sidebar,
+   zoom, windowed browsers). Whenever JS measures a real overflow it adds
+   .hscroll-on so the same scroll-container behaviour applies at any
+   viewport — and the floating hscroll arrows can actually scroll. */
+.planner-grid.hscroll-on {
+    overflow-x: auto;
+    overflow-y: visible;      /* page scrolls vertically — see the rule above */
+    max-height: none;
+    overscroll-behavior-x: contain;
+}
+.planner-grid.hscroll-on .planner-day-header { top: 0; }
+
+/* Phones (<641px): 7 columns can never fit — keep the classic inner
+   scroll container with 180px columns and horizontal swipe. */
+@media (max-width: 640px) {
+    .planner-grid {
+        grid-template-columns: repeat(7, minmax(180px, 1fr));
+        overflow-x: auto;
+        overflow-y: visible;
+        max-height: none;
+        overscroll-behavior-x: contain;
+        overscroll-behavior-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
+    }
+    .planner-grid .planner-day-header { top: 0; }
+}
+
+/* Touch TABLETS 641–1500px (iPad portrait/landscape, 768–1366px): no inner
+   scroll container, 7 equal columns fill the width, page scrolls. */
+@media (min-width: 641px) and (max-width: 1500px) and (pointer: coarse) {
+    .planner-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        overflow: visible;
+        max-height: none;
+    }
+    .planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
+
+    /* Narrow columns (~110–170px): nothing may stick out of the card.
+       Long single words (customer names, "Anforderungen") break, chips
+       stack full-width and wrap instead of being clipped. */
+    .planner-day-column,
+    .planner-kunde-cell        { min-width: 0; padding: 8px; gap: 8px; }
+    /* min-height:0 — the 232px floor sized for wide desktop columns makes
+       iPad cards look stretched even with little content; cards now size
+       to their content on narrow columns. */
+    .planner-card              { min-width: 0; overflow: hidden; padding: 8px; min-height: 0; }
+    .planner-card-title-row    { gap: 4px; }
+    /* break-word (NOT anywhere / word-break:break-word): those shrink the
+       min-content width to one letter, so flex items wrap letter-by-letter.
+       break-word keeps whole words and only splits a word wider than the box. */
+    .planner-card-title,
+    .planner-card-subtitle,
+    .planner-card-note,
+    .planner-card-time         { min-width: 0; overflow-wrap: break-word; word-break: normal; hyphens: auto; }
+    /* Legacy -webkit-box puts the colour dot on its own row and clamps the
+       text to one line ("HA…") — use a plain block with a max-height instead. */
+    .planner-card-title        { display: block; -webkit-line-clamp: unset; line-clamp: unset;
+                                 font-size: 0.76rem; line-height: 1.2; max-height: 3.6em; overflow: hidden; }
+    .planner-card-title .planner-kunde-dot,
+    .planner-card-title > span:first-child { display: inline-block; vertical-align: middle; }
+    .planner-card-time         { font-size: 0.82rem; }
+    .planner-card-subtitle,
+    .planner-card-note         { font-size: 0.7rem; }
+    /* Long object names wrap to 3-4 lines at ~130px column width — clamp to
+       2 lines so cards stay compact. */
+    .planner-card-subtitle,
+    .planner-card-month-objekt {
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .planner-card-count        { min-width: 22px; height: 22px; font-size: 0.68rem; flex: 0 0 auto; }
+
+    /* row+wrap (not column): full-width pills wasted the right half of the
+       card — chips now pack side-by-side and only wrap when needed. */
+    .planner-card-footer,
+    .planner-card-workers      { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 4px; }
+    .planner-card-chip,
+    .planner-card-worker {
+        /* block, not flex: WebKit cannot wrap text inside an anonymous flex
+           item, so names like "Mohamad Mohamad" were clipped at the pill
+           edge instead of wrapping to a second line. */
+        display: block;
+        max-width: 100%;
+        white-space: normal;
+        overflow: hidden;
+        line-height: 1.2;
+        font-size: 0.62rem;
+        padding: 3px 6px;
+        border-radius: 8px;
+        text-align: left;
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+    .planner-card-chip .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
+}
+
+.planner-day-column {
+    min-height: 460px;
+    border-right: 1px solid var(--gray-200);
+    background: var(--white);
+}
+
+.planner-day-column:last-child {
+    border-right: none;
+}
+
+.planner-day-column.today .planner-day-header {
+    background: var(--accent);
+    color: var(--white);
+}
+
+.planner-day-header {
+    padding: 14px 14px 12px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    position: sticky;
+    top: var(--topbar-height, 60px);
+    z-index: 5;
+}
+
+.planner-day-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.planner-day-date {
+    font-size: 0.78rem;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.planner-day-body {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.planner-day-empty,
+.planner-loading,
+.planner-empty-list {
+    padding: 28px 12px;
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 0.82rem;
+}
+
+/* ---- Week view grouped by customer (Kunde rows, like a crew planner) ---- */
+.planner-day-header.today {
+    background: var(--accent);
+    color: var(--white);
+}
+
+.planner-kunde-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--gray-900, #111827);
+}
+
+.planner-kunde-row-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+.planner-kunde-row-count {
+    margin-left: 4px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.planner-kunde-cell {
+    min-height: 54px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.planner-kunde-cell.last {
+    border-right: none;
+}
+
+.planner-kunde-cell.today {
+    background: var(--gray-50);
+}
+
+.planner-week-empty {
+    grid-column: 1 / -1;
+    padding: 48px 12px;
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 0.86rem;
+}
+
+.planner-card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 232px;
+    border: 1px solid #bfdbfe;
+    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: left;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.planner-card:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.planner-card.pending {
+    border-color: #93c5fd;
+    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.planner-card.planned {
+    border-color: #fcd34d;
+    background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.planner-card.confirmed {
+    border-color: #86efac;
+    background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.planner-card.nu-pending {
+    border-color: #c4b5fd;
+    background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.nu-pending-chip {
+    color: #7c3aed !important;
+    background: #ede9fe !important;
+    border: 1px solid #c4b5fd !important;
+}
+
+.nu-accepted-chip {
+    color: #16a34a !important;
+    background: #ecfdf5 !important;
+    border: 1px solid #86efac !important;
+}
+
+.planner-card.rejected {
+    border-color: #fca5a5;
+    background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.planner-card.partial {
+    border-color: #93c5fd;
+    background: repeating-linear-gradient(
+        45deg,
+        #c7defc 0,
+        #c7defc 9px,
+        #eff6ff 9px,
+        #eff6ff 18px
+    );
+}
+
+.planner-card.planned.partial {
+    border-color: #fcd34d;
+    background: repeating-linear-gradient(
+        45deg,
+        #fde68a 0,
+        #fde68a 9px,
+        #fffbeb 9px,
+        #fffbeb 18px
+    );
+}
+
+/* Tombstone: day removed from Bestelleingang → card is locked, grayed-out,
+   read-only. Overrides any status/partial coloring. */
+.planner-card.storno-locked {
+    cursor: not-allowed;
+    opacity: 0.55;
+    filter: grayscale(0.8);
+    border-color: #9ca3af !important;
+    background: repeating-linear-gradient(
+        -45deg,
+        #e5e7eb 0,
+        #e5e7eb 10px,
+        #f3f4f6 10px,
+        #f3f4f6 20px
+    ) !important;
+    pointer-events: auto;
+}
+.planner-card.storno-locked:hover {
+    opacity: 0.7;
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.storno-chip {
+    background: #f3f4f6;
+    color: #6b7280;
+    border: 1px dashed #9ca3af;
+}
+.storno-chip .material-symbols-outlined {
+    font-size: 14px;
+    vertical-align: -2px;
+    margin-right: 2px;
+}
+[data-theme="dark"] .planner-card.storno-locked {
+    border-color: #4b5563 !important;
+    background: repeating-linear-gradient(
+        -45deg,
+        #374151 0,
+        #374151 10px,
+        #1f2937 10px,
+        #1f2937 20px
+    ) !important;
+    opacity: 0.6;
+}
+[data-theme="dark"] .storno-chip {
+    background: #374151;
+    color: #9ca3af;
+    border-color: #4b5563;
+}
+
+.dispo-cnt { font-weight: 700; }
+.dispo-cnt-added { color: #16a34a; }
+.dispo-cnt-req { color: #dc2626; }
+.dispo-cnt-done { color: #16a34a; }
+.dispo-cnt-sep { color: var(--gray-400); margin: 0 1px; }
+
+.planner-card-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.planner-card-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.planner-card-count {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.8);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--gray-700);
+}
+
+.planner-card-time,
+.planner-card-subtitle,
+.planner-card-note {
+    font-size: 0.78rem;
+    margin-top: 6px;
+    color: var(--gray-700);
+}
+
+/* Shift start/end time must be readable at a glance. */
+.planner-card-time {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--gray-900, #111827);
+}
+
+.planner-card-note {
+    color: var(--gray-600);
+    line-height: 1.35;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.planner-card-subtitle {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Push footer (chips) to the bottom so every card ends at the same edge */
+.planner-card-footer {
+    margin-top: auto !important;
+    padding-top: 10px;
+}
+
+.planner-card-footer,
+.planner-card-workers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.planner-card-chip,
+.planner-card-worker {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.75);
+    font-size: 0.72rem;
+    color: var(--gray-700);
+}
+.planner-card-worker {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.planner-card-worker-more {
+    background: var(--gray-200);
+    color: var(--gray-600);
+    font-weight: 700;
+}
+
+.planner-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+}
+/* The column gap is the ONLY spacing between sections — own margins on
+   these blocks used to stack on top of it (≈30–45px empty bands). */
+.planner-detail > .planner-detail-ort,
+.planner-detail > .planner-anf-panel,
+.planner-detail > .planner-detail-topfields,
+.planner-detail > .planner-confirmed-banner,
+.planner-detail > .planner-storno-banner {
+    margin: 0;
+}
+
+.planner-detail-headline {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.planner-time-input {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    padding: 2px 6px;
+    width: 110px;
+    background: var(--white);
+    cursor: pointer;
+}
+.planner-time-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+.planner-beschreibung-input {
+    display: inline-block;
+    font-size: 0.95rem;
+    padding: 3px 8px;
+    margin-top: 4px;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+}
+.planner-beschreibung-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+.planner-original-time {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    background: #fef9c3;
+    border-left: 3px solid #eab308;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-top: -8px;
+}
+.planner-original-time i {
+    color: #eab308;
+    margin-right: 4px;
+}
+
+.planner-detail-tabs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.planner-detail-pill {
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: var(--gray-100);
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.planner-detail-pill.active {
+    background: #eef2ff;
+    color: var(--primary);
+}
+
+.planner-detail-note {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid #22c55e;
+    border-radius: 14px;
+    padding: 16px;
+    background: #f9fffb;
+}
+
+.planner-detail-note i {
+    color: #16a34a;
+    margin-top: 2px;
+}
+
+.planner-detail-meta {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    margin-top: 6px;
+}
+
+.planner-detail-topfields {
+    display: grid;
+    grid-template-columns: minmax(0, 420px);
+    gap: 16px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+.planner-detail-topfields .form-group {
+    margin-bottom: 0;
+}
+
+.planner-detail-topfields label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.planner-detail-topfields select,
+.planner-detail-topfields textarea {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    font-size: 0.88rem;
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+}
+
+.planner-detail-topfields select:focus,
+.planner-detail-topfields textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    outline: none;
+}
+
+.planner-shift-confirmed {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #ecfdf5;
+    border: 1px solid #86efac;
+    color: #166534;
+    font-weight: 700;
+}
+
+.planner-modal-header {
+    position: sticky !important;
+    top: 0;
+    z-index: 10;
+    background: var(--white);
+}
+
+.planner-modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--white);
+    z-index: 10;
+    border-top: 1px solid var(--gray-200);
+}
+
+/* Plan/confirm actions sit right-aligned next to the fullscreen/close
+   buttons (inserted before .modal-max-btn by openPlannerTaskDetail) —
+   no longer floating over the title in the middle of the header. */
+.planner-header-action {
+    position: static;
+    margin-left: auto;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+.planner-modal-header .planner-header-action + .modal-max-btn {
+    margin-left: 0;
+}
+
+.planner-header-action > * {
+    pointer-events: auto;
+}
+
+.planner-header-action-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.planner-team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.planner-team-grid-split {
+    align-items: start;
+}
+
+.planner-team-column {
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.planner-team-column-full {
+    grid-column: 1 / -1;
+}
+
+.planner-team-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.planner-soll-menge {
+    color: var(--gray-500);
+    font-weight: 500;
+}
+.planner-team-header { align-items: center; gap: 10px; }
+.planner-team-title { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.planner-team-count { white-space: nowrap; }
+
+/* ♂/♀ coverage of the required gender mix (display only) */
+.planner-gender-cov { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.planner-gender-cov:empty { display: none; }
+.planner-gender-cov-part {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--gray-100);
+    color: var(--gray-500);
+}
+.planner-gender-cov-part.m.ok { background: #eff6ff; color: #2563eb; }
+.planner-gender-cov-part.w.ok { background: #fdf2f8; color: #db2777; }
+.planner-gender-cov-part.nu { background: #eef2ff; color: #4f46e5; }
+
+/* Order changed the Anforderungen after the shift was staffed */
+.planner-anf-changed {
+    border: 1px solid #fed7aa;
+    background: #fff7ed;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: #9a3412;
+}
+.planner-anf-changed > summary {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    list-style: none;
+    line-height: 1.45;
+}
+.planner-anf-changed > summary::-webkit-details-marker { display: none; }
+.planner-anf-changed > summary .material-symbols-outlined { color: #ea580c; margin-top: 2px; }
+.planner-anf-changed[open] > summary u { display: none; }
+.planner-anf-changed .planner-anf-panel { margin: 10px 0 2px; }
+.planner-anf-changed-empty { margin-top: 8px; color: var(--gray-500); }
+[data-theme="dark"] .planner-anf-changed { background: rgba(234, 88, 12, 0.12); border-color: rgba(234, 88, 12, 0.35); color: #fdba74; }
+[data-theme="dark"] .planner-gender-cov-part { background: var(--gray-200); }
+
+.planner-team-list {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 220px;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.planner-team-list-assigned {
+    background: linear-gradient(180deg, rgba(245, 247, 250, 0.7) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.planner-worker-search-wrap {
+    padding: 12px 12px 0;
+}
+
+.planner-worker-search {
+    width: 100%;
+}
+
+.planner-worker-search input {
+    max-width: 100%;
+}
+
+.planner-worker-item {
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.planner-worker-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    border-color: #cbd5e1;
+}
+
+.planner-worker-item.assigned {
+    border-left: 4px solid var(--warning);
+    background: #fffdf7;
+}
+
+/* Per-worker task input (sent to the worker's app) — only on assigned cards.
+   Separate from the shift-level Dispo note (bemerkung), which stays internal. */
+.planner-worker-task-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px dashed var(--gray-200);
+}
+.planner-worker-task-icon {
+    color: var(--warning);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+.planner-worker-task {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    line-height: 1.35;
+    background: var(--white);
+    /* Long task texts: scroll inside the field (was cut off at 140px)
+       and can be enlarged by dragging the corner. */
+    resize: vertical;
+    overflow-x: hidden;
+    overflow-y: auto;
+    field-sizing: content;
+    max-height: 260px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.planner-worker-task:focus {
+    outline: none;
+    border-color: var(--warning);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+.planner-worker-task::placeholder {
+    color: var(--gray-400);
+    font-size: 0.78rem;
+}
+
+/* Bulk "team task" bar — type once, apply to all assigned workers. */
+.planner-bulk-task {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 10px;
+    padding: 8px;
+    background: var(--gray-50);
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+}
+.planner-bulk-task-icon {
+    color: var(--warning);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+.planner-bulk-task-input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    line-height: 1.35;
+    background: var(--white);
+    /* Long task texts: scroll inside the field (was cut off at 140px)
+       and can be enlarged by dragging the corner. */
+    resize: vertical;
+    overflow-x: hidden;
+    overflow-y: auto;
+    field-sizing: content;
+    max-height: 260px;
+}
+.planner-bulk-task-input:focus {
+    outline: none;
+    border-color: var(--warning);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+.planner-bulk-task-btn {
+    flex-shrink: 0;
+    border: none;
+    background: var(--warning);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s ease;
+}
+.planner-bulk-task-btn:hover { opacity: 0.9; }
+
+/* NU (Subcontractor) worker card — light blue */
+.planner-nu-worker-card {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 4px solid #3b82f6;
+    position: relative;
+}
+.planner-nu-worker-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.12);
+}
+.planner-nu-remove {
+    background: #dbeafe !important;
+    color: #3b82f6 !important;
+}
+.planner-nu-remove:hover {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+}
+
+/* NU Worker Removal Modal */
+#nuRemoveOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+}
+#nuRemoveOverlay.active {
+    display: block;
+}
+.nu-remove-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(3px);
+}
+.nu-remove-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--white);
+    border-radius: 12px;
+    width: 480px;
+    max-width: 94vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: nuRemoveSlideIn 0.2s ease-out;
+}
+@keyframes nuRemoveSlideIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+.nu-remove-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, #1e3a5f, #2563eb);
+    color: #fff;
+}
+.nu-remove-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.nu-remove-header-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+.nu-remove-header-sub {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+.nu-remove-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.15s;
+}
+.nu-remove-close:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+}
+.nu-remove-body {
+    padding: 20px 24px;
+}
+.nu-remove-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--gray-800);
+    margin-bottom: 8px;
+}
+.nu-remove-textarea {
+    width: 100%;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.15s;
+    min-height: 90px;
+}
+.nu-remove-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+.nu-remove-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #1e40af;
+}
+.nu-remove-info i {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.nu-remove-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+}
+.nu-remove-confirm-btn {
+    background: #dc2626 !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+}
+.nu-remove-confirm-btn:hover {
+    background: #b91c1c !important;
+}
+.nu-remove-confirm-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.planner-nu-avatar {
+    background: #3b82f6 !important;
+    color: #fff !important;
+}
+.planner-nu-firma {
+    font-size: 0.72rem;
+    color: #3b82f6;
+    font-weight: 600;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.planner-worker-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.planner-worker-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #cbd5e1;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.planner-worker-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.planner-worker-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.planner-worker-name {
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.planner-worker-subline {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+.planner-worker-side {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.planner-warning-btn {
+    border: none;
+    background: transparent;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Soft variant: only multi_shift hints — info-blue, no alarm */
+.planner-warning-btn.info {
+    color: #3b82f6;
+}
+
+.planner-warning-panel {
+    display: none;
+    padding-top: 4px;
+}
+
+.planner-warning-panel.open {
+    display: block;
+}
+
+.planner-warning-entry {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    font-size: 0.78rem;
+    color: var(--gray-700);
+    margin-top: 6px;
+}
+
+/* Multi-shift soft notice: another shift on the same day, but no time overlap */
+.planner-warning-entry.info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+/* ============================================
+   Quick Overview Cards (Disposition) - moved to tasks.css
+   ============================================ */
+.overview-cards {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.overview-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    min-height: auto;
+}
+
+.overview-card small {
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.overview-card.pending {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+}
+
+.overview-card.planned {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+}
+
+.overview-card.confirmed {
+    background: #ecfdf5;
+    border-color: #86efac;
+    color: #166534;
+}
+
+.overview-card.rejected {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+/* ============================================
+   NU Positionen & Anforderungen — Redesign
+   ============================================ */
+.nu-positions-panel {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-left: 3px solid #f59e0b;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nu-positions-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--gray-50);
+    gap: 10px;
+}
+
+.nu-positions-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nu-positions-header-left i,
+.nu-positions-header-left .material-symbols-outlined {
+    color: var(--accent);
+    font-size: 0.92rem;
+}
+
+.nu-positions-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--gray-800);
+}
+
+.nu-firma-badge {
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    background: var(--accent-soft);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+}
+
+.nu-positions-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nu-close-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-400);
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+    font-size: 0.75rem;
+}
+
+.nu-close-btn:hover {
+    background: #fef2f2;
+    color: #ef4444;
+    border-color: #fca5a5;
+}
+
+.nu-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+    font-weight: 600;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.nu-add-btn:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.nu-add-btn i {
+    font-size: 0.7rem;
+}
+
+.nu-positions-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nu-position-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.nu-position-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: var(--gray-400);
+}
+
+.nu-position-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.nu-position-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.nu-position-card-header .form-control {
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-color: transparent;
+    background: transparent;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.nu-position-card-header .form-control:focus {
+    border-color: var(--accent);
+    background: var(--white);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+.nu-position-count-input {
+    width: 52px !important;
+    text-align: center;
+    font-weight: 700 !important;
+    color: #d97706 !important;
+    border-color: #fde68a !important;
+    background: #fffbeb !important;
+    border-radius: 8px !important;
+}
+
+.nu-position-count-input:focus {
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15) !important;
+}
+
+.nu-position-remove-btn {
+    border: none;
+    background: transparent;
+    color: var(--gray-300);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: all 0.15s;
+}
+
+.nu-position-remove-btn:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.nu-position-card-body {
+    padding: 12px 16px 14px;
+}
+
+.nu-position-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.nu-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.nu-field-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.nu-field-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--gray-500);
+}
+
+.nu-field-group .form-control {
+    font-size: 0.875rem;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    border-color: var(--gray-300);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.nu-field-group .form-control:hover:not(:focus) {
+    border-color: var(--gray-400);
+}
+
+.nu-field-group .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
+.nu-field-group .form-control::placeholder {
+    color: #d1d5db;
+    font-style: italic;
+}
+
+/* Gender split inside a NU position card — shown when Geschlecht=gemischt */
+.nu-geschlecht-mix {
+    display: flex; gap: 8px; margin-top: 6px;
+}
+.nu-geschlecht-mix-part {
+    display: flex; align-items: center; gap: 6px; flex: 1;
+}
+.nu-geschlecht-mix-part .form-control {
+    width: 100%; text-align: center; font-weight: 700;
+}
+.nu-mix-sym { font-size: 1rem; font-weight: 700; flex-shrink: 0; }
+
+.nu-assignment-status {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+}
+
+.nu-assignment-status.waiting {
+    background: var(--gray-50);
+    border: 1px dashed var(--gray-300);
+    color: var(--gray-400);
+}
+
+.nu-assignment-status.partial {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.nu-assignment-status.complete {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+}
+
+.nu-assignment-status-header {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nu-assigned-worker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 0.8rem;
+}
+
+.nu-assigned-worker-avatar {
+    background: #16a34a;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.nu-assigned-worker-name {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.nu-assigned-worker-nr {
+    color: var(--gray-400);
+    font-size: 0.72rem;
+}
+
+.nu-positions-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--gray-100);
+    background: var(--gray-50);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.nu-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--accent);
+    color: var(--md-sys-color-on-primary, #fff);
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.2);
+}
+
+.nu-submit-btn:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    transform: translateY(-1px);
+}
+
+.nu-submit-btn i {
+    font-size: 0.78rem;
+}
+
+.nu-empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.nu-empty-state .nu-empty-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.nu-empty-state .nu-empty-icon i {
+    font-size: 1.1rem;
+    color: var(--gray-400);
+}
+
+.nu-empty-state .nu-empty-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--gray-700);
+}
+
+.nu-empty-state .nu-empty-text {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+.nu-empty-state .nu-empty-cta {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: var(--radius);
+    border: 1px dashed var(--gray-300);
+    background: var(--white);
+    color: var(--gray-600);
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.nu-empty-state .nu-empty-cta:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.nu-empty-state .nu-empty-cta i {
+    font-size: 0.72rem;
+    color: #f59e0b;
+}
+
+.nu-summary-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.nu-summary-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 180px;
+    max-width: 280px;
+    flex: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nu-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.nu-summary-card:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    transform: translateY(-2px);
+}
+
+.nu-summary-card.complete::before {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.nu-summary-card.complete {
+    border-color: #bbf7d0;
+}
+
+.nu-summary-card.complete:hover {
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.nu-summary-card.accepted::before {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.nu-summary-card.accepted {
+    border-color: #bbf7d0;
+}
+
+.nu-summary-card.accepted:hover {
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.nu-summary-card.nu-pending::before {
+    background: linear-gradient(90deg, #a78bfa, #7c3aed);
+}
+
+.nu-summary-card.nu-pending {
+    border-color: #ddd6fe;
+}
+
+.nu-summary-card.nu-pending:hover {
+    border-color: #a78bfa;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+}
+
+.nu-summary-location {
+    font-size: 0.7rem;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.nu-summary-firma {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nu-summary-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nu-summary-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--gray-500);
+}
+
+.nu-summary-stat i {
+    font-size: 0.72rem;
+}
+
+.nu-summary-stat .count {
+    font-weight: 700;
+    color: var(--gray-700);
+}
+
+.nu-summary-stat.filled .count {
+    color: #16a34a;
+}
+
+.nu-summary-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.nu-summary-card:hover .nu-summary-actions {
+    opacity: 1;
+}
+
+.nu-summary-action-btn {
+    border: none;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    cursor: pointer;
+    font-size: 0.72rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+
+.nu-summary-action-btn:hover {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.nu-summary-action-btn.danger:hover {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.nu-add-card {
+    background: var(--gray-50);
+    border: 2px dashed var(--gray-300);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--gray-400);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.nu-add-card:hover {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.nu-add-card i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 640px) {
+    .nu-position-fields {
+        grid-template-columns: 1fr;
+    }
+    .nu-positions-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .nu-summary-cards {
+        flex-direction: column;
+    }
+    .nu-summary-card {
+        max-width: 100%;
+    }
+}
+
+.planner-mobile-toolbar {
+    display: none;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.planner-mobile-weeknav {
+    display: none;
+    padding: 14px 16px;
+}
+
+/* Month Grid View */
+.planner-grid-month {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+}
+
+.planner-month-header {
+    background: var(--gray-50);
+    padding: 8px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-200);
+    border-right: 1px solid var(--gray-100);
+    position: sticky;
+    top: var(--topbar-height, 60px);
+    z-index: 5;
+}
+
+@media (max-width: 768px) {
+    /* Mobile topbar wraps (height:auto, min 50px) */
+    .planner-month-header { top: 50px; }
+}
+
+.planner-month-cell {
+    min-height: 90px;
+    border-bottom: 1px solid var(--gray-100);
+    border-right: 1px solid var(--gray-100);
+    padding: 4px;
+    background: var(--white);
+    overflow: hidden;
+}
+
+.planner-month-cell.today {
+    background: #eff6ff;
+}
+
+.planner-month-cell.planner-month-empty {
+    background: var(--gray-50);
+    min-height: 90px;
+}
+
+.planner-month-cell-date {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    padding: 2px 4px;
+    margin-bottom: 2px;
+}
+
+.planner-month-cell.today .planner-month-cell-date {
+    color: var(--primary);
+}
+
+.planner-month-cell-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.planner-month-cell-body .planner-card {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+    border-radius: 6px;
+    min-height: 0;
+}
+
+.planner-month-cell-body .planner-card-footer {
+    margin-top: 2px !important;
+    padding-top: 0;
+}
+
+.planner-month-cell-body .planner-card-title-row {
+    gap: 4px;
+}
+
+.planner-month-cell-body .planner-card-title {
+    font-size: 0.7rem;
+}
+
+.planner-month-cell-body .planner-card-time,
+.planner-month-cell-body .planner-card-subtitle,
+.planner-month-cell-body .planner-card-note,
+.planner-month-cell-body .planner-card-workers {
+    display: none;
+}
+
+.planner-month-cell-body .planner-card-footer {
+    margin-top: 2px;
+}
+
+.planner-month-cell-body .planner-card-chip {
+    font-size: 0.65rem;
+    padding: 1px 4px;
+}
+
+/* Month view — customer group inside a day cell (mirrors the weekly
+   Kunde rows at monthly scale). */
+.planner-month-kgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.planner-month-kgroup + .planner-month-kgroup {
+    margin-top: 6px;
+}
+.planner-month-kgroup-name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--gray-600);
+    padding: 2px 2px 0;
+    min-width: 0;
+}
+.planner-month-kgroup-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+.planner-month-kgroup-count {
+    flex: 0 0 auto;
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 0 5px;
+    line-height: 14px;
+}
+[data-theme="dark"] .planner-month-kgroup-name {
+    color: var(--gray-300);
+}
+[data-theme="dark"] .planner-month-kgroup-count {
+    background: rgba(255,255,255,0.10);
+    color: var(--gray-400);
+}
+
+/* Object line on the compact month card — stays visible (the generic
+   subtitle is hidden in month cells). */
+.planner-month-cell-body .planner-card-month-objekt {
+    font-size: 0.66rem;
+    color: var(--gray-500);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 1px;
+}
+[data-theme="dark"] .planner-month-cell-body .planner-card-month-objekt {
+    color: var(--gray-400);
+}
+
+.planner-month-empty-label {
+    color: var(--gray-300);
+    font-size: 0.75rem;
+    text-align: center;
+    display: block;
+    padding: 8px 0;
+}
+
+/* View dropdown hover */
+.planner-view-option:hover {
+    background: var(--gray-50);
+}
+
+.planner-topbar-title-mobile {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .planner-shell {
+        gap: 10px;
+    }
+    .planner-topbar-nav {
+        display: none !important;
+    }
+    .planner-topbar-title-mobile {
+        display: inline;
+    }
+    .planner-mobile-toolbar {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+    }
+    .planner-mobile-toolbar .btn {
+        min-width: 0;
+        min-height: 44px;
+        padding: 6px 4px;
+        gap: 3px;
+        justify-content: center;
+        font-size: 0.68rem;
+        line-height: 1.15;
+        white-space: normal;
+        text-align: center;
+    }
+    .planner-mobile-toolbar .material-symbols-outlined {
+        font-size: 1.05rem;
+        flex: 0 0 auto;
+    }
+    .planner-overview-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+    }
+    .planner-overview-cards .overview-card {
+        min-width: 0;
+        min-height: 54px;
+        padding: 6px 4px;
+        gap: 2px;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+    .planner-overview-cards .overview-card small {
+        max-width: 100%;
+        gap: 2px;
+        font-size: 0.64rem;
+    }
+    .planner-overview-cards .overview-card small .material-symbols-outlined {
+        font-size: 0.9rem;
+    }
+    .dispo-overview-row {
+        gap: 8px;
+    }
+    .dispo-filterbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+        min-width: 0;
+    }
+    .dispo-search-wrap {
+        grid-column: 1 / -1;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+    .dispo-search-input,
+    .dispo-filter-select {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        min-height: 36px;
+        padding-top: 6px;
+        padding-bottom: 6px;
+        font-size: 0.75rem;
+    }
+    .dispo-reset-btn {
+        grid-column: 1 / -1;
+        min-height: 34px;
+        padding: 6px 10px;
+        justify-content: center;
+        font-size: 0.75rem;
+    }
+    .dispo-filter-summary {
+        margin-top: 6px;
+        gap: 4px;
+        font-size: 0.72rem;
+    }
+    .planner-mobile-weeknav {
+        display: block;
+        position: relative;
+        z-index: 20;
+        overflow: visible;
+        padding: 10px;
+    }
+    .planner-mobile-weeknav .planner-week-nav {
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        gap: 6px;
+        width: 100%;
+    }
+    .planner-mobile-weeknav .planner-week-nav > .btn {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+    }
+    .planner-mobile-weeknav .planner-view-toggle {
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+    .planner-mobile-weeknav .planner-view-toggle > .btn {
+        min-height: 38px;
+        padding: 7px 16px;
+        font-size: 0.78rem;
+    }
+    .planner-mobile-weeknav .planner-view-dropdown {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+        min-width: 150px !important;
+    }
+}
+
+/* ── Anforderungen (from Bestelleingang, shown to Dispo) ───────── */
+.planner-card-anf-chip {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+.planner-anf-panel {
+    background: #f5f3ff;
+    border: 1px solid #ddd6fe;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 14px 0;
+}
+.planner-anf-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #5b21b6;
+    margin-bottom: 10px;
+}
+.planner-anf-total {
+    background: #5b21b6;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 9px;
+}
+.planner-anf-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.planner-anf-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--white);
+    border: 1px solid #ede9fe;
+    border-radius: 8px;
+    padding: 6px 10px;
+    min-width: 120px;
+}
+.planner-anf-field-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #7c3aed;
+}
+.planner-anf-field-val { font-size: 0.82rem; color: #1f2937; font-weight: 600; }
+.planner-anf-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.82rem;
+}
+.planner-anf-table th {
+    text-align: left;
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--gray-500);
+    background: #faf5ff;
+    padding: 7px 10px;
+    border-bottom: 1px solid #ede9fe;
+}
+.planner-anf-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--gray-100);
+    color: #1f2937;
+}
+.planner-anf-table tr:last-child td { border-bottom: none; }
+.planner-anf-anzahl {
+    font-weight: 800;
+    color: #5b21b6;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   MD3 migration support (Material Symbols replacing FontAwesome)
+   ------------------------------------------------------------
+   FontAwesome <i> icons scale with the surrounding font-size;
+   Material Symbols default to 24px. These rules pin the swapped
+   icons to 1em inside compact chrome (chips, pills, badges,
+   panels) so nothing grows. Buttons/topbar icons already used
+   Material Symbols before and keep their existing look.
+   ============================================================ */
+.overview-card small .material-symbols-outlined,
+.dispo-chip .material-symbols-outlined,
+.dispo-filter-summary > .material-symbols-outlined,
+.dispo-search-clear .material-symbols-outlined,
+.dispo-reset-btn .material-symbols-outlined,
+.dispo-bereich-chip .material-symbols-outlined,
+.planner-card-chip .material-symbols-outlined,
+.planner-anf-panel .material-symbols-outlined,
+.planner-detail-note .material-symbols-outlined,
+.planner-original-time .material-symbols-outlined,
+.planner-detail .material-symbols-outlined,
+.nu-positions-panel .material-symbols-outlined,
+.planner-nu-firma .material-symbols-outlined,
+.planner-worker-item .material-symbols-outlined,
+.wp-toolbar .material-symbols-outlined,
+.nu-remove-info .material-symbols-outlined,
+.nu-remove-footer .material-symbols-outlined,
+.nu-remove-close .material-symbols-outlined,
+.dispo-gate-close .material-symbols-outlined {
+    font-size: 1em;
+    line-height: 1;
+    vertical-align: -2px;
+}
+/* Slightly larger where the icon is the visual anchor */
+.wp-header-title .material-symbols-outlined { font-size: 1.1em; vertical-align: -3px; }
+.dispo-gate-head .material-symbols-outlined { font-size: 1.15em; vertical-align: -3px; }
+.dispo-gate-ico .material-symbols-outlined { font-size: 1.5rem; }
+.nu-remove-header-icon .material-symbols-outlined { font-size: 1.25rem; }
+.nu-empty-icon .material-symbols-outlined { font-size: 1.6rem; }
+.nu-add-card .material-symbols-outlined { font-size: 1.3rem; }
+.wp-empty .material-symbols-outlined {
+    font-size: 2.2rem;
+    color: var(--gray-300, #cbd5e1);
+    display: block;
+    margin: 0 auto 10px;
+}
+/* Loading spinners swapped from fa-spinner */
+.wp-empty md-circular-progress { margin: 0 auto 10px; display: block; }
+
+/* ── Boxes previously styled inline in tasks.js ── */
+.planner-confirmed-banner {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.planner-confirmed-banner .material-symbols-outlined { color: #16a34a; font-size: 1.3rem; }
+.planner-confirmed-banner span:last-child { font-weight: 700; color: #15803d; font-size: 0.95rem; }
+
+/* Storno-locked banner: day removed from Bestelleingang */
+.planner-storno-banner {
+    background: #f3f4f6;
+    border: 1px dashed #9ca3af;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.planner-storno-banner .material-symbols-outlined { color: #6b7280; font-size: 1.3rem; }
+.planner-storno-banner span:last-child { font-weight: 700; color: #4b5563; font-size: 0.95rem; }
+[data-theme="dark"] .planner-storno-banner {
+    background: #1f2937;
+    border-color: #4b5563;
+}
+[data-theme="dark"] .planner-storno-banner .material-symbols-outlined { color: #9ca3af; }
+[data-theme="dark"] .planner-storno-banner span:last-child { color: #d1d5db; }
+.planner-detail-ort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: #1e3a8a;
+}
+.planner-detail-ort a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.dispo-truncated-warning {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin-top: 8px;
+    font-size: 0.82rem;
+    color: #92400e;
+}
+
+/* ============================================================
+   DARK MODE — Dispo / Einsätze
+   All hardcoded light pastels above are swapped for translucent
+   tints on dark surfaces so text (light gray vars) stays readable.
+   ============================================================ */
+
+/* ── Board cards ── */
+[data-theme="dark"] .planner-card,
+[data-theme="dark"] .planner-card.pending {
+    border-color: rgba(96, 165, 250, 0.4);
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.2) 100%);
+}
+[data-theme="dark"] .planner-card.planned {
+    border-color: rgba(251, 191, 36, 0.4);
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.18) 100%);
+}
+[data-theme="dark"] .planner-card.confirmed {
+    border-color: rgba(74, 222, 128, 0.4);
+    background: linear-gradient(180deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.18) 100%);
+}
+[data-theme="dark"] .planner-card.nu-pending {
+    border-color: rgba(167, 139, 250, 0.4);
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.2) 100%);
+}
+[data-theme="dark"] .planner-card.rejected {
+    border-color: rgba(248, 113, 113, 0.4);
+    background: linear-gradient(180deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.18) 100%);
+}
+[data-theme="dark"] .planner-card.partial {
+    border-color: rgba(96, 165, 250, 0.4);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(59, 130, 246, 0.22) 0,
+        rgba(59, 130, 246, 0.22) 9px,
+        rgba(59, 130, 246, 0.08) 9px,
+        rgba(59, 130, 246, 0.08) 18px
+    );
+}
+[data-theme="dark"] .planner-card.planned.partial {
+    border-color: rgba(251, 191, 36, 0.4);
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(245, 158, 11, 0.22) 0,
+        rgba(245, 158, 11, 0.22) 9px,
+        rgba(245, 158, 11, 0.08) 9px,
+        rgba(245, 158, 11, 0.08) 18px
+    );
+}
+[data-theme="dark"] .planner-card-count,
+[data-theme="dark"] .planner-card-chip,
+[data-theme="dark"] .planner-card-worker {
+    background: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .nu-pending-chip {
+    color: #c4b5fd !important;
+    background: rgba(139, 92, 246, 0.18) !important;
+    border-color: rgba(167, 139, 250, 0.45) !important;
+}
+[data-theme="dark"] .nu-accepted-chip {
+    color: #4ade80 !important;
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(74, 222, 128, 0.45) !important;
+}
+[data-theme="dark"] .dispo-cnt-added,
+[data-theme="dark"] .dispo-cnt-done { color: #4ade80; }
+[data-theme="dark"] .dispo-cnt-req { color: #f87171; }
+
+/* ── Overview cards (Ausstehend / Geplant / …) ── */
+[data-theme="dark"] .overview-card.pending {
+    background: rgba(59, 130, 246, 0.14);
+    border-color: rgba(96, 165, 250, 0.45);
+    color: #93c5fd;
+}
+[data-theme="dark"] .overview-card.planned {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(251, 191, 36, 0.45);
+    color: #fcd34d;
+}
+[data-theme="dark"] .overview-card.confirmed {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(74, 222, 128, 0.45);
+    color: #86efac;
+}
+[data-theme="dark"] .overview-card.rejected {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(248, 113, 113, 0.45);
+    color: #fca5a5;
+}
+
+/* ── Month view ── */
+[data-theme="dark"] .planner-month-cell.today {
+    background: rgba(59, 130, 246, 0.12);
+}
+
+/* ── Detail modal ── */
+[data-theme="dark"] .planner-detail-pill.active {
+    background: rgba(129, 140, 248, 0.16);
+    color: #a5b4fc;
+}
+[data-theme="dark"] .planner-detail-note {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(74, 222, 128, 0.35);
+    border-left-color: #4ade80;
+}
+[data-theme="dark"] .planner-detail-note i,
+[data-theme="dark"] .planner-detail-note .material-symbols-outlined { color: #4ade80; }
+[data-theme="dark"] .planner-original-time {
+    background: rgba(234, 179, 8, 0.12);
+    border-left-color: #facc15;
+    color: var(--gray-600);
+}
+[data-theme="dark"] .planner-original-time i { color: #facc15; }
+[data-theme="dark"] .planner-shift-confirmed {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(74, 222, 128, 0.45);
+    color: #86efac;
+}
+[data-theme="dark"] .planner-confirmed-banner {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(74, 222, 128, 0.35);
+}
+[data-theme="dark"] .planner-confirmed-banner .material-symbols-outlined { color: #4ade80; }
+[data-theme="dark"] .planner-confirmed-banner span:last-child { color: #86efac; }
+[data-theme="dark"] .planner-detail-ort {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(96, 165, 250, 0.35);
+    color: #bfdbfe;
+}
+[data-theme="dark"] .planner-detail-ort a { color: #93c5fd; }
+[data-theme="dark"] .dispo-truncated-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(251, 191, 36, 0.45);
+    color: #fcd34d;
+}
+
+/* ── Team lists / worker cards ── */
+[data-theme="dark"] .planner-team-list-assigned {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0) 100%);
+}
+[data-theme="dark"] .planner-worker-item:hover { border-color: var(--gray-400); }
+[data-theme="dark"] .planner-worker-item.assigned {
+    background: rgba(245, 158, 11, 0.08);
+}
+[data-theme="dark"] .planner-worker-avatar {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+[data-theme="dark"] .planner-bulk-task { border-color: var(--gray-300); }
+[data-theme="dark"] .planner-warning-entry {
+    background: rgba(249, 115, 22, 0.1);
+    border-color: rgba(253, 186, 116, 0.4);
+}
+[data-theme="dark"] .planner-warning-entry.info {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(96, 165, 250, 0.35);
+}
+[data-theme="dark"] .planner-warning-btn.info { color: #60a5fa; }
+
+/* ── NU worker cards / removal modal ── */
+[data-theme="dark"] .planner-nu-worker-card {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(96, 165, 250, 0.35);
+    border-left-color: #60a5fa;
+}
+[data-theme="dark"] .planner-nu-remove {
+    background: rgba(59, 130, 246, 0.18) !important;
+    color: #93c5fd !important;
+}
+[data-theme="dark"] .planner-nu-remove:hover {
+    background: rgba(239, 68, 68, 0.18) !important;
+    color: #fca5a5 !important;
+}
+[data-theme="dark"] .planner-nu-firma { color: #93c5fd; }
+[data-theme="dark"] .nu-remove-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(96, 165, 250, 0.35);
+    color: #bfdbfe;
+}
+[data-theme="dark"] .nu-remove-close:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* ── NU positions panel ── */
+[data-theme="dark"] .nu-firma-badge {
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+}
+[data-theme="dark"] .nu-add-btn {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(251, 191, 36, 0.4);
+    color: #fcd34d;
+}
+[data-theme="dark"] .nu-add-btn:hover {
+    background: rgba(245, 158, 11, 0.2);
+    border-color: #f59e0b;
+}
+[data-theme="dark"] .nu-close-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(248, 113, 113, 0.45);
+}
+[data-theme="dark"] .nu-position-card-header { background: var(--gray-50); }
+[data-theme="dark"] .nu-position-count-input {
+    color: #fcd34d !important;
+    border-color: rgba(251, 191, 36, 0.4) !important;
+    background: rgba(245, 158, 11, 0.12) !important;
+}
+[data-theme="dark"] .nu-position-remove-btn { color: var(--gray-400); }
+[data-theme="dark"] .nu-position-remove-btn:hover {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.15);
+}
+[data-theme="dark"] .nu-field-group .form-control::placeholder,
+[data-theme="dark"] .nu-position-card-header .form-control::placeholder { color: var(--gray-400); }
+[data-theme="dark"] .nu-position-card-header .form-control { color: var(--gray-900); }
+[data-theme="dark"] .nu-assignment-status.waiting { border-color: var(--gray-300); }
+[data-theme="dark"] .nu-assignment-status.partial {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(251, 191, 36, 0.4);
+    color: #fcd34d;
+}
+[data-theme="dark"] .nu-assignment-status.complete {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(74, 222, 128, 0.35);
+    color: #4ade80;
+}
+[data-theme="dark"] .nu-empty-state .nu-empty-cta:hover {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fcd34d;
+}
+[data-theme="dark"] .nu-summary-firma { color: var(--gray-900); }
+[data-theme="dark"] .nu-summary-card.complete,
+[data-theme="dark"] .nu-summary-card.accepted { border-color: rgba(74, 222, 128, 0.4); }
+[data-theme="dark"] .nu-summary-card.nu-pending { border-color: rgba(167, 139, 250, 0.4); }
+[data-theme="dark"] .nu-summary-stat.filled .count { color: #4ade80; }
+[data-theme="dark"] .nu-summary-action-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+[data-theme="dark"] .nu-add-card {
+    background: var(--gray-50);
+    border-color: var(--gray-300);
+}
+[data-theme="dark"] .nu-add-card:hover {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: #f59e0b;
+    color: #fcd34d;
+}
+
+/* ── Anforderungen panel ── */
+[data-theme="dark"] .planner-card-anf-chip {
+    background: rgba(129, 140, 248, 0.16);
+    color: #a5b4fc;
+}
+[data-theme="dark"] .planner-anf-panel {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(167, 139, 250, 0.3);
+}
+[data-theme="dark"] .planner-anf-head { color: #c4b5fd; }
+[data-theme="dark"] .planner-anf-total { background: #7c3aed; }
+[data-theme="dark"] .planner-anf-field { border-color: rgba(167, 139, 250, 0.25); }
+[data-theme="dark"] .planner-anf-field-label { color: #a78bfa; }
+[data-theme="dark"] .planner-anf-field-val { color: var(--gray-900); }
+[data-theme="dark"] .planner-anf-table th {
+    background: rgba(139, 92, 246, 0.1);
+    border-bottom-color: rgba(167, 139, 250, 0.25);
+}
+[data-theme="dark"] .planner-anf-table td { color: var(--gray-800); }
+[data-theme="dark"] .planner-anf-anzahl { color: #c4b5fd; }
+
+/* ── New NU selection overlay + card ── */
+.planner-add-nu-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px; border: 1.5px dashed var(--accent);
+    border-radius: 16px; background: var(--white);
+    color: var(--accent);
+    cursor: pointer; transition: all 0.2s;
+    min-height: 64px;
+}
+.planner-add-nu-card:hover { background: var(--accent-soft); border-style: solid; box-shadow: 0 4px 14px rgba(11,87,208,0.12); }
+.planner-add-nu-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent); color: var(--md-sys-color-on-primary, #fff);
+}
+.planner-add-nu-text { flex: 1; }
+.planner-add-nu-title { font-weight: 700; font-size: 0.95rem; color: var(--accent); }
+.planner-add-nu-sub { font-size: 0.78rem; color: var(--gray-500); margin-top: 2px; }
+
+.planner-nu-select-overlay {
+    position: fixed; inset: 0; z-index: 3000;
+    background: rgba(15,23,42,0.55);
+    align-items: center; justify-content: center;
+    padding: 24px;
+    backdrop-filter: blur(3px);
+    overflow: hidden;
+}
+.planner-nu-select-dialog {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 24px;
+    width: 100%; max-width: 1080px; max-height: 88vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 32px 90px rgba(0,0,0,0.35), 0 0 0 6px rgba(255,255,255,0.06);
+    overflow: hidden;
+    transition: max-width 0.2s ease;
+}
+/* Select view = compact popup (just the partner list). */
+.planner-nu-select-dialog[data-view="select"] { max-width: 620px; }
+.planner-nu-select-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 28px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    color: var(--md-sys-color-on-primary, #fff);
+}
+.planner-nu-select-title { font-size: 1.3rem; font-weight: 700; color: var(--md-sys-color-on-primary, #fff); }
+.planner-nu-select-sub { font-size: 0.82rem; color: color-mix(in srgb, var(--md-sys-color-on-primary, #fff) 85%, transparent); margin-top: 4px; }
+.planner-nu-select-close {
+    background: color-mix(in srgb, var(--md-sys-color-on-primary, #fff) 15%, transparent);
+    border: none; color: var(--md-sys-color-on-primary, #fff);
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; cursor: pointer; line-height: 1;
+    transition: background 0.15s;
+}
+.planner-nu-select-close:hover { background: color-mix(in srgb, var(--md-sys-color-on-primary, #fff) 25%, transparent); }
+.planner-nu-select-body {
+    display: flex; flex-direction: column; gap: 10px;
+    padding: 24px 28px; overflow-y: auto; flex: 1;
+    overscroll-behavior: contain;
+    background: var(--gray-50);
+}
+.planner-nu-edit-body {
+    padding: 24px 28px; overflow-y: auto; flex: 1;
+    overscroll-behavior: contain;
+    background: var(--gray-50);
+}
+.planner-nu-edit-body .nu-positions-panel {
+    border-left-color: var(--accent);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.planner-nu-select-list { display: flex; flex-direction: column; gap: 12px; }
+.planner-nu-select-list-title {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--gray-500);
+    margin-bottom: 4px;
+}
+.planner-nu-select-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px; border: 1px solid var(--gray-200);
+    border-radius: 16px; background: var(--white);
+    cursor: pointer; transition: all 0.18s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.planner-nu-select-item:hover {
+    border-color: var(--accent);
+    background: var(--white);
+    box-shadow: 0 8px 22px rgba(11,87,208,0.15);
+    transform: translateY(-2px);
+}
+.planner-nu-select-avatar {
+    width: 50px; height: 50px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--accent-soft); color: var(--accent);
+    font-weight: 700; font-size: 0.95rem;
+}
+.planner-nu-select-info { flex: 1; }
+.planner-nu-select-name { font-weight: 700; color: var(--gray-900); font-size: 0.95rem; }
+.planner-nu-select-bereich { font-size: 0.78rem; color: var(--gray-500); margin-top: 3px; }
+.planner-nu-select-arrow {
+    color: var(--accent); opacity: 0.7; transition: opacity 0.15s;
+}
+.planner-nu-select-item:hover .planner-nu-select-arrow { opacity: 1; }
+
+/* ============================================
+   iPad / Tablet (641px–1024px)
+   Ziel: verhält sich wie Desktop, nur kompakter.
+   - Desktop-Topbar-Nav bleibt, Mobile-Toolbar bleibt weg
+   - Die SEITE scrollt (nicht das Grid) → Filter scrollen weg,
+     Day-Header pinnen unter der Topbar (wie am Laptop)
+   - 7 Spalten mit fester Mindestbreite, horizontal scrollbar
+     statt gequetscht → Namen bleiben lesbar
+   - Mitarbeiter-Namen dürfen auf 2 Zeilen umbrechen
+   ============================================ */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .planner-topbar-nav        { display: inline-flex !important; }
+    .planner-topbar-title-mobile,
+    .planner-mobile-toolbar,
+    .planner-mobile-weeknav    { display: none !important; }
+
+    .planner-topbar-actions .planner-btn-label { display: none; }
+    .planner-topbar-actions .btn { padding: 8px 10px; }
+
+    /* Overview + Filter: untereinander, volle Breite */
+    .dispo-overview-row  { flex-direction: column; align-items: stretch; }
+    .dispo-filterbar     { justify-content: flex-start; }
+    .dispo-search-wrap   { max-width: none; flex: 1 1 100%; }
+    .dispo-filter-select { flex: 1 1 calc(50% - 4px); max-width: none; }
+    .dispo-bereich-chips { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .dispo-bereich-chip  { flex: 0 0 auto; }
+
+    /* Kalender: 7 Spalten passen in die Breite (Sidebar ist schmal),
+       die SEITE scrollt vertikal → Filter scrollen weg wie am Laptop.
+       Kein inneres Scroll-Container mehr (überschreibt die 1500px-Regel). */
+    .planner-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        overflow: visible;
+        max-height: none;
+    }
+    /* Day-Header pinnt unter der Topbar (die auf iPad umbricht → höher) */
+    .planner-grid .planner-day-header { top: var(--topbar-height, 60px); }
+    .planner-kunde-row { position: static; }
+
+    /* Karten kompakter, aber lesbar */
+    .planner-card        { min-height: 170px; padding: 10px; border-radius: 10px; }
+    .planner-card-title  { font-size: 0.8rem; }
+    .planner-card-time,
+    .planner-card-subtitle,
+    .planner-card-note   { font-size: 0.72rem; }
+    .planner-day-header  { padding: 10px 10px 8px; }
+    .planner-day-name    { font-size: 0.75rem; }
+    .planner-day-date    { font-size: 0.7rem; }
+    .planner-day-body    { padding: 8px; gap: 8px; }
+
+    /* Mitarbeiter-Namen: nicht abschneiden, sondern umbrechen */
+    .planner-card-worker {
+        max-width: 100%;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        line-height: 1.25;
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+    .planner-card-chip { font-size: 0.7rem; }
+
+    /* Touch-Targets */
+    .dispo-bereich-chip  { padding: 9px 16px; font-size: 0.85rem; }
+    .dispo-filter-select { padding: 10px 28px 10px 12px; font-size: 0.88rem; }
+    .dispo-search-input  { padding: 10px 32px 10px 34px; font-size: 0.88rem; }
+}
+
+/* Tablet PORTRAIT (641px–900px): even with the sidebar off-canvas,
+   7 columns in ~800px are ~110px — too narrow to read. Give them a fixed
+   160px and let the CALENDAR swipe horizontally. Its height stays
+   auto (no max-height), so vertical scrolling remains on the page and
+   the filters still scroll away. */
+@media (min-width: 641px) and (max-width: 900px) and (pointer: coarse) {
+    .planner-calendar {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
+    }
+    .planner-grid {
+        grid-template-columns: repeat(7, 160px);
+        min-width: calc(7 * 160px);
+        overflow: visible;
+        max-height: none;
+    }
+    .planner-day-column,
+    .planner-kunde-cell { scroll-snap-align: start; }
+    /* Headers can't pin to the viewport inside a horizontal scroller —
+       keep them static so no gap/overlap appears. */
+    .planner-grid .planner-day-header { position: static; }
+    /* Wider columns: back to readable sizes and one-row chips. */
+    .planner-card              { padding: 10px; }
+    .planner-card-title        { font-size: 0.82rem; max-height: none; }
+    .planner-card-time         { font-size: 0.9rem; }
+    .planner-card-subtitle,
+    .planner-card-note         { font-size: 0.74rem; }
+    .planner-card-footer,
+    .planner-card-workers      { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+    .planner-card-chip,
+    .planner-card-worker       { font-size: 0.7rem; padding: 4px 8px; display: inline-flex; flex-wrap: nowrap; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+    .planner-card-worker       { max-width: 140px; }
+}
+
+/* iPad Portrait (641px–834px) — Filter vollständig stapeln */
+@media (min-width: 641px) and (max-width: 834px) {
+    .dispo-filterbar     { flex-direction: column; align-items: stretch; gap: 6px; }
+    .dispo-filter-select { flex: 1 1 100%; }
+    .dispo-reset-btn     { justify-content: center; }
+    .planner-overview-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+}
+
+/* ============================================
+   SMARTPHONE (≤640px) — "Schicht bearbeiten"-Modal
+   Nur das Planner-Modal; Tablet-Regeln (641px+) bleiben unberührt.
+   - Header: Status-Buttons (Geplant/Bestätigen) nicht mehr absolut
+     über dem Titel, sondern als eigene Zeile darunter
+   - Zugewiesen / Mitarbeiter: untereinander statt nebeneinander
+   - "Für alle"-Leiste: Textarea volle Breite, Button darunter
+   - Footer: 2-spaltiges Raster, Speichern über die volle Breite
+   ============================================ */
+@media (max-width: 640px), (max-height: 500px) and (pointer: coarse) {
+    #modalOverlay:has(.planner-modal-header) {
+        align-items: stretch;
+        padding: var(--sa-top, 0px) 0 var(--sa-bottom, 0px);
+    }
+    #modalOverlay:has(.planner-modal-header) .modal {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        max-height: none;
+        min-height: 0;
+        overflow: hidden;
+        border-radius: 0;
+    }
+    #modalOverlay:has(.planner-modal-header) .modal-body {
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
+    #modalOverlay.planner-keyboard-open {
+        min-height: 0;
+        max-height: var(--planner-visible-height, 100dvh);
+        align-items: stretch;
+    }
+    #modalOverlay.planner-keyboard-open .modal {
+        height: 100%;
+        max-height: 100%;
+    }
+    #modalOverlay.planner-worker-search-active .planner-detail > :not(.planner-team-grid) {
+        display: none;
+    }
+    #modalOverlay.planner-worker-search-active .planner-team-grid > .planner-team-column:first-child {
+        display: none;
+    }
+    #modalOverlay.planner-worker-search-active .planner-team-grid,
+    #modalOverlay.planner-worker-search-active .planner-team-grid-split {
+        display: block;
+    }
+    #modalOverlay.planner-worker-search-active .planner-modal-footer,
+    #modalOverlay.planner-worker-search-active .planner-header-action {
+        display: none;
+    }
+    #modalOverlay.planner-worker-search-active .planner-modal-header {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        row-gap: 0;
+    }
+    #modalOverlay.planner-worker-search-active .modal-body {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    #modalOverlay.planner-worker-search-active .planner-team-list {
+        min-height: 140px;
+        max-height: none;
+        height: calc(var(--planner-visible-height, 100dvh) - 190px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
+    #modalOverlay.planner-worker-search-active .planner-worker-search-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        padding-bottom: 10px;
+        background: var(--white);
+    }
+    #modalOverlay:has(.planner-modal-header) .planner-worker-search,
+    #modalOverlay:has(.planner-modal-header) .planner-worker-search input {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    #modalOverlay:has(.planner-modal-header) input,
+    #modalOverlay:has(.planner-modal-header) textarea,
+    #modalOverlay:has(.planner-modal-header) select {
+        font-size: 16px;
+    }
+    .planner-modal-header,
+    .planner-modal-footer {
+        position: static !important;
+        flex: 0 0 auto;
+    }
+    .planner-modal-header .modal-max-btn {
+        display: none;
+    }
+    .planner-modal-header {
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+    .planner-modal-header .modal-title {
+        flex: 1 1 0;
+        min-width: 0;
+        font-size: 1rem;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+    .planner-header-action {
+        position: static;
+        transform: none;
+        flex: 1 1 100%;
+        order: 3;
+        justify-content: flex-start;
+        margin: 0;
+    }
+    .planner-header-action-group {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+    }
+    .planner-header-action-group .btn {
+        flex: 1 1 0;
+        justify-content: center;
+        padding: 9px 10px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .planner-detail,
+    .planner-team-grid,
+    .planner-team-grid-split,
+    .planner-team-column,
+    .planner-worker-item {
+        min-width: 0;
+        max-width: 100%;
+    }
+    .planner-team-grid,
+    .planner-team-grid-split {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+    .planner-team-list {
+        min-height: 0;
+        max-height: 300px;
+    }
+    .planner-team-list-assigned {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .planner-bulk-task {
+        flex-wrap: wrap;
+    }
+    .planner-bulk-task-input {
+        flex: 1 1 calc(100% - 28px);
+    }
+    .planner-bulk-task-btn {
+        flex: 1 1 100%;
+        padding: 9px 12px;
+    }
+
+    .planner-modal-footer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .planner-modal-footer .btn {
+        flex: none;
+        min-width: 0;
+        width: 100%;
+        justify-content: center;
+        padding: 10px 8px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .planner-modal-footer .btn.btn-primary {
+        grid-column: 1 / -1;
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}
+
+
+/* ── Anforderungen docked right above the team columns (2026-10-19) ──
+   The requirements are what the planner staffs against, so they sit as a
+   header band over "Zugewiesen | Mitarbeiter" (Nachunternehmer moved up). */
+.planner-staff-dock {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.planner-staff-dock > .planner-anf-panel {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    border-left: 4px solid #7c3aed;
+    background:
+        repeating-linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0 10px, transparent 10px 20px),
+        linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    box-shadow: 0 2px 10px rgba(91, 33, 182, 0.08);
+}
+.planner-staff-dock > .planner-anf-panel::after {
+    content: "";
+    position: absolute;
+    top: -46px;
+    right: -46px;
+    width: 120px;
+    height: 120px;
+    transform: rotate(45deg);
+    background: linear-gradient(180deg, rgba(124, 58, 237, 0.16), rgba(124, 58, 237, 0));
+    pointer-events: none;
+}
+.planner-staff-dock > .planner-anf-panel > * { position: relative; z-index: 1; }
+[data-theme="dark"] .planner-staff-dock > .planner-anf-panel {
+    border-left-color: #a78bfa;
+    background:
+        repeating-linear-gradient(135deg, rgba(167, 139, 250, 0.06) 0 10px, transparent 10px 20px),
+        linear-gradient(135deg, rgba(139, 92, 246, 0.14) 0%, rgba(139, 92, 246, 0.06) 100%);
+    box-shadow: none;
+}
+[data-theme="dark"] .planner-staff-dock > .planner-anf-panel::after {
+    background: linear-gradient(180deg, rgba(167, 139, 250, 0.2), rgba(167, 139, 250, 0));
+}
+/* Phone worker-search mode shows only the team grid — keep the dock, hide its band. */
+#modalOverlay.planner-worker-search-active .planner-detail > .planner-staff-dock { display: block; }
+#modalOverlay.planner-worker-search-active .planner-staff-dock > .planner-anf-panel { display: none; }
+
+/* ── Ort / Treffpunkt on the headline row, right side (2026-10-19) ── */
+.planner-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 18px;
+    flex-wrap: wrap;
+}
+.planner-head-row > .planner-detail-headline { flex: 0 1 auto; }
+.planner-detail-ort.planner-head-ort {
+    margin: 0;
+    flex: 0 1 auto;
+    max-width: min(560px, 58%);
+    padding: 8px 12px;
+    border-radius: 12px;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08);
+}
+.planner-head-ort-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.3;
+    font-size: 0.86rem;
+}
+.planner-head-ort-text strong {
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.45px;
+    color: #3b82f6;
+}
+.planner-head-ort a {
+    margin-left: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+}
+.planner-head-ort a:hover { background: rgba(37, 99, 235, 0.18); }
+@media (max-width: 760px) {
+    .planner-detail-ort.planner-head-ort { max-width: 100%; flex: 1 1 100%; }
+}
+
+/* ── Schichtbörse (shift exchange) — shift modal box + toolbar dialog ── */
+.planner-boerse-btn { position: relative; border-color: var(--accent); color: var(--accent); }
+.planner-boerse-badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: 999px; background: #dc2626; color: #fff; font-size: .7rem; font-weight: 700; line-height: 18px; text-align: center; }
+#plannerBoerseBox:empty { display: none; }
+#plannerBoerseBox { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.boerse-box { border: 1px solid var(--gray-200); border-left: 4px solid var(--accent); border-radius: 12px; background: var(--white); padding: 10px 12px; }
+.boerse-box.is-abgabe { border-left-color: #f59e0b; }
+.boerse-box-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .86rem; color: var(--gray-700); }
+.boerse-box-head > .material-symbols-outlined { color: var(--accent); font-size: 20px; }
+.boerse-box.is-abgabe .boerse-box-head > .material-symbols-outlined { color: #f59e0b; }
+.boerse-box-head > span:nth-child(2) { flex: 1; min-width: 200px; }
+.boerse-sub { display: block; color: var(--gray-500); font-size: .76rem; margin-top: 2px; }
+.boerse-box-cta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .86rem; color: var(--gray-700); border-style: dashed; border-left-style: solid; }
+.boerse-box-cta > .material-symbols-outlined { color: var(--accent); }
+.boerse-box-cta > span:nth-child(2) { flex: 1; min-width: 200px; }
+.boerse-req { display: flex; align-items: center; gap: 10px; padding: 8px 4px 2px; margin-top: 8px; border-top: 1px dashed var(--gray-200); }
+.boerse-req-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+.boerse-req-main { flex: 1; min-width: 0; font-size: .86rem; }
+.boerse-req-main small { color: var(--gray-500); }
+.boerse-req-sub { font-size: .76rem; color: var(--gray-500); }
+.boerse-empty { font-size: .8rem; color: var(--gray-400); padding: 6px 2px 0; }
+.boerse-empty-big { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 40px 10px; text-align: center; }
+.boerse-empty-big .material-symbols-outlined { font-size: 40px; }
+.boerse-dialog { display: flex; flex-direction: column; gap: 10px; }
+
+/* Topbar: week nav + 4 action buttons must stay on ONE row — the topbar has a
+   fixed height, a wrapped second row clipped the week label at the top.
+   Below 1440px the buttons collapse to icons (title attribute = tooltip). */
+@media (min-width: 641px) {
+    .planner-topbar-nav, .planner-topbar-actions { flex-wrap: nowrap; white-space: nowrap; }
+}
+@media (min-width: 641px) and (max-width: 1600px) {
+    .planner-topbar-actions .planner-btn-label { display: none; }
+    .planner-topbar-actions .btn { padding: 8px 10px; }
+}
+/* The page title may overflow into .topbar-right (style.css: overflow visible) —
+   in Planung the date gives way so the buttons never run over it. */
+@media (min-width: 641px) and (max-width: 1800px) {
+    .topbar:has(.planner-topbar-nav) .current-date { display: none; }
+}
+
+/* Overview counters in the Planung topbar (desktop ≥1200px) — compact chips
+   next to the action buttons; the copy in the filter row is hidden there. */
+.planner-topbar-stats { display: none; }
+@media (min-width: 1200px) {
+    .planner-topbar-stats { display: inline-flex; align-items: center; gap: 8px; margin-left: 6px; flex-wrap: nowrap; white-space: nowrap; }
+    .planner-topbar-stats .overview-card { padding: 4px 11px; font-size: .95rem; gap: 6px; box-shadow: none; line-height: 1.2; }
+    .planner-topbar-stats .overview-card small { font-size: .72rem; }
+    .planner-topbar-stats .overview-card small .material-symbols-outlined { font-size: .95rem; }
+    .main-content:has(.planner-topbar-stats) .dispo-overview-row > .planner-overview-cards { display: none; }
+}

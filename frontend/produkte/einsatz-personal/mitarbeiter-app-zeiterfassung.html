@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitarbeiter-App &amp; Zeiterfassung — Clood-X</title>
+    <meta name="description" content="Schichten sehen, mobil stempeln, Urlaub beantragen, Nachrichten lesen: die Clood-X Mitarbeiter-App für iOS, Android und Desktop.">
+    <link rel="canonical" href="https://clood-x.com/produkte/einsatz-personal/mitarbeiter-app-zeiterfassung.html">
+    <meta name="theme-color" content="#fbfaf8">
+    <link rel="stylesheet" href="/assets/css/marketing.tailwind.min.css?v=20261112c">
+    <link rel="stylesheet" href="/assets/css/fonts.css?v=20261112c">
+    <link rel="stylesheet" href="/assets/css/fa-subset.css?v=20261112c">
+    <link rel="stylesheet" href="/produkte/einsatz-personal/shared.css?v=20261112c">
+    <link rel="stylesheet" href="/produkte/einsatz-personal/mitarbeiter-app-zeiterfassung.css?v=20261112c">
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
+</head>
+<body class="bg-paper text-ink-900">
+<!-- Navigation -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative flex items-center justify-between h-16 md:h-[72px]">
+            <a href="/" class="flex items-center gap-2.5 -ml-3 shrink-0">
+                <img src="/assets/img/clood-x-logo.png" alt="" class="w-9 h-9 rounded-lg">
+                <span class="text-ink-950 font-semibold text-lg tracking-tight whitespace-nowrap">Clood-X</span>
+            </a>
+            <div class="hidden lg:flex items-center space-x-6 whitespace-nowrap ml-8 nav-links">
+                <div class="nav-prod">
+                    <button type="button" id="prodMenuBtn" aria-expanded="false" aria-haspopup="true" class="text-ink-500 hover:text-ink-950 transition text-sm">
+                        Produkte <span class="nav-caret"></span>
+                    </button>
+                    <div class="nav-mega">
+                        <div class="nav-mega-grid">
+                            <div>
+                                <p class="nav-mega-head">Einsatz &amp; Personal</p>
+                                <a href="/produkte/einsatz-personal/einsatzplanung-disposition.html" class="nav-mega-item"><i class="fas fa-calendar-check"></i><span><strong>Einsatzplanung &amp; Disposition</strong><small>Wochenplanung per Drag &amp; Drop</small></span></a>
+                                <a href="/produkte/einsatz-personal/mitarbeiter-app-zeiterfassung.html" class="nav-mega-item"><i class="fas fa-mobile-alt"></i><span><strong>Mitarbeiter-App &amp; Zeiterfassung</strong><small>Stempeln, Schichten, Rückmeldung</small></span></a>
+                                <a href="/produkte/einsatz-personal/antraege-abwesenheiten.html" class="nav-mega-item"><i class="fas fa-calendar-alt"></i><span><strong>Anträge &amp; Abwesenheiten</strong><small>Urlaub &amp; Krank digital</small></span></a>
+                                <a href="/produkte/einsatz-personal/schichtboerse.html" class="nav-mega-item"><i class="fas fa-users"></i><span><strong>Schichtbörse</strong><small>Freie Schichten intern vergeben</small></span></a>
+                            </div>
+                            <div>
+                                <p class="nav-mega-head">Auftrag &amp; Abrechnung</p>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-inbox"></i><span><strong>Bestelleingang</strong><small>Aufträge digital annehmen</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-invoice"></i><span><strong>Bestellungen &amp; Auftragsbestätigungen</strong><small>PDF-Belege im Firmendesign</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-clipboard-check"></i><span><strong>Monatsabschluss</strong><small>Prüfen &amp; freigeben per Klick</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Lohn- &amp; Kundenabrechnung</strong><small>Aus Einsatzdaten, ohne Neueingabe</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-chart-line"></i><span><strong>Controlling &amp; Exporte</strong><small>Marge, Stunden, Deckungsbeitrag</small></span></a>
+                            </div>
+                            <div>
+                                <p class="nav-mega-head">Qualität &amp; Compliance</p>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-shield-alt"></i><span><strong>Wachbuch &amp; Leitstand</strong><small>Schichtprotokoll in Echtzeit</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-check"></i><span><strong>Reklamation &amp; Maßnahmen</strong><small>CAPA bis zur Lösung</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Dienstanweisungen</strong><small>Pro Objekt, immer aktuell</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-balance-scale"></i><span><strong>ArbZG &amp; AÜG-konform</strong><small>Ruhezeiten &amp; Entleiher im Griff</small></span></a>
+                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-lock"></i><span><strong>Dokumente &amp; Signatur</strong><small>Archiv + elektronische Signatur</small></span></a>
+                            </div>
+                        </div>
+                        <div class="nav-mega-band">
+                            <a href="/landing.html#services" class="nav-band-item"><i class="fas fa-users"></i><span><strong>Kundenbeziehungen</strong><small>CRM · Kunden-Portal · NU-Portal · Nachrichten</small></span></a>
+                            <a href="/landing.html#ki" class="nav-band-item"><i class="fas fa-robot"></i><span><strong>KI-Assistent <em class="nav-new">Neu</em></strong><small>Antworten aus echten Zahlen · PDF → Daten · Aktionen mit Freigabe</small></span></a>
+                        </div>
+                    </div>
+                </div>
+                <a href="/landing.html#workflow" class="text-ink-500 hover:text-ink-950 transition text-sm">Ablauf</a>
+                <a href="/landing.html#vergleich" class="text-ink-500 hover:text-ink-950 transition text-sm">Vergleich</a>
+                <a href="/landing.html#faq" class="text-ink-500 hover:text-ink-950 transition text-sm">FAQ</a>
+                                <a href="/desktop/Clood-X-Setup.exe" class="text-ink-500 hover:text-ink-950 transition text-sm"><i class="fab fa-windows mr-1"></i>Windows-App</a>
+                <a href="/desktop/Clood-X.dmg" class="text-ink-500 hover:text-ink-950 transition text-sm"><i class="fab fa-apple mr-1"></i>Mac-App</a>
+                <a href="/login.php" class="text-ink-500 hover:text-ink-950 transition text-sm">Anmelden</a>
+                <a href="/register.html" class="bg-primary-500 hover:bg-primary-600 text-paper px-5 py-2.5 rounded-full text-sm font-semibold transition">
+                    Kostenlos testen
+                </a>
+            </div>
+            <button id="mobileMenuBtn" class="lg:hidden text-ink-950 text-xl" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileMenu"><i class="fas fa-bars"></i></button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="hidden lg:hidden bg-paper/95 backdrop-blur-md border-t border-ink-100">
+        <div class="px-4 py-4 space-y-3">
+            <details class="mob-prod">
+                <summary class="text-ink-500 hover:text-ink-950 py-2">Produkte <i class="fas fa-plus faq-icon text-xs text-ink-400"></i></summary>
+                <div class="pl-3 pb-1">
+                    <p class="mob-head">Einsatz &amp; Personal</p>
+                    <a href="/produkte/einsatz-personal/einsatzplanung-disposition.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Einsatzplanung &amp; Disposition</a>
+                    <a href="/produkte/einsatz-personal/mitarbeiter-app-zeiterfassung.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Mitarbeiter-App &amp; Zeiterfassung</a>
+                    <a href="/produkte/einsatz-personal/antraege-abwesenheiten.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Anträge &amp; Abwesenheiten</a>
+                    <a href="/produkte/einsatz-personal/schichtboerse.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Schichtbörse</a>
+                    <p class="mob-head">Auftrag &amp; Abrechnung</p>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestelleingang</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestellungen &amp; Auftragsbestätigungen</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Monatsabschluss</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Lohn- &amp; Kundenabrechnung</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Controlling &amp; Exporte</a>
+                    <p class="mob-head">Qualität &amp; Compliance</p>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Wachbuch &amp; Leitstand</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Reklamation &amp; Maßnahmen</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dienstanweisungen</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">ArbZG &amp; AÜG-konform</a>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dokumente &amp; Signatur</a>
+                    <p class="mob-head">Mehr</p>
+                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Kundenbeziehungen (CRM · Portale · Chat)</a>
+                    <a href="/landing.html#ki" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">KI-Assistent</a>
+                </div>
+            </details>
+            <a href="/landing.html#workflow" class="block text-ink-500 hover:text-ink-950 py-2">Ablauf</a>
+            <a href="/landing.html#vergleich" class="block text-ink-500 hover:text-ink-950 py-2">Vergleich</a>
+            <a href="/landing.html#faq" class="block text-ink-500 hover:text-ink-950 py-2">FAQ</a>
+            <a href="/login.php" class="block text-ink-500 hover:text-ink-950 py-2">Anmelden</a>
+            <a href="/register.html" class="block bg-primary-500 text-paper text-center px-5 py-3 rounded-full font-semibold">Kostenlos testen</a>
+        </div>
+    </div>
+</nav>
+<!-- Hero -->
+<header class="pd-hero">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <p class="pd-crumb"><a href="/">Startseite</a> · <a href="/#services">Produkte</a> · Einsatz &amp; Personal</p>
+        <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-5">Einsatz &amp; Personal</p>
+        <h1 class="display-h text-4xl md:text-6xl text-primary-600 leading-[1.05] mb-6">Das Team stempelt —<br><em>und meldet zurück.</em></h1>
+        <p class="text-lg md:text-xl text-ink-500 max-w-2xl mx-auto mb-9">Jeder Mitarbeiter sieht seine Schichten auf dem Smartphone, stempelt Kommen, Gehen und Pause, lädt Fotos hoch und stellt Anträge. Ohne Zettel, ohne Telefonketten — und ohne Schulung.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/register.html" class="bg-primary-500 hover:bg-primary-600 text-paper px-8 py-4 rounded-full text-base font-semibold transition shadow-lg shadow-primary-500/20">14 Tage kostenlos testen</a>
+            <a href="/#demo" class="text-ink-700 hover:text-ink-950 px-6 py-4 text-base font-medium transition">So sieht es aus <i class="fas fa-arrow-down ml-1 text-sm"></i></a>
+        </div>
+    </div>
+</header>
+<!-- Feature 1: punch -->
+<section class="py-16 md:py-24 hairline-t">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div class="reveal">
+                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Zeiterfassung</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Kommen. Gehen. Pause. Ein Fingertipp.</h2>
+                <p class="text-ink-500 mb-6">Die App zeigt die heutige Schicht mit Objekt und Zeit. Ein Tipp auf „Einstempeln" genügt — Clood-X speichert Soll und Ist getrennt, inklusive echter Pausen.</p>
+<ul class="space-y-3">
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Geo-Radius pro Objekt: Stempeln nur am Standort möglich</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Pausenregeln je Betrieb konfigurierbar (Zeitfenster → Abzug)</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Verlängerungen mit Grund — direkt vom Einsatz aus</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Echte Ist-Zeiten fließen in Monatsabschluss und Abrechnung</span></li>
+            </ul>            </div>
+            <div class="reveal flex justify-center">
+                <div class="pd-phone">
+                    <div class="pd-phone-inner">
+                        <p class="mock-label">Heute</p>
+                        <div class="mock-row" style="background:#fff"><div><p class="text-xs text-ink-400">06:00–14:00</p><p class="text-sm font-semibold text-ink-900">Bürokomplex Nordpark</p></div><i class="fas fa-lock text-ink-300 text-xs"></i></div>
+                        <div class="w-full text-center rounded-full py-2.5 text-sm font-semibold mb-2" style="background:#0b57d0;color:#fbfaf8">Einstempeln</div>
+                        <div class="mock-row" style="background:#fff"><i class="fas fa-comment-alt text-ink-400 text-xs"></i><span class="text-xs text-ink-500">„Schlüssel liegt beim Empfang."</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Feature 2: more than punch -->
+<section class="py-16 md:py-24 hairline-t bg-ink-50/50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div class="reveal md:order-1 order-2">
+                <div class="mock-card">
+                    <p class="mock-label">In der App</p>
+                    <div class="mock-row"><i class="fas fa-calendar-alt text-primary-500"></i><span class="text-sm text-ink-700">Anträge: Urlaub, Krank, Sonderurlaub</span></div>
+                    <div class="mock-row"><i class="fas fa-file-alt text-primary-500"></i><span class="text-sm text-ink-700">Dokumente &amp; angeforderte Nachweise</span></div>
+                    <div class="mock-row"><i class="fas fa-comment-dots text-primary-500"></i><span class="text-sm text-ink-700">Nachrichten vom Büro — nachvollziehbar</span></div>
+                    <div class="mock-row"><i class="fas fa-mobile-alt text-primary-500"></i><span class="text-sm text-ink-700">Push bei Planänderung oder neuer Schicht</span></div>
+                </div>
+            </div>
+            <div class="reveal md:order-2 order-1">
+                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Mehr als Stempeln</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Die App ist der Rückkanal des Teams.</h2>
+                <p class="text-ink-500 mb-6">Antrag stellen, Krankmeldung hochladen, Dokument nachreichen, Foto vom Objekt senden: Alles landet beim richtigen Vorgang — statt in einer WhatsApp-Gruppe.</p>
+<ul class="space-y-3">
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Dokumenten-Anfragen des Büros direkt in der App beantworten</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Foto-Uploads zum Einsatz (z. B. Zustand, Vorfälle)</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Interne Nachrichten zwischen Büro und Team</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Verfügbar als App (iOS, Android) und Desktop (Windows, macOS)</span></li>
+            </ul>            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Feature 3: no training -->
+<section class="py-16 md:py-24 hairline-t">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl reveal">
+            <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Für die Praxis gebaut</p>
+            <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Keine Schulung. Kein Handbuch.</h2>
+            <p class="text-ink-500 mb-6">Die Oberfläche ist bewusst reduziert: Schicht sehen, stempeln, zurückmelden. Neue Mitarbeiter erhalten einen eigenen Login — ihr Zugang sieht nur, was sie brauchen.</p>
+<ul class="space-y-3">
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Eigener Login pro Mitarbeiter — getrennt vom Büro-Account</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">App-Login-Nachverfolgung: wer wann zuletzt aktiv war</span></li>
+                <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Funktioniert im Browser (PWA) und als installierte App</span></li>
+            </ul>        </div>
+    </div>
+</section>
+<!-- Weitere Produkte der Section -->
+<section class="py-16 md:py-20 hairline-t bg-ink-50/50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-2">Einsatz &amp; Personal</p>
+        <h2 class="display-h text-2xl md:text-3xl text-primary-600 mb-8">Weitere Produkte der Section</h2>
+        <div class="grid sm:grid-cols-3 gap-5">
+            <a href="/produkte/einsatz-personal/einsatzplanung-disposition.html" class="xl-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Einsatzplanung &amp; Disposition</h3>
+                <p>Wochenplanung per Drag &amp; Drop — Konflikte und Abwesenheiten sofort sichtbar.</p>
+            </a>
+            <a href="/produkte/einsatz-personal/antraege-abwesenheiten.html" class="xl-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Anträge &amp; Abwesenheiten</h3>
+                <p>Urlaub und Krank digital beantragen, genehmigen, im Plan sehen.</p>
+            </a>
+            <a href="/produkte/einsatz-personal/schichtboerse.html" class="xl-card">
+                <i class="fas fa-users"></i>
+                <h3>Schichtbörse</h3>
+                <p>Offene Schichten intern ausschreiben — das Team bewirbt sich selbst.</p>
+            </a>
+        </div>
+    </div>
+</section>
+<!-- CTA -->
+<section class="py-20 md:py-28 hairline-t bg-primary-500">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="display-h text-3xl md:text-5xl text-paper mb-5">Ihr Team ist mobil —<br><em>Ihre Zeiterfassung auch.</em></h2>
+        <p class="text-lg text-primary-100 mb-8">14 Tage kostenlos testen — offene Registrierung, keine Kreditkarte.</p>
+        <a href="/register.html" class="inline-block bg-paper text-ink-950 px-10 py-4 rounded-full text-lg font-semibold hover:bg-ink-100 transition">
+            Jetzt kostenlos starten <i class="fas fa-arrow-right ml-2 text-sm"></i>
+        </a>
+    </div>
+</section>
+<footer class="py-14 hairline-t">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-sm">
+            <div class="flex items-center gap-2">
+                <img src="/assets/img/clood-x-logo.png" alt="" class="w-8 h-8 rounded-lg">
+                <span class="text-ink-950 font-semibold">Clood-X</span>
+                <span class="text-ink-400">— Die Betriebsplattform für Auftragsdienstleister</span>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-ink-500">
+                <a href="/" class="hover:text-ink-950 transition">Startseite</a>
+                <a href="/impressum.php" class="hover:text-ink-950 transition">Impressum</a>
+                <a href="/datenschutz.php" class="hover:text-ink-950 transition">Datenschutz</a>
+                <a href="/agb.php" class="hover:text-ink-950 transition">AGB</a>
+            </div>
+        </div>
+        <div class="hairline-t mt-8 pt-6 text-center text-xs text-ink-400">&copy; 2026 Clood-X. Alle Rechte vorbehalten.</div>
+    </div>
+</footer>
+
+<script>
+window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('nav-scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// Produkte mega-menu — click toggle (hover handled by CSS), outside/Escape close
+const prodWrap = document.querySelector('.nav-prod');
+const prodBtn = document.getElementById('prodMenuBtn');
+if (prodWrap && prodBtn) {
+    const setProd = (open) => {
+        prodWrap.classList.toggle('open', open);
+        prodBtn.setAttribute('aria-expanded', String(open));
+    };
+    prodBtn.addEventListener('click', () => setProd(!prodWrap.classList.contains('open')));
+    document.addEventListener('click', (e) => { if (!prodWrap.contains(e.target)) setProd(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setProd(false); prodBtn.focus(); } });
+    prodWrap.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setProd(false)));
+}
+
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const setMenuOpen = (open) => {
+    mobileMenu.classList.toggle('hidden', !open);
+    mobileMenuBtn.setAttribute('aria-expanded', String(open));
+    mobileMenuBtn.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+};
+mobileMenuBtn.addEventListener('click', () => setMenuOpen(mobileMenu.classList.contains('hidden')));
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenuOpen(false)));
+
+
+// Scroll reveal
+const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+if (localStorage.getItem('hms_token')) {
+    document.querySelectorAll('a[href="/register.html"]').forEach(a => { a.href = '/index.php'; });
+}
+</script>
+</body>
+</html>

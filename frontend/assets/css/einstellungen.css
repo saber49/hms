@@ -1,0 +1,22 @@
+/* System › Einstellungen — section picker (same surface/radius language as .data-bento tiles) */
+.est-page { display: flex; flex-direction: column; gap: 16px; }
+.est-nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.est-nav-item { display: flex; gap: 12px; align-items: flex-start; text-align: left; cursor: pointer; font: inherit; color: var(--gray-900);
+    background: var(--white); border: 1px solid var(--gray-200); border-radius: 16px; padding: 14px 16px;
+    transition: border-color .15s, box-shadow .15s, background .15s; }
+.est-nav-item:hover { border-color: var(--gray-300); box-shadow: 0 2px 10px rgba(0, 0, 0, .05); }
+.est-nav-item.is-on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--white)); box-shadow: 0 0 0 1px var(--accent) inset; }
+.est-nav-icon { flex: none; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: var(--gray-100); color: var(--gray-700); }
+.est-nav-item.is-on .est-nav-icon { background: var(--accent); color: #fff; }
+.est-nav-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.est-nav-text strong { font-size: .95rem; }
+.est-nav-text small { font-size: .78rem; color: var(--gray-500); line-height: 1.35; }
+.est-body { min-height: 200px; }
+@media (max-width: 640px) {
+    .est-nav { grid-template-columns: 1fr; gap: 8px; }
+    .est-nav-text small { display: none; }
+    .est-nav-item { padding: 10px 12px; align-items: center; }
+}
+/* Sections rendered inside the page use its full width. */
+.est-body .pdfd-wrap { max-width: none; margin: 0; }

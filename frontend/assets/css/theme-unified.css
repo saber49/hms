@@ -1,0 +1,442 @@
+/* ============================================================
+   Unified Classic Theme
+   ------------------------------------------------------------
+   Loaded LAST in index.php. Overrides every module's private
+   colour palette (workers/cyan, subcontractors/amber,
+   price_history/indigo, incoming_orders/purple, orders/coral,
+   monatsabschluss/green, customers bento tiles) with ONE
+   classic palette:
+
+     Primary (structure):   navy   #1a2744  (brand)
+     Accent (interactive):  blue   #2563eb
+     Neutrals:              slate scale
+     Status (kept, unified): green = ok, amber = warn, red = danger
+
+   To revert: remove this <link> from index.php — the original
+   module palettes underneath are untouched.
+   ============================================================ */
+
+:root {
+    /* ---------- Unified tokens → Material Design 3 system tokens ---------- */
+    --u-primary:        var(--md-sys-color-primary);
+    --u-primary-dark:   var(--md-ref-palette-primary20);
+    --u-primary-light:  var(--md-ref-palette-primary50);
+    --u-accent:         var(--md-sys-color-primary);
+    --u-accent-hover:   var(--md-ref-palette-primary30);
+    --u-accent-strong:  var(--md-ref-palette-primary20);
+    --u-accent-light:   var(--md-ref-palette-primary60);
+    --u-accent-soft:    var(--md-sys-color-primary-container);
+    --u-accent-line:    var(--md-ref-palette-primary80);
+    --u-accent-50:      var(--md-ref-palette-primary95);
+    --u-accent-tint:    rgba(11, 87, 208, 0.06);
+
+    /* ---------- Mitarbeiter (workers.css — was cyan/teal) ---------- */
+    --wk-accent:        var(--u-accent);
+    --wk-accent-hover:  var(--u-accent-hover);
+    --wk-accent-soft:   var(--u-accent-soft);
+    --wk-accent-line:   var(--u-accent-line);
+    --wk-accent-tint:   var(--u-accent-tint);
+    --wk-teal:          var(--u-accent-strong);
+    --wk-teal-soft:     var(--u-accent-soft);
+
+    /* ---------- Nachunternehmer (subcontractors.css — was amber) ---------- */
+    --nu-accent:        var(--u-accent);
+    --nu-accent-hover:  var(--u-accent-hover);
+    --nu-accent-soft:   var(--u-accent-soft);
+    --nu-accent-line:   var(--u-accent-line);
+    --nu-accent-tint:   var(--u-accent-tint);
+
+    /* ---------- Preishistorie (price_history.css — was indigo) ---------- */
+    --ph-accent:        var(--u-accent);
+    --ph-accent-hover:  var(--u-accent-hover);
+    --ph-accent-soft:   var(--u-accent-soft);
+    --ph-accent-line:   var(--u-accent-line);
+    --ph-accent-tint:   var(--u-accent-tint);
+
+    /* ---------- Bestelleingang (incoming_orders.css — was purple) ---------- */
+    --be-accent:        var(--u-accent);
+    --be-accent-hover:  var(--u-accent-hover);
+    --be-accent-soft:   var(--u-accent-soft);
+    --be-accent-line:   var(--u-accent-line);
+    --be-accent-tint:   var(--u-accent-tint);
+    --be-accent-strong: var(--u-accent-strong);
+
+    /* ---------- Bestellungen (orders.css — was slate + coral) ---------- */
+    --or-primary:        var(--u-primary);
+    --or-primary-dark:   var(--u-primary-dark);
+    --or-primary-light:  var(--u-primary-light);
+    --or-accent:         var(--u-accent);
+    --or-accent-dark:    var(--u-accent-strong);
+    --or-accent-light:   var(--u-accent-light);
+    --or-accent-soft:    var(--u-accent-soft);
+    --or-accent-50:      var(--u-accent-50);
+
+    /* ---------- Monatsabschluss (monatsabschluss.css — was full green) ---------- */
+    --ma-primary:        var(--u-primary);
+    --ma-primary-dark:   var(--u-primary-dark);
+    --ma-primary-light:  var(--u-accent);
+    --ma-primary-soft:   var(--u-accent-soft);
+    --ma-primary-50:     var(--u-accent-50);
+    --ma-accent:         var(--u-accent);
+    --ma-accent-dark:    var(--u-accent-strong);
+    --ma-accent-light:   var(--u-accent-light);
+    --ma-accent-soft:    var(--u-accent-soft);
+    --ma-accent-50:      var(--u-accent-50);
+    --ma-nu:             var(--u-accent-strong);
+    --ma-nu-soft:        var(--u-accent-soft);
+    /* Neutralise the green-tinted canvas / borders / text */
+    --ma-text:           #1e293b;
+    --ma-text-strong:    #0f172a;
+    --ma-text-muted:     #64748b;
+    --ma-canvas:         var(--gray-50);
+    --ma-border:         var(--gray-200);
+    --ma-border-strong:  #cbd5e1;
+    --ma-shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.06);
+    --ma-shadow-md:      0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+/* ---------- Kunden bento tiles (customers.css — were 8 colours) ---------- */
+.bento-tile-total,
+.bento-tile-active,
+.bento-tile-archiv,
+.bento-tile-objekte,
+.bento-tile-objekte-hero,
+.bento-tile-artikel,
+.bento-tile-orders,
+.bento-tile-einsaetze,
+.bento-tile-last,
+.bento-tile-docs {
+    --bento-accent: var(--u-primary);
+    --bento-accent-soft: rgba(26, 39, 68, 0.08);
+}
+
+/* ---------- Small hardcoded leftovers ---------- */
+/* Einsätze: purple "NU pending" chips → unified blue */
+.nu-pending-chip {
+    color: var(--u-accent-strong) !important;
+    background: var(--u-accent-soft) !important;
+    border: 1px solid var(--u-accent-line) !important;
+}
+.nu-summary-card.nu-pending::before {
+    background: linear-gradient(90deg, var(--u-accent-light), var(--u-accent)) !important;
+}
+.planner-anf-field-label { color: var(--u-accent-strong) !important; }
+
+/* Kunden: navy gradient table header → flat brand navy */
+.zuschlag-table thead th {
+    background: var(--u-primary) !important;
+}
+
+/* Mitarbeiter: initial-password card (was cyan gradient) */
+.wk-pw-show-card {
+    background: linear-gradient(135deg, var(--u-accent-50) 0%, var(--u-accent-soft) 100%) !important;
+}
+
+/* Nachunternehmer: "people" stat icon (was indigo) */
+.nu-stat-people .nu-stat-icon {
+    background: var(--u-accent-soft) !important;
+    color: var(--u-accent-strong) !important;
+}
+
+/* Account modal: tenant-admin role badge (was violet) */
+.role-badge.role-tenant_admin {
+    background: var(--u-accent-soft);
+    color: var(--u-accent-strong);
+}
+.doc-cat {
+    background: var(--u-accent-soft);
+    color: var(--u-accent-strong);
+}
+
+/* ============================================================
+   DARK MODE corrections
+   ------------------------------------------------------------
+   The unified tokens above point at STATIC palette steps
+   (primary20/30 = near-black, primary95 = near-white) and a few
+   hardcoded slate hexes. Those never flip with the scheme, so
+   hover rows turned white and accent text turned black on dark.
+   This block re-targets them to their dark-scheme equivalents.
+   Placed last in the last-loaded sheet → wins the cascade.
+   ============================================================ */
+[data-theme="dark"] {
+    --u-primary-dark:   var(--md-ref-palette-primary80);
+    --u-accent-hover:   var(--md-ref-palette-primary70);
+    --u-accent-strong:  var(--md-ref-palette-primary80);
+    --u-accent-line:    var(--md-ref-palette-primary40);
+    --u-accent-50:      rgba(76, 141, 246, 0.12);   /* hover-row tint */
+    --u-accent-tint:    rgba(76, 141, 246, 0.10);
+
+    /* Monatsabschluss neutrals (hardcoded slate in :root above) */
+    --ma-text:           var(--gray-800);
+    --ma-text-strong:    var(--gray-900);
+    --ma-text-muted:     var(--gray-500);
+    --ma-border-strong:  var(--gray-300);
+    --ma-shadow-sm:      var(--md-sys-elevation-level1);
+    --ma-shadow-md:      var(--md-sys-elevation-level2);
+}
+
+[data-theme="dark"] .bento-tile-total,
+[data-theme="dark"] .bento-tile-active,
+[data-theme="dark"] .bento-tile-archiv,
+[data-theme="dark"] .bento-tile-objekte,
+[data-theme="dark"] .bento-tile-objekte-hero,
+[data-theme="dark"] .bento-tile-artikel,
+[data-theme="dark"] .bento-tile-orders,
+[data-theme="dark"] .bento-tile-einsaetze,
+[data-theme="dark"] .bento-tile-last,
+[data-theme="dark"] .bento-tile-docs {
+    --bento-accent: var(--md-ref-palette-primary80);
+    --bento-accent-soft: rgba(168, 199, 250, 0.12);
+}
+
+/* ============================================================
+   Mobile: Touch-Targets (min. 44x44, Apple HIG) & Lesbarkeit
+   Loaded last -> overrides module sheets on small screens only.
+   ============================================================ */
+@media (max-width: 768px) {
+
+    /* Menu toggle must not be squeezed by the flex topbar */
+    .menu-toggle {
+        min-width: 44px;
+        flex-shrink: 0;
+    }
+
+    /* MD3 icon buttons in table rows / doc actions */
+    md-icon-button {
+        width: 44px !important;
+        height: 44px !important;
+        --md-icon-button-state-layer-width: 44px !important;
+        --md-icon-button-state-layer-height: 44px !important;
+    }
+
+    /* Filter chips */
+    md-filter-chip {
+        --md-filter-chip-container-height: 40px;
+    }
+
+    /* Common small icon buttons across modules */
+    .chat-header-btn,
+    .btn-icon,
+    .wk-card-menu,
+    .dispo-gate-close {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* AI assistant controls */
+    .ai-expand,
+    .ai-clear,
+    .ai-close,
+    .ai-attach,
+    .ai-send {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    .ai-quick-chip {
+        min-height: 40px;
+    }
+
+    /* Email links on worker cards: enlarge tap area, not the font */
+    .wk-card-email {
+        padding: 8px 0;
+        display: inline-block;
+    }
+
+    /* Sidebar user row + dashboard quick links */
+    .user-info {
+        min-height: 44px;
+    }
+    .dash-quick-btn {
+        min-height: 44px;
+    }
+    .link-more {
+        padding: 12px 0;
+        display: inline-block;
+    }
+
+    /* MD3 buttons: 44px container on touch devices */
+    md-filled-button,
+    md-outlined-button,
+    md-text-button {
+        --md-filled-button-container-height: 44px !important;
+        --md-outlined-button-container-height: 44px !important;
+        --md-text-button-container-height: 44px !important;
+    }
+    md-icon-button {
+        min-width: 44px !important;
+    }
+
+    /* Chips / segmented buttons across modules */
+    .ai-quick-chip,
+    .chip,
+    .granularity-chip,
+    .metric-chip,
+    .bd-tab,
+    .dispo-bereich-chip,
+    .dispo-reset-btn,
+    .ma-today-btn,
+    .ma-range-btn,
+    .ma-tab,
+    button.btn-sm {
+        min-height: 44px;
+    }
+    .ctrl-period button,
+    .ctrl-paginator button {
+        min-height: 44px;
+    }
+    .chip {
+        min-width: 44px;
+    }
+    .or-tab,
+    button.btn-primary {
+        min-height: 44px;
+    }
+    .or-actions button,
+    button.view,
+    button.pdf,
+    button.pdfs,
+    button.close,
+    button.cancel,
+    button.delete {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    .dispo-search-clear,
+    #ctrlSnapClose,
+    #dispoBereichReopen {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Monatsabschluss month nav arrows */
+    .ma-month-nav button,
+    .ma-header button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Worker card email links: full tap height */
+    .wk-card-email {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* Bestellungseingang: toolbar stacks, chips scroll, button full width */
+    .be-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .be-toolbar md-outlined-text-field.be-search {
+        max-width: none;
+    }
+    .be-toolbar md-chip-set {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+    }
+    .be-toolbar-right,
+    .be-toolbar-right md-filled-button {
+        width: 100%;
+    }
+
+    /* Controlling: snapshots drawer covers the full width */
+    .ctrl-snap-drawer {
+        width: 100vw;
+        max-width: 100vw;
+    }
+
+    /* Monatsabschluss: month-nav injector must fit / scroll, not overflow */
+    .ma-nav-injector {
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .ma-nav-injector::-webkit-scrollbar { display: none; }
+
+    /* Preishistorie: action buttons get their own full row and wrap */
+    .ph-filter-actions {
+        grid-column: 1 / -1;
+        flex-wrap: wrap;
+    }
+
+    /* Filter chip rows (Bestellungseingang + Bestellungen):
+       horizontal scroll instead of widening the page */
+    .be-toolbar-left,
+    .or-toolbar-row {
+        max-width: 100%;
+        min-width: 0;
+    }
+    .be-toolbar md-chip-set,
+    .or-toolbar-row md-chip-set {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+    }
+    .be-toolbar md-chip-set::-webkit-scrollbar,
+    .or-toolbar-row md-chip-set::-webkit-scrollbar { display: none; }
+
+    /* Controlling: title/period must wrap, heatmap scrolls */
+    .ctrl-title,
+    .ctrl-title h2,
+    .ctrl-title small {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+    .ctrl-period {
+        max-width: 100%;
+    }
+    .ctrl-heatmap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Dashboard (Übersicht): grid items must never exceed the screen.
+       The Chart.js canvas sets an intrinsic width that blows out the
+       grid column — min-width:0 + clamped canvas fixes it. */
+    .dash-grid > *,
+    .dash-card,
+    .dash-hero > * {
+        min-width: 0;
+        max-width: 100%;
+    }
+    .dash-chart-wrap {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .dash-chart-wrap canvas {
+        max-width: 100% !important;
+    }
+
+    /* Readability: raise fonts below 11px */
+    th {
+        font-size: 0.72rem !important;
+    }
+    .ph-tl-typ,
+    .ph-price-label,
+    .ph-filter-field label,
+    .owner-ribbon,
+    .ma-today-btn,
+    .ma-range-btn {
+        font-size: 0.7rem !important;
+    }
+    .bento-tile-head,
+    .bento-tile-label,
+    .wk-kpi-label,
+    .be-kpi-label,
+    .ph-kpi-label,
+    .nu-stat-cue,
+    .wk-tag,
+    .wk-card-badge,
+    .ai-badge-pro {
+        font-size: 0.7rem !important;
+    }
+}

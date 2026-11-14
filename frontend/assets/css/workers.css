@@ -1,0 +1,1842 @@
+/* ============================================================
+   Mitarbeiter (Workers) — Dedicated Stylesheet (v2)
+   Identity: Cyan (#0891b2) + Teal accent — distinct from
+             Kunde (blue), NU (amber), Preishistorie (indigo)
+   Structure: Stats Bento + Warning banner + Filter row +
+              Cards grid + Profile (sidebar + tabbed main) +
+              Modal with tabs + Compliance Checklist
+   ============================================================
+   Sections:
+   1. Theme variables
+   2. Stats Bento (5 KPI cards)
+   3. Warning banner (expiring docs alert)
+   4. Toolbar / search / filters
+   5. Cards grid + card
+   6. Card mini-badges (compliance hints)
+   7. Profile layout
+   8. Profile sidebar
+   9. Profile tabs + content
+  10. Stammdaten data card
+  11. Documents tab
+  12. Absences tab
+  13. Compliance checklist tab
+  14. Modal-tabs (within create/edit modal context)
+  15. Modal accent context
+  16. Misc helpers (avatar, dropdown menu, etc.)
+   ============================================================ */
+
+/* ===== 1. Theme Variables ===== */
+:root {
+    --wk-accent:        #0891b2;   /* cyan-600 */
+    --wk-accent-hover:  #0e7490;   /* cyan-700 */
+    --wk-accent-soft:   #cffafe;   /* cyan-100 */
+    --wk-accent-line:   #a5f3fc;   /* cyan-200 */
+    --wk-accent-tint:   rgba(8, 145, 178, 0.06);
+    --wk-teal:          #0d9488;   /* teal-600 */
+    --wk-teal-soft:     #ccfbf1;   /* teal-100 */
+
+    --wk-surface:       var(--white);
+    --wk-bg-soft:       var(--gray-50);
+    --wk-bg-strip:      var(--gray-100);
+    --wk-border:        var(--gray-200);
+    --wk-border-strong: var(--gray-300);
+    --wk-text:          var(--gray-900);
+    --wk-text-muted:    var(--gray-500);
+    --wk-text-soft:     var(--gray-400);
+
+    --wk-ok:            #059669;
+    --wk-ok-soft:       #d1fae5;
+    --wk-warn:          #d97706;
+    --wk-warn-soft:     #fef3c7;
+    --wk-danger:        #dc2626;
+    --wk-danger-soft:   #fee2e2;
+}
+
+/* Dark mode — brighter, saturated accents (MD3: tone 300–400 on dark) */
+[data-theme="dark"] {
+    --wk-accent:        #22d3ee;   /* cyan-400 */
+    --wk-accent-hover:  #67e8f9;   /* cyan-300 */
+    --wk-accent-soft:   rgba(34, 211, 238, 0.16);
+    --wk-accent-line:   rgba(34, 211, 238, 0.35);
+    --wk-accent-tint:   rgba(34, 211, 238, 0.10);
+    --wk-teal:          #2dd4bf;   /* teal-400 */
+    --wk-teal-soft:     rgba(45, 212, 191, 0.16);
+    --wk-ok:            #34d399;   /* emerald-400 */
+    --wk-ok-soft:       rgba(52, 211, 153, 0.16);
+    --wk-warn:          #fbbf24;   /* amber-400 */
+    --wk-warn-soft:     rgba(251, 191, 36, 0.16);
+    --wk-danger:        #f87171;   /* red-400 */
+    --wk-danger-soft:   rgba(248, 113, 113, 0.16);
+}
+
+/* Dark mode — hardcoded light hexes in banner + checklist rows */
+[data-theme="dark"] .wk-warn-banner {
+    border-color: rgba(251, 191, 36, 0.35);
+    color: #fde68a;
+}
+[data-theme="dark"] .wk-warn-banner.danger {
+    border-color: rgba(248, 113, 113, 0.35);
+    border-left-color: var(--wk-danger);
+    color: #fecaca;
+}
+[data-theme="dark"] .wk-cl-item.expiring { background: rgba(251, 191, 36, 0.08); }
+[data-theme="dark"] .wk-cl-item.expired  { background: rgba(248, 113, 113, 0.08); }
+[data-theme="dark"] .wk-cl-expiring { border-color: rgba(251, 191, 36, 0.35); }
+[data-theme="dark"] .wk-cl-expired  { border-color: rgba(248, 113, 113, 0.35); }
+
+/* ===== 2. Stats Bento ===== */
+.wk-stats-bento {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+@media (max-width: 1200px) { .wk-stats-bento { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 720px)  { .wk-stats-bento { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .wk-stats-bento { grid-template-columns: 1fr; } }
+
+.wk-kpi {
+    position: relative;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 12px;
+    padding: 14px 16px 12px;
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 110px;
+}
+.wk-kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--wk-accent);
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.wk-kpi:hover {
+    box-shadow: 0 4px 14px rgba(15,23,42,0.06);
+    border-color: var(--wk-accent-line);
+    transform: translateY(-1px);
+}
+.wk-kpi:hover::before { opacity: 1; }
+.wk-kpi[data-clickable] { cursor: pointer; }
+.wk-kpi[data-clickable]:hover::before { opacity: 1; }
+
+.wk-kpi-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.wk-kpi-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.92rem;
+    flex-shrink: 0;
+}
+.wk-kpi-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--wk-text-muted);
+}
+.wk-kpi-value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--wk-text);
+    line-height: 1;
+    letter-spacing: -0.6px;
+    font-variant-numeric: tabular-nums;
+}
+.wk-kpi-value small {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--wk-text-soft);
+    margin-left: 3px;
+}
+.wk-kpi-sub {
+    font-size: 0.72rem;
+    color: var(--wk-text-soft);
+    margin-top: auto;
+    padding-top: 4px;
+}
+.wk-kpi-sub strong { color: var(--wk-text); font-weight: 700; }
+
+/* Variants */
+.wk-kpi-warn .wk-kpi-icon  { background: var(--wk-warn-soft);  color: var(--wk-warn); }
+.wk-kpi-warn .wk-kpi-value { color: var(--wk-warn); }
+.wk-kpi-danger .wk-kpi-icon { background: var(--wk-danger-soft); color: var(--wk-danger); }
+.wk-kpi-danger .wk-kpi-value { color: var(--wk-danger); }
+.wk-kpi-ok .wk-kpi-icon   { background: var(--wk-ok-soft);    color: var(--wk-ok); }
+.wk-kpi-teal .wk-kpi-icon { background: var(--wk-teal-soft);  color: var(--wk-teal); }
+
+/* ===== 3. Warning Banner ===== */
+.wk-warn-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--wk-warn-soft);
+    border: 1px solid #fde68a;
+    border-left: 4px solid var(--wk-warn);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-size: 0.86rem;
+    color: #78350f;
+    cursor: pointer;
+    transition: box-shadow .15s ease;
+}
+.wk-warn-banner:hover { box-shadow: 0 4px 12px rgba(217,119,6,0.15); }
+.wk-warn-banner.danger {
+    background: var(--wk-danger-soft);
+    border-color: #fecaca;
+    border-left-color: var(--wk-danger);
+    color: #7f1d1d;
+}
+.wk-warn-banner > i {
+    font-size: 1.2rem;
+    color: var(--wk-warn);
+    flex-shrink: 0;
+}
+.wk-warn-banner.danger > i { color: var(--wk-danger); }
+.wk-warn-banner-text { flex: 1; min-width: 0; }
+.wk-warn-banner-text strong { font-weight: 700; }
+.wk-warn-banner-action {
+    background: var(--white);
+    border: 1px solid var(--wk-border);
+    color: var(--wk-text);
+    padding: 6px 12px;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .15s ease, color .15s ease;
+}
+.wk-warn-banner-action:hover {
+    border-color: var(--wk-accent);
+    color: var(--wk-accent);
+}
+
+/* ===== 4. Toolbar ===== */
+.wk-toolbar {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 12px;
+}
+
+/* Toolbar layout — 3 named zones, re-arranged per screen. Breakpoints
+   include the sidebar (260px desktop, 200px at 641–1024px, none ≤640px).
+   (No container queries: their layout containment would re-anchor the
+   md-select menus.)
+   ≥1760px  one row      [search][status + selects][actions]
+   916+     two rows     [search            ][actions]
+                         [status][select][select    ]
+   ≤915px   stacked      search / status / 2 selects / actions          */
+.wk-tb {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "search  actions"
+        "filters filters";
+    gap: 10px 12px;
+    align-items: center;
+}
+.wk-tb > .wk-tb-search { grid-area: search; max-width: 520px; }
+.wk-tb-filters {
+    grid-area: filters;
+    display: flex;
+    align-items: center;
+    gap: 10px 12px;
+    min-width: 0;
+}
+.wk-tb-status  { flex: none; }
+.wk-tb-selects {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(230px, 260px));
+    gap: 10px;
+    min-width: 0;
+}
+.wk-tb-actions {
+    grid-area: actions;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.wk-tb-btn { white-space: nowrap; }
+
+@media (min-width: 1760px) {
+    .wk-tb {
+        grid-template-columns: minmax(220px, 340px) minmax(0, 1fr) auto;
+        grid-template-areas: "search filters actions";
+    }
+    .wk-tb-selects { grid-template-columns: repeat(2, minmax(230px, 250px)); }
+}
+
+@media (max-width: 915px) {
+    .wk-tb > .wk-tb-search { max-width: none; }
+    .wk-tb {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "search"
+            "filters"
+            "actions";
+    }
+    .wk-tb-filters { flex-direction: column; align-items: stretch; }
+    .wk-tb-status  { overflow-x: auto; scrollbar-width: none; }
+    .wk-tb-status::-webkit-scrollbar { display: none; }
+    .wk-tb-selects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .wk-tb-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .wk-tb-primary { grid-column: 1 / -1; order: -1; }
+    .wk-tb-btn { width: 100%; }
+}
+
+@media (max-width: 560px) {
+    .wk-tb-selects { grid-template-columns: minmax(0, 1fr); }
+}
+
+.wk-search {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+    max-width: 360px;
+}
+.wk-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px 0 34px;
+    border: 1px solid var(--wk-border);
+    border-radius: 8px;
+    background: var(--wk-surface);
+    color: var(--wk-text);
+    font-size: 0.85rem;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.wk-search input::placeholder { color: var(--wk-text-soft); }
+.wk-search input:focus {
+    outline: none;
+    border-color: var(--wk-accent);
+    box-shadow: 0 0 0 3px var(--wk-accent-tint);
+}
+.wk-search > i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--wk-text-soft);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.wk-filter-pills {
+    display: inline-flex;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 36px;
+}
+.wk-filter-pills button {
+    background: none;
+    border: none;
+    padding: 0 13px;
+    height: 100%;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--wk-text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-right: 1px solid var(--wk-border);
+    position: relative;
+    transition: color .15s ease, background .15s ease;
+}
+.wk-filter-pills button:last-child { border-right: none; }
+.wk-filter-pills button:hover {
+    color: var(--wk-text);
+    background: var(--wk-bg-soft);
+}
+.wk-filter-pills button.active {
+    color: var(--wk-accent);
+    background: var(--wk-surface);
+}
+.wk-filter-pills button.active::after {
+    content: '';
+    position: absolute;
+    left: 8px; right: 8px; bottom: 0;
+    height: 2px;
+    background: var(--wk-accent);
+    border-radius: 2px 2px 0 0;
+}
+
+.wk-extra-filter select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--wk-border);
+    border-radius: 8px;
+    background: var(--wk-surface);
+    color: var(--wk-text);
+    font-size: 0.82rem;
+    min-width: 130px;
+}
+.wk-extra-filter select:focus {
+    outline: none;
+    border-color: var(--wk-accent);
+    box-shadow: 0 0 0 3px var(--wk-accent-tint);
+}
+
+.wk-btn-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    height: 36px;
+    background: var(--wk-accent);
+    color: #fff;
+    border: 1px solid var(--wk-accent);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s ease;
+    white-space: nowrap;
+}
+.wk-btn-create:hover { background: var(--wk-accent-hover); border-color: var(--wk-accent-hover); }
+
+/* App-Link bar */
+.wk-app-link-bar {
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-accent-line);
+    border-left: 3px solid var(--wk-accent);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.wk-app-link-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+}
+.wk-app-link-info > i {
+    color: var(--wk-accent);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.wk-app-link-label {
+    font-size: 0.7rem;
+    color: var(--wk-text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.wk-app-link-url {
+    font-size: 0.85rem;
+    color: var(--wk-text);
+    font-family: ui-monospace, 'SF Mono', monospace;
+    word-break: break-all;
+    margin-top: 2px;
+}
+
+/* ===== 5. Cards Grid ===== */
+.wk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+}
+.wk-card {
+    position: relative;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 12px;
+    padding: 16px 16px 14px;
+    cursor: pointer;
+    transition: box-shadow .18s ease, border-color .18s ease, transform .15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+    min-height: 200px;
+}
+.wk-card:hover {
+    box-shadow: 0 4px 14px rgba(15,23,42,0.07);
+    border-color: var(--wk-accent-line);
+    transform: translateY(-1px);
+}
+.wk-card.inactive { opacity: 0.55; }
+
+.wk-card-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--wk-text-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all .12s ease;
+}
+.wk-card-menu:hover {
+    background: var(--wk-bg-soft);
+    border-color: var(--wk-border);
+    color: var(--wk-text);
+}
+.wk-card-dropdown {
+    position: absolute;
+    top: 38px;
+    right: 8px;
+    background: var(--white);
+    border: 1px solid var(--wk-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.12);
+    min-width: 180px;
+    z-index: 20;
+    overflow: hidden;
+    display: none;
+}
+.wk-card-dropdown.open { display: block; }
+.wk-card-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: none;
+    border: none;
+    color: var(--wk-text);
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: background .12s ease;
+}
+.wk-card-dropdown button:hover { background: var(--wk-bg-soft); }
+.wk-card-dropdown button.text-danger { color: var(--wk-danger); }
+.wk-card-dropdown button i { width: 14px; color: var(--wk-text-soft); }
+.wk-card-dropdown button.text-danger i { color: var(--wk-danger); }
+
+.wk-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.4rem;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(15,23,42,0.10);
+}
+.wk-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.wk-avatar-status {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+.wk-avatar-status.active   { background: var(--wk-ok); }
+.wk-avatar-status.inactive { background: var(--wk-text-soft); }
+
+.wk-card-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--wk-text);
+    line-height: 1.2;
+    margin-top: 2px;
+}
+.wk-card-role {
+    font-size: 0.74rem;
+    color: var(--wk-text-muted);
+    margin-bottom: 4px;
+}
+.wk-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    margin: 2px 0;
+}
+.wk-tag {
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent-hover);
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    border: 1px solid var(--wk-accent-line);
+}
+.wk-card-email {
+    color: var(--wk-accent);
+    font-size: 0.75rem;
+    text-decoration: none;
+    word-break: break-all;
+    margin-top: 4px;
+}
+.wk-card-email:hover { text-decoration: underline; }
+.wk-card-phone {
+    font-size: 0.74rem;
+    color: var(--wk-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+}
+.wk-card-phone i { color: var(--wk-text-soft); font-size: 0.65rem; }
+
+/* ===== 6. Card mini-badges (bottom row) ===== */
+.wk-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: center;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--wk-bg-strip);
+    width: 100%;
+}
+.wk-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 7px;
+    border-radius: 100px;
+    font-size: 0.64rem;
+    font-weight: 700;
+    background: var(--wk-bg-strip);
+    color: var(--wk-text-muted);
+    border: 1px solid var(--wk-border);
+}
+.wk-card-badge.warn { background: var(--wk-warn-soft); color: var(--wk-warn); border-color: #fde68a; }
+.wk-card-badge.danger { background: var(--wk-danger-soft); color: var(--wk-danger); border-color: #fecaca; }
+.wk-card-badge.ok { background: var(--wk-ok-soft); color: var(--wk-ok); border-color: rgba(5,150,105,0.2); }
+.wk-card-badge.birthday { background: #fce7f3; color: #be185d; border-color: #fbcfe8; }
+.wk-card-badge i { font-size: 0.6rem; }
+
+/* ===== 7. Profile Layout ===== */
+.wk-profile {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+@media (max-width: 900px) {
+    .wk-profile { grid-template-columns: 1fr; }
+}
+
+/* ===== 8. Profile Sidebar ===== */
+.wk-profile-sidebar {
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 14px;
+    padding: 20px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    /* Stick BELOW the global topbar (60px) so the worker card stays
+       visible while scrolling Stammdaten / Dokumente / etc. */
+    position: sticky;
+    top: calc(var(--topbar-height, 60px) + 12px);
+    align-self: start;
+    /* Sidebar scrolls internally on short viewports so the action
+       buttons + back-button never get clipped behind the topbar. */
+    max-height: calc(100vh - var(--topbar-height, 60px) - 24px);
+    overflow-y: auto;
+}
+@media (max-width: 900px) {
+    .wk-profile-sidebar {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        top: auto;
+    }
+}
+.wk-profile-avatar {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 2.4rem;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 3px solid white;
+    box-shadow: 0 4px 16px rgba(15,23,42,0.12);
+}
+.wk-profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.wk-profile-avatar::after {
+    content: '\f030'; /* fa-camera */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    background: rgba(15,23,42,0.7);
+    color: white;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+.wk-profile-avatar:hover::after { opacity: 1; }
+.wk-profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--wk-text);
+    text-align: center;
+    margin-top: 4px;
+}
+.wk-profile-role {
+    font-size: 0.78rem;
+    color: var(--wk-text-muted);
+    text-align: center;
+}
+.wk-profile-dienst {
+    background: var(--wk-bg-strip);
+    color: var(--wk-text-muted);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: ui-monospace, 'SF Mono', monospace;
+}
+.wk-profile-eintritt {
+    font-size: 0.72rem;
+    color: var(--wk-text-muted);
+    margin-top: 2px;
+}
+.wk-profile-actions {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    width: 100%;
+    margin-top: 12px;
+}
+.wk-profile-action-btn {
+    width: 100%;
+    height: 36px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    color: var(--wk-text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all .12s ease;
+}
+.wk-profile-action-btn:hover {
+    border-color: var(--wk-accent);
+    color: var(--wk-accent);
+    background: var(--wk-accent-soft);
+}
+.wk-profile-action-btn.btn-edit:hover { color: var(--wk-accent); border-color: var(--wk-accent); }
+.wk-profile-action-btn.btn-deactivate:hover { color: var(--wk-danger); border-color: var(--wk-danger); background: var(--wk-danger-soft); }
+.wk-profile-back {
+    margin-top: 14px;
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--wk-border);
+    color: var(--wk-text-muted);
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all .12s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.wk-profile-back:hover {
+    border-color: var(--wk-accent);
+    color: var(--wk-accent);
+}
+
+/* ===== 9. Profile Tabs + Content ===== */
+.wk-profile-main {
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.wk-tabs {
+    display: flex;
+    background: var(--wk-bg-strip);
+    border-bottom: 1px solid var(--wk-border);
+    overflow-x: auto;
+}
+.wk-tab {
+    flex: 1;
+    min-width: 110px;
+    background: none;
+    border: none;
+    padding: 13px 14px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--wk-text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s ease, background .15s ease, border-color .15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.wk-tab:hover { color: var(--wk-text); background: var(--wk-surface); }
+.wk-tab.active {
+    color: var(--wk-accent);
+    background: var(--wk-surface);
+    border-bottom-color: var(--wk-accent);
+}
+.wk-tab i { font-size: 0.78rem; }
+.wk-tab .wk-tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--wk-border);
+    color: var(--wk-text-muted);
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+.wk-tab.active .wk-tab-count {
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent);
+}
+
+.wk-tab-content {
+    display: none;
+    padding: 18px 20px;
+}
+.wk-tab-content.active { display: block; }
+
+/* ===== 10. Stammdaten data card ===== */
+.wk-data-card {
+    background: var(--wk-surface);
+    border-radius: 10px;
+}
+.wk-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Column gap stays generous so the two columns read as separate.
+       Row gap removed - per-field padding + dashed separators give rhythm. */
+    column-gap: 28px;
+    row-gap: 0;
+}
+@media (max-width: 600px) {
+    .wk-data-grid { grid-template-columns: 1fr; column-gap: 0; }
+}
+.wk-data-section-title {
+    grid-column: 1 / -1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--wk-text);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--wk-border);
+    margin-top: 18px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.wk-data-section-title:first-child { margin-top: 2px; }
+.wk-data-section-title i {
+    width: 26px; height: 26px;
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+}
+/* Each field is now a tight inline row: LABEL : VALUE on the same
+   baseline with a soft dashed separator beneath - reads like a clean
+   data-sheet instead of the previous airy two-line stack. */
+.wk-data-field {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    align-items: baseline;
+    column-gap: 10px;
+    padding: 7px 0;
+    min-width: 0;
+    border-bottom: 1px dashed var(--wk-border);
+}
+@media (max-width: 600px) {
+    .wk-data-field {
+        grid-template-columns: 1fr;
+        row-gap: 2px;
+    }
+}
+.wk-data-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--wk-text-muted);
+    margin: 0;
+    /* Allow long labels (e.g. "Staatsangehoerigkeit") to wrap to a
+       second line instead of pushing the value off-grid. */
+    white-space: normal;
+    line-height: 1.25;
+}
+.wk-data-value {
+    font-size: 0.88rem;
+    color: var(--wk-text);
+    word-break: break-word;
+    line-height: 1.35;
+    min-height: 1.1em;
+}
+.wk-data-value:empty::before {
+    content: '–';
+    color: var(--wk-text-soft);
+}
+.wk-data-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--wk-border);
+}
+
+/* ===== 10b. Stammdaten — section cards (wkSdSection) =====
+   Each block (Persönliche Daten, Kontakt, …) is its own card; fields are
+   soft tiles (label above value). Empty fields are dashed + muted so the
+   eye lands on real data. Masonry via CSS columns: max 2 columns, falls
+   back to 1 column when a column would get narrower than 360px. */
+.wk-sd {
+    columns: 2 360px;
+    column-gap: 14px;
+}
+.wk-sd-sec {
+    display: inline-block;          /* keeps a card whole inside the columns */
+    width: 100%;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    margin: 0 0 14px;
+    padding: 12px 14px 14px;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+.wk-sd-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.wk-sd-ic {
+    width: 30px; height: 30px;
+    flex: none;
+    border-radius: 8px;
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.wk-sd-ic .material-symbols-outlined { font-size: 18px; color: inherit; }
+.wk-sd-title {
+    flex: 1;
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--wk-text);
+    letter-spacing: -0.1px;
+}
+.wk-sd-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    background: var(--wk-warn-soft);
+    color: var(--wk-warn);
+    white-space: nowrap;
+}
+.wk-sd-meta.is-done { background: var(--wk-ok-soft); color: var(--wk-ok); }
+.wk-sd-meta .material-symbols-outlined { font-size: 13px; }
+.wk-sd-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+}
+.wk-sd-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 7px 10px;
+    background: var(--wk-bg-soft);
+    border: 1px solid transparent;
+    border-radius: 8px;
+}
+.wk-sd-field.is-wide { grid-column: 1 / -1; }
+.wk-sd-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--wk-text-muted);
+}
+.wk-sd-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--wk-text);
+    word-break: break-word;
+}
+.wk-sd-value.is-mono {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+.wk-sd-field.is-empty {
+    background: transparent;
+    border: 1px dashed var(--wk-border);
+}
+.wk-sd-field.is-empty .wk-sd-value {
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--wk-text-muted);
+}
+.wk-sd-chip {
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent-hover);
+}
+@media (max-width: 600px) {
+    .wk-sd-sec { padding: 10px 12px 12px; }
+    .wk-sd-fields { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+/* ===== 11. Documents Tab ===== */
+.wk-docs-upload {
+    background: var(--wk-bg-soft);
+    border: 1px dashed var(--wk-border-strong);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+/* Two-row upload form: fields on row 1, the Hochladen button on
+   row 2 (right-aligned). Native <input type="file"> can take a lot
+   of horizontal space on laptops, which previously pushed the
+   submit button off the visible area. Forcing the button onto its
+   own row makes the form layout-stable from 360 px to 4K. */
+.wk-docs-upload-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+    grid-auto-rows: auto;
+    gap: 10px 12px;
+    align-items: end;
+}
+.wk-docs-upload-grid > .wk-docs-upload-submit {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+}
+@media (max-width: 900px) {
+    .wk-docs-upload-grid { grid-template-columns: 1fr 1fr; }
+    .wk-docs-upload-grid > .wk-docs-upload-submit { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+    .wk-docs-upload-grid { grid-template-columns: 1fr; }
+}
+.wk-docs-upload-grid .form-group { margin: 0; min-width: 0; }
+/* Native file input is greedy with width; cap it to the column. */
+.wk-docs-upload-grid input[type="file"] { max-width: 100%; }
+.wk-docs-upload-grid label {
+    font-size: 0.66rem !important;
+    font-weight: 700 !important;
+    color: var(--wk-text-muted) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+}
+
+.wk-docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+.wk-doc-card {
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow .15s ease, border-color .15s ease;
+    display: flex;
+    flex-direction: column;
+}
+.wk-doc-card:hover {
+    box-shadow: 0 4px 14px rgba(15,23,42,0.06);
+    border-color: var(--wk-accent-line);
+}
+.wk-doc-thumb {
+    height: 110px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 2.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    border-bottom: 1px solid var(--wk-border);
+}
+.wk-doc-thumb span {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin-top: 4px;
+    letter-spacing: 1px;
+}
+.wk-doc-expiry-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    box-shadow: 0 2px 6px rgba(15,23,42,0.15);
+}
+.wk-doc-expiry-badge.expired       { color: var(--wk-danger); }
+.wk-doc-expiry-badge.expiring-soon { color: var(--wk-warn); }
+.wk-doc-expiry-badge.valid         { color: var(--wk-ok); }
+
+.wk-doc-info {
+    padding: 10px 12px 6px;
+    flex: 1;
+    min-width: 0;
+}
+.wk-doc-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--wk-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wk-doc-meta {
+    font-size: 0.7rem;
+    color: var(--wk-text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+}
+.wk-doc-expiry-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+}
+.wk-doc-expiry-text.expired       { color: var(--wk-danger); }
+.wk-doc-expiry-text.expiring-soon { color: var(--wk-warn); }
+.wk-doc-expiry-text.valid         { color: var(--wk-ok); }
+.wk-doc-actions {
+    display: flex;
+    gap: 4px;
+    padding: 6px 10px 10px;
+    border-top: 1px solid var(--wk-bg-strip);
+}
+/* Unified action buttons â€” all four (edit / view / download / delete)
+   share the same shape so the row stays balanced at any card width.
+   `flex: 1` + `min-width: 0` lets them shrink evenly on narrow laptop
+   screens, but `min-height: 30px` + centered flex guarantees the
+   FontAwesome glyph is always visible (no more "vanishing download
+   button" at ~480 px card widths). Works on both `<button>` and `<a>`
+   because the selector matches the class, not the tag. */
+.wk-doc-actions .btn-icon {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 32px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 6px;
+    color: var(--wk-text-muted);
+    cursor: pointer;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all .12s ease;
+}
+.wk-doc-actions .btn-icon:hover {
+    border-color: var(--wk-accent);
+    color: var(--wk-accent);
+    background: var(--wk-accent-soft);
+}
+.wk-doc-actions .btn-icon i { pointer-events: none; }
+/* Legacy `.btn-sm` kept as alias so anything still using the old class
+   keeps the same look (prevents a half-broken state after deploy). */
+.wk-doc-actions .btn-sm {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 32px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 6px;
+    color: var(--wk-text-muted);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    transition: all .12s ease;
+}
+.wk-doc-actions .btn-sm:hover {
+    border-color: var(--wk-accent);
+    color: var(--wk-accent);
+    background: var(--wk-accent-soft);
+}
+
+/* ===== 12. Absences ===== */
+.wk-absence-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+}
+@media (max-width: 720px) {
+    .wk-absence-stats { grid-template-columns: repeat(2, 1fr); }
+}
+.wk-absence-stat {
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+    transition: border-color .15s ease;
+}
+.wk-absence-stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--wk-text);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.wk-absence-stat-label {
+    font-size: 0.65rem;
+    color: var(--wk-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+.wk-absence-stat.paid     { border-left: 3px solid var(--wk-ok); }
+.wk-absence-stat.unpaid   { border-left: 3px solid var(--wk-danger); }
+.wk-absence-stat.vacation { border-left: 3px solid var(--wk-accent); }
+.wk-absence-stat.remaining { border-left: 3px solid var(--wk-teal); }
+
+.wk-absence-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+}
+.wk-absence-toolbar select {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--wk-border);
+    border-radius: 7px;
+    background: var(--wk-surface);
+    font-size: 0.82rem;
+}
+
+.wk-absence-form {
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-accent-line);
+    border-left: 3px solid var(--wk-accent);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+}
+.wk-absence-form.editing {
+    border-left-color: var(--wk-warn);
+    background: #fffbeb;
+}
+
+.absence-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: color-mix(in srgb, var(--badge-color, var(--wk-accent)) 15%, white);
+    color: var(--badge-color, var(--wk-accent));
+    border: 1px solid color-mix(in srgb, var(--badge-color, var(--wk-accent)) 25%, transparent);
+}
+.absence-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    margin-bottom: 6px;
+}
+.absence-card-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+.absence-card-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.absence-date {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--wk-text);
+}
+.absence-date i { color: var(--wk-text-soft); margin-right: 4px; font-size: 0.72rem; }
+.absence-days {
+    font-size: 0.72rem;
+    color: var(--wk-text-muted);
+}
+.absence-note {
+    font-size: 0.72rem;
+    color: var(--wk-text-soft);
+    font-style: italic;
+}
+
+/* ===== 13. Compliance Checklist ===== */
+.wk-checklist-summary {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 12px;
+    background: var(--wk-bg-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+}
+.wk-cl-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+.wk-cl-ok       { background: var(--wk-ok-soft);     color: var(--wk-ok);     border-color: rgba(5,150,105,0.2); }
+.wk-cl-expiring { background: var(--wk-warn-soft);   color: var(--wk-warn);   border-color: #fde68a; }
+.wk-cl-expired  { background: var(--wk-danger-soft); color: var(--wk-danger); border-color: #fecaca; }
+.wk-cl-missing  { background: var(--wk-bg-strip);    color: var(--wk-text-muted); border-color: var(--wk-border); }
+
+.wk-cl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.wk-cl-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    border-left: 3px solid var(--wk-border-strong);
+    transition: background .12s ease;
+}
+.wk-cl-item:hover { background: var(--wk-bg-soft); }
+.wk-cl-item.ok       { border-left-color: var(--wk-ok); }
+.wk-cl-item.expiring { border-left-color: var(--wk-warn);   background: #fffbeb; }
+.wk-cl-item.expired  { border-left-color: var(--wk-danger); background: #fef2f2; }
+.wk-cl-item.missing  { border-left-color: var(--wk-text-soft); }
+
+.wk-cl-icon { font-size: 1.15rem; flex-shrink: 0; }
+.wk-cl-icon.ok       { color: var(--wk-ok); }
+.wk-cl-icon.expiring { color: var(--wk-warn); }
+.wk-cl-icon.expired  { color: var(--wk-danger); }
+.wk-cl-icon.missing  { color: var(--wk-text-soft); }
+
+.wk-cl-body { flex: 1; min-width: 0; }
+.wk-cl-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--wk-text);
+}
+.wk-cl-meta {
+    font-size: 0.72rem;
+    color: var(--wk-text-muted);
+    margin-top: 2px;
+}
+.wk-cl-actions { flex-shrink: 0; }
+
+/* Phones: the non-shrinking action cluster (status chip + icon buttons)
+   left the body only ~80px — the title broke into one word per line.
+   Wrap the row instead: icon + body on the first line, actions on their
+   own full-width line below, aligned to the right. */
+@media (max-width: 600px) {
+    .wk-cl-item { flex-wrap: wrap; row-gap: 8px; }
+    .wk-cl-body { flex: 1 1 0; min-width: 0; }
+    .wk-cl-actions {
+        flex: 1 0 100%;
+        display: flex !important;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding-left: 32px; /* line up with the body (icon width + gap) */
+    }
+    .wk-cl-actions md-outlined-button { --md-outlined-button-container-height: 34px; }
+}
+
+/* ===== 14. Modal Tabs (within create/edit modal) ===== */
+.wk-modal-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--wk-bg-strip);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 16px;
+    border: 1px solid var(--wk-border);
+    overflow-x: auto;
+}
+
+/* QuaSOD multi-select dropdown ---------------------------------------- */
+.wk-quasod-wrap {
+    position: relative;
+}
+.wk-quasod-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+}
+.wk-quasod-popup {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border: 1px solid var(--wk-border);
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+    padding: 8px;
+    z-index: 1100;
+    max-height: 320px;
+    overflow-y: auto;
+}
+.wk-quasod-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    user-select: none;
+}
+.wk-quasod-row:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+.wk-quasod-row input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+.wk-quasod-row-all {
+    font-weight: 500;
+}
+.wk-quasod-row-danger {
+    color: #dc2626;
+}
+.wk-quasod-divider {
+    height: 1px;
+    background: var(--wk-border);
+    margin: 4px 0;
+}
+
+.wk-modal-tab {
+    /* `flex: 1 1 0` + `min-width: 0` makes every tab exactly the same
+       width, regardless of its label length. Without this, a long
+       label like "Ausweis & Sicherheit" forced its tab to grow past
+       the others, breaking the visual rhythm of the row. */
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--wk-text-muted);
+    cursor: pointer;
+    border-radius: 7px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.wk-modal-tab:hover { color: var(--wk-text); }
+.wk-modal-tab.active {
+    background: var(--wk-surface);
+    color: var(--wk-accent);
+    box-shadow: 0 1px 2px rgba(15,23,42,0.06);
+}
+.wk-modal-tab i { font-size: 0.74rem; }
+
+.wk-modal-pane {
+    display: none;
+}
+.wk-modal-pane.active {
+    display: block;
+    animation: wkPaneFadeIn .18s ease;
+}
+@keyframes wkPaneFadeIn {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 15. Modal Accent Context ===== */
+.modal.wk-context .form-control:focus {
+    border-color: var(--wk-accent);
+    box-shadow: 0 0 0 3px var(--wk-accent-tint);
+}
+.modal.wk-context .btn-primary {
+    background: var(--wk-accent);
+    border-color: var(--wk-accent);
+}
+.modal.wk-context .btn-primary:hover {
+    background: var(--wk-accent-hover);
+    border-color: var(--wk-accent-hover);
+}
+
+/* Initial password modal */
+.wk-pw-show-card {
+    background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+    border: 2px solid var(--wk-accent);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    margin-bottom: 14px;
+}
+.wk-pw-show-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--wk-accent-hover);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+.wk-pw-show-value {
+    font-family: ui-monospace, 'SF Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--wk-text);
+    letter-spacing: 2px;
+    background: var(--white);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--wk-accent-line);
+    user-select: all;
+    cursor: copy;
+}
+.wk-pw-show-hint {
+    font-size: 0.78rem;
+    color: var(--wk-accent-hover);
+    margin-top: 8px;
+}
+
+/* ===== 16. Empty state ===== */
+.wk-empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--wk-text-soft);
+}
+.wk-empty i {
+    font-size: 2.4rem;
+    color: var(--wk-border-strong);
+    margin-bottom: 10px;
+    display: block;
+}
+.wk-empty p { font-size: 0.9rem; }
+
+/* ============================================
+   Absence approval workflow ï¿½ status badges
+   ============================================ */
+.absence-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.absence-status-pending {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+    animation: notifPulse 2s ease-in-out infinite;
+}
+.absence-status-genehmigt {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+.absence-status-abgelehnt {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+.absence-card-pending {
+    border-left: 4px solid #f59e0b;
+    background: #fffbeb;
+}
+.absence-card-rejected {
+    border-left: 4px solid #ef4444;
+    opacity: 0.75;
+}
+
+/* ============================================================
+   17. MD3 MIGRATION — Mitarbeiter module (mirrors users.css)
+   ============================================================ */
+
+/* ---------- MD3 dialog sizing (host inherits only min/max width) ---------- */
+md-dialog.workers-dialog-xl {
+    --dlg-w: min(1040px, calc(100vw - 48px));
+    min-width: var(--dlg-w);
+    max-width: var(--dlg-w);
+    max-height: calc(100vh - 48px);
+    overscroll-behavior: contain;
+}
+
+.workers-dialog-content {
+    overscroll-behavior: contain;
+}
+@media (min-width: 769px) {
+    md-dialog.workers-dialog-xl {
+        --dlg-w: min(1040px, calc(100vw - var(--sidebar-width, 260px) - 48px));
+        margin-left: calc(var(--sidebar-width, 260px)
+                          + (100vw - var(--sidebar-width, 260px) - var(--dlg-w)) / 2);
+        margin-right: 0;
+    }
+}
+
+/* Modal tab strip + pane rhythm inside the MD3 dialog */
+.workers-dialog-content .cust-modal-tabs {
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--wk-border);
+}
+.workers-dialog-content .wk-modal-pane { display: none; }
+.workers-dialog-content .wk-modal-pane.active { display: block; animation: wkPaneIn .18s ease; }
+.workers-dialog-content .form-group { min-width: 0; }
+.workers-dialog-content .customer-form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--wk-text);
+    border-bottom: 1px solid var(--wk-border);
+    padding-bottom: 6px;
+}
+.workers-dialog-content .customer-form-section-title .material-symbols-outlined {
+    font-size: 18px;
+    color: var(--wk-accent);
+}
+
+/* ---------- Toolbar (list page): MD3 field density ---------- */
+/* Every control is 40px tall (fields have no floating label, buttons are
+   40px by default, chips 32px centred) so rows line up on every screen.
+   NOTE: never corner-full (9999px) on outlined fields — the border is
+   drawn from 3 panels whose side widths equal the corner radius. */
+md-outlined-text-field.wk-search {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    --md-outlined-text-field-container-shape: 20px;
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+}
+md-outlined-select.wk-extra-filter {
+    width: 100%;
+    min-width: 0;
+    white-space: nowrap; /* inherited into the shadow field: value stays on one line */
+    --md-outlined-select-text-field-container-shape: 20px;
+    /* md-outlined-select reads the generic field tokens for its height. */
+    --md-outlined-field-top-space: 8px;
+    --md-outlined-field-bottom-space: 8px;
+}
+.wk-toolbar md-chip-set { min-width: 0; flex-wrap: nowrap; }
+
+/* ---------- Material Symbols in existing wk shells ---------- */
+.wk-kpi-icon .material-symbols-outlined { font-size: 18px; }
+.wk-warn-banner > .material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
+.wk-card-menu .material-symbols-outlined { font-size: 18px; }
+.wk-card-dropdown button .material-symbols-outlined { font-size: 15px; vertical-align: -3px; }
+.wk-card-badge .material-symbols-outlined { font-size: 11px; }
+.wk-card-pending-badge .material-symbols-outlined { font-size: 11px; }
+.wk-card-phone .material-symbols-outlined { color: var(--wk-text-soft); }
+.wk-profile-action-btn .material-symbols-outlined { font-size: 18px; }
+.wk-profile-back .material-symbols-outlined { vertical-align: -3px; }
+.wk-tab .material-symbols-outlined { font-size: 16px; vertical-align: -3px; }
+.wk-data-section-title .material-symbols-outlined { font-size: 16px; color: var(--wk-accent); vertical-align: -3px; }
+.wk-cl-pill .material-symbols-outlined { vertical-align: -2px; }
+.wk-cl-icon.material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
+.wk-cl-icon.ok       { color: var(--wk-ok); }
+.wk-cl-icon.expiring { color: var(--wk-warn); }
+.wk-cl-icon.expired  { color: var(--wk-danger); }
+.wk-cl-icon.missing  { color: var(--wk-text-soft); }
+.wk-doc-thumb > .material-symbols-outlined { font-size: 38px; }
+.wk-doc-expiry-badge .material-symbols-outlined { display: block; }
+.wk-empty .material-symbols-outlined {
+    font-size: 2.4rem;
+    color: var(--wk-border-strong);
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.absence-status-badge .material-symbols-outlined,
+.absence-date .material-symbols-outlined,
+.absence-note .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
+.wk-pw-show-hint .material-symbols-outlined { vertical-align: -3px; }
+.wk-quasod-btn .material-symbols-outlined { pointer-events: none; }
+
+/* ---------- Docs upload grid: MD3 fields fill + bottom-align ---------- */
+.wk-docs-upload-grid .form-group { margin-bottom: 0; min-width: 0; }
+.wk-docs-upload-grid md-outlined-text-field,
+.wk-docs-upload-grid md-outlined-select { width: 100%; min-width: 0; }
+.wk-docs-upload-grid .cust-file-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--wk-text-muted);
+    margin-bottom: 4px;
+}
+.wk-docs-upload-grid input[type="file"].form-control {
+    width: 100%;
+    height: 56px;
+    padding: 15px 12px;
+    border-radius: 4px;
+    border-color: var(--wk-border-strong);
+    background: var(--wk-surface);
+}
+.wk-docs-upload-submit { align-self: flex-end; }
+
+/* ---------- Absence toolbar: select + button on one line ---------- */
+.wk-absence-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.wk-absence-toolbar md-outlined-select {
+    min-width: 140px;
+    --md-outlined-select-text-field-top-space: 8px;
+    --md-outlined-select-text-field-bottom-space: 8px;
+}
+
+/* Pane fade-in reused from the old .wk-modal-pane animation */
+@keyframes wkPaneIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulsing red badge — count of pending (manager decision required) absences */
+.wk-tab .wk-tab-pending-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 6px;
+    background: #ef4444;
+    color: #fff;
+    border-radius: 9px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(239,68,68,.35);
+    animation: notifPulse 2s ease-in-out infinite;
+}

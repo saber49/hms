@@ -1,0 +1,100 @@
+/* ============================================
+   Qualitätsmanagement & Wachbuch — only what the shared design system
+   (customers.css data-*, interessenten.css crm-*) does not cover.
+   ============================================ */
+
+.qm-page .qm-mt { margin-top: 14px; }
+.qm-subtabs { margin-bottom: 12px; }
+.qm-clip { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
+.qm-pre { white-space: pre-line; }
+.qm-obj-select { min-width: 280px; }
+
+/* badges (same pill shape as crm-chip, own tones) */
+.qm-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 999px; font-size: .72rem; font-weight: 600;
+    background: var(--gray-100); color: var(--gray-700); white-space: nowrap; vertical-align: middle; }
+.qm-ok { background: rgba(22, 163, 74, .16); color: #15803d; }
+.qm-info { background: rgba(14, 165, 233, .16); color: #0369a1; }
+.qm-warn { background: rgba(245, 158, 11, .18); color: #b45309; }
+.qm-err { background: rgba(220, 38, 38, .14); color: #b91c1c; }
+
+/* Steckbrief */
+.qm-steckbrief { margin-bottom: 12px; }
+.qm-kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; padding: 14px 16px; }
+.qm-kv-grid > div > span { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); margin-bottom: 2px; }
+
+/* month → day → log */
+.qm-monat > summary { cursor: pointer; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.qm-tag-row > td { background: var(--gray-50); padding: 0 !important; }
+.qm-tag-body { padding: 12px 14px; }
+.qm-blaetter { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.qm-blatt { flex: 1 1 260px; background: var(--white); border: 1px solid var(--gray-200); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.qm-hinweis { font-size: .84rem; color: var(--gray-700); background: rgba(14, 165, 233, .08); border-radius: 8px; padding: 6px 8px; }
+
+.qm-eintraege { display: flex; flex-direction: column; gap: 6px; }
+.qm-eintrag { display: grid; grid-template-columns: 58px 30px 1fr auto; gap: 8px; align-items: start; background: var(--white);
+    border: 1px solid var(--gray-200); border-left: 3px solid var(--gray-300); border-radius: 8px; padding: 8px 10px; }
+.qm-eintrag-zeit { font-weight: 700; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; font-size: .88rem; }
+.qm-eintrag-zeit .crm-muted { font-weight: 400; font-size: .72rem; }
+.qm-eintrag-icon .material-symbols-outlined { font-size: 20px; color: var(--gray-500); }
+.qm-eintrag-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.qm-eintrag-text { white-space: pre-line; margin: 2px 0; }
+.qm-eintrag-akt { display: flex; gap: 2px; }
+.qm-wichtig { border-left-color: #f59e0b; }
+.qm-art-alarm { border-left-color: #dc2626; background: rgba(220, 38, 38, .04); }
+.qm-art-vorkommnis { border-left-color: #f59e0b; }
+.qm-art-dienstbeginn, .qm-art-dienstende { border-left-color: #16a34a; }
+.qm-art-hinweis, .qm-art-uebergabe { border-left-color: #0ea5e9; }
+.qm-art-berichtigung { border-left-color: #6366f1; }
+.qm-berichtigt .qm-eintrag-text, .qm-berichtigt .qm-eintrag-head strong { text-decoration: line-through; color: var(--gray-500); }
+.qm-fotos { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+.qm-fotos img { width: 84px; height: 84px; object-fit: cover; border-radius: 6px; cursor: zoom-in; background: var(--gray-100); }
+.qm-foto-gross img { max-width: 100%; border-radius: 8px; }
+
+/* Leitstand incidents */
+.qm-vk { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--gray-100); flex-wrap: wrap; }
+.qm-vk-main { cursor: pointer; flex: 1 1 320px; }
+.qm-vk-alarm { background: rgba(220, 38, 38, .05); }
+
+/* Übersicht */
+.qm-todo { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--gray-100); cursor: pointer; }
+.qm-todo span:nth-child(2) { flex: 1; }
+.qm-todo:hover { background: var(--gray-50); }
+.qm-todo-error > .material-symbols-outlined:first-child { color: #dc2626; }
+.qm-todo-warn > .material-symbols-outlined:first-child { color: #d97706; }
+
+/* Dienstanweisung */
+.qm-kurz { margin: 4px 0 0 18px; padding: 0; font-size: .84rem; color: var(--gray-700); }
+.qm-kurz-row { display: flex; gap: 6px; margin-bottom: 6px; }
+.qm-kurz-row .crm-input { flex: 1; }
+
+/* settings */
+.qm-frage { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--gray-100); }
+.qm-frage > div { flex: 1; }
+.qm-frage select, .qm-frage input { max-width: 200px; }
+.qm-geheim { display: flex; flex-direction: column; gap: 10px; }
+.qm-geheim-row { display: flex; align-items: center; gap: 10px; justify-content: space-between; border: 1px solid var(--gray-200); border-radius: 10px; padding: 8px 12px; }
+.qm-geheim-row strong { font-size: 1.25rem; letter-spacing: .08em; font-family: ui-monospace, monospace; }
+
+@media (max-width: 640px) {
+    .qm-eintrag { grid-template-columns: 48px 1fr; }
+    .qm-eintrag-icon { display: none; }
+    .qm-eintrag-akt { grid-column: 1 / -1; justify-content: flex-end; }
+    .qm-frage { flex-direction: column; align-items: stretch; }
+    .qm-frage select, .qm-frage input { max-width: none; }
+    .qm-obj-select { min-width: 0; width: 100%; }
+}
+
+/* Einstellungen › Qualität › Allgemein: wide question cards (2 columns, 1 on phones) */
+.qm-fragen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 14px; align-items: start; }
+.qm-fragen-grid .crm-settings-card { margin: 0; }
+.qm-frage strong { font-size: .92rem; }
+.qm-name { font-weight: 600; }
+@media (max-width: 640px) { .qm-fragen-grid { grid-template-columns: 1fr; } }
+
+/* Spacing: the shared .crm-page gap only reaches direct children — the QM
+   frames render one level deeper (#qmBody, #qmWbBody, #qmStBody). */
+#qmBody, #qmWbBody, #qmStBody, .qm-tag-body { display: flex; flex-direction: column; gap: 14px; }
+#qmBody > *, #qmWbBody > *, #qmStBody > * { margin-top: 0; margin-bottom: 0; }
+#qmBody .crm-grid .crm-card { margin-bottom: 14px; }
+.bento-foot-pill[onclick] { cursor: pointer; }
+.qm-pill-on { outline: 2px solid var(--accent); }
