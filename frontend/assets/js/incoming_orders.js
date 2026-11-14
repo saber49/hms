@@ -878,7 +878,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                     <div class="be-vl-grid be-vl-place">
                         <div class="be-vl-field be-vl-ort">
                             <label for="wiz_shift_ort">Ort / Treffpunkt <span class="be-vl-req">*</span> <small>Pflichtfeld · ein eigener Tag-Ort hat Vorrang</small></label>
-                            <md-outlined-text-field type="text" class="form-control" id="wiz_shift_ort" required autocomplete="off" placeholder="z.B. Haupteingang, Musterstr. 1, 04109 Leipzig" oninput="beOrtInput(event); wizRefreshOrtHints()" onblur="beOrtHide()"></md-outlined-text-field>
+                            <md-outlined-text-field type="text" class="form-control" id="wiz_shift_ort" required autocomplete="off" placeholder="z.B. Haupteingang, Musterstr. 1, 04109 Leipzig" oninput="beOrtInput(event); wizRefreshOrtHints()" onfocusout="beOrtHide()"></md-outlined-text-field>
                             <div id="wiz_ort_suggest" class="be-ort-suggest" style="display:none"></div>
                             <style>
                               .be-ort-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
@@ -2151,18 +2151,18 @@ async function wizEditDay(btn) {
     cells[4].innerHTML = tInp(row.dataset.bis || '');
     cells[6].innerHTML = inp('number', parseInt(row.dataset.pauseMinuten) || 0, 'width:64px;text-align:right') ;
     cells[7].innerHTML = inp('number', parseInt(row.dataset.gesetzlPause) || 0, 'width:64px;text-align:right');
-    cells[6].querySelector('input').min = '0';
-    cells[7].querySelector('input').min = '0';
+    cells[6].querySelector('input, md-outlined-text-field').min = '0';
+    cells[7].querySelector('input, md-outlined-text-field').min = '0';
     // Pausenregelung: editing the day's Von/Bis re-derives its pause from
     // the tenant rules — until the user types a pause by hand (override).
     const rowAutoPause = () => {
         if (row._pauseTouched) return;
-        const p = beAutoPauseMin(cells[3].querySelector('input')?.value, cells[4].querySelector('input')?.value);
-        if (p !== null) cells[6].querySelector('input').value = p;
+        const p = beAutoPauseMin(cells[3].querySelector('input, md-outlined-text-field')?.value, cells[4].querySelector('input, md-outlined-text-field')?.value);
+        if (p !== null) cells[6].querySelector('input, md-outlined-text-field').value = p;
     };
-    cells[3].querySelector('input')?.addEventListener('input', rowAutoPause);
-    cells[4].querySelector('input')?.addEventListener('input', rowAutoPause);
-    cells[6].querySelector('input')?.addEventListener('input', () => { row._pauseTouched = true; });
+    cells[3].querySelector('input, md-outlined-text-field')?.addEventListener('input', rowAutoPause);
+    cells[4].querySelector('input, md-outlined-text-field')?.addEventListener('input', rowAutoPause);
+    cells[6].querySelector('input, md-outlined-text-field')?.addEventListener('input', () => { row._pauseTouched = true; });
     cells[8].innerHTML = wizDayMengeEditHtml(row);
     // Beschreibung stays display-only (header-synced); the Ort gets its own
     // input + suggestion box so a single day can deviate from the order's
@@ -2182,7 +2182,7 @@ async function wizEditDay(btn) {
         <div style="position:relative;margin-top:3px">
             <md-outlined-text-field type="text" class="form-control be-day-ort-edit" value="${escapeHtml(row.dataset.ort || '')}"
                    placeholder="Tag-Ort (geht in die Dispo) — leer = kein Ort" autocomplete="off"${confirmedOrtHint}
-                   oninput="beOrtInput(event)" onblur="beOrtHide(event)"
+                   oninput="beOrtInput(event)" onfocusout="beOrtHide(event)"
                    style="padding:2px 6px;font-size:.78rem;min-width:190px"></md-outlined-text-field>
             <div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div>
         </div>`;
@@ -2198,10 +2198,10 @@ function wizSaveDayEdit(btnOrRow) {
     const row = btnOrRow && btnOrRow.tagName === 'TR' ? btnOrRow : btnOrRow.closest('tr');
     if (!row) return false;
     const cells = row.querySelectorAll('td');
-    const datum = cells[1].querySelector('input')?.value || '';
-    const von = cells[3].querySelector('input')?.value || '';
-    const bis = cells[4].querySelector('input')?.value || '';
-    let pause = parseInt(cells[6].querySelector('input')?.value) || 0;
+    const datum = cells[1].querySelector('input, md-outlined-text-field')?.value || '';
+    const von = cells[3].querySelector('input, md-outlined-text-field')?.value || '';
+    const bis = cells[4].querySelector('input, md-outlined-text-field')?.value || '';
+    let pause = parseInt(cells[6].querySelector('input, md-outlined-text-field')?.value) || 0;
     // Rules configured + pause untouched → the tier for THIS day's duration
     // wins over whatever the input happened to show — applied BEFORE the
     // net-hours check so soll_std matches the stored pause.
@@ -3015,7 +3015,7 @@ function _beCalEditHtml(r, n) {
         <label class="m">M Männer<md-outlined-text-field type="number" class="form-control" min="0" data-f="m" value="${mixM}"></md-outlined-text-field></label>
         <label class="w">W Frauen<md-outlined-text-field type="number" class="form-control" min="0" data-f="w" value="${mixW}"></md-outlined-text-field></label>
         <label></label>
-        <label class="wide">Tag-Ort<md-outlined-text-field type="text" class="form-control be-day-ort-edit" data-f="ort" autocomplete="off" value="${val(r.dataset.ort)}" placeholder="leer = Ort / Treffpunkt der Vorlage" oninput="beOrtInput(event)" onblur="beOrtHide(event)"></md-outlined-text-field><div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div></label>
+        <label class="wide">Tag-Ort<md-outlined-text-field type="text" class="form-control be-day-ort-edit" data-f="ort" autocomplete="off" value="${val(r.dataset.ort)}" placeholder="leer = Ort / Treffpunkt der Vorlage" oninput="beOrtInput(event)" onfocusout="beOrtHide(event)"></md-outlined-text-field><div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div></label>
         <div class="be-cal-anf">
             <label>Qualifikation<md-outlined-text-field type="text" class="form-control anf-qual" data-f="qual" value="${val(anfEff.qualifikation)}" placeholder="wie Vorlage"></md-outlined-text-field></label>
             <label>Kleidung<md-outlined-text-field type="text" class="form-control anf-kleidung" data-f="kleid" value="${val(anfEff.kleidung)}" placeholder="wie Vorlage"></md-outlined-text-field></label>
@@ -3135,11 +3135,11 @@ async function _beCalSaveEdit(row, form) {
     if (!row.classList.contains('be-day-editing')) return;
     const cells = row.querySelectorAll('td');
     const set = (el, value) => { if (el) el.value = value; };
-    set(cells[1]?.querySelector('input'), v('datum'));
-    set(cells[3]?.querySelector('input'), v('von').trim());
-    set(cells[4]?.querySelector('input'), v('bis').trim());
-    set(cells[6]?.querySelector('input'), v('pause'));
-    set(cells[7]?.querySelector('input'), v('pause'));
+    set(cells[1]?.querySelector('input, md-outlined-text-field'), v('datum'));
+    set(cells[3]?.querySelector('input, md-outlined-text-field'), v('von').trim());
+    set(cells[4]?.querySelector('input, md-outlined-text-field'), v('bis').trim());
+    set(cells[6]?.querySelector('input, md-outlined-text-field'), v('pause'));
+    set(cells[7]?.querySelector('input, md-outlined-text-field'), v('pause'));
     set(cells[8]?.querySelector('.be-day-menge'), v('menge'));
     set(cells[8]?.querySelector('.be-day-mix-m'), v('m'));
     set(cells[8]?.querySelector('.be-day-mix-w'), v('w'));

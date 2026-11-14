@@ -536,7 +536,7 @@ window.FE = (() => {
         // Inspector's X/Y/size inputs: Backspace there must edit the
         // number, not delete the element)
         const ae = document.activeElement;
-        if (ae && (ae.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))) return;
+        if (ae && (ae.isContentEditable || /^(INPUT|TEXTAREA|SELECT|MD-OUTLINED-TEXT-FIELD|MD-FILLED-TEXT-FIELD|MD-OUTLINED-SELECT|MD-FILLED-SELECT|MD-CHECKBOX|MD-RADIO)$/.test(ae.tagName))) return;
         const mod = e.ctrlKey || e.metaKey;
         if (mod && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
         if (mod && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); redo(); return; }

@@ -344,7 +344,7 @@ async function openObjectModal(id = null) {
                 </div>
 
                 <div class="form-group" style="position:relative">
-                    <md-outlined-text-field id="f_adresse" label="Adresse" value="${escapeHtml(obj.adresse || '')}" placeholder="Musterstraße 12" oninput="objAdresseInput(event)" onblur="objAdresseHide()"></md-outlined-text-field>
+                    <md-outlined-text-field id="f_adresse" label="Adresse" value="${escapeHtml(obj.adresse || '')}" placeholder="Musterstraße 12" oninput="objAdresseInput(event)" onfocusout="objAdresseHide()"></md-outlined-text-field>
                     <div id="f_adresse_suggest" class="obj-adr-suggest" style="display:none"></div>
                     <style>
                       .obj-adr-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
