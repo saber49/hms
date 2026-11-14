@@ -1089,6 +1089,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 18px;
 }
+.planner-team-grid > .planner-team-column:only-child {
+    grid-column: 1 / -1;
+}
 .planner-team-grid-split {
     align-items: start;
 }
