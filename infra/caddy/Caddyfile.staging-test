@@ -1,0 +1,109 @@
+# ============================================================
+# FrankenPHP edge — replica of nginx staging-tunnel (:8081)
+# Test instance on :8090. Serves hms-frontend-staging via
+# embedded PHP (classic mode), proxies /api|sanctum|share to
+# Octane :8001 and /app/* WS to Reverb :8082.
+# ============================================================
+{
+	admin off
+	auto_https off
+	frankenphp {
+		php_ini memory_limit 128M
+		php_ini upload_max_filesize 20M
+		php_ini post_max_size 22M
+		php_ini max_execution_time 60
+		php_ini expose_php Off
+	}
+}
+
+:8081 {
+	bind 127.0.0.1
+	root * /var/www/hms-frontend-staging
+
+	request_body {
+		max_size 20MB
+	}
+
+	encode zstd gzip
+
+	# ---- tenant-slug rewrites (server-level, run before routing) ----
+	# nginx: ^/(?!app/|api/|assets/|worker/|uploads/|sanctum/|share/)([a-z0-9][-a-z0-9]*)/(.+)$ -> /$2
+	@tenantSub {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /sanctum/* /share/*
+		path_regexp tsub ^/([a-z0-9][-a-z0-9]*)/(.+)$
+	}
+	rewrite @tenantSub /{re.tsub.2}
+
+	# nginx: ^/(?!...same...)([a-z0-9][-a-z0-9]*)/?$ -> /index.php
+	@tenantRoot {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /sanctum/* /share/*
+		path_regexp troot ^/[a-z0-9][-a-z0-9]*/?$
+	}
+	rewrite @tenantRoot /index.php
+
+	# ---- dotfile deny (nginx ~ /\.ht and ~ /\.env — applied globally) ----
+	route {
+		@dotfiles path /.ht* /.env* */.ht* */.env*
+		respond @dotfiles 403
+	}
+
+	# ---- static-asset regex beats non-^~ prefix locations (nginx semantics) ----
+	@statAsset {
+		path_regexp asc \.(js|css|woff2?|ttf|eot|otf|svg|ico|png|jpe?g|gif|webp|avif)$
+		not path /app/* /worker/sw.js
+	}
+	route @statAsset {
+		header Cache-Control "public, max-age=3600"
+		file_server
+	}
+
+	# ---- Reverb WebSocket: /app/* -> :8082 ----
+	handle /app/* {
+		reverse_proxy 127.0.0.1:8082 {
+			header_up X-Real-IP {remote_host}
+			transport http {
+				read_timeout 3600s
+				write_timeout 3600s
+			}
+		}
+	}
+
+	# ---- /uploads/* alias -> backend-staging storage ----
+	handle_path /uploads/* {
+		root * /var/www/hms-backend-staging/storage/app/public/uploads
+		@udot path /.ht* /.env*
+		respond @udot 403
+		header Cache-Control "public, max-age=604800"
+		file_server
+	}
+
+	# ---- Octane: /api /sanctum /share/* -> :8001 ----
+	@octane path /api /api/* /sanctum /sanctum/* /share/*
+	handle @octane {
+		reverse_proxy 127.0.0.1:8001 {
+			header_up X-Real-IP {remote_host}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+	@apiNoStore path /api /api/*
+	header @apiNoStore Cache-Control "no-store"
+
+	# ---- /worker/sw.js must never be cached ----
+	@swjs path /worker/sw.js
+	header @swjs Cache-Control "no-cache, no-store, must-revalidate"
+
+	# ---- PHP (classic mode) — only existing .php, like try_files $uri =404 ----
+	@phpfile {
+		path *.php
+		file {path}
+	}
+	php @phpfile
+
+	# ---- static + index (nginx: index landing.html only) ----
+	file_server {
+		index landing.html
+	}
+}

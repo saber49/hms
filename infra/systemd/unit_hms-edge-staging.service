@@ -1,0 +1,19 @@
+# /etc/systemd/system/hms-edge-staging.service
+[Unit]
+Description=HMS FrankenPHP edge (staging test, :8090) — nginx replacement candidate
+After=network-online.target hms-octane-staging.service hms-reverb-staging.service
+Wants=network-online.target
+
+[Service]
+User=www-data
+Group=www-data
+ExecStart=/var/www/hms-backend/frankenphp run --config /etc/frankenphp/Caddyfile.staging-test
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=1048576
+Environment=XDG_CONFIG_HOME=/var/www/hms-backend-staging/storage/frankenphp/config
+Environment=XDG_DATA_HOME=/var/www/hms-backend-staging/storage/frankenphp/data
+Environment=HOME=/var/www/hms-backend-staging/storage/frankenphp
+
+[Install]
+WantedBy=multi-user.target

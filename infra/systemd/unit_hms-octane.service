@@ -1,0 +1,29 @@
+# /etc/systemd/system/hms-octane.service
+[Unit]
+Description=HMS Laravel Octane (FrankenPHP)
+After=network.target mysql.service redis-server.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/hms-backend
+Environment=XDG_CONFIG_HOME=/var/www/hms-backend/storage/frankenphp/config
+Environment=XDG_DATA_HOME=/var/www/hms-backend/storage/frankenphp/data
+Environment=HOME=/var/www/hms-backend/storage/frankenphp
+Environment=PHPRC=/var/www/hms-backend/php.frankenphp.ini
+ExecStart=/usr/bin/php   -d opcache.enable_cli=1   -d opcache.memory_consumption=256   -d opcache.interned_strings_buffer=32   -d opcache.max_accelerated_files=20000   -d opcache.validate_timestamps=0   -d opcache.save_comments=1   -d opcache.jit=tracing   -d opcache.jit_buffer_size=128M   -d realpath_cache_size=4M   -d realpath_cache_ttl=600 -d upload_max_filesize=10M -d post_max_size=12M -d memory_limit=256M   artisan octane:start --server=frankenphp --host=127.0.0.1 --port=8000 --workers=24 --max-requests=500
+ExecReload=/bin/kill -USR1 $MAINPID
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/www/hms-backend/storage/logs/octane.log
+StandardError=append:/var/www/hms-backend/storage/logs/octane.err.log
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/var/www/hms-backend/storage /var/www/hms-backend/bootstrap/cache
+
+[Install]
+WantedBy=multi-user.target

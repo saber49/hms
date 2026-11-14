@@ -1,0 +1,17 @@
+# /etc/systemd/system/hms-reverb.service
+[Unit]
+Description=HMS Reverb WebSocket server (production, :8080)
+After=network.target hms-octane.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/hms-backend
+Environment=HOME=/var/www/hms-backend/storage/frankenphp
+ExecStart=/usr/bin/php /var/www/hms-backend/artisan reverb:start --host=127.0.0.1 --port=8080 --no-interaction
+Restart=always
+RestartSec=3
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

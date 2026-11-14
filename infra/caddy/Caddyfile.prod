@@ -1,0 +1,341 @@
+# ============================================================
+# FrankenPHP edge — PRODUCTION replica of all nginx vhosts
+# Replaces: sites-enabled/clood-x.com, hms, saberplan-block.conf,
+#           staging.clood-x.com
+# PHP served by embedded FrankenPHP PHP 8.5 (classic mode).
+# ============================================================
+{
+	auto_https off
+	admin off
+	frankenphp {
+		php_ini memory_limit 128M
+		php_ini upload_max_filesize 20M
+		php_ini post_max_size 22M
+		php_ini max_execution_time 60
+		php_ini expose_php Off
+	}
+	# Real visitor IP: only Cloudflare (the firewall admits nothing else on
+	# 80/443) may set it, via CF-Connecting-IP → {client_ip}.
+	servers {
+		trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+		client_ip_headers CF-Connecting-IP
+	}
+}
+
+# ---------- alt TLDs -> clood-x.com ----------
+http://clood-x.de, http://clood-x.org, http://clood-x.store {
+	redir https://clood-x.com{uri} 301
+}
+clood-x.de, clood-x.org, clood-x.store {
+	tls /etc/frankenphp/certs/clood-x.de.crt /etc/frankenphp/certs/clood-x.de.key
+	redir https://clood-x.com{uri} 301
+}
+
+# ---------- saberplan: connection abort (nginx 444) ----------
+http://saberplan.com, http://www.saberplan.com, http://*.saberplan.com {
+	abort
+}
+saberplan.com, www.saberplan.com, *.saberplan.com {
+	tls /etc/frankenphp/certs/saberplan.com.crt /etc/frankenphp/certs/saberplan.com.key
+	abort
+}
+
+# ---------- direct IP access (nginx "hms" site) ----------
+http://87.106.142.253 {
+	root * /var/www/hms-frontend
+	request_body {
+		max_size 20MB
+	}
+	@hmsdot path /.ht* /.env* */.ht* */.env*
+	respond @hmsdot 403
+	@hmsproxy path /api /api/* /sanctum /sanctum/* /share/*
+	handle @hmsproxy {
+		reverse_proxy 127.0.0.1:8000 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+	@hmsPhp {
+		path *.php
+		file {path}
+	}
+	php @hmsPhp
+	file_server {
+		index index.html index.htm
+	}
+}
+
+# ---------- HTTP -> HTTPS (clood hosts) ----------
+http://clood-x.com, http://www.clood-x.com, http://*.clood-x.com {
+	redir https://{host}{uri} 301
+}
+
+# ---------- staging.clood-x.com ----------
+staging.clood-x.com {
+	tls /etc/frankenphp/certs/clood-x-origin.crt /etc/frankenphp/certs/clood-x-origin.key
+	root * /var/www/hms-frontend-staging
+	request_body {
+		max_size 20MB
+	}
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Content-Security-Policy "frame-ancestors 'self' https://clood-x.com https://www.clood-x.com"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-X-Powered-By
+	}
+
+	@stTenantSub {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /sanctum/* /share/*
+		path_regexp stsub ^/([a-z0-9][-a-z0-9]*)/(.+)$
+	}
+	rewrite @stTenantSub /{re.stsub.2}
+	@stTenantRoot {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /sanctum/* /share/*
+		path_regexp stroot ^/[a-z0-9][-a-z0-9]*/?$
+	}
+	rewrite @stTenantRoot /index.php
+
+	route {
+		@stdot path /.ht* /.env* */.ht* */.env*
+		respond @stdot 403
+	}
+	redir /worker/ /worker/index.php 302
+
+	@stAsset {
+		path_regexp stasc \.(js|css|woff2?|ttf|eot|otf|svg|ico|png|jpe?g|gif|webp|avif)$
+		not path /app/* /uploads/* /worker/sw.js
+	}
+	route @stAsset {
+		header Cache-Control "public, max-age=3600"
+		file_server
+	}
+
+	handle /app/* {
+		reverse_proxy 127.0.0.1:8082 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 3600s
+				write_timeout 3600s
+			}
+		}
+	}
+	handle_path /uploads/* {
+		root * /var/www/hms-backend-staging/storage/app/public/uploads
+		@stUplPhoto path_regexp stuplphoto ^/(workers|lager)/[^/.][^/]*/[^/.][^/]*/foto_[^/]+\.(jpe?g|png|webp|gif)$
+		handle @stUplPhoto {
+			header Cache-Control "public, max-age=604800"
+			file_server
+		}
+		handle {
+			respond 403
+		}
+	}
+	@stOctane path /api /api/* /sanctum /sanctum/* /share/*
+	handle @stOctane {
+		reverse_proxy 127.0.0.1:8001 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+	@stApi path /api /api/*
+	header @stApi Cache-Control "no-store"
+	@stSw path /worker/sw.js
+	header @stSw Cache-Control "no-cache, no-store, must-revalidate"
+	@stPhp {
+		path *.php
+		file {path}
+	}
+	php @stPhp
+	file_server {
+		index landing.html
+	}
+}
+
+# ---------- main: clood-x.com + www + *.clood-x.com ----------
+clood-x.com, www.clood-x.com, *.clood-x.com {
+	tls /etc/frankenphp/certs/clood-x.com.crt /etc/frankenphp/certs/clood-x.com.key
+	root * /var/www/hms-frontend
+	request_body {
+		max_size 20MB
+	}
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-X-Powered-By
+	}
+
+	# tenant-slug rewrites (exclusions mirror nginx lookahead list)
+	@tenantSub {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /phpmyadmin/* /sanctum/* /share/* /desktop/* /admin /admin/* /livewire /livewire/* /css/* /js/* /fonts/*
+		path_regexp tsub ^/([a-z0-9][-a-z0-9]*)/(.+)$
+	}
+	rewrite @tenantSub /{re.tsub.2}
+	@tenantRoot {
+		not path /app/* /api/* /assets/* /worker/* /uploads/* /phpmyadmin/* /sanctum/* /share/* /desktop/* /admin /admin/* /livewire /livewire/* /css/* /js/* /fonts/*
+		path_regexp troot ^/[a-z0-9][-a-z0-9]*/?$
+	}
+	rewrite @tenantRoot /index.php
+
+	# global dotfile deny (stricter than nginx: also inside ^~ prefixes)
+	route {
+		@dotfiles path /.ht* /.env* */.ht* */.env*
+		respond @dotfiles 403
+	}
+
+	# /worker/sw.js — never cached
+	@swExact path /worker/sw.js
+	route @swExact {
+		header Cache-Control "no-cache, no-store, must-revalidate"
+		file_server
+	}
+	redir /worker/ /worker/index.php 302
+
+	# asset regex (nginx ~* location) — excluded from ^~ prefixes + uploads + sw.js
+	@statAsset {
+		path_regexp asc \.(js|css|woff2?|ttf|eot|otf|svg|ico|png|jpe?g|gif|webp|avif)$
+		not path /app/* /uploads/* /desktop/* /admin /admin/* /livewire /livewire/* /css/* /js/* /fonts/* /phpmyadmin/* /worker/sw.js
+	}
+	route @statAsset {
+		header Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
+	# /desktop/ — installer binaries, octet-stream + no-store
+	handle_path /desktop/* {
+		root * /var/www/hms-frontend/desktop
+		@dotg path /.ht* /.env* */.ht* */.env*
+		respond @dotg 403
+		header Cache-Control "no-store, no-cache, must-revalidate"
+		header Content-Type application/octet-stream
+		file_server
+	}
+
+	# Reverb WebSocket (prod) /app/* -> :8080
+	handle /app/* {
+		reverse_proxy 127.0.0.1:8080 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 3600s
+				write_timeout 3600s
+			}
+		}
+	}
+
+	# uploads -> backend storage (uniform; also fixes nginx subcontractor-*.png 404)
+	# Only profile/article photos are public; documents are served solely via
+	# short-lived signed links from /api/files/link (App\Support\FileAccess).
+	handle_path /uploads/* {
+		root * /var/www/hms-backend/storage/app/public/uploads
+		@uplPhoto path_regexp uplphoto ^/(workers|lager)/[^/.][^/]*/[^/.][^/]*/foto_[^/]+\.(jpe?g|png|webp|gif)$
+		handle @uplPhoto {
+			header Cache-Control "public, max-age=604800"
+			file_server
+		}
+		handle {
+			header Cache-Control "no-store"
+			respond 403
+		}
+	}
+
+	# phpMyAdmin gate: open /__pma-zugang?k=<secret in /root/.pma-gate> once
+	# per browser (sets a cookie for 30 days); without it phpMyAdmin is a 404.
+	handle /__pma-zugang {
+		@pmaKey query k=b575bd7f8b6afdb4752fe4558e2803be14d075af348be080
+		header @pmaKey Set-Cookie "pma_gate=b575bd7f8b6afdb4752fe4558e2803be14d075af348be080; Path=/phpmyadmin; Max-Age=2592000; Secure; HttpOnly; SameSite=Strict"
+		header Cache-Control "no-store"
+		redir @pmaKey /phpmyadmin/ 302
+		respond 404
+	}
+	@pmaNoGate {
+		path /phpmyadmin /phpmyadmin/*
+		not header Cookie *pma_gate=b575bd7f8b6afdb4752fe4558e2803be14d075af348be080*
+	}
+	handle @pmaNoGate {
+		respond 404
+	}
+
+	# phpMyAdmin — bcrypt auth (old apr1-MD5 .htpasswd not reusable)
+	@pma path /phpmyadmin /phpmyadmin/*
+	handle @pma {
+		@dotg path /.ht* /.env* */.ht* */.env*
+		respond @dotg 403
+		basic_auth {
+			admin $2y$05$rdTkRdD8pDv5taGuombMpe6f7DMRQn.hdbVUr2uiG6vvezdjK6PCK
+		}
+		uri strip_prefix /phpmyadmin
+		root * /usr/share/phpmyadmin
+		try_files {path} {path}/index.php index.php
+		@pmaPhp path *.php
+		php @pmaPhp
+		file_server
+		header Cache-Control "no-store, no-cache, must-revalidate, private"
+	}
+
+	# Octane proxies — /api /sanctum /share /admin /livewire /css /js /fonts
+	@octanePlain {
+		path /api /api/* /sanctum /sanctum/* /share/*
+		not path */.ht* */.env* /.ht* /.env*
+	}
+	@octaneCaret path /admin /admin/* /livewire /livewire/* /css/* /js/* /fonts/*
+	@octaneAll path /api /api/* /sanctum /sanctum/* /share/* /admin /admin/* /livewire /livewire/* /css/* /js/* /fonts/*
+	# plain-prefix paths: nginx regex wins -> dotfiles 403 via catch-all
+	handle @octanePlain {
+		reverse_proxy 127.0.0.1:8000 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+	# ^~ paths (admin/livewire/css/js/fonts): beat regex -> dotfiles proxied like nginx
+	handle @octaneCaret {
+		reverse_proxy 127.0.0.1:8000 {
+			header_up X-Real-IP {client_ip}
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 120s
+				write_timeout 120s
+			}
+		}
+	}
+	@apiNoStore path /api /api/* /sanctum /sanctum/*
+	header @apiNoStore Cache-Control "no-store, no-cache, must-revalidate, private"
+	header @apiNoStore CDN-Cache-Control "no-store"
+
+	# PHP + static catch-all — same no-cache as nginx .php + location /
+	handle {
+		@dotg path /.ht* /.env* */.ht* */.env*
+		respond @dotg 403
+		header Cache-Control "no-cache, no-store, must-revalidate, private"
+		@phpMain {
+			path *.php
+			file {path}
+		}
+		php @phpMain
+		file_server {
+			index landing.html
+		}
+	}
+}
+
+# ---------- :80 catch-all (first-block-wins parity) ----------
+:80 {
+	redir https://clood-x.com{uri} 301
+}
