@@ -319,19 +319,6 @@
 .modal.modal-wide .data-table-card thead th.text-right {
     text-align: right;
 }
-
-/* Customer tabs — refined */
-.customer-tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--gray-100);
-    padding: 4px;
-    border-radius: 10px;
-    margin-bottom: 18px;
-    border: none;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-}
 .customer-tab {
     padding: 9px 16px;
     background: transparent;
@@ -372,18 +359,6 @@
     font-weight: 600;
     letter-spacing: 0.3px;
 }
-.bereich-sicherheit {
-    background: var(--info-light, #dbeafe);
-    color: var(--md-ext-color-on-info-container, #1d4ed8);
-}
-.bereich-reinigung {
-    background: var(--success-light, #d1fae5);
-    color: var(--md-ext-color-on-success-container, #059669);
-}
-.bereich-beides {
-    background: var(--warning-light, #fef3c7);
-    color: var(--md-ext-color-on-warning-container, #b45309);
-}
 .bereich-badge:not(.bereich-sicherheit):not(.bereich-reinigung):not(.bereich-beides) {
     background: #f3e8ff;
     color: #7c3aed;
@@ -392,100 +367,9 @@
     background: rgba(167, 139, 250, .16);
     color: #c4b5fd;
 }
-
-/* Toolbar filter dropdown */
-.toolbar-filter {
-    max-width: 180px;
-    height: 38px;
-    font-size: 0.85rem;
-}
-
-/* ============================================
-   Stats overview (top of page)
-   ============================================ */
-.kunden-stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 18px;
-}
 @media (max-width: 900px) {
-    .kunden-stats-row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 500px) {
-    .kunden-stats-row { grid-template-columns: 1fr; }
-}
-.kunden-stat-card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: 12px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    cursor: pointer;
-    transition: box-shadow 0.18s ease, transform 0.15s ease, border-color 0.18s ease;
-}
-.kunden-stat-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    transform: translateY(-1px);
-    border-color: var(--accent);
-}
-.kunden-stat-icon {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-    background: var(--gray-100);
-    color: var(--gray-500);
-    flex-shrink: 0;
-}
-.kunden-stat-total .kunden-stat-icon { background: var(--info-light, #dbeafe); color: var(--md-ext-color-on-info-container, #1d4ed8); }
-.kunden-stat-active .kunden-stat-icon { background: var(--success-light, #d1fae5); color: var(--md-ext-color-on-success-container, #059669); }
-.kunden-stat-archiv .kunden-stat-icon { background: var(--gray-100); color: var(--gray-500); }
-.kunden-stat-objekte .kunden-stat-icon { background: var(--warning-light, #fef3c7); color: var(--md-ext-color-on-warning-container, #b45309); }
-.kunden-stat-body { min-width: 0; }
-.kunden-stat-num {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--primary);
-    line-height: 1.1;
-}
-.kunden-stat-lbl {
-    font-size: 0.72rem;
-    color: var(--gray-500);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    margin-top: 2px;
-}
-
-/* Filter toggle (Aktiv / Archiv / Alle) */
-.kunden-filter-toggle {
-    display: inline-flex;
-    border: 1px solid var(--gray-200);
-    border-radius: 8px;
-    overflow: hidden;
-    background: var(--white);
-    height: 38px;
-}
-.kunden-filter-toggle button {
-    background: none;
-    border: none;
-    padding: 0 14px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--gray-500);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border-right: 1px solid var(--gray-200);
-    transition: background 0.15s ease, color 0.15s ease;
-}
-.kunden-filter-toggle button:last-child { border-right: none; }
-.kunden-filter-toggle button:hover {
-    background: var(--gray-50);
-    color: var(--primary);
 }
 .kunden-filter-toggle button.active {
     background: var(--accent);
@@ -542,8 +426,6 @@
 
 /* Status colors */
 .status.status-nein { background: var(--gray-100); color: var(--gray-500); }
-.text-warn { color: var(--warning, #d97706) !important; }
-.text-warn:hover { background: var(--warning-light, #fef3c7); }
 .text-success { color: var(--success, #059669) !important; }
 .text-success:hover { background: var(--success-light, #d1fae5); }
 
@@ -765,16 +647,6 @@
     justify-content: center;
     overflow: hidden;
     border-bottom: 1px solid var(--gray-200);
-}
-.doc-thumb-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-.doc-thumb-img:hover {
-    transform: scale(1.05);
 }
 .doc-thumb-icon {
     font-size: 2.5rem;
@@ -1452,11 +1324,6 @@
 }
 
 /* Empty state styling for table */
-.data-table-card .empty-state {
-    padding: 60px 20px;
-    text-align: center;
-    color: var(--gray-400);
-}
 .data-table-card .empty-state i {
     font-size: 3rem;
     display: block;

@@ -30,11 +30,6 @@
 
 /* ---------- topbar title (icon + title + sub injected into #pageTitle) ---------- */
 .oc-pt-wrap { display: inline-flex; align-items: center; gap: 10px; }
-.oc-pt-icon {
-    width: 34px; height: 34px; border-radius: 9px;
-    background: var(--oc-primary); color: #fff;
-    display: inline-flex; align-items: center; justify-content: center;
-}
 .oc-pt-icon .material-symbols-outlined { font-size: 19px; }
 .oc-pt-stack { display: inline-flex; flex-direction: column; line-height: 1.15; }
 .oc-pt-sub { font-size: .68rem; font-weight: 500; color: var(--oc-text-muted); letter-spacing: .2px; }
@@ -114,7 +109,6 @@
 .oc-kunde { font-weight: 600; color: var(--oc-text); }
 .oc-obj { font-size: .75rem; color: var(--oc-text-muted); }
 .oc-leistungen { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .8rem; }
-.oc-dim { color: var(--oc-text-muted); font-size: .75rem; }
 
 .oc-badge {
     display: inline-flex; align-items: center; gap: 4px;

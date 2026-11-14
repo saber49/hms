@@ -40,38 +40,6 @@
     margin-bottom: 12px;
 }
 
-.wm-search-icon {
-    position: absolute;
-    left: 14px;
-    color: var(--text-muted);
-    font-size: 13px;
-    pointer-events: none;
-}
-
-.wm-search-input {
-    flex: 1;
-    width: 100%;
-    padding: 10px 38px 10px 38px;
-    border: 1.5px solid var(--border);
-    border-radius: 24px;
-    font-size: 14px;
-    font-family: var(--font);
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.wm-search-input::placeholder {
-    color: var(--text-muted);
-    font-size: 13px;
-}
-
-.wm-search-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(202, 138, 4, 0.12);
-}
-
 .wm-search-clear {
     position: absolute;
     right: 8px;

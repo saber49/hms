@@ -1472,61 +1472,6 @@
     overflow-x: auto;
 }
 
-/* QuaSOD multi-select dropdown ---------------------------------------- */
-.wk-quasod-wrap {
-    position: relative;
-}
-.wk-quasod-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-}
-.wk-quasod-popup {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: var(--white);
-    border: 1px solid var(--wk-border);
-    border-radius: 6px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
-    padding: 8px;
-    z-index: 1100;
-    max-height: 320px;
-    overflow-y: auto;
-}
-.wk-quasod-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    user-select: none;
-}
-.wk-quasod-row:hover {
-    background: rgba(0, 0, 0, 0.04);
-}
-.wk-quasod-row input[type="checkbox"] {
-    margin: 0;
-    cursor: pointer;
-}
-.wk-quasod-row-all {
-    font-weight: 500;
-}
-.wk-quasod-row-danger {
-    color: #dc2626;
-}
-.wk-quasod-divider {
-    height: 1px;
-    background: var(--wk-border);
-    margin: 4px 0;
-}
-
 .wk-modal-tab {
     /* `flex: 1 1 0` + `min-width: 0` makes every tab exactly the same
        width, regardless of its label length. Without this, a long
