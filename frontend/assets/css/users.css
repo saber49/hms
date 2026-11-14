@@ -217,7 +217,7 @@
     background: var(--gray-100);
     color: var(--gray-600);
 }
-.role-chip.r-owner { background: linear-gradient(135deg,var(--md-ext-color-warning-container), var(--md-ext-color-warning); color: var(--md-ext-color-on-warning-container); }
+.role-chip.r-owner { background: linear-gradient(135deg, var(--md-ext-color-warning-container), var(--md-ext-color-warning)); color: var(--md-ext-color-on-warning-container); }
 .role-chip.r-admin { background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); color: var(--accent); }
 .role-chip.r-manager { background: var(--success-light); color: var(--success); }
 .role-chip.r-dispo { background: var(--info-light); color: var(--info); }
