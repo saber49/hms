@@ -437,11 +437,37 @@ function auegAktiv() {
 }
 
 /**
+ * UI wording of the company's main industry (payload `terms`, Konto & Firma →
+ * Unternehmensdaten → Branche & Bezeichnungen): Kunde/Klient, Objekt/Haushalt …
+ * term('kunden') → "Klienten". Unknown keys return the neutral default.
+ */
+const TERM_DEFAULTS = { kunde: 'Kunde', kunden: 'Kunden', objekt: 'Objekt', objekte: 'Objekte' };
+function term(key) {
+    let t = null;
+    try {
+        const cur = (typeof CURRENT_TENANT !== 'undefined' && CURRENT_TENANT) || {};
+        t = cur.terms || JSON.parse(localStorage.getItem('hms_tenant') || '{}').terms || null;
+    } catch (e) { /* ignore */ }
+    return (t && typeof t[key] === 'string' && t[key]) || TERM_DEFAULTS[key] || key;
+}
+window.term = term;
+
+// Sidebar labels that follow the industry wording.
+function applyTermLabels() {
+    const set = (page, text) => document.querySelectorAll(`.nav-item[data-page="${page}"] span:not(.badge)`).forEach(sp => {
+        if (sp.textContent !== text) sp.textContent = text;
+    });
+    set('customers', term('kunden'));
+    set('objects', term('objekte') + ' & Artikel');
+}
+
+/**
  * Apply permission-based UI gating to the sidebar.
  * - Hides nav items the user is not allowed to see.
  * - Hides section headers whose items are all hidden.
  */
 function applyPermissionGating() {
+    applyTermLabels();
     document.querySelectorAll('.nav-item').forEach(item => {
         const page = item.dataset.page;
         const need = PAGE_PERMS[page];
@@ -613,7 +639,7 @@ const PAGE_MODULE_SCRIPTS = {
     absences: ['assets/js/absences.js?v=20261104pager1'],
     users: ['assets/js/users.js?v=20261109prod1'],
     pdf_design: ['assets/js/pdf_design.js?v=20261109prod1'],
-    company_documents: ['assets/js/company_documents.js?v=20261104pager1'],
+    company_documents: ['assets/js/company_documents.js?v=20261114sek1'],
     aufgaben: ['assets/js/aufgaben.js?v=20261104pager1'],
     aueg: ['assets/js/aueg.js?v=20261104pager1']
 };
@@ -797,8 +823,8 @@ async function loadPage(page) {
     const titles = {
         dashboard: 'Übersicht',
         interessenten: 'Vertrieb — Interessenten & Leads',
-        customers: 'Stammdaten — Kunden',
-        objects: 'Stammdaten — Objekte & Artikel',
+        customers: 'Stammdaten — ' + term('kunden'),
+        objects: 'Stammdaten — ' + term('objekte') + ' & Artikel',
         subcontractors: 'Personal — Nachunternehmer',
         price_history: 'Preishistorie',
         lager: 'Stammdaten — Lager & Ausrüstung',
@@ -1732,7 +1758,28 @@ function renderCompanyTab(c) {
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-book"></i> Bezeichnungen</div>
+            <div class="acc-section-header"><i class="fas fa-book"></i> ${Array.isArray(c.branchen) ? 'Branche &amp; Bezeichnungen' : 'Bezeichnungen'}</div>
+            ${Array.isArray(c.branchen) ? `
+            <div class="acc-info-box">
+                <i class="fas fa-info-circle"></i>
+                Die Hauptbranche bestimmt die Begriffe im System (z.B. „Klienten“ statt „Kunden“ in der Hauswirtschaft).
+                Branchen je Dienstleistung (Objektarten, Qualifikationen, Zusatzfelder) stellen Sie unter Konto &amp; Firma → Bereiche ein.
+            </div>
+            <div class="acc-grid acc-grid-2">
+                <div class="form-group acc-span-2">
+                    <label>Hauptbranche des Unternehmens</label>
+                    <select class="form-control" id="cf_branche" onchange="cfBrancheChanged(this.value)">
+                        <option value="">— keine (neutrale Begriffe) —</option>
+                        ${c.branchen.map(b => `<option value="${escapeHtml(b.key)}" ${b.key === c.branche ? 'selected' : ''}>${escapeHtml(b.label)}</option>`).join('')}
+                    </select>
+                </div>
+                ${[['kunde', 'Begriff für Kunde (Einzahl)'], ['kunden', 'Begriff für Kunden (Mehrzahl)'], ['objekt', 'Begriff für Objekt (Einzahl)'], ['objekte', 'Begriff für Objekte (Mehrzahl)']].map(([k, l]) => `
+                <div class="form-group">
+                    <label>${l}</label>
+                    <input type="text" class="form-control cf-term" data-term="${k}" maxlength="40" value="${escapeHtml((c.terms_custom || {})[k] || '')}" placeholder="${escapeHtml((c.terms_default || {})[k] || TERM_DEFAULTS[k])}">
+                </div>`).join('')}
+                <div class="form-group acc-span-2"><small style="color:var(--gray-500)">Leer = Begriff der gewählten Branche (grau angezeigt).</small></div>
+            </div>` : ''}
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>Name des Schicht-Protokolls</label>
@@ -2252,6 +2299,12 @@ function _readCompanyForm() {
     if (fzEl) out.firmen_zusatz = fzEl.value.trim();
     const obEl = document.getElementById('cf_objektbuch_label');
     if (obEl) out.objektbuch_label = obEl.value.trim();
+    const brEl = document.getElementById('cf_branche');
+    if (brEl) {
+        out.branche = brEl.value || null;
+        out.terms = {};
+        document.querySelectorAll('.cf-term').forEach(i => { out.terms[i.dataset.term] = i.value.trim(); });
+    }
     if (document.getElementById('cf_aueg_aktiv')) out.aueg = { aktiv: document.getElementById('cf_aueg_aktiv').checked };
     if (document.getElementById('cf_arbzg_aktiv')) {
         out.arbzg = {
@@ -2262,6 +2315,13 @@ function _readCompanyForm() {
     }
     return out;
 }
+
+// Placeholders of the wording fields follow the selected main industry.
+function cfBrancheChanged(key) {
+    const b = ((_accountCompanyData && _accountCompanyData.branchen) || []).find(x => x.key === key);
+    document.querySelectorAll('.cf-term').forEach(i => { i.placeholder = (b && b.terms[i.dataset.term]) || TERM_DEFAULTS[i.dataset.term]; });
+}
+window.cfBrancheChanged = cfBrancheChanged;
 
 async function saveAccountActiveTab() {
     if (_accountActiveTab === 'profile') return; // password has its own button

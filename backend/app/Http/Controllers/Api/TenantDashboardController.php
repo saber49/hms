@@ -104,6 +104,12 @@ class TenantDashboardController extends Controller
             'objektbuch_label_custom'  => (string) data_get($tenant->settings, 'objektbuch_label', ''),
             'objektbuch_label_default' => \App\Support\TenantProfile::defaultObjektbuchLabel($tenant),
             'arbzg'                    => \App\Support\TenantProfile::arbzg($tenant),
+            'aueg'                     => ['aktiv' => \App\Support\Aueg::enabled($tenant)],
+            // Main industry of the company + UI wording (Kunde/Klient, Objekt/Haushalt …).
+            'branche'                  => \App\Support\TenantProfile::branche($tenant),
+            'branchen'                 => array_map(fn ($b) => ['key' => $b['key'], 'label' => $b['label'], 'terms' => $b['terms']], \App\Support\Branchen::forUi()),
+            'terms_custom'             => (object) array_filter((array) data_get($tenant->settings, 'terms', []), fn ($v) => is_string($v) && trim($v) !== ''),
+            'terms_default'            => \App\Support\Branchen::defaultTerms($tenant),
         ]);
     }
 
@@ -156,6 +162,9 @@ class TenantDashboardController extends Controller
             'arbzg.ruhezeit'       => 'nullable|numeric|min:5|max:24',
             'aueg'                 => 'nullable|array',
             'aueg.aktiv'           => 'nullable|boolean',
+            'branche'              => 'nullable|string|in:' . implode(',', array_keys(\App\Support\Branchen::REGISTRY)),
+            'terms'                => 'nullable|array',
+            'terms.*'              => 'nullable|string|max:40',
         ]);
 
         $tenant = $request->user()->tenant;
@@ -216,6 +225,38 @@ class TenantDashboardController extends Controller
                 'max_tag'  => isset($in['max_tag']) && $in['max_tag'] !== '' ? (float) $in['max_tag'] : $cur['max_tag'],
                 'ruhezeit' => isset($in['ruhezeit']) && $in['ruhezeit'] !== '' ? (float) $in['ruhezeit'] : $cur['ruhezeit'],
             ];
+            $settingsTouched = true;
+        }
+        // AÜG module switch — only when the key is sent.
+        if ($request->has('aueg.aktiv')) {
+            $settings['aueg'] = ['aktiv' => (bool) $request->input('aueg.aktiv')];
+            $settingsTouched = true;
+        }
+        // Main industry (wording, defaults) — only when the key is sent.
+        if ($request->has('branche')) {
+            $b = (string) $request->input('branche', '');
+            // Defaults derived from the industry (ArbZG hints, AÜG, log name)
+            // must not flip for a company that runs without one today:
+            // freeze the current effective values before the first switch.
+            if (\App\Support\TenantProfile::branche($tenant) === null && $b !== '') {
+                if (!isset($settings['arbzg'])) $settings['arbzg'] = \App\Support\TenantProfile::arbzg($tenant);
+                if (!isset($settings['aueg']) && class_exists(\App\Support\Aueg::class)) $settings['aueg'] = ['aktiv' => \App\Support\Aueg::enabled($tenant)];
+                if (trim((string) ($settings['objektbuch_label'] ?? '')) === '') $settings['objektbuch_label'] = \App\Support\TenantProfile::objektbuchLabel($tenant);
+            }
+            if ($b === '') unset($settings['branche']);
+            else $settings['branche'] = $b;
+            $settingsTouched = true;
+        }
+        // Custom wording — complete set when sent; empty values = industry default.
+        if ($request->has('terms')) {
+            $in = (array) $request->input('terms', []);
+            $terms = [];
+            foreach (\App\Support\Branchen::TERM_KEYS as $k) {
+                $v = trim(strip_tags((string) ($in[$k] ?? '')));
+                if ($v !== '') $terms[$k] = mb_substr($v, 0, 40);
+            }
+            if ($terms) $settings['terms'] = $terms;
+            else unset($settings['terms']);
             $settingsTouched = true;
         }
         if ($settingsTouched) {

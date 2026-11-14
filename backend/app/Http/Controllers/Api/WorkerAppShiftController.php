@@ -46,7 +46,7 @@ class WorkerAppShiftController extends Controller
 
         // Query shifts
         $rawShifts = DB::connection('tenant')->select("
-            SELECT e.einsatz_id, e.bestell_id, e.datum, e.kunden_id, e.obj_id, e.nu_id,
+            SELECT e.einsatz_id, e.bestell_id, e.datum, e.kunden_id, e.obj_id, e.artikel_id, e.nu_id,
                    e.ist_start, e.ist_ende, e.ist_std_menge, e.ist_betrag, e.pause_minuten,
                    e.hms_bestaetigt, e.beschreibung, e.bemerkung, e.ort,
                    {$aufgabeCol},
@@ -112,6 +112,7 @@ class WorkerAppShiftController extends Controller
                 'ort'            => $s->ort ?: null,
                 'bemerkung'      => null,
                 'hms_bestaetigt' => $s->hms_bestaetigt,
+                'checklisten'    => self::checklistenInfo($s, $dienstNr),
             ];
         }
 
@@ -123,5 +124,27 @@ class WorkerAppShiftController extends Controller
             'days'       => $days,
             'shifts'     => $shifts,
         ]);
+    }
+
+    /** {anzahl, pflicht, erledigt} of the shift's Checklisten (null without any). */
+    private static function checklistenInfo($s, string $dienstNr): ?array
+    {
+        if (!$s->obj_id || !\App\Support\Checklisten::ready()) return null;
+        try {
+            $v = \App\Support\Checklisten::vorlagenFuer($s->obj_id, \App\Support\Checklisten::einsatzBereiche($s->obj_id, $s->artikel_id ?? null, $s->kunden_id));
+            if (!$v) return null;
+            $done = DB::connection('tenant')->table('checklisten_protokolle')
+                ->where('einsatz_id', $s->einsatz_id)->where('created_by_dienst_nr', $dienstNr)
+                ->distinct()->pluck('vorlage_id')->map(fn ($i) => (int) $i)->all();
+            $pflicht = array_filter($v, fn ($x) => $x->pflicht);
+            return [
+                'anzahl'        => count($v),
+                'pflicht'       => count($pflicht),
+                'pflicht_offen' => count(array_filter($pflicht, fn ($x) => !in_array((int) $x->id, $done, true))),
+                'erledigt'      => count($done),
+            ];
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }

@@ -104,14 +104,18 @@ class TenantProfile
         $s = Schema::connection('tenant');
         if (!$s->hasTable('bereiche_katalog')) return;
         $db = DB::connection('tenant');
-        if ($db->table('bereiche_katalog')->whereNull('parent_id')->whereRaw('LOWER(name) = ?', [mb_strtolower($p['bereich'])])->exists()) return;
-        $row = ['name' => $p['bereich'], 'parent_id' => null, 'aktiv' => 1, 'sortierung' => 0, 'created_at' => now(), 'updated_at' => now()];
-        if ($s->hasColumn('bereiche_katalog', 'bewachung')) {
-            $row['bewachung'] = $p['bewachung'] ? 1 : 0;
-            $row['stadiondienst'] = $p['stadiondienst'] ? 1 : 0;
+        $id = $db->table('bereiche_katalog')->whereNull('parent_id')->whereRaw('LOWER(name) = ?', [mb_strtolower($p['bereich'])])->value('id');
+        if (!$id) {
+            $row = ['name' => $p['bereich'], 'parent_id' => null, 'aktiv' => 1, 'sortierung' => 0, 'created_at' => now(), 'updated_at' => now()];
+            if ($s->hasColumn('bereiche_katalog', 'bewachung')) {
+                $row['bewachung'] = $p['bewachung'] ? 1 : 0;
+                $row['stadiondienst'] = $p['stadiondienst'] ? 1 : 0;
+            }
+            $id = $db->table('bereiche_katalog')->insertGetId($row);
+            // Ready-made Einsatzarten, each mapped to its platform service type.
+            SecurityServices::seedStarterEinsatzarten((int) $id);
         }
-        $id = $db->table('bereiche_katalog')->insertGetId($row);
-        // Ready-made Einsatzarten, each mapped to its platform service type.
-        SecurityServices::seedStarterEinsatzarten((int) $id);
+        // Industry + starter pack (Objektarten, Qualifikations-/Kleidungs-Listen).
+        Branchen::applyPaket((int) $id, $branche);
     }
 }

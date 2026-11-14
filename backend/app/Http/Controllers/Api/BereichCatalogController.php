@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Support\BereichScope;
+use App\Support\Branchen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -41,6 +42,8 @@ class BereichCatalogController extends Controller
                 $mains[$r->id] = ['id' => $r->id, 'name' => $r->name, 'farbe' => $r->farbe ?? null, 'aktiv' => (int) $r->aktiv,
                     // Security switches (2026_10_19_110000): Sicherheit tab / stadium fields in the worker form.
                     'bewachung' => (int) ($r->bewachung ?? 0), 'stadiondienst' => (int) ($r->stadiondienst ?? 0),
+                    // Industry of the main (2026_10_21_200000) — keys of Branchen::REGISTRY.
+                    'branche' => $r->branche ?? null,
                     'subs' => []];
             } else {
                 $subs[] = $r;
@@ -85,7 +88,7 @@ class BereichCatalogController extends Controller
             return response()->json(array_values(array_unique($flat)));
         }
 
-        return response()->json(['mains' => $mains, 'managed' => true]);
+        return response()->json(['mains' => $mains, 'managed' => true, 'branchen' => Branchen::forUi(), 'branche_ok' => Branchen::hasColumn()]);
     }
 
     /** GET /sicherheitsleistungen — active security service types (artikel picker). */
@@ -160,6 +163,13 @@ class BereichCatalogController extends Controller
             $insert['leistungsart_id'] = ($lid !== null && $lid !== '') ? (int) $lid
                 : \App\Support\SecurityServices::idForKey(\App\Support\SecurityServices::guess($name));
         }
+        $branche = $request->input('branche');
+        if ($branche !== null && $branche !== '') {
+            if ($parentId !== null || !Branchen::exists($branche)) {
+                return response()->json(['error' => 'Ungültige Branche'], 422);
+            }
+            if (Branchen::hasColumn()) $insert['branche'] = $branche;
+        }
         $id = DB::connection('tenant')->table('bereiche_katalog')->insertGetId($insert);
         if ($parentId === null) \App\Support\SecurityServices::seedStarterEinsatzarten((int) $id);
         BereichScope::invalidateStaticCache();
@@ -216,6 +226,21 @@ class BereichCatalogController extends Controller
             }
             $update[$f] = $request->boolean($f) ? 1 : 0;
         }
+        // Industry of a MAIN (null = none). Switches/lists follow only via
+        // the explicit starter pack (POST /bereich-catalog/{id}/paket).
+        if (array_key_exists('branche', $request->all())) {
+            if (!Branchen::hasColumn()) {
+                return response()->json(['error' => 'Noch nicht verfügbar (Migration ausstehend)'], 409);
+            }
+            if ($row->parent_id !== null) {
+                return response()->json(['error' => 'Nur für Hauptbereiche'], 422);
+            }
+            $b = $request->input('branche');
+            if ($b !== null && $b !== '' && !Branchen::exists($b)) {
+                return response()->json(['error' => 'Ungültige Branche'], 422);
+            }
+            $update['branche'] = ($b === '' ? null : $b);
+        }
         // Stadium duty implies a security area.
         if (!empty($update['stadiondienst'])) $update['bewachung'] = 1;
         if (array_key_exists('bewachung', $update) && $update['bewachung'] === 0) $update['stadiondienst'] = 0;
@@ -267,6 +292,36 @@ class BereichCatalogController extends Controller
         BereichScope::invalidateStaticCache();
         \App\Helpers\Realtime::changed('bereiche');
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * POST /bereich-catalog/{id}/paket {branche?} — applies the industry
+     * starter pack to a main: missing Objektarten, Qualifikations- and
+     * Kleidungs-Listen, security switches (only ever switched on) and the
+     * industry itself. Existing entries are never changed or removed.
+     */
+    public function paket(Request $request, int $id)
+    {
+        if ($resp = $this->requireManage($request)) return $resp;
+        if (!Branchen::hasColumn()) {
+            return response()->json(['error' => 'Noch nicht verfügbar (Migration ausstehend)'], 409);
+        }
+        $row = DB::connection('tenant')->table('bereiche_katalog')->where('id', $id)->first();
+        if (!$row) {
+            return response()->json(['error' => 'Nicht gefunden'], 404);
+        }
+        if ($row->parent_id !== null) {
+            return response()->json(['error' => 'Nur für Hauptbereiche'], 422);
+        }
+        if ($resp = $this->scopeCheckRow($request->user(), $row)) return $resp;
+        $key = (string) ($request->input('branche') ?: ($row->branche ?? ''));
+        if (!Branchen::exists($key)) {
+            return response()->json(['error' => 'Bitte zuerst eine Branche wählen'], 422);
+        }
+        $res = Branchen::applyPaket($id, $key);
+        BereichScope::invalidateStaticCache();
+        \App\Helpers\Realtime::changed('bereiche');
+        return response()->json(['success' => true] + $res);
     }
 
     public function destroy(Request $request, int $id)
