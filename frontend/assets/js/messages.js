@@ -366,7 +366,7 @@ async function openNewChat() {
             <ul class="chat-user-list">
                 ${users.map(u => `
                     <li class="chat-user-item" onclick="this.classList.toggle('selected');this.querySelector('input').checked=!this.querySelector('input').checked">
-                        <input type="checkbox" value="${u.id}" class="chat-participant-cb">
+                        <md-checkbox value="${u.id}" class="chat-participant-cb"></md-checkbox>
                         <span>${escapeHtml(u.full_name)}</span>
                         <small style="color:var(--gray-400);margin-left:auto">${u.role}</small>
                     </li>
@@ -382,7 +382,7 @@ async function openNewChat() {
 async function createNewChat() {
     const title = document.getElementById('newChatTitle').value.trim();
     const message = document.getElementById('newChatMessage').value.trim();
-    const checkboxes = document.querySelectorAll('.chat-participant-cb:checked');
+    const checkboxes = document.querySelectorAll('.chat-participant-cb:checked, .chat-participant-cb[checked]');
     const participants = Array.from(checkboxes).map(cb => parseInt(cb.value));
 
     if (participants.length === 0) {
@@ -496,14 +496,14 @@ async function openAddMembers() {
     }
     list.innerHTML = `<ul class="chat-user-list" style="border:none;border-radius:0">` + candidates.map(u => `
         <li class="chat-user-item" onclick="this.classList.toggle('selected');this.querySelector('input').checked=!this.querySelector('input').checked">
-            <input type="checkbox" value="${u.id}" class="chat-participant-cb">
+            <md-checkbox value="${u.id}" class="chat-participant-cb"></md-checkbox>
             <span>${escapeHtml(u.full_name)}</span>
             <small style="color:var(--gray-400);margin-left:auto">${escapeHtml(u.role || '')}</small>
         </li>`).join('') + '</ul>';
 }
 
 async function chatAddMembers() {
-    const ids = Array.from(document.querySelectorAll('#chatAddPopList .chat-participant-cb:checked'))
+    const ids = Array.from(document.querySelectorAll('#chatAddPopList .chat-participant-cb:checked, #chatAddPopList .chat-participant-cb[checked]'))
         .map(cb => parseInt(cb.value));
     if (!ids.length) { showToast('Bitte mindestens ein Mitglied auswählen', 'error'); return; }
     const r = await apiPost(API.messages + '/add-members', { conversation_id: chatCurrentConv, participants: ids });

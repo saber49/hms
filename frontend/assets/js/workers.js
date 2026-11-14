@@ -2531,7 +2531,7 @@ let _wkModalWorker = null;
 function wkUpdateSicherheitTabVisibility(fallbackTags) {
     const tab = document.getElementById('wk_tab_sicherheit');
     if (!tab) return;
-    const rendered = !!document.querySelector('#f_w_bereiche input[type=checkbox]');
+    const rendered = !!document.querySelector('#f_w_bereiche input[type=checkbox], #f_w_bereiche md-checkbox');
     const tags = rendered && typeof collectBereicheChecks === 'function'
         ? collectBereicheChecks('f_w_bereiche') : (fallbackTags || []);
     const sec = wkSecMode(tags, _wkQual.mains.length ? _wkQual.mains : (_wkQualCatalogCache || []), _wkModalWorker);

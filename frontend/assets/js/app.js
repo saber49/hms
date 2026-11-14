@@ -1434,7 +1434,7 @@ function renderDocAssetsSection(c, ctx) {
                 </button>
             </div>
             ${isAdmin ? `<label class="doc-asset-scope" title="Für alle Benutzer der Firma als Standard speichern">
-                <input type="checkbox" id="${kind}Scope"> Firmen-Standard
+                <md-checkbox id="${kind}Scope"></md-checkbox> Firmen-Standard
             </label>` : ''}
         </div>`;
     };
@@ -1801,7 +1801,7 @@ function renderCompanyTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group acc-span-2">
                     <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                        <input type="checkbox" id="cf_arbzg_aktiv" ${c.arbzg.aktiv ? 'checked' : ''}> Hinweise aktivieren
+                        <md-checkbox id="cf_arbzg_aktiv" ${c.arbzg.aktiv ? 'checked' : ''}></md-checkbox> Hinweise aktivieren
                     </label>
                 </div>
                 <div class="form-group">
@@ -1824,7 +1824,7 @@ function renderCompanyTab(c) {
                 und den Equal-Pay-Anspruch (9 Monate) — als Seite „AÜG-Fristen“ unter Personal und als Hinweis in der Planung.
             </div>
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <input type="checkbox" id="cf_aueg_aktiv" ${c.aueg.aktiv ? 'checked' : ''}> AÜG-Modul aktivieren
+                <md-checkbox id="cf_aueg_aktiv" ${c.aueg.aktiv ? 'checked' : ''}></md-checkbox> AÜG-Modul aktivieren
             </label>
         </div>` : ''}
     `;
@@ -3108,7 +3108,7 @@ function _mselBuild(containerId, options, selected, placeholder, emptyText, prim
           <span class="material-symbols-outlined msel-caret">expand_more</span>
         </div>
         <div class="msel-panel">${opts.map(v => `
-          <label class="msel-opt"><input type="checkbox" value="${escapeHtml(v)}" ${selLower.has(String(v).trim().toLowerCase()) ? 'checked' : ''} ${primLower && String(v).trim().toLowerCase() === primLower ? 'data-msel-primary="1"' : ''} onchange="_mselRefresh('${containerId}')">${colored ? bereichDotHtml(v, false) : ''}<span>${escapeHtml(v)}</span></label>`).join('')
+          <label class="msel-opt"><md-checkbox value="${escapeHtml(v)}" ${selLower.has(String(v).trim().toLowerCase()) ? 'checked' : ''} ${primLower && String(v).trim().toLowerCase() === primLower ? 'data-msel-primary="1"' : ''} onchange="_mselRefresh('${containerId}')"></md-checkbox>${colored ? bereichDotHtml(v, false) : ''}<span>${escapeHtml(v)}</span></label>`).join('')
           || `<div class="msel-empty">${emptyText}</div>`}</div>
       </div>`;
     el.dataset.mselPh = placeholder;
@@ -3120,16 +3120,16 @@ function _mselBuild(containerId, options, selected, placeholder, emptyText, prim
 // checked, else the first checked option. Keeps `bereich` aligned with
 // the visible list without a separate free-text field.
 function mselPrimary(containerId) {
-    const prim = document.querySelector('#' + containerId + ' input[data-msel-primary]:checked');
+    const prim = document.querySelector('#' + containerId + ' input[data-msel-primary]:checked, #' + containerId + ' md-checkbox[data-msel-primary][checked]');
     if (prim) return prim.value;
-    const first = document.querySelector('#' + containerId + ' input[type=checkbox]:checked');
+    const first = document.querySelector('#' + containerId + ' input[type=checkbox]:checked, #' + containerId + ' md-checkbox[checked]');
     return first ? first.value : null;
 }
 
 function _mselRefresh(containerId) {
     const chips = document.getElementById(containerId + '_chips');
     if (!chips) return;
-    const boxes = [...document.querySelectorAll('#' + containerId + ' input[type=checkbox]')];
+    const boxes = [...document.querySelectorAll('#' + containerId + ' input[type=checkbox], #' + containerId + ' md-checkbox')];
     const vals = boxes.map((b, i) => b.checked ? i : -1).filter(i => i >= 0);
     const colored = document.getElementById(containerId).dataset.mselColored === '1';
     chips.innerHTML = vals.length
@@ -3137,7 +3137,7 @@ function _mselRefresh(containerId) {
         : `<span class="msel-ph">${escapeHtml(document.getElementById(containerId).dataset.mselPh || 'Auswählen…')}</span>`;
 }
 function _mselUncheck(containerId, idx) {
-    const boxes = document.querySelectorAll('#' + containerId + ' input[type=checkbox]');
+    const boxes = document.querySelectorAll('#' + containerId + ' input[type=checkbox], #' + containerId + ' md-checkbox');
     if (boxes[idx]) { boxes[idx].checked = false; boxes[idx].dispatchEvent(new Event('change', { bubbles: true })); }
 }
 function mselToggle(containerId) {
@@ -3165,7 +3165,7 @@ async function renderBereicheChecks(containerId, selected = [], primary = null) 
     _mselBuild(containerId, bereiche, sel, 'Dienstleistungen wählen…', 'Keine Bereiche vorhanden', primary, true);
 }
 function collectBereicheChecks(containerId) {
-    return [...document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked')].map(i => i.value);
+    return [...document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked, #' + containerId + ' md-checkbox[checked]')].map(i => i.value);
 }
 // All service tags of a customer/object: primary bereich + bereiche list,
 // comma-split for legacy values, de-duplicated, canonical order.
@@ -3341,7 +3341,7 @@ async function renderArtenChecks(containerId, selected = [], primary = null, opt
         'Noch keine Einsatzarten angelegt — Konto &amp; Firma → Sicherheitsbereich → Einsatzarten', primary, true);
 }
 function collectArtenChecks(containerId) {
-    return [...document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked')].map(i => i.value);
+    return [...document.querySelectorAll('#' + containerId + ' input[type=checkbox]:checked, #' + containerId + ' md-checkbox[checked]')].map(i => i.value);
 }
 function invalidateBereichSubsCache() { _cachedBereichSubs = null; }
 

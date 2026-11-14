@@ -991,11 +991,11 @@ function _cdocsBereicheHtml() {
             </header>
             <div class="bsec-flags">
                 <label class="bsec-flag bsec-flag-fixed" title="Immer aktiv — Clood-X ist für Sicherheitsdienste ausgelegt">
-                    <input type="checkbox" checked disabled>
+                    <md-checkbox checked disabled></md-checkbox>
                     <span><b>Bewachung nach § 34a GewO</b><small>Bewacherregister-ID, Funkrufname · immer aktiv</small></span>
                 </label>
                 <label class="bsec-flag">
-                    <input type="checkbox" ${m.stadiondienst ? 'checked' : ''} ${canEdit ? '' : 'disabled'} onchange="bcatSetFlag(${m.id}, 'stadiondienst', this.checked)">
+                    <md-checkbox ${m.stadiondienst ? 'checked' : ''} ${canEdit ? '' : 'disabled'} onchange="bcatSetFlag(${m.id}, 'stadiondienst', this.checked)"></md-checkbox>
                     <span><b>Veranstaltungs- &amp; Stadiondienst</b><small>DFB-Pin, Ordnernummer, Barcode, Stadionverbot</small></span>
                 </label>
             </div>

@@ -974,7 +974,7 @@ async function saveArtikel(objId, artikelId) {
         nacht_bis:                    document.getElementById('f_art_nacht_bis')?.value || '06:00',
     };
     if (!data.artikel_name) { showToast('Bezeichnung erforderlich', 'error'); return; }
-    if (!artikelId && !artenSel.length && document.querySelector('#f_art_arten input[type=checkbox]')) {
+    if (!artikelId && !artenSel.length && document.querySelector('#f_art_arten input[type=checkbox], #f_art_arten md-checkbox')) {
         showToast('Bitte mindestens eine Einsatzart wählen', 'error'); return;
     }
     if (!data.bereich) { showToast('Unterbereich wählen — der Bereich wird daraus abgeleitet', 'error'); return; }

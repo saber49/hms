@@ -78,7 +78,7 @@ function clRenderProtokolleShell() {
             <label class="cl-fld"><span>Von</span><input type="date" id="clVon" value="${escapeHtml(f.von)}"></label>
             <label class="cl-fld"><span>Bis</span><input type="date" id="clBis" value="${escapeHtml(f.bis)}"></label>
             <label class="cl-fld"><span>Kategorie</span><select id="clKat"><option value="">Alle</option>${Object.entries(kat).map(([k, l]) => `<option value="${k}" ${f.kategorie === k ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label>
-            <label class="cl-chk"><input type="checkbox" id="clMaengel" ${f.maengel ? 'checked' : ''}> Nur mit Mängeln</label>
+            <label class="cl-chk"><md-checkbox id="clMaengel" ${f.maengel ? 'checked' : ''}></md-checkbox> Nur mit Mängeln</label>
             <div class="cl-search">${clIcon('search')}<input id="clQ" placeholder="${escapeHtml(clTerm('objekt'))}, ${escapeHtml(clTerm('kunde'))}, Mitarbeiter, Vorlage…" value="${escapeHtml(f.q)}"></div>
         </div>
         <div class="cl-kpis" id="clKpis"></div>
@@ -276,7 +276,7 @@ async function clLoadVorlagen() {
             <div class="cl-vgrid">${list.map(v => `
                 <div class="cl-vcard ${v.aktiv ? '' : 'cl-off'}">
                     <div class="cl-vtop"><b>${escapeHtml(v.name)}</b>
-                        ${edit ? `<label class="cl-switch" title="${v.aktiv ? 'Aktiv' : 'Inaktiv'}"><input type="checkbox" ${v.aktiv ? 'checked' : ''} onchange="clToggleVorlage(${v.id}, this.checked)"><span></span></label>` : ''}</div>
+                        ${edit ? `<label title="${v.aktiv ? 'Aktiv' : 'Inaktiv'}" style="display:inline-flex"><md-switch ${v.aktiv ? 'selected' : ''} onchange="clToggleVorlage(${v.id}, this.selected)"></md-switch></label>` : ''}</div>
                     ${v.beschreibung ? `<div class="cl-vdesc">${escapeHtml(v.beschreibung)}</div>` : ''}
                     <div class="cl-pills">
                         <span class="cl-pill">${clIcon('format_list_bulleted')}${v.felder_anzahl} Felder</span>
@@ -352,7 +352,7 @@ function clRenderBuilder() {
                     <input class="cl-b-label" value="${escapeHtml(f.label || '')}" placeholder="${isSec ? 'Überschrift, z.B. Sanitärbereiche' : 'Prüfpunkt / Frage'}" oninput="clSetField(${i}, 'label', this.value, true)">
                 </div>
                 ${isSec ? '' : `<div class="cl-b-line cl-b-opts">
-                    <label class="cl-chk"><input type="checkbox" ${f.pflicht ? 'checked' : ''} onchange="clSetField(${i}, 'pflicht', this.checked, true)"> Pflicht</label>
+                    <label class="cl-chk"><md-checkbox ${f.pflicht ? 'checked' : ''} onchange="clSetField(${i}, 'pflicht', this.checked, true)"></md-checkbox> Pflicht</label>
                     <select onchange="clSetField(${i}, 'foto', this.value, true)" title="Foto">${Object.entries(CL_FOTO).filter(([k]) => (k !== 'bei_mangel' || ['ok_nok', 'bewertung'].includes(f.typ)) && (k !== 'nie' || f.typ !== 'foto')).map(([k, l]) => `<option value="${k}" ${k === (f.foto || 'nie') ? 'selected' : ''}>${l}</option>`).join('')}</select>
                     ${f.typ === 'zahl' ? `<input class="cl-b-small" value="${escapeHtml(f.einheit || '')}" placeholder="Einheit (°C, kg …)" oninput="clSetField(${i}, 'einheit', this.value, true)">` : ''}
                     <input class="cl-b-hint" value="${escapeHtml(f.hinweis || '')}" placeholder="Hinweis für den Mitarbeiter (optional)" oninput="clSetField(${i}, 'hinweis', this.value, true)">
@@ -371,8 +371,8 @@ function clRenderBuilder() {
                 <label class="cl-fld cl-span2"><span>Beschreibung</span><input id="clbDesc" value="${escapeHtml(v.beschreibung || '')}" maxlength="2000" placeholder="Wofür ist die Checkliste? (sieht auch der Mitarbeiter)"></label>
                 <label class="cl-fld"><span>Unterschrift</span><select id="clbSig">${Object.keys(CL_SIG).map(k => `<option value="${k}" ${k === v.unterschrift ? 'selected' : ''}>${escapeHtml(clSigLabel(k))}</option>`).join('')}</select></label>
                 <div class="cl-fld"><span>Optionen</span>
-                    <label class="cl-chk"><input type="checkbox" id="clbAlle" ${v.alle_objekte ? 'checked' : ''}> Für alle ${escapeHtml(clTerm('objekte'))} des Bereichs</label>
-                    <label class="cl-chk"><input type="checkbox" id="clbGps" ${v.gps ? 'checked' : ''}> GPS-Standort speichern</label>
+                    <label class="cl-chk"><md-checkbox id="clbAlle" ${v.alle_objekte ? 'checked' : ''}></md-checkbox> Für alle ${escapeHtml(clTerm('objekte'))} des Bereichs</label>
+                    <label class="cl-chk"><md-checkbox id="clbGps" ${v.gps ? 'checked' : ''}></md-checkbox> GPS-Standort speichern</label>
                 </div>
             </div>
             <div class="cl-b-fhead"><b>Felder</b><span class="cl-sub">„i. O. / n. i. O.“ und „Bewertung“ ergeben das Ergebnis in Prozent; n. i. O. verlangt eine Mangelbeschreibung.</span></div>
@@ -456,8 +456,8 @@ function clRenderObjekte() {
     const list = clObjVisible();
     el.innerHTML = list.length ? list.map(o => `
         <div class="cl-o-row ${o.zugeordnet ? 'on' : ''}">
-            <label class="cl-chk"><input type="checkbox" ${o.zugeordnet ? 'checked' : ''} onchange="clObjSet('${escapeHtml(o.obj_id)}','zugeordnet',this.checked)"> <span><b>${escapeHtml(o.objektname || o.obj_id)}</b><small>${escapeHtml([o.kundenname, o.stadt, o.bereich].filter(Boolean).join(' · '))}</small></span></label>
-            <label class="cl-chk cl-o-pf"><input type="checkbox" ${o.pflicht ? 'checked' : ''} ${o.zugeordnet ? '' : 'disabled'} onchange="clObjSet('${escapeHtml(o.obj_id)}','pflicht',this.checked)"> Pflicht</label>
+            <label class="cl-chk"><md-checkbox ${o.zugeordnet ? 'checked' : ''} onchange="clObjSet('${escapeHtml(o.obj_id)}','zugeordnet',this.checked)"></md-checkbox> <span><b>${escapeHtml(o.objektname || o.obj_id)}</b><small>${escapeHtml([o.kundenname, o.stadt, o.bereich].filter(Boolean).join(' · '))}</small></span></label>
+            <label class="cl-chk cl-o-pf"><md-checkbox ${o.pflicht ? 'checked' : ''} ${o.zugeordnet ? '' : 'disabled'} onchange="clObjSet('${escapeHtml(o.obj_id)}','pflicht',this.checked)"></md-checkbox> Pflicht</label>
         </div>`).join('') : `<div class="cl-empty">Keine ${escapeHtml(clTerm('objekte'))} gefunden</div>`;
 }
 function clObjSet(oid, k, val) {

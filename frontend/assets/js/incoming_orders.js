@@ -4621,7 +4621,7 @@ function beCopyUpdatePreview() {
     if (!order) return;
     const tm = parseInt(document.getElementById('beCopyMonat').value);
     const tj = parseInt(document.getElementById('beCopyJahr').value);
-    const mode = document.querySelector('input[name="beCopyMode"]:checked')?.value || 'wochentag';
+    const mode = document.querySelector('md-radio[name="beCopyMode"][checked], input[name="beCopyMode"]:checked')?.value || 'wochentag';
     const all = beCopyShiftedDates(order, tm, tj, mode);
     const dates = all.filter(d => beInMonth(d, tm, tj)).sort();
     const dropped = all.length - dates.length;
@@ -4684,12 +4684,12 @@ async function copyIncomingOrder(id) {
         <div class="form-group" style="margin-top:14px">
             <label style="font-weight:600">Verschiebung der Tage</label>
             <label style="display:flex;gap:10px;align-items:flex-start;margin-top:8px;cursor:pointer">
-                <input type="radio" name="beCopyMode" value="wochentag" checked onchange="beCopyUpdatePreview()" style="margin-top:3px">
+                <md-radio name="beCopyMode" value="wochentag" checked onchange="beCopyUpdatePreview()" style="margin-top:3px"></md-radio>
                 <span><strong>Gleicher Wochentag</strong> (empfohlen)<br>
                 <span style="font-size:0.8rem;color:var(--be-text-muted)">Verschiebt um ganze Wochen — Samstag bleibt Samstag, Wochenend-Muster (z. B. 24h-Abdeckung) bleiben erhalten.</span></span>
             </label>
             <label style="display:flex;gap:10px;align-items:flex-start;margin-top:8px;cursor:pointer">
-                <input type="radio" name="beCopyMode" value="kalendertag" onchange="beCopyUpdatePreview()" style="margin-top:3px">
+                <md-radio name="beCopyMode" value="kalendertag" onchange="beCopyUpdatePreview()" style="margin-top:3px"></md-radio>
                 <span><strong>Gleicher Kalendertag</strong><br>
                 <span style="font-size:0.8rem;color:var(--be-text-muted)">08.08. wird 08.10. — Wochentage können dadurch abweichen.</span></span>
             </label>
@@ -4730,7 +4730,7 @@ async function beExecuteCopy() {
     if (tm === parseInt(order.monat) && tj === parseInt(order.jahr)) {
         if (!(await mdConfirm('Der neue Zeitraum ist identisch mit dem Original. Trotzdem kopieren?', 'Gleicher Zeitraum'))) return;
     }
-    const mode = document.querySelector('input[name="beCopyMode"]:checked')?.value || 'wochentag';
+    const mode = document.querySelector('md-radio[name="beCopyMode"][checked], input[name="beCopyMode"]:checked')?.value || 'wochentag';
     const shifted = beCopyShiftedDates(order, tm, tj, mode);
 
     const headerOrt = beCopyResolveOrt(order);

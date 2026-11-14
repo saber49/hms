@@ -131,7 +131,7 @@ function agRenderEntleiher() {
                 <td class="ag-num"><input type="number" class="ag-in ag-max" min="1" max="120" value="${e.hoechstdauer_monate}" ${edit ? '' : 'disabled'}></td>
                 <td class="ag-num"><input type="number" class="ag-in ag-ep" min="1" max="120" value="${e.equal_pay_monate}" ${edit ? '' : 'disabled'}></td>
                 <td><input type="text" class="ag-in ag-bem" maxlength="255" value="${escapeHtml(e.bemerkung || '')}" placeholder="z.B. TV LeiZ Metall: 48 Monate" ${edit ? '' : 'disabled'}></td>
-                <td><input type="checkbox" class="ag-akt" ${e.aktiv ? 'checked' : ''} ${edit ? '' : 'disabled'}></td>
+                <td><md-checkbox class="ag-akt" ${e.aktiv ? 'checked' : ''} ${edit ? '' : 'disabled'}></md-checkbox></td>
                 <td class="ag-actions">${edit ? `<button class="ag-btn ag-btn-sm" onclick="agSaveEntleiher('${escapeHtml(e.kunde_id)}')">${agIcon('save')}</button><button class="ag-btn ag-btn-sm ag-danger" onclick="agRemoveEntleiher('${escapeHtml(e.kunde_id)}')" title="Nicht mehr prüfen">${agIcon('delete')}</button>` : ''}</td>
             </tr>`).join('')}</tbody>
         </table></div>` : `<div class="ag-empty" style="padding:16px">Noch keine Entleiher.</div>`}

@@ -581,7 +581,7 @@ function crmLeadDetail(l) {
                 ${l.deal ? `<div class="crm-card crm-deal-link" onclick="crmOpenDetail('deal','${l.deal.id}')">${crmIcon('handshake')} <div><strong>${crmE(l.deal.titel)}</strong><div class="crm-sub">${crmPhaseBadge(l.deal.phase)} · erwarteter Abschluss ${crmDate(l.deal.erwarteter_abschluss)}</div></div>${crmIcon('chevron_right')}</div>` : ''}
                 <div class="crm-card">
                     <div class="crm-card-title">${crmIcon('checklist')} Qualifizierungs-Checkliste</div>
-                    ${checks.map(([key, label]) => `<label class="crm-check"><input type="checkbox" ${c[key] ? 'checked' : ''} ${ed && offen ? `onchange="crmLeadPatch({checkliste:{${key}:this.checked}})"` : 'disabled'}> ${label}</label>`).join('')}
+                    ${checks.map(([key, label]) => `<label class="crm-check"><md-checkbox ${c[key] ? 'checked' : ''} ${ed && offen ? `onchange="crmLeadPatch({checkliste:{${key}:this.checked}})"` : 'disabled'}></md-checkbox> ${label}</label>`).join('')}
                     <div class="crm-check-date">Termin am <input type="date" class="crm-input crm-input-sm" value="${crmE(c.termin_am || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_am:this.value||null}})"` : 'disabled'}>
                         <input type="time" class="crm-input crm-input-sm" value="${crmE(c.termin_zeit || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_zeit:this.value||null}})"` : 'disabled'}></div>
                 </div>
@@ -620,9 +620,9 @@ function crmFolgeFelder(defTitel) {
     return `
         <div class="crm-sec">Nächster Schritt</div>
         <div class="crm-radio-row" data-f="folge">
-            <label><input type="radio" name="crm_folge" value="aufgabe" checked onchange="crmFolgeToggle()"> Aufgabe anlegen</label>
-            <label><input type="radio" name="crm_folge" value="qualifizieren" onchange="crmFolgeToggle()"> Danach qualifizieren</label>
-            <label><input type="radio" name="crm_folge" value="disqualifizieren" onchange="crmFolgeToggle()"> Danach disqualifizieren</label>
+            <label><md-radio name="crm_folge" value="aufgabe" checked onchange="crmFolgeToggle()"></md-radio> Aufgabe anlegen</label>
+            <label><md-radio name="crm_folge" value="qualifizieren" onchange="crmFolgeToggle()"></md-radio> Danach qualifizieren</label>
+            <label><md-radio name="crm_folge" value="disqualifizieren" onchange="crmFolgeToggle()"></md-radio> Danach disqualifizieren</label>
         </div>
         <div id="crmFolgeAufgabe" class="crm-form-grid">
             <label class="crm-field">Typ<select id="cf_a_typ" class="crm-input">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</select></label>
@@ -632,12 +632,12 @@ function crmFolgeFelder(defTitel) {
         </div>`;
 }
 function crmFolgeToggle() {
-    const v = document.querySelector('input[name="crm_folge"]:checked')?.value;
+    const v = document.querySelector('md-radio[name="crm_folge"][checked], input[name="crm_folge"]:checked')?.value;
     const box = document.getElementById('crmFolgeAufgabe');
     if (box) box.style.display = v === 'aufgabe' ? '' : 'none';
 }
 function crmFolgeDaten(fd) {
-    const folge = document.querySelector('input[name="crm_folge"]:checked')?.value || 'keine';
+    const folge = document.querySelector('md-radio[name="crm_folge"][checked], input[name="crm_folge"]:checked')?.value || 'keine';
     fd.append('folge', folge);
     if (folge === 'aufgabe') fd.append('aufgabe', JSON.stringify({ typ: crmV('cf_a_typ'), titel: crmV('cf_a_titel'), faellig_am: crmV('cf_a_datum'), faellig_zeit: crmV('cf_a_zeit') || null }));
     return folge;
@@ -648,9 +648,9 @@ function crmAnrufDialog(vorErg = '') {
     const erg = crmList('anruf_ergebnis');
     openModal('Anruf protokollieren — ' + [k.vorname, k.nachname].filter(Boolean).join(' '), `
         <div class="crm-form">
-            <div class="crm-radio-row"><label><input type="radio" name="crm_richtung" value="ausgehend" checked> ↗ ausgehend</label><label><input type="radio" name="crm_richtung" value="eingehend"> ↙ eingehend</label></div>
+            <div class="crm-radio-row"><label><md-radio name="crm_richtung" value="ausgehend" checked></md-radio> ↗ ausgehend</label><label><md-radio name="crm_richtung" value="eingehend"></md-radio> ↙ eingehend</label></div>
             <div class="crm-sec">Ergebnis *</div>
-            <div class="crm-erg-row" data-f="ergebnis">${erg.map(e => `<label class="crm-erg-pill"><input type="radio" name="crm_erg" value="${crmE(e.key)}" ${e.key === vorErg ? 'checked' : ''}> ${crmE(e.name)}</label>`).join('')}</div>
+            <div class="crm-erg-row" data-f="ergebnis">${erg.map(e => `<label class="crm-erg-pill"><md-radio name="crm_erg" value="${crmE(e.key)}" ${e.key === vorErg ? 'checked' : ''}></md-radio> ${crmE(e.name)}</label>`).join('')}</div>
             <label class="crm-field">Notiz<textarea id="cf_notiz" class="crm-input" rows="3" maxlength="5000"></textarea></label>
             <label class="crm-field">Zeitpunkt<input id="cf_zeit" type="datetime-local" class="crm-input" value="${crmNowLocal()}"></label>
             ${crmFolgeFelder('Nachfassen: ' + [k.vorname, k.nachname].filter(Boolean).join(' '))}
@@ -662,8 +662,8 @@ async function crmAnrufSpeichern() {
     const l = crmC().data;
     const fd = new FormData();
     fd.append('bezug_typ', 'lead'); fd.append('bezug_id', l.id); fd.append('typ', 'anruf');
-    fd.append('richtung', document.querySelector('input[name="crm_richtung"]:checked')?.value || 'ausgehend');
-    const erg = document.querySelector('input[name="crm_erg"]:checked')?.value;
+    fd.append('richtung', document.querySelector('md-radio[name="crm_richtung"][checked], input[name="crm_richtung"]:checked')?.value || 'ausgehend');
+    const erg = document.querySelector('md-radio[name="crm_erg"][checked], input[name="crm_erg"]:checked')?.value;
     if (!erg) return showToast('Ergebnis ist Pflicht', 'error');
     fd.append('ergebnis', erg);
     fd.append('notiz', crmV('cf_notiz'));
@@ -692,10 +692,10 @@ function crmAktivitaetDialog(bezugTyp, bezugId, typ = 'notiz') {
                     ${crmOptions([{ key: 'email', name: 'E-Mail' }, { key: 'termin', name: 'Termin' }, { key: 'besichtigung', name: 'Besichtigung' }, { key: 'notiz', name: 'Notiz' }], typ)}</select></label>
                 <label class="crm-field">Zeitpunkt<input id="cf_zeit" type="datetime-local" class="crm-input" value="${crmNowLocal()}" data-f="zeitpunkt"></label>
             </div>
-            <div class="crm-radio-row" id="cfRichtung" style="${typ === 'email' ? '' : 'display:none'}" data-f="richtung"><label><input type="radio" name="crm_richtung" value="ausgehend" checked> ↗ ausgehend</label><label><input type="radio" name="crm_richtung" value="eingehend"> ↙ eingehend (Antwort)</label></div>
+            <div class="crm-radio-row" id="cfRichtung" style="${typ === 'email' ? '' : 'display:none'}" data-f="richtung"><label><md-radio name="crm_richtung" value="ausgehend" checked></md-radio> ↗ ausgehend</label><label><md-radio name="crm_richtung" value="eingehend"></md-radio> ↙ eingehend (Antwort)</label></div>
             <label class="crm-field">Notiz<textarea id="cf_notiz" class="crm-input" rows="4" maxlength="5000" data-f="notiz"></textarea></label>
             <label class="crm-field">Anhang (optional, max. 10 MB)<input id="cf_datei" type="file" class="crm-input" data-f="datei" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx"></label>
-            <label class="crm-check"><input type="checkbox" id="cf_mit_aufgabe" onchange="document.getElementById('crmFolgeAufgabe').style.display=this.checked?'':'none'"> Folgeaufgabe anlegen</label>
+            <label class="crm-check"><md-checkbox id="cf_mit_aufgabe" onchange="document.getElementById('crmFolgeAufgabe').style.display=this.checked?'':'none'"></md-checkbox> Folgeaufgabe anlegen</label>
             <div id="crmFolgeAufgabe" class="crm-form-grid" style="display:none">
                 <label class="crm-field">Typ<select id="cf_a_typ" class="crm-input">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</select></label>
                 <label class="crm-field crm-span2">Titel<input id="cf_a_titel" class="crm-input" data-f="aufgabe.titel" maxlength="200" value="Nachfassen"></label>
@@ -711,7 +711,7 @@ async function crmAktivitaetSpeichern(bezugTyp, bezugId) {
     const fd = new FormData();
     const typ = crmV('cf_typ');
     fd.append('bezug_typ', bezugTyp); fd.append('bezug_id', bezugId); fd.append('typ', typ);
-    if (typ === 'email') fd.append('richtung', document.querySelector('input[name="crm_richtung"]:checked')?.value || 'ausgehend');
+    if (typ === 'email') fd.append('richtung', document.querySelector('md-radio[name="crm_richtung"][checked], input[name="crm_richtung"]:checked')?.value || 'ausgehend');
     fd.append('notiz', crmV('cf_notiz')); fd.append('zeitpunkt', crmV('cf_zeit'));
     const file = document.getElementById('cf_datei')?.files?.[0];
     if (file) fd.append('datei', file);
@@ -761,7 +761,7 @@ function crmQualifizierenDialog() {
     openModal('Qualifizieren → Deal anlegen', `
         <div class="crm-form">
             <div class="crm-sec">Checkliste (alle Pflicht)</div>
-            ${checks.map(([k2, lab]) => `<label class="crm-check" data-f="checkliste.${k2}"><input type="checkbox" id="cq_${k2}" ${c[k2] ? 'checked' : ''}> ${lab}</label>`).join('')}
+            ${checks.map(([k2, lab]) => `<label class="crm-check" data-f="checkliste.${k2}"><md-checkbox id="cq_${k2}" ${c[k2] ? 'checked' : ''}></md-checkbox> ${lab}</label>`).join('')}
             <div class="crm-form-grid">
                 <label class="crm-field">Termin am *<input id="cq_termin_am" type="date" class="crm-input" data-f="checkliste.termin_am" value="${crmE(c.termin_am || '')}" onchange="crmQSync()"></label>
                 <label class="crm-field">Uhrzeit<input id="cq_termin_zeit" type="time" class="crm-input" value="${crmE(c.termin_zeit || '')}" onchange="crmQSync()"></label>
@@ -1022,7 +1022,7 @@ function crmPhaseDialog(ziel) {
     };
     const firmaKunde = d.firma?.kunde_id;
     const extra = ziel === 'gewonnen' && crmCan('kunden_edit')
-        ? `<label class="crm-check crm-span3"><input type="checkbox" id="cp_kunde" checked> ${firmaKunde ? 'Mit bestehendem Kunden ' + crmE(firmaKunde) + ' verknüpfen' : 'Als Kunde in Stammdaten anlegen (Bereich = Sparte ' + crmE(d.sparte || '') + ')'}</label>` : '';
+        ? `<label class="crm-check crm-span3"><md-checkbox id="cp_kunde" checked></md-checkbox> ${firmaKunde ? 'Mit bestehendem Kunden ' + crmE(firmaKunde) + ' verknüpfen' : 'Als Kunde in Stammdaten anlegen (Bereich = Sparte ' + crmE(d.sparte || '') + ')'}</label>` : '';
     const hint = ziel === 'gewonnen' ? 'Lifecycle → Kunde, Übergabe-Aufgabe an die Objektleitung der Sparte (A10).'
         : ziel === 'verloren' ? 'Lifecycle bleibt Opportunity; die Vertriebsleitung erhält einen Hinweis (A11).' : '';
     openModal('Phase → ' + crmName('deal_phase', ziel), `
@@ -1331,12 +1331,12 @@ function crmKontaktFelder(k = {}) {
         <label class="crm-field">Vorname<input id="ck_vorname" class="crm-input" maxlength="100" value="${crmE(k.vorname || '')}"></label>
         <label class="crm-field">Nachname *<input id="ck_nachname" class="crm-input" data-f="nachname" maxlength="100" value="${crmE(k.nachname || '')}"></label>
         <label class="crm-field crm-span2">Position<input id="ck_position" class="crm-input" maxlength="150" placeholder="z. B. Hausverwaltung, Einkauf, Geschäftsführung" value="${crmE(k.position || '')}"></label>
-        <label class="crm-check"><input type="checkbox" id="ck_entscheider" ${k.entscheider ? 'checked' : ''}> Entscheider</label>
+        <label class="crm-check"><md-checkbox id="ck_entscheider" ${k.entscheider ? 'checked' : ''}></md-checkbox> Entscheider</label>
         <label class="crm-field">E-Mail<input id="ck_email" type="email" class="crm-input" data-f="email" maxlength="200" value="${crmE(k.email || '')}"></label>
         <label class="crm-field">Telefon<input id="ck_telefon" class="crm-input" data-f="telefon" maxlength="60" value="${crmE(k.telefon || '')}"></label>
         <label class="crm-field">Mobil<input id="ck_mobil" class="crm-input" data-f="mobil" maxlength="60" value="${crmE(k.mobil || '')}"></label>
         <label class="crm-field">Quelle *<select id="ck_quelle" class="crm-input" data-f="quelle">${crmOptions(crmList('quelle'), k.quelle || '', '— wählen —')}</select></label>
-        <label class="crm-check"><input type="checkbox" id="ck_dsgvo" ${k.dsgvo_einwilligung ? 'checked' : ''}> Einwilligung Werbe-E-Mails</label>
+        <label class="crm-check"><md-checkbox id="ck_dsgvo" ${k.dsgvo_einwilligung ? 'checked' : ''}></md-checkbox> Einwilligung Werbe-E-Mails</label>
         <label class="crm-field">Einwilligung am<input id="ck_dsgvo_datum" type="date" class="crm-input" data-f="dsgvo_datum" value="${crmE(k.dsgvo_datum || '')}"></label>`;
 }
 function crmKontaktDaten() {
@@ -1363,9 +1363,9 @@ function crmNeuerKontakt(pre = {}) {
         <div class="crm-form">
             <div class="crm-sec">Firma</div>
             <div class="crm-radio-row">
-                <label><input type="radio" name="cn_fmodus" value="vorhanden" ${pre.firma_id ? 'checked' : ''} onchange="crmFModus()"> Vorhandene Firma</label>
-                <label><input type="radio" name="cn_fmodus" value="neu" ${pre.firma_id ? '' : 'checked'} onchange="crmFModus()"> Neue Firma</label>
-                <label><input type="radio" name="cn_fmodus" value="privat" onchange="crmFModus()"> Privatkunde (ohne Firma)</label>
+                <label><md-radio name="cn_fmodus" value="vorhanden" ${pre.firma_id ? 'checked' : ''} onchange="crmFModus()"></md-radio> Vorhandene Firma</label>
+                <label><md-radio name="cn_fmodus" value="neu" ${pre.firma_id ? '' : 'checked'} onchange="crmFModus()"></md-radio> Neue Firma</label>
+                <label><md-radio name="cn_fmodus" value="privat" onchange="crmFModus()"></md-radio> Privatkunde (ohne Firma)</label>
             </div>
             <div id="cnFVorhanden" style="${pre.firma_id ? '' : 'display:none'}">
                 <input class="crm-input" placeholder="Firma suchen…" oninput="crmFirmaSuche(this.value)" value="${crmE(pre.firma_name || '')}">
@@ -1375,7 +1375,7 @@ function crmNeuerKontakt(pre = {}) {
             <div class="crm-sec">Kontakt</div>
             <div class="crm-form-grid">${crmKontaktFelder({})}</div>
             ${crmCan('leads_edit') ? `<div class="crm-sec">Lead</div>
-            <label class="crm-check"><input type="checkbox" id="cn_lead" checked onchange="document.getElementById('cnLead').style.display=this.checked?'':'none'"> Direkt als SQL übernehmen und Lead anlegen (A3)</label>
+            <label class="crm-check"><md-checkbox id="cn_lead" checked onchange="document.getElementById('cnLead').style.display=this.checked?'':'none'"></md-checkbox> Direkt als SQL übernehmen und Lead anlegen (A3)</label>
             <div id="cnLead" class="crm-form-grid">
                 <label class="crm-field">Sparte *<select id="cn_sparte" class="crm-input" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
                 <label class="crm-field">Priorität<select id="cn_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>
@@ -1385,7 +1385,7 @@ function crmNeuerKontakt(pre = {}) {
         `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmKontaktAnlegen()">${crmIcon('save')} Anlegen</md-filled-button>`, 'modal-xl');
 }
 function crmFModus() {
-    const m = document.querySelector('input[name="cn_fmodus"]:checked')?.value;
+    const m = document.querySelector('md-radio[name="cn_fmodus"][checked], input[name="cn_fmodus"]:checked')?.value;
     document.getElementById('cnFVorhanden').style.display = m === 'vorhanden' ? '' : 'none';
     document.getElementById('cnFNeu').style.display = m === 'neu' ? '' : 'none';
 }
@@ -1399,7 +1399,7 @@ function crmFirmaSuche(q) {
     }, 300);
 }
 async function crmKontaktAnlegen(trotzdem = false) {
-    const m = document.querySelector('input[name="cn_fmodus"]:checked')?.value;
+    const m = document.querySelector('md-radio[name="cn_fmodus"][checked], input[name="cn_fmodus"]:checked')?.value;
     const body = { ...crmKontaktDaten(), trotzdem, owner_id: crmV('cn_owner') || null };
     if (m === 'vorhanden') { body.firma_id = crmV('cn_firma_id') || null; if (!body.firma_id) return showToast('Firma auswählen', 'error'); }
     if (m === 'neu') body.firma = crmFirmaDaten('cn_f_');
@@ -1511,8 +1511,8 @@ function crmZwRow(sp, i) {
     const z = _crmZw[sp], o = _crmZwOwners;
     const modi = [['', 'Keine Regel'], ['rotation', 'Rotation (Round-Robin)'], ['region', 'Region (PLZ)'], ['fest', 'Feste Person']];
     let body = '';
-    if (z.modus === 'rotation') body = `<div class="crm-zw-pool">${o.map(u => `<label class="crm-check"><input type="checkbox" ${z.user_ids.includes(u.id) ? 'checked' : ''}
-        onchange="crmZwPool(${i},${u.id},this.checked)"> ${crmE(u.name)}</label>`).join('')}</div>`;
+    if (z.modus === 'rotation') body = `<div class="crm-zw-pool">${o.map(u => `<label class="crm-check"><md-checkbox ${z.user_ids.includes(u.id) ? 'checked' : ''}
+        onchange="crmZwPool(${i},${u.id},this.checked)"></md-checkbox> ${crmE(u.name)}</label>`).join('')}</div>`;
     if (z.modus === 'region') body = `<div class="crm-zw-regionen">${z.plz_regeln.map((r, j) => `<div class="crm-zw-region">
             PLZ <input class="crm-input crm-input-sm crm-zw-plz" maxlength="5" inputmode="numeric" value="${crmE(r.von)}" onchange="crmZwReg(${i},${j},'von',this.value)">
             bis <input class="crm-input crm-input-sm crm-zw-plz" maxlength="5" inputmode="numeric" value="${crmE(r.bis)}" onchange="crmZwReg(${i},${j},'bis',this.value)">
@@ -1686,7 +1686,7 @@ async function crmImportVorschau() {
                 <label class="crm-field">Quelle (wenn Spalte leer)<select id="ci_quelle" class="crm-input">${crmOptions(crmList('quelle'), 'import')}</select></label>
                 <label class="crm-field">Owner<select id="ci_owner" class="crm-input"><option value="auto" selected>Automatisch (Zuweisungsregel)</option><option value="ich">Ich selbst</option>${crmOptions(crm.opt.owners || [], '')}</select></label>
             </div>
-            <label class="crm-check"><input type="checkbox" id="ci_lead" onchange="document.getElementById('ciLead').style.display=this.checked?'':'none'"> Für jeden Kontakt direkt einen Lead anlegen (Lifecycle SQL, Aufgabe „Erstkontakt“ — A3)</label>
+            <label class="crm-check"><md-checkbox id="ci_lead" onchange="document.getElementById('ciLead').style.display=this.checked?'':'none'"></md-checkbox> Für jeden Kontakt direkt einen Lead anlegen (Lifecycle SQL, Aufgabe „Erstkontakt“ — A3)</label>
             <div id="ciLead" class="crm-form-grid" style="display:none">
                 <label class="crm-field">Sparte *<select id="ci_sparte" class="crm-input" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
                 <label class="crm-field">Priorität<select id="ci_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>

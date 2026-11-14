@@ -226,7 +226,7 @@ function auRenderEmp() {
         const key = 'user:' + u.id;
         const on = _au.sel.has(key);
         const sub = [u.rolle, (u.bereiche || []).length ? (u.bereiche || []).join(', ') : 'alle Bereiche'].filter(Boolean).join(' · ');
-        return `<label class="au-pick ${on ? 'on' : ''}"><input type="checkbox" ${on ? 'checked' : ''} onchange="auToggleEmp('user', '${parseInt(u.id, 10)}', this.checked)">
+        return `<label class="au-pick ${on ? 'on' : ''}"><md-checkbox ${on ? 'checked' : ''} onchange="auToggleEmp('user', '${parseInt(u.id, 10)}', this.checked)"></md-checkbox>
             <span><strong>${escapeHtml(u.name)}${u.ich ? ' (ich)' : ''}</strong><small>${escapeHtml(sub)}</small></span></label>`;
     };
     document.getElementById('auEmpPick').innerHTML = `
