@@ -1067,7 +1067,7 @@ async function openSavedPdfsList(bestellId) {
                 </div>`;
         }).join('');
     } catch(e) {
-        body.innerHTML = `<div style="text-align:center;padding:30px;color:#dc2626">${orIcon('error', 'font-size:15px;vertical-align:-2px')} ` + e.message + '</div>';
+        body.innerHTML = `<div style="text-align:center;padding:30px;color: var(--md-sys-color-error)">${orIcon('error', 'font-size:15px;vertical-align:-2px')} ` + e.message + '</div>';
     }
 }
 
@@ -1079,7 +1079,7 @@ function ensureSavedPdfsModal() {
     modal.id = 'savedPdfsModal';
     modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,0.55);backdrop-filter:blur(2px);align-items:center;justify-content:center';
     modal.innerHTML = `
-        <div style="background:var(--white);border-radius:14px;box-shadow:0 25px 60px rgba(0,0,0,0.35);max-width:620px;width:92vw;max-height:85vh;display:flex;flex-direction:column">
+        <div style="background:var(--white);border-radius:14px;box-shadow: 0 25px 60px color-mix(in srgb, var(--md-sys-color-scrim) 35%, transparent);max-width:620px;width:92vw;max-height:85vh;display:flex;flex-direction:column">
             <div style="padding:18px 22px;border-bottom:1px solid var(--gray-200);display:flex;justify-content:space-between;align-items:center">
                 <div>
                     <div id="savedPdfsTitle" style="font-size:1.05rem;font-weight:700;color:var(--gray-800)">Gespeicherte PDFs</div>

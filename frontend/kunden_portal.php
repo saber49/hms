@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
     <title>Kundenportal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20260729mob8">
     <link rel="stylesheet" href="assets/css/kunden_portal.css?v=20261011kp7">
     <link rel="stylesheet" href="assets/css/kunden_portal_qm.css?v=20261109qm1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <script>
     (function () {
         // App handoff: the shared Clood-X app login passes the portal session
@@ -80,30 +80,30 @@
     <div class="kp-head">
     <header class="kp-topbar">
         <div class="kp-topbar-left">
-            <i class="fas fa-shield-halved kp-topbar-icon"></i>
+            <i class="material-symbols-outlined kp-topbar-icon">shield</i>
             <div>
                 <div class="kp-title" id="kpKunde">Kundenportal</div>
                 <div class="kp-subtitle" id="kpFirma"></div>
             </div>
         </div>
-        <button class="kp-btn-logout" onclick="kpPasswortDialog()" title="Passwort ändern"><i class="fas fa-key"></i><span>Passwort</span></button>
-        <button class="kp-btn-logout" onclick="kpLogout()" title="Abmelden"><i class="fas fa-sign-out-alt"></i><span>Abmelden</span></button>
+        <button class="kp-btn-logout" onclick="kpPasswortDialog()" title="Passwort ändern"><i class="material-symbols-outlined">vpn_key</i><span>Passwort</span></button>
+        <button class="kp-btn-logout" onclick="kpLogout()" title="Abmelden"><i class="material-symbols-outlined">logout</i><span>Abmelden</span></button>
     </header>
 
     <nav class="kp-nav">
-        <button class="kp-tab active" data-tab="einsaetze" onclick="kpSwitchTab('einsaetze')"><i class="fas fa-calendar-alt"></i> Einsätze</button>
-        <button class="kp-tab" data-tab="wachbuch" onclick="kpSwitchTab('wachbuch')"><i class="fas fa-book"></i> <span id="kpObTab" style="visibility:hidden">Wachbuch</span></button>
-        <button class="kp-tab" data-tab="fotos" onclick="kpSwitchTab('fotos')"><i class="fas fa-images"></i> Fotos</button>
-        <button class="kp-tab" data-tab="dienstanweisungen" data-qm hidden onclick="kpSwitchTab('dienstanweisungen')"><i class="fas fa-file-shield"></i> Dienstanweisungen</button>
-        <button class="kp-tab" data-tab="reklamationen" data-qm hidden onclick="kpSwitchTab('reklamationen')"><i class="fas fa-comments"></i> Reklamationen</button>
+        <button class="kp-tab active" data-tab="einsaetze" onclick="kpSwitchTab('einsaetze')"><i class="material-symbols-outlined">calendar_month</i> Einsätze</button>
+        <button class="kp-tab" data-tab="wachbuch" onclick="kpSwitchTab('wachbuch')"><i class="material-symbols-outlined">menu_book</i> <span id="kpObTab" style="visibility:hidden">Wachbuch</span></button>
+        <button class="kp-tab" data-tab="fotos" onclick="kpSwitchTab('fotos')"><i class="material-symbols-outlined">photo_library</i> Fotos</button>
+        <button class="kp-tab" data-tab="dienstanweisungen" data-qm hidden onclick="kpSwitchTab('dienstanweisungen')"><i class="material-symbols-outlined">privacy_tip</i> Dienstanweisungen</button>
+        <button class="kp-tab" data-tab="reklamationen" data-qm hidden onclick="kpSwitchTab('reklamationen')"><i class="material-symbols-outlined">forum</i> Reklamationen</button>
     </nav>
     </div>
 
     <section class="kp-toolbar">
         <div class="kp-week">
-            <button class="kp-icon-btn" onclick="kpShiftWeek(-1)" title="Vorherige Woche"><i class="fas fa-chevron-left"></i></button>
+            <button class="kp-icon-btn" onclick="kpShiftWeek(-1)" title="Vorherige Woche"><i class="material-symbols-outlined">chevron_left</i></button>
             <div class="kp-week-label" id="kpWeekLabel"></div>
-            <button class="kp-icon-btn" onclick="kpShiftWeek(1)" title="Nächste Woche"><i class="fas fa-chevron-right"></i></button>
+            <button class="kp-icon-btn" onclick="kpShiftWeek(1)" title="Nächste Woche"><i class="material-symbols-outlined">chevron_right</i></button>
             <button class="kp-chip-btn" id="kpTodayBtn" onclick="kpThisWeek()">Heute</button>
         </div>
         <select id="kpObjekt" class="kp-select" onchange="kpLoad()">
@@ -112,14 +112,14 @@
     </section>
 
     <main class="kp-content" id="kpContent">
-        <div class="kp-empty"><i class="fas fa-spinner fa-spin"></i><p>Lade...</p></div>
+        <div class="kp-empty"><i class="material-symbols-outlined ms-spin">progress_activity</i><p>Lade...</p></div>
     </main>
 
     <div class="kp-lightbox" id="kpLightbox" onclick="kpCloseLightbox()">
-        <button class="kp-lightbox-close" title="Schließen"><i class="fas fa-times"></i></button>
+        <button class="kp-lightbox-close" title="Schließen"><i class="material-symbols-outlined">close</i></button>
         <img id="kpLightboxImg" alt="">
         <div class="kp-lightbox-caption" id="kpLightboxCaption"></div>
-        <a class="kp-lightbox-dl" id="kpLightboxDl" href="#" download onclick="event.stopPropagation()"><i class="fas fa-download"></i> Herunterladen</a>
+        <a class="kp-lightbox-dl" id="kpLightboxDl" href="#" download onclick="event.stopPropagation()"><i class="material-symbols-outlined">download</i> Herunterladen</a>
     </div>
 
     <footer class="kp-footer">

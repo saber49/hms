@@ -17,7 +17,7 @@ async function renderLists() {
     content.innerHTML = `
         <div class="toolbar">
             <div class="toolbar-left"></div>
-            <md-filled-button  onclick="openListModal()"><i slot="icon" class="fas fa-plus"></i> Neuer Eintrag</md-filled-button>
+            <md-filled-button  onclick="openListModal()"><i slot="icon" class="material-symbols-outlined">add</i> Neuer Eintrag</md-filled-button>
         </div>
         ${Object.keys(grouped).map(cat => `
             <div class="card mb-2">
@@ -33,8 +33,8 @@ async function renderLists() {
                                 <td>${l.sortierung}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <md-icon-button  onclick="openListModal(${l.id})" title="Bearbeiten"><i class="fas fa-pen"></i></md-icon-button>
-                                        <md-icon-button  class="md-icon-danger" onclick="deleteListItem(${l.id})" title="Löschen"><i class="fas fa-trash"></i></md-icon-button>
+                                        <md-icon-button  onclick="openListModal(${l.id})" title="Bearbeiten"><i class="material-symbols-outlined">edit</i></md-icon-button>
+                                        <md-icon-button  class="md-icon-danger" onclick="deleteListItem(${l.id})" title="Löschen"><i class="material-symbols-outlined">delete</i></md-icon-button>
                                     </div>
                                 </td>
                             </tr>`).join('')}
@@ -43,7 +43,7 @@ async function renderLists() {
                 </div>
             </div>
         `).join('')}
-        ${Object.keys(grouped).length === 0 ? '<div class="empty-state"><i class="fas fa-list"></i><p>Keine Listeneinträge</p></div>' : ''}
+        ${Object.keys(grouped).length === 0 ? '<div class="empty-state"><i class="material-symbols-outlined">list</i><p>Keine Listeneinträge</p></div>' : ''}
     `;
 }
 

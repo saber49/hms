@@ -566,7 +566,7 @@ function renderNavFavorites() {
         const icon = orig.querySelector('i');
         const label = orig.querySelector('span:not(.badge)');
         a.innerHTML = `${icon ? icon.outerHTML : ''}<span>${label ? label.innerHTML : page}</span>`
-            + `<button type="button" class="nav-fav-star" title="Aus Favoriten entfernen"><i class="fas fa-star"></i></button>`;
+            + `<button type="button" class="nav-fav-star" title="Aus Favoriten entfernen"><i class="material-symbols-outlined">star</i></button>`;
         a.addEventListener('click', (e) => { e.preventDefault(); orig.click(); });
         a.querySelector('.nav-fav-star').addEventListener('click', (e) => {
             e.preventDefault(); e.stopPropagation(); toggleNavFavorite(page);
@@ -789,7 +789,7 @@ async function loadPage(page) {
         const c = document.getElementById('content');
         if (c) {
             c.innerHTML = '<div class="empty-state" style="padding:48px;text-align:center;color:var(--gray-500)">'
-                + '<i class="fas fa-lock fa-2x" style="margin-bottom:12px;color:var(--gray-400)"></i>'
+                + '<i class="material-symbols-outlined" style="font-size:2em" style="margin-bottom:12px;color:var(--gray-400)">lock</i>'
                 + '<p style="font-weight:600;margin-bottom:4px">Keine Berechtigungen zugewiesen</p>'
                 + '<p style="font-size:0.9rem">Bitte wenden Sie sich an Ihren Administrator.</p>'
                 + '</div>';
@@ -858,7 +858,7 @@ async function loadPage(page) {
     }
 
     const content = document.getElementById('content');
-    content.innerHTML = '<div class="text-center mt-3"><i class="fas fa-spinner fa-spin fa-2x text-muted"></i></div>';
+    content.innerHTML = '<div class="text-center mt-3"><md-circular-progress indeterminate></md-circular-progress></div>';
 
     try {
         await ensurePageScripts(page);
@@ -867,7 +867,7 @@ async function loadPage(page) {
         await Promise.race([ensureBereichColors(), new Promise(r => setTimeout(r, 1500))]);
     } catch (error) {
         _scriptCacheBust = Date.now().toString(36);
-        content.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
+        content.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">wifi</i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
         showToast(error.message || 'Bereich konnte nicht geladen werden', 'error');
         if (!window.__hmsBootReady) {
             window.__hmsBootReady = true;
@@ -913,7 +913,7 @@ async function loadPage(page) {
             case 'qm_wachbuch': pageRender = renderQmWachbuch(); break;
             case 'qm': pageRender = renderQm(); break;
             case 'einstellungen': pageRender = renderEinstellungen(); break;
-            default: content.innerHTML = '<div class="empty-state"><i class="fas fa-hard-hat"></i><p>Seite wird entwickelt...</p></div>';
+            default: content.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">engineering</i><p>Seite wird entwickelt...</p></div>';
         }
     } catch (e) {
         // A renderer may be missing if its module script arrived corrupted
@@ -922,7 +922,7 @@ async function loadPage(page) {
         // The cache-buster makes "Erneut versuchen" bypass the bad entry.
         console.error('Page render failed:', e);
         _scriptCacheBust = Date.now().toString(36);
-        content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht gestartet werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
+        content.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">warning</i><p>Bereich konnte nicht gestartet werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
         if (!window.__hmsBootReady) {
             window.__hmsBootReady = true;
             document.dispatchEvent(new CustomEvent('hms:page-ready'));
@@ -937,7 +937,7 @@ async function loadPage(page) {
             if (!content.querySelector('.data-toolbar, table, .nu-stats-grid, .stats-grid')) {
                 console.error('Page render rejected:', e);
                 _scriptCacheBust = Date.now().toString(36);
-                content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
+                content.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">warning</i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
             }
         });
     }
@@ -1230,18 +1230,18 @@ async function openAccountModal(activeTab) {
 
     // Tab definitions — only admins see the company tab
     const tabs = [
-        { id: 'profile', icon: 'fa-user', label: 'Mein Profil' },
+        { id: 'profile', icon: 'person', label: 'Mein Profil' },
     ];
     if (isAdmin) {
-        tabs.push({ id: 'company',   icon: 'fa-building',      label: 'Unternehmensdaten' });
-        tabs.push({ id: 'legal',     icon: 'fa-balance-scale', label: 'Rechtliches' });
-        tabs.push({ id: 'bank',      icon: 'fa-university',    label: 'Bankverbindung' });
-        tabs.push({ id: 'documents', icon: 'fa-folder-open',   label: 'Dokumente' });
+        tabs.push({ id: 'company',   icon: 'apartment',      label: 'Unternehmensdaten' });
+        tabs.push({ id: 'legal',     icon: 'balance', label: 'Rechtliches' });
+        tabs.push({ id: 'bank',      icon: 'account_balance',    label: 'Bankverbindung' });
+        tabs.push({ id: 'documents', icon: 'folder_open',   label: 'Dokumente' });
     }
 
     const tabsHtml = tabs.map(tab => `
         <button class="acc-tab ${tab.id === activeTab ? 'active' : ''}" data-tab="${tab.id}" onclick="switchAccountTab('${tab.id}')">
-            <i class="fas ${tab.icon}"></i> ${tab.label}
+            <i class="material-symbols-outlined">${tab.icon}</i> ${tab.label}
         </button>
     `).join('');
 
@@ -1249,14 +1249,14 @@ async function openAccountModal(activeTab) {
         <div class="acc-modal">
             <div class="acc-tabs">${tabsHtml}</div>
             <div class="acc-tab-content" id="accTabContent">
-                <div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>
+                <div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>
             </div>
         </div>
     `;
 
     const footer = `
         <md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>
-        <md-filled-button  id="accSaveBtn" style="display:none" onclick="saveAccountActiveTab()"><i slot="icon" class="fas fa-save"></i> Speichern</md-filled-button>
+        <md-filled-button  id="accSaveBtn" style="display:none" onclick="saveAccountActiveTab()"><i slot="icon" class="material-symbols-outlined">save</i> Speichern</md-filled-button>
     `;
 
     openModal('Mein Konto', body, footer, 'modal-lg');
@@ -1307,7 +1307,7 @@ async function renderAccountTab(tabId, ctx) {
         // The "Signatur & Stempel" uploaders (Bestellungen editors only)
         // need the company payload for the current asset paths.
         if (hasPermission('auftraege.bestellungen.edit') && !_accountCompanyData) {
-            container.innerHTML = '<div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+            container.innerHTML = '<div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
             await _loadAccountCompanyData();
         }
         container.innerHTML = renderProfileTab(ctx, _accountCompanyData || {});
@@ -1316,7 +1316,7 @@ async function renderAccountTab(tabId, ctx) {
 
     // Admin-only tabs need the company data fetched once
     if (!_accountCompanyData) {
-        container.innerHTML = '<div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+        container.innerHTML = '<div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
         await _loadAccountCompanyData();
     }
     const c = _accountCompanyData || {};
@@ -1345,26 +1345,26 @@ function renderProfileTab(ctx, c) {
     return `
         <div class="acc-section">
             <div class="account-profile">
-                <div class="account-avatar"><i class="fas fa-user-circle"></i></div>
+                <div class="account-avatar"><i class="material-symbols-outlined">account_circle</i></div>
                 <div class="account-details">
                     <div class="account-detail-row">
-                        <span class="account-label"><i class="fas fa-user"></i> Name</span>
+                        <span class="account-label"><i class="material-symbols-outlined">person</i> Name</span>
                         <span class="account-value">${escapeHtml(u.full_name || 'Benutzer')}</span>
                     </div>
                     <div class="account-detail-row">
-                        <span class="account-label"><i class="fas fa-at"></i> Benutzername</span>
+                        <span class="account-label"><i class="material-symbols-outlined">alternate_email</i> Benutzername</span>
                         <span class="account-value">${escapeHtml(u.username || '–')}</span>
                     </div>
                     <div class="account-detail-row">
-                        <span class="account-label"><i class="fas fa-envelope"></i> E-Mail</span>
+                        <span class="account-label"><i class="material-symbols-outlined">mail</i> E-Mail</span>
                         <span class="account-value">${escapeHtml(u.email || '–')}</span>
                     </div>
                     <div class="account-detail-row">
-                        <span class="account-label"><i class="fas fa-shield-alt"></i> Rolle</span>
+                        <span class="account-label"><i class="material-symbols-outlined">shield</i> Rolle</span>
                         <span class="account-value"><span class="role-badge role-${u.role || 'viewer'}">${ctx.roleLabel}</span></span>
                     </div>
                     <div class="account-detail-row">
-                        <span class="account-label"><i class="fas fa-building"></i> Unternehmen</span>
+                        <span class="account-label"><i class="material-symbols-outlined">apartment</i> Unternehmen</span>
                         <span class="account-value">${escapeHtml(ctx.tenant.name || '–')}</span>
                     </div>
                 </div>
@@ -1372,7 +1372,7 @@ function renderProfileTab(ctx, c) {
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-key"></i> Passwort ändern</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">vpn_key</i> Passwort ändern</div>
             <div class="acc-grid acc-grid-3">
                 <div class="form-group">
                     <label>Aktuelles Passwort</label>
@@ -1388,7 +1388,7 @@ function renderProfileTab(ctx, c) {
                 </div>
             </div>
             <div style="text-align:right;margin-top:8px">
-                <md-filled-button  onclick="saveAccountPassword()"><i slot="icon" class="fas fa-save"></i> Passwort ändern</md-filled-button>
+                <md-filled-button  onclick="saveAccountPassword()"><i slot="icon" class="material-symbols-outlined">save</i> Passwort ändern</md-filled-button>
             </div>
         </div>
 
@@ -1420,17 +1420,17 @@ function renderDocAssetsSection(c, ctx) {
         return `
         <div class="doc-asset-card">
             <div class="doc-asset-preview" id="${kind}PreviewBox">
-                ${url ? `<img src="${escapeHtml(url)}" alt="${title}">` : `<i class="fas ${icon}"></i>`}
+                ${url ? `<img src="${escapeHtml(url)}" alt="${title}">` : `<i class="material-symbols-outlined">${icon}</i>`}
             </div>
-            <div class="doc-asset-title"><i class="fas ${icon}"></i> ${title}</div>
+            <div class="doc-asset-title"><i class="material-symbols-outlined">${icon}</i> ${title}</div>
             <div class="doc-asset-status ${cls}" id="${kind}Status">${status}</div>
             <div class="logo-buttons" style="justify-content:center">
                 <input type="file" id="${kind}File" accept="image/png,image/webp,image/svg+xml,image/jpeg" style="display:none" onchange="uploadDocAsset(this,'${kind}')">
                 <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('${kind}File').click()">
-                    <i class="fas fa-upload"></i> ${own ? 'Ersetzen' : 'Hochladen'}
+                    <i class="material-symbols-outlined">upload</i> ${own ? 'Ersetzen' : 'Hochladen'}
                 </button>
                 <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}>
-                    <i class="fas fa-trash"></i>
+                    <i class="material-symbols-outlined">delete</i>
                 </button>
             </div>
             ${isAdmin ? `<label class="doc-asset-scope" title="Für alle Benutzer der Firma als Standard speichern">
@@ -1440,15 +1440,15 @@ function renderDocAssetsSection(c, ctx) {
     };
     return `
         <div class="acc-section" id="docAssetsSection">
-            <div class="acc-section-header"><i class="fas fa-stamp"></i> Signatur &amp; Stempel</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">approval</i> Signatur &amp; Stempel</div>
             <p style="font-size:0.85rem;color:var(--gray-500);margin:0 0 12px">
                 Deine persönliche Unterschrift und dein Stempel für die Bestellung-PDFs — am besten als
                 <strong>PNG mit transparentem Hintergrund</strong>. Ohne eigene Datei gilt der Firmen-Standard.
                 Im PDF-Viewer werden sie per Knopfdruck auf das Dokument gesetzt.
             </p>
             <div class="doc-assets-grid">
-                ${card('signature', 'Unterschrift', 'fa-signature')}
-                ${card('stamp', 'Stempel', 'fa-stamp')}
+                ${card('signature', 'Unterschrift', 'signature')}
+                ${card('stamp', 'Stempel', 'approval')}
             </div>
         </div>`;
 }
@@ -1586,21 +1586,21 @@ function renderLogoUploader(c) {
     const previewSrc = hasLogo ? tenantLogoUrl(c.logo_path) : '';
     return `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-image"></i> Firmenlogo</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">image</i> Firmenlogo</div>
             <div class="company-logo-uploader">
                 <div class="logo-preview" id="logoPreviewBox">
                     ${hasLogo
                         ? `<img src="${escapeHtml(previewSrc)}" alt="Logo">`
-                        : `<i class="fas fa-image"></i>`}
+                        : `<i class="material-symbols-outlined">image</i>`}
                 </div>
                 <div class="logo-actions">
                     <div class="logo-buttons">
                         <input type="file" id="companyLogoFile" accept="image/png,image/jpeg,image/svg+xml" style="display:none" onchange="uploadCompanyLogo(this)">
                         <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('companyLogoFile').click()">
-                            <i class="fas fa-upload"></i> Logo hochladen
+                            <i class="material-symbols-outlined">upload</i> Logo hochladen
                         </button>
                         <md-outlined-button type="button"  class="md-btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}>
-                            <i class="fas fa-trash"></i> Entfernen
+                            <i class="material-symbols-outlined">delete</i> Entfernen
                         </button>
                     </div>
                     <div class="hint">PNG, JPG oder SVG · max. 2 MB · empfohlen quadratisch (z.B. 512×512 px)</div>
@@ -1660,7 +1660,7 @@ async function removeCompanyLogo() {
     showToast('Logo entfernt');
     if (_accountCompanyData) _accountCompanyData.logo_path = null;
     const box = document.getElementById('logoPreviewBox');
-    if (box) box.innerHTML = '<i class="fas fa-image"></i>';
+    if (box) box.innerHTML = '<i class="material-symbols-outlined">image</i>';
     const removeBtn = document.getElementById('logoRemoveBtn');
     if (removeBtn) removeBtn.style.display = 'none';
     const merged = { ...JSON.parse(localStorage.getItem('hms_tenant') || '{}'), logo_path: null };
@@ -1674,7 +1674,7 @@ function renderCompanyTab(c) {
     return `
         ${renderLogoUploader(c)}
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-building"></i> Unternehmensdaten</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">apartment</i> Unternehmensdaten</div>
             <div class="acc-grid acc-grid-2">
                 <div class="form-group acc-span-2">
                     <label>Firmenname *</label>
@@ -1699,7 +1699,7 @@ function renderCompanyTab(c) {
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-address-card"></i> Kontakt & Anschrift</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">contact_page</i> Kontakt & Anschrift</div>
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>E-Mail</label>
@@ -1737,9 +1737,9 @@ function renderCompanyTab(c) {
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-mug-hot"></i> Pausenregelung (MA-Pause)</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">local_cafe</i> Pausenregelung (MA-Pause)</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 <span>Füllt die <strong>MA-Pause</strong> im Bestelleingang automatisch aus der Schichtdauer (Von–Bis der Schicht).
                 Jede Regel gilt für einen Bereich der Schichtdauer, Grenzen eingeschlossen — z. B. „06:01 bis 09:00 → 30 Min“
                 (gesetzliches ArbZG-Minimum: über 6 Std 30 Min, über 9 Std 45 Min). Dauer außerhalb aller Bereiche = keine Pause.
@@ -1753,15 +1753,15 @@ function renderCompanyTab(c) {
             </div>
             <div id="cfPauseRules"></div>
             <md-outlined-button type="button"  class="md-btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px">
-                <i class="fas fa-plus"></i> Regel hinzufügen
+                <i class="material-symbols-outlined">add</i> Regel hinzufügen
             </button>
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-book"></i> ${Array.isArray(c.branchen) ? 'Branche &amp; Bezeichnungen' : 'Bezeichnungen'}</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">menu_book</i> ${Array.isArray(c.branchen) ? 'Branche &amp; Bezeichnungen' : 'Bezeichnungen'}</div>
             ${Array.isArray(c.branchen) ? `
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Die Hauptbranche bestimmt die Begriffe im System (z.B. „Klienten“ statt „Kunden“ in der Hauswirtschaft).
                 Branchen je Dienstleistung (Objektarten, Qualifikationen, Zusatzfelder) stellen Sie unter Konto &amp; Firma → Bereiche ein.
             </div>
@@ -1791,9 +1791,9 @@ function renderCompanyTab(c) {
 
         ${c.arbzg ? `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-business-time"></i> Arbeitszeitgesetz (Hinweise in der Planung)</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">work_history</i> Arbeitszeitgesetz (Hinweise in der Planung)</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Zeigt in der Disposition einen Hinweis, wenn die Ruhezeit zwischen zwei Schichten oder die Arbeitszeit pro Tag
                 (ohne Pausen) die Grenze überschreitet. Nur ein Hinweis — die Zuweisung wird nie blockiert.
                 Abweichende Grenzen per Tarifvertrag (§ 7 ArbZG, z.B. 12 Std) hier einstellen.
@@ -1817,9 +1817,9 @@ function renderCompanyTab(c) {
 
         ${c.aueg ? `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-handshake"></i> Arbeitnehmerüberlassung (AÜG)</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">handshake</i> Arbeitnehmerüberlassung (AÜG)</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Für Personaldienstleister: überwacht je Mitarbeiter und Entleiher die Überlassungshöchstdauer (18 Monate)
                 und den Equal-Pay-Anspruch (9 Monate) — als Seite „AÜG-Fristen“ unter Personal und als Hinweis in der Planung.
             </div>
@@ -1867,8 +1867,8 @@ function cfPauseRuleRowHtml(von, bis, min) {
         <input type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01">
         <input type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00">
         <input type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30">
-        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color:var(--danger,#dc2626)">
-            <i class="fas fa-trash"></i>
+        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))">
+            <i class="material-symbols-outlined">delete</i>
         </button>
     </div>`;
 }
@@ -1904,9 +1904,9 @@ function cfInitPauseRules(rules) {
 function renderLegalTab(c) {
     return `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-balance-scale"></i> Handelsregister</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">balance</i> Handelsregister</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Diese Angaben sind gesetzlich vorgeschrieben für die Impressumspflicht (§ 5 TMG) und Geschäftsbriefe (§ 37a HGB).
             </div>
             <div class="acc-grid acc-grid-2">
@@ -1922,7 +1922,7 @@ function renderLegalTab(c) {
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-receipt"></i> Steuerliche Angaben</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">receipt</i> Steuerliche Angaben</div>
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>Umsatzsteuer-ID (USt-IdNr.)</label>
@@ -1942,9 +1942,9 @@ function renderLegalTab(c) {
 function renderBankTab(c) {
     return `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-university"></i> Bankverbindung</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">account_balance</i> Bankverbindung</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Wird auf Rechnungen und Geschäftsdokumenten angezeigt.
             </div>
             <div class="acc-grid acc-grid-2">
@@ -1973,7 +1973,7 @@ let _accountDocs = null;       // cached doc list for the current modal session
 let _accountDocsCats = null;   // category enum from the API
 
 async function renderDocumentsTab(container) {
-    container.innerHTML = '<div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    container.innerHTML = '<div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
     try {
         const res = await apiGet(API_BASE + '/dashboard/documents');
         _accountDocs = Array.isArray(res.items) ? res.items : [];
@@ -1992,14 +1992,14 @@ function renderDocumentsTabHtml(items, categories) {
         .join('');
 
     const listHtml = items.length === 0
-        ? `<div class="docs-empty"><i class="fas fa-folder-open"></i><div>Noch keine Dokumente hochgeladen.</div></div>`
+        ? `<div class="docs-empty"><i class="material-symbols-outlined">folder_open</i><div>Noch keine Dokumente hochgeladen.</div></div>`
         : items.map(d => docCardHtml(d)).join('');
 
     return `
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-folder-open"></i> Firmendokumente</div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">folder_open</i> Firmendokumente</div>
             <div class="acc-info-box">
-                <i class="fas fa-info-circle"></i>
+                <i class="material-symbols-outlined">info</i>
                 Hier können Sie offizielle Unternehmensunterlagen hinterlegen
                 (Gewerbeschein, Handelsregisterauszug, Steuerbescheid, Versicherungsnachweise &hellip;).
                 Erlaubt: PDF, JPG, PNG, WEBP &middot; max. 10&nbsp;MB pro Datei.
@@ -2025,14 +2025,14 @@ function renderDocumentsTabHtml(items, categories) {
                 </div>
                 <div class="docs-uploader-actions">
                     <md-filled-button type="button"  id="docUploadBtn">
-                        <i class="fas fa-upload"></i> Hochladen
+                        <i class="material-symbols-outlined">upload</i> Hochladen
                     </button>
                 </div>
             </div>
         </div>
 
         <div class="acc-section">
-            <div class="acc-section-header"><i class="fas fa-list"></i> Hinterlegte Dokumente <span class="docs-count">${items.length}</span></div>
+            <div class="acc-section-header"><i class="material-symbols-outlined">list</i> Hinterlegte Dokumente <span class="docs-count">${items.length}</span></div>
             <div class="docs-list" id="docsList">
                 ${listHtml}
             </div>
@@ -2042,7 +2042,7 @@ function renderDocumentsTabHtml(items, categories) {
 
 function docCardHtml(d) {
     const isPdf = (d.mime_type || '').includes('pdf');
-    const icon  = isPdf ? 'fa-file-pdf' : 'fa-file-image';
+    const icon  = isPdf ? 'picture_as_pdf' : 'image';
     const iconColor = isPdf ? '#dc2626' : '#2563eb';
     const sizeKb = Math.round((d.size_bytes || 0) / 1024);
     const sizeStr = sizeKb >= 1024
@@ -2061,7 +2061,7 @@ function docCardHtml(d) {
     return `
         <div class="doc-card" data-id="${d.id}">
             <div class="doc-thumb" data-thumb-url="${escapeHtml(thumbUrl)}" data-fallback-icon="${icon}" data-fallback-color="${iconColor}">
-                <i class="fas ${icon}" style="color:${iconColor}"></i>
+                <i class="material-symbols-outlined" style="color:${iconColor}">${icon}</i>
             </div>
             <div class="doc-meta">
                 <div class="doc-title" title="${escapeHtml(d.original_filename || '')}">${escapeHtml(d.title)}</div>
@@ -2071,13 +2071,13 @@ function docCardHtml(d) {
                     <span>${sizeStr}</span>
                     <span class="doc-dot">&middot;</span>
                     <span>${escapeHtml(dateStr)}</span>
-                    ${d.uploaded_by_name ? `<span class="doc-dot">&middot;</span><span><i class="fas fa-user"></i> ${escapeHtml(d.uploaded_by_name)}</span>` : ''}
+                    ${d.uploaded_by_name ? `<span class="doc-dot">&middot;</span><span><i class="material-symbols-outlined">person</i> ${escapeHtml(d.uploaded_by_name)}</span>` : ''}
                 </div>
             </div>
             <div class="doc-actions">
-                <md-icon-button type="button"  title="Anzeigen" onclick="openTenantDocument(${d.id})"><i class="fas fa-eye"></i></md-icon-button>
-                <md-icon-button type="button"  title="Herunterladen" onclick="downloadTenantDocument(${d.id})"><i class="fas fa-download"></i></md-icon-button>
-                <md-icon-button type="button"  class="md-icon-danger" title="L\u00f6schen" onclick="deleteTenantDocument(${d.id})"><i class="fas fa-trash"></i></md-icon-button>
+                <md-icon-button type="button"  title="Anzeigen" onclick="openTenantDocument(${d.id})"><i class="material-symbols-outlined">visibility</i></md-icon-button>
+                <md-icon-button type="button"  title="Herunterladen" onclick="downloadTenantDocument(${d.id})"><i class="material-symbols-outlined">download</i></md-icon-button>
+                <md-icon-button type="button"  class="md-icon-danger" title="L\u00f6schen" onclick="deleteTenantDocument(${d.id})"><i class="material-symbols-outlined">delete</i></md-icon-button>
             </div>
         </div>
     `;
@@ -2176,7 +2176,7 @@ async function uploadTenantDocument() {
     fd.append('title', title);
 
     const btn = document.getElementById('docUploadBtn');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hochladen \u2026'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Hochladen \u2026'; }
 
     try {
         const res = await fetch(API_BASE + '/dashboard/documents', {
@@ -2196,7 +2196,7 @@ async function uploadTenantDocument() {
     } catch (e) {
         showToast('Upload fehlgeschlagen', 'error');
     } finally {
-        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-upload"></i> Hochladen'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="material-symbols-outlined">upload</i> Hochladen'; }
     }
 }
 window.uploadTenantDocument = uploadTenantDocument;
@@ -2410,7 +2410,7 @@ function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const btn = document.getElementById('themeToggleBtn');
     if (btn) {
-        btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        btn.innerHTML = theme === 'dark' ? '<i class="material-symbols-outlined">light_mode</i>' : '<i class="material-symbols-outlined">dark_mode</i>';
         btn.title = theme === 'dark' ? 'Helles Design' : 'Dunkles Design';
     }
 }
@@ -2714,7 +2714,7 @@ function closeModal() {
 // ============================================
 // SYSTEM CONFIRM DIALOG
 // ============================================
-function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Bestätigen', cancelText = 'Abbrechen', icon = 'fa-exclamation-triangle', type = 'warning' }) {
+function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Bestätigen', cancelText = 'Abbrechen', icon = 'warning', type = 'warning' }) {
     return new Promise(resolve => {
         const overlay = document.createElement('div');
         Object.assign(overlay.style, {
@@ -2726,8 +2726,8 @@ function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Be
         const colorMap = { warning: '#f59e0b', danger: '#dc2626', info: '#2563eb', success: '#16a34a' };
         const accent = colorMap[type] || colorMap.warning;
         overlay.innerHTML = `
-            <div style="background:var(--white);border-radius:16px;padding:36px 32px 28px;box-shadow:0 25px 60px rgba(0,0,0,0.3);max-width:440px;width:90%;text-align:center;transform:scale(0.92);transition:transform 0.2s ease">
-                <div style="font-size:2.8rem;margin-bottom:16px;color:${accent}"><i class="fas ${icon}"></i></div>
+            <div style="background:var(--white);border-radius:16px;padding:36px 32px 28px;box-shadow: 0 25px 60px color-mix(in srgb, var(--md-sys-color-scrim) 30%, transparent);max-width:440px;width:90%;text-align:center;transform:scale(0.92);transition:transform 0.2s ease">
+                <div style="font-size:2.8rem;margin-bottom:16px;color:${accent}"><i class="material-symbols-outlined">${icon}</i></div>
                 <div style="font-size:1.15rem;font-weight:700;color:var(--gray-900);margin-bottom:10px">${title}</div>
                 <div style="font-size:0.9rem;color:var(--gray-500);line-height:1.6;margin-bottom:28px">${message}</div>
                 <div style="display:flex;gap:12px;justify-content:center">
@@ -2761,7 +2761,7 @@ function showRetryBanner() {
     const banner = document.createElement('div');
     banner.id = 'retryBanner';
     banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--danger-light, #fef2f2);color:var(--danger, #dc2626);text-align:center;padding:10px 16px;font-size:0.85rem;font-weight:600;border-bottom:2px solid #fecaca;display:flex;align-items:center;justify-content:center;gap:12px';
-    banner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <span>Verbindungsfehler — Daten konnten nicht geladen werden.</span> <button onclick="document.getElementById(\'retryBanner\').remove();loadPage(currentPage)" style="background:var(--danger, #dc2626);color:var(--md-sys-color-on-error, #fff);border:none;padding:5px 16px;border-radius:6px;font-weight:600;cursor:pointer;font-size:0.8rem"><i class="fas fa-redo"></i> Erneut versuchen</button> <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--danger, #dc2626);cursor:pointer;font-size:1.1rem;padding:0 4px">&times;</button>';
+    banner.innerHTML = '<i class="material-symbols-outlined">warning</i> <span>Verbindungsfehler — Daten konnten nicht geladen werden.</span> <button onclick="document.getElementById(\'retryBanner\').remove();loadPage(currentPage)" style="background: var(--danger, var(--md-sys-color-error));color: var(--md-sys-color-on-error, #fff);border:none;padding:5px 16px;border-radius:6px;font-weight:600;cursor:pointer;font-size:0.8rem"><i class="material-symbols-outlined">refresh</i> Erneut versuchen</button> <button onclick="this.parentElement.remove()" style="background:none;border:none;color: var(--danger, var(--md-sys-color-error));cursor:pointer;font-size:1.1rem;padding:0 4px">&times;</button>';
     document.body.prepend(banner);
 }
 
@@ -2942,8 +2942,8 @@ function showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle' };
-    toast.innerHTML = `<i class="fas ${icons[type] || icons.success}"></i><span class="toast-message"></span>`;
+    const icons = { success: 'check_circle', error: 'error', warning: 'warning' };
+    toast.innerHTML = `<i class="material-symbols-outlined">${icons[type] || icons.success}</i><span class="toast-message"></span>`;
     const toastMsg = toast.querySelector('.toast-message');
     if (toastMsg) toastMsg.textContent = message;
     container.appendChild(toast);
@@ -3030,18 +3030,18 @@ function schichtartBadge(schichtart, pct = null, opts = {}) {
     if (code === 'tagdienst' && (!pct || pct === 0)) return '';
 
     const meta = {
-        tagdienst:      { icon: 'fa-sun',          label: 'Tag' },
-        nachtdienst:    { icon: 'fa-moon',         label: 'Nacht' },
-        sonntag:        { icon: 'fa-calendar-day', label: 'Sonntag' },
-        feiertag:       { icon: 'fa-star',         label: 'Feiertag' },
-        nacht_sonntag:  { icon: 'fa-moon',         label: 'Nacht+So' },
-        nacht_feiertag: { icon: 'fa-moon',         label: 'Nacht+Feiertag' },
+        tagdienst:      { icon: 'light_mode',          label: 'Tag' },
+        nachtdienst:    { icon: 'dark_mode',         label: 'Nacht' },
+        sonntag:        { icon: 'calendar_today', label: 'Sonntag' },
+        feiertag:       { icon: 'star',         label: 'Feiertag' },
+        nacht_sonntag:  { icon: 'dark_mode',         label: 'Nacht+So' },
+        nacht_feiertag: { icon: 'dark_mode',         label: 'Nacht+Feiertag' },
     };
-    const m = meta[code] || { icon: 'fa-clock', label: code };
+    const m = meta[code] || { icon: 'schedule', label: code };
     const showPct = opts.showPct !== false && pct != null && pct > 0;
     const pctStr  = showPct ? ` +${parseFloat(pct).toLocaleString('de-DE', { maximumFractionDigits: 1 })}%` : '';
     const lbl     = opts.compact ? '' : ` ${m.label}`;
-    return `<span class="schichtart-badge schichtart-${code}" title="${m.label}${pctStr}"><i class="fas ${m.icon}"></i>${lbl}${pctStr}</span>`;
+    return `<span class="schichtart-badge schichtart-${code}" title="${m.label}${pctStr}"><i class="material-symbols-outlined">${m.icon}</i>${lbl}${pctStr}</span>`;
 }
 
 let _cachedBereiche = null;

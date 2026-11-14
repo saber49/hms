@@ -91,10 +91,10 @@
                 <div class="ccall-timer" id="ccallTimer"></div>
                 <div class="ccall-controls">
                     <button class="ccall-btn ccall-btn-mute" id="ccallMute" title="Mikrofon stumm" disabled>
-                        <i class="fas fa-microphone"></i>
+                        <i class="material-symbols-outlined">mic</i>
                     </button>
                     <button class="ccall-btn ccall-btn-end" id="ccallEnd" title="Auflegen">
-                        <i class="fas fa-phone-slash"></i>
+                        <i class="material-symbols-outlined">phone_disabled</i>
                     </button>
                 </div>
             </div>`;
@@ -363,7 +363,7 @@
         state.localStream.getAudioTracks().forEach(t => { t.enabled = !state.muted; });
         const btn = document.getElementById('ccallMute');
         btn.classList.toggle('ccall-on', state.muted);
-        btn.innerHTML = '<i class="fas fa-microphone' + (state.muted ? '-slash' : '') + '"></i>';
+        btn.innerHTML = '<i class="material-symbols-outlined">' + (state.muted ? 'mic_off' : 'mic') + '</i>';
     }
 
     async function hangup() {

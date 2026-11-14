@@ -12,9 +12,9 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/md3-tokens.css?v=20260729mob8">
     <link rel="stylesheet" href="/assets/css/style.css?v=20261020mf1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <style>
         body { display: block; background: var(--bg); }
         .hidden { display: none !important; }
@@ -50,7 +50,10 @@
             .ob-head h1 { font-size: 1.35rem; }
             #tenantName { display: none; }
         }
-    </style>
+    
+.material-symbols-outlined.ms-spin, .ms-spin { animation: msSpin 1s linear infinite; }
+@keyframes msSpin { to { transform: rotate(360deg); } }
+</style>
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
@@ -62,7 +65,7 @@
         <div class="ob-logo"><img src="/assets/img/clood-x-logo.png" alt="Clood-X"><span>Clood-X</span></div>
         <div class="ob-top-r">
             <span id="tenantName"></span>
-            <button type="button" class="btn btn-outline btn-sm" onclick="logout()"><i class="fas fa-right-from-bracket"></i> Abmelden</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="logout()"><i class="material-symbols-outlined">logout</i> Abmelden</button>
         </div>
     </div>
 </header>
@@ -73,21 +76,21 @@
         <p>Ein letzter Schritt: die gesetzlichen Pflichtangaben Ihrer Firma.</p>
     </div>
 
-    <div id="loading" class="card ob-center"><i class="fas fa-spinner fa-spin"></i></div>
+    <div id="loading" class="card ob-center"><i class="material-symbols-outlined ms-spin">progress_activity</i></div>
 
     <div id="notOwner" class="card ob-center hidden">
-        <i class="fas fa-lock big"></i>
+        <i class="material-symbols-outlined big">lock</i>
         <h3 style="margin:0 0 6px;color:var(--gray-800)">Einrichtung noch nicht abgeschlossen</h3>
         <p style="margin:0">Der Firmen-Inhaber muss zuerst die Firmendaten hinterlegen. Bitte versuchen Sie es danach erneut.</p>
     </div>
 
     <form id="companyForm" class="card ob-card hidden" novalidate onsubmit="save(event)">
         <div class="ob-info">
-            <i class="fas fa-scale-balanced"></i>
+            <i class="material-symbols-outlined">balance</i>
             <span>Diese Angaben erscheinen auf Rechnungen, Leistungsnachweisen und Auftragsbestätigungen und sind gesetzlich vorgeschrieben (§ 14 UStG, Impressumspflicht). Sie können sie später jederzeit unter <b>Konto &amp; Firma</b> ändern.</span>
         </div>
 
-        <div class="ob-sec"><i class="fas fa-building"></i> Firma</div>
+        <div class="ob-sec"><i class="material-symbols-outlined">apartment</i> Firma</div>
         <div class="ob-grid">
             <div class="form-group span2">
                 <label class="req" for="name">Firmenname</label>
@@ -105,7 +108,7 @@
             </div>
         </div>
 
-        <div class="ob-sec"><i class="fas fa-location-dot"></i> Anschrift &amp; Kontakt</div>
+        <div class="ob-sec"><i class="material-symbols-outlined">location_on</i> Anschrift &amp; Kontakt</div>
         <div class="ob-grid">
             <div class="form-group span3">
                 <label class="req" for="company_address">Straße und Hausnummer</label>
@@ -130,7 +133,7 @@
         </div>
 
         <div id="registerSec">
-            <div class="ob-sec"><i class="fas fa-landmark"></i> Registereintrag</div>
+            <div class="ob-sec"><i class="material-symbols-outlined">account_balance</i> Registereintrag</div>
             <div class="ob-grid two">
                 <div class="form-group">
                     <label class="req" for="registergericht">Registergericht</label>
@@ -143,7 +146,7 @@
             </div>
         </div>
 
-        <div class="ob-sec"><i class="fas fa-receipt"></i> Steuer</div>
+        <div class="ob-sec"><i class="material-symbols-outlined">receipt</i> Steuer</div>
         <div class="ob-grid two">
             <div class="form-group">
                 <label for="ust_id">USt-IdNr.</label>
@@ -153,14 +156,14 @@
                 <label for="steuernummer">Steuernummer</label>
                 <input class="form-control" id="steuernummer" maxlength="30" placeholder="z. B. 231/123/45678">
             </div>
-            <span class="ob-hint span3"><i class="fas fa-circle-info"></i> Mindestens eines der beiden Felder ist Pflicht (Angabe auf jeder Rechnung).</span>
+            <span class="ob-hint span3"><i class="material-symbols-outlined">info</i> Mindestens eines der beiden Felder ist Pflicht (Angabe auf jeder Rechnung).</span>
         </div>
 
         <div id="formError" class="ob-error hidden"></div>
 
         <button type="submit" id="saveBtn" class="btn btn-primary ob-submit">
-            <span id="saveTxt"><i class="fas fa-check"></i> Speichern und loslegen</span>
-            <i class="fas fa-spinner fa-spin hidden" id="saveSpin"></i>
+            <span id="saveTxt"><i class="material-symbols-outlined">check</i> Speichern und loslegen</span>
+            <i class="material-symbols-outlined ms-spin">progress_activity</i>
         </button>
     </form>
 </main>

@@ -366,18 +366,18 @@ function _ocDocHtml(d) {
         <style>
             .oc-doc-bearb{grid-column:1/-1;flex-basis:100%}
             .oc-doc-bearb select{font:inherit;font-weight:600;padding:3px 6px;border:1px solid var(--gray-300);border-radius:6px;background:var(--white);color:inherit;max-width:100%;width:min(420px,100%)}
-            .oc-doc-changed{display:flex;gap:8px;align-items:flex-start;margin:10px 0;padding:10px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;font-size:.85rem}
-            [data-theme="dark"] .oc-doc-changed{background:rgba(251,146,60,.12);border-color:rgba(251,146,60,.45);color:#fdba74}
-            [data-theme="dark"] .oc-badge-changed{background:rgba(251,146,60,.14)!important;color:#fdba74!important;border-color:rgba(251,146,60,.45)!important}
+            .oc-doc-changed{display:flex;gap:8px;align-items:flex-start;margin:10px 0;padding:10px 12px;border-radius:8px;background: var(--md-ext-color-warning-container);border: 1px solid var(--md-ext-color-warning-container);color: var(--md-ext-color-warning);font-size:.85rem}
+            [data-theme="dark"] .oc-doc-changed{background: color-mix(in srgb, var(--md-ext-color-warning) 12%, transparent);border-color: color-mix(in srgb, var(--md-ext-color-warning) 45%, transparent);color: var(--md-ext-color-warning-container)}
+            [data-theme="dark"] .oc-badge-changed{background: color-mix(in srgb, var(--md-ext-color-warning) 14%, transparent)!important;color: var(--md-ext-color-warning-container)!important;border-color: color-mix(in srgb, var(--md-ext-color-warning) 45%, transparent)!important}
             .oc-notes-input{width:100%;box-sizing:border-box;min-height:90px;resize:vertical;font:inherit;font-size:.9rem;line-height:1.45;padding:9px 11px;border:1px solid var(--gray-300);border-radius:8px;background:var(--white);color:inherit}
-            .oc-notes-input:focus{outline:none;border-color:var(--primary,#2563eb);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+            .oc-notes-input:focus{outline:none;border-color: var(--primary,var(--md-sys-color-primary));box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent)}
             .oc-notes-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;font-size:.78rem;color:var(--gray-500)}
-            .oc-notes-save{font:inherit;font-weight:600;font-size:.82rem;padding:6px 14px;border-radius:999px;border:0;background:var(--primary,#2563eb);color:#fff;cursor:pointer}
+            .oc-notes-save{font:inherit;font-weight:600;font-size:.82rem;padding:6px 14px;border-radius:999px;border:0;background: var(--primary,var(--md-sys-color-primary));color: #fff;cursor:pointer}
             .oc-notes-save:disabled{opacity:.45;cursor:default}
             .oc-doc-versions{margin-top:12px}
             .oc-doc-version{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)}
             .oc-doc-version span:nth-child(2){flex:1}
-            .oc-badge-changed{background:#fff7ed!important;color:#c2410c!important;border-color:#fdba74!important;margin-left:4px}
+            .oc-badge-changed{background: var(--md-ext-color-warning-container)!important;color: var(--md-ext-color-warning)!important;border-color: var(--md-ext-color-warning-container)!important;margin-left:4px}
         </style>`;
 }
 
@@ -624,7 +624,7 @@ async function abShowArchiv(id) {
         _abArchivRows = d.entries || [];
         if (!body) return;
         body.innerHTML = _abArchivRows.length ? _abArchivRows.map((e, i) => `
-            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--md-sys-color-outline-variant,#e2e8f0)">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom: 1px solid var(--md-sys-color-outline-variant,var(--md-sys-color-primary-container))">
                 ${abIcon('picture_as_pdf')}
                 <div style="flex:1;min-width:0">
                     <div style="font-weight:600">${e.version ? 'Version ' + parseInt(e.version, 10) + ' · ' : ''}${escapeHtml(_AB_AKTION[e.aktion] || e.aktion)}</div>

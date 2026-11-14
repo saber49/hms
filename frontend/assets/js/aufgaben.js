@@ -295,7 +295,7 @@ function auStyles() {
     .au-seg{display:inline-flex;background:var(--gray-100);border-radius:12px;padding:3px;gap:2px}
     .au-seg button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:7px 12px;border-radius:9px;font:inherit;font-size:.85rem;font-weight:600;color:var(--gray-600);cursor:pointer}
     .au-seg button .material-symbols-outlined{font-size:18px}
-    .au-seg button.on{background:var(--white);color:var(--gray-900);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+    .au-seg button.on{background:var(--white);color:var(--gray-900);box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent)}
     .au-seg-sm button{padding:6px 10px;font-size:.8rem}
     .au-search{display:flex;align-items:center;gap:6px;flex:1;min-width:200px;border:1px solid var(--gray-200);border-radius:10px;padding:0 10px;background:var(--white)}
     .au-search input{border:0;outline:0;background:none;flex:1;padding:9px 0;font:inherit;color:inherit}
@@ -303,12 +303,12 @@ function auStyles() {
     .au-search-full{margin:6px 0}
     .au-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gray-300);background:var(--white);color:var(--gray-800);padding:8px 14px;border-radius:10px;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer}
     .au-btn .material-symbols-outlined{font-size:18px}
-    .au-btn-primary{background:var(--accent,#2563eb);border-color:var(--accent,#2563eb);color:var(--md-sys-color-on-primary,#fff)}
-    .au-btn-ok{background:#16a34a;border-color:#16a34a;color:#fff}
+    .au-btn-primary{background: var(--accent,var(--md-sys-color-primary));border-color: var(--accent,var(--md-sys-color-primary));color: var(--md-sys-color-on-primary,#fff)}
+    .au-btn-ok{background: var(--md-ext-color-success);border-color: var(--md-ext-color-success);color: #fff}
     .au-list{display:flex;flex-direction:column;gap:10px}
-    .au-card{display:flex;gap:14px;padding:14px 16px;border:1px solid var(--gray-200);border-left:4px solid var(--accent,#2563eb);border-radius:14px;background:var(--white);cursor:pointer;transition:box-shadow .15s}
-    .au-card:hover{box-shadow:0 4px 14px rgba(15,23,42,.08)}
-    .au-card.is-done{opacity:.65;border-left-color:#16a34a}
+    .au-card{display:flex;gap:14px;padding:14px 16px;border:1px solid var(--gray-200);border-left: 4px solid var(--accent,var(--md-sys-color-primary));border-radius:14px;background:var(--white);cursor:pointer;transition:box-shadow .15s}
+    .au-card:hover{box-shadow: 0 4px 14px color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent)}
+    .au-card.is-done{opacity:.65;border-left-color: var(--md-ext-color-success)}
     .au-card-main{flex:1;min-width:0}
     .au-card-top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
     .au-card-title{font-weight:700;font-size:1rem;color:var(--gray-900)}
@@ -318,14 +318,14 @@ function auStyles() {
     .au-card-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;white-space:nowrap}
     .au-created{font-size:.74rem;color:var(--gray-400)}
     .au-due{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:600;color:var(--gray-700)}
-    .au-due.is-over{color:#dc2626}
+    .au-due.is-over{color: var(--md-sys-color-error)}
     .au-status,.au-prio,.au-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:700}
-    .au-s-open{background:rgba(100,116,139,.12);color:#475569}
-    .au-s-work{background:rgba(234,179,8,.16);color:#a16207}
-    .au-s-done{background:rgba(22,163,74,.14);color:#15803d}
-    .au-p-low{background:rgba(100,116,139,.12);color:#64748b}
-    .au-p-high{background:rgba(249,115,22,.15);color:#c2410c}
-    .au-p-urgent{background:rgba(220,38,38,.14);color:#dc2626}
+    .au-s-open{background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);color: var(--md-sys-color-primary)}
+    .au-s-work{background: color-mix(in srgb, var(--md-ext-color-warning) 16%, transparent);color: var(--md-ext-color-warning)}
+    .au-s-done{background: color-mix(in srgb, var(--md-ext-color-success) 14%, transparent);color: var(--md-ext-color-on-success-container)}
+    .au-p-low{background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);color: var(--md-sys-color-primary)}
+    .au-p-high{background: color-mix(in srgb, var(--md-ext-color-warning) 15%, transparent);color: var(--md-ext-color-warning)}
+    .au-p-urgent{background: color-mix(in srgb, var(--md-sys-color-error) 14%, transparent);color: var(--md-sys-color-error)}
     .au-chip{background:var(--gray-100);color:var(--gray-700)}
     .au-chip-sel{padding:3px 4px 3px 9px}
     .au-chip-sel button{border:0;background:none;cursor:pointer;display:inline-flex;color:inherit;padding:0 2px}
@@ -335,7 +335,7 @@ function auStyles() {
     .au-row{display:flex;gap:12px;flex-wrap:wrap}
     .au-field{display:flex;flex-direction:column;gap:5px;font-size:.8rem;font-weight:600;color:var(--gray-600)}
     .au-input{font:inherit;font-size:.92rem;font-weight:400;padding:9px 11px;border:1px solid var(--gray-300);border-radius:10px;background:var(--white);color:var(--gray-900);width:100%;box-sizing:border-box}
-    .au-input:focus{outline:none;border-color:var(--accent,#2563eb);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+    .au-input:focus{outline:none;border-color: var(--accent,var(--md-sys-color-primary));box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent)}
     textarea.au-input{resize:vertical;line-height:1.45}
     .au-muted{color:var(--gray-400);font-weight:400;font-size:.8rem}
     .au-emp-pick{display:grid;grid-template-columns:1fr;gap:10px;max-height:300px;overflow:auto;border:1px solid var(--gray-200);border-radius:12px;padding:8px}
@@ -343,7 +343,7 @@ function auStyles() {
     .au-pick-head{display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--gray-500);padding:4px 6px;position:sticky;top:-8px;background:var(--white)}
     .au-pick{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;font-weight:400}
     .au-pick:hover{background:var(--gray-50)}
-    .au-pick.on{background:rgba(37,99,235,.08)}
+    .au-pick.on{background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent)}
     .au-pick span{display:flex;flex-direction:column;min-width:0;font-size:.86rem;color:var(--gray-800)}
     .au-pick small{color:var(--gray-500);font-size:.74rem}
     .au-detail-title{margin:4px 0 6px;font-size:1.2rem}

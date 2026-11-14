@@ -811,7 +811,7 @@ function _showTempPasswordDialog(tempPassword, email, emailQueued) {
                     : `<span style="color:var(--danger)">${_ms('warning', 'font-size:15px;vertical-align:-3px')} Die E-Mail-Zustellung ist <strong>fehlgeschlagen</strong> — bitte das Passwort manuell weitergeben.</span>`
                 }
             </p>
-            <div style="background:var(--gray-100);border:1px solid #cbd5e1;border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+            <div style="background:var(--gray-100);border: 1px solid var(--md-sys-color-primary-container);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px">
                 <code id="tempPwValue" style="flex:1;font-size:16px;font-weight:700;letter-spacing:0.5px;font-family:ui-monospace,monospace;word-break:break-all">${_escape(tempPassword)}</code>
                 <md-outlined-button onclick="navigator.clipboard.writeText(document.getElementById('tempPwValue').textContent).then(()=>showToast('Passwort kopiert','success'))" style="white-space:nowrap">
                     <md-icon slot="icon">content_copy</md-icon>Kopieren

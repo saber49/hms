@@ -73,7 +73,7 @@ function kpQuery() {
 }
 
 function kpEmpty(icon, text) {
-    return `<div class="kp-empty"><i class="fas ${icon}"></i><p>${kpEsc(text)}</p></div>`;
+    return `<div class="kp-empty"><i class="material-symbols-outlined">${icon}</i><p>${kpEsc(text)}</p></div>`;
 }
 
 // ---------- shell ----------
@@ -103,7 +103,7 @@ async function kpInit() {
         });
         if ((me.objekte || []).length <= 1) sel.style.display = 'none';
     } catch (e) {
-        document.getElementById('kpContent').innerHTML = kpEmpty('fa-triangle-exclamation', 'Verbindungsfehler. Bitte Seite neu laden.');
+        document.getElementById('kpContent').innerHTML = kpEmpty('warning', 'Verbindungsfehler. Bitte Seite neu laden.');
         return;
     } finally {
         kpShowObTab();
@@ -150,7 +150,7 @@ async function kpLoad(silent = false) {
     const ext = KP_TABS[kpTab];
     document.querySelector('.kp-week').hidden = !!(ext && !ext.week);
     if (!ext || ext.week) kpUpdateWeekLabel();
-    if (!silent) box.innerHTML = kpEmpty('fa-spinner fa-spin', 'Lade...');
+    if (!silent) box.innerHTML = kpEmpty('progress_activity', 'Lade...');
     try {
         if (ext) {
             await ext.load(box, seq);
@@ -174,7 +174,7 @@ async function kpLoad(silent = false) {
             }
         }
     } catch (e) {
-        if (seq === kpLoadSeq) box.innerHTML = kpEmpty('fa-triangle-exclamation', 'Daten konnten nicht geladen werden.');
+        if (seq === kpLoadSeq) box.innerHTML = kpEmpty('warning', 'Daten konnten nicht geladen werden.');
     }
 }
 
@@ -182,7 +182,7 @@ async function kpLoad(silent = false) {
 function kpTimeRange(von, bis) { return von || bis ? `${von || '–'} – ${bis || '–'}` : '–'; }
 
 function kpRenderEinsaetze(list) {
-    if (!list.length) return kpEmpty('fa-calendar-xmark', 'Keine Einsätze in diesem Zeitraum.');
+    if (!list.length) return kpEmpty('event_busy', 'Keine Einsätze in diesem Zeitraum.');
     // Shifts running right now (a worker is clocked in) come first.
     const isLive = e => (e.mitarbeiter || []).some(w => w.im_dienst);
     const live = list.filter(isLive);
@@ -221,7 +221,7 @@ function kpShiftCard(e) {
         <article class="kp-card">
             <div class="kp-card-head">
                 <div>
-                    <div class="kp-card-title"><i class="fas fa-location-dot"></i> ${kpEsc(e.objektname || '')}</div>
+                    <div class="kp-card-title"><i class="material-symbols-outlined">location_on</i> ${kpEsc(e.objektname || '')}</div>
                     ${e.leistung ? `<div class="kp-card-sub">${kpEsc(e.leistung)}</div>` : ''}
                 </div>
                 <div class="kp-plan"><span>Plan</span><strong>${kpEsc(kpTimeRange(e.plan_von, e.plan_bis))}</strong></div>
@@ -253,18 +253,18 @@ function kpGroupByObjekt(list) {
 }
 
 function kpRenderFolders(list, kind) {
-    if (!list.length) return kpEmpty('fa-image', 'Keine Fotos in diesem Zeitraum.');
+    if (!list.length) return kpEmpty('image', 'Keine Fotos in diesem Zeitraum.');
     const label = n => kind === 'fotos' ? `${n} ${n === 1 ? 'Foto' : 'Fotos'}` : `${n} ${n === 1 ? 'Eintrag' : 'Einträge'}`;
     return `<div class="kp-folder-grid">${kpGroupByObjekt(list).map(g => `
         <button class="kp-folder" data-obj="${kpEsc(g.obj_id)}" onclick="kpOpenFolder(this.dataset.obj)">
             <div class="kp-folder-cover"${kind === 'fotos' ? ` data-cover="${g.items[0].id}"` : ''}>
-                <i class="fas ${kind === 'fotos' ? 'fa-folder-image' : 'fa-folder'}"></i>
+                <i class="material-symbols-outlined">${kind === 'fotos' ? 'photo_library' : 'folder'}</i>
             </div>
             <div class="kp-folder-info">
                 <strong>${kpEsc(g.name)}</strong>
                 <span>${label(g.items.length)} · zuletzt ${kpDe(g.last)}</span>
             </div>
-            <i class="fas fa-chevron-right kp-folder-arrow"></i>
+            <i class="material-symbols-outlined kp-folder-arrow">chevron_right</i>
         </button>`).join('')}</div>`;
 }
 
@@ -272,8 +272,8 @@ function kpFolderHead(list, objId) {
     const name = (list.find(x => x.obj_id === objId) || {}).objektname
         || [...document.getElementById('kpObjekt').options].find(o => o.value === objId)?.textContent || objId;
     return `<div class="kp-folder-head">
-        <button class="kp-chip-btn" onclick="kpCloseFolder()"><i class="fas fa-arrow-left"></i> Alle Objekte</button>
-        <span class="kp-folder-title"><i class="fas fa-folder-open"></i> ${kpEsc(name)}</span>
+        <button class="kp-chip-btn" onclick="kpCloseFolder()"><i class="material-symbols-outlined">arrow_back</i> Alle Objekte</button>
+        <span class="kp-folder-title"><i class="material-symbols-outlined">folder_open</i> ${kpEsc(name)}</span>
     </div>`;
 }
 
@@ -320,14 +320,14 @@ async function kpDownloadAll() {
 
 function kpRenderFotos(box, list, seq, headHtml = '') {
     kpRevokeFotos();
-    if (!list.length) { box.innerHTML = headHtml + kpEmpty('fa-image', 'Keine Fotos in diesem Zeitraum.'); return; }
+    if (!list.length) { box.innerHTML = headHtml + kpEmpty('image', 'Keine Fotos in diesem Zeitraum.'); return; }
     const allBtn = list.length > 1
-        ? `<div class="kp-foto-actions"><button class="kp-chip-btn" onclick="kpDownloadAll()"><i class="fas fa-download"></i> Alle herunterladen (${list.length})</button></div>`
+        ? `<div class="kp-foto-actions"><button class="kp-chip-btn" onclick="kpDownloadAll()"><i class="material-symbols-outlined">download</i> Alle herunterladen (${list.length})</button></div>`
         : '';
     box.innerHTML = headHtml + allBtn + `<div class="kp-foto-grid">${list.map(f => `
         <figure class="kp-foto" data-id="${f.id}" data-obj="${kpEsc(f.objektname || '')}" data-taken="${kpEsc(f.aufgenommen || '')}" data-caption="${kpEsc(f.aufgenommen + ' · ' + (f.objektname || '') + ' · ' + (f.mitarbeiter || ''))}">
-            <div class="kp-foto-img"><i class="fas fa-spinner fa-spin"></i></div>
-            <button class="kp-foto-dl" title="Herunterladen" disabled><i class="fas fa-download"></i></button>
+            <div class="kp-foto-img"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress></div>
+            <button class="kp-foto-dl" title="Herunterladen" disabled><i class="material-symbols-outlined">download</i></button>
             <figcaption><strong>${kpEsc(f.aufgenommen)}</strong><span>${kpEsc(f.objektname || '')}</span><span>${kpEsc(f.mitarbeiter || '')}</span></figcaption>
         </figure>`).join('')}</div>`;
     // Images are protected (Bearer) — fetch as blobs, a few at a time.
@@ -353,7 +353,7 @@ function kpRenderFotos(box, list, seq, headHtml = '') {
                 dl.onclick = (ev) => { ev.stopPropagation(); kpDownload(url, fig.dataset.file); };
                 fig.onclick = () => kpOpenLightbox(url, fig.dataset.caption, fig.dataset.file);
             } catch (e) {
-                fig.querySelector('.kp-foto-img').innerHTML = '<i class="fas fa-image-slash"></i>';
+                fig.querySelector('.kp-foto-img').innerHTML = '<i class="material-symbols-outlined">hide_image</i>';
             }
         }
     };

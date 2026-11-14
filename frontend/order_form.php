@@ -71,7 +71,10 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
     .editor-layout, body.viewer-mode .editor-layout { min-height: calc(100vh - var(--topbar-h) - var(--safe-top)); }
     .canvas, body.viewer-mode .canvas { padding-bottom: calc(24px + var(--safe-bottom)); }
     #toastHost { bottom: calc(20px + var(--safe-bottom)); }
-    </style>
+    
+.material-symbols-outlined.ms-spin, .ms-spin { animation: msSpin 1s linear infinite; }
+@keyframes msSpin { to { transform: rotate(360deg); } }
+</style>
 <?php endif; ?>
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
@@ -103,9 +106,9 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
 <?php else: ?>
     <header class="topbar">
         <div class="topbar-left">
-            <a href="index.php" class="tb-back" title="Zurück" onclick="return window.closeEditor ? window.closeEditor() : true"><i class="fas fa-arrow-left"></i></a>
+            <a href="index.php" class="tb-back" title="Zurück" onclick="return window.closeEditor ? window.closeEditor() : true"><i class="material-symbols-outlined">arrow_back</i></a>
             <div class="tb-brand">
-                <i class="fas fa-file-invoice"></i>
+                <i class="material-symbols-outlined">receipt_long</i>
                 <div>
                     <div class="tb-title">Auftragsbestätigung</div>
                     <div class="tb-subtitle" id="docMeta">Wird geladen…</div>
@@ -117,7 +120,7 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
             <!-- Simple viewer only: column switches for THIS PDF (not the template) -->
             <div class="tb-btn-wrap" id="pdfColsWrap" style="display:none">
                 <button class="tb-btn tb-secondary" id="btnPdfCols" onclick="togglePdfColsPanel(event)" title="Spalten für dieses PDF">
-                    <i class="fas fa-sliders-h"></i> <span>Einstellungen</span>
+                    <i class="material-symbols-outlined">tune</i> <span>Einstellungen</span>
                 </button>
                 <div class="pdfcols-panel" id="pdfColsPanel">
                     <div class="pdfcols-title">Nur für dieses PDF</div>
@@ -128,28 +131,28 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
                 </div>
             </div>
             <button class="tb-btn tb-secondary" id="btnAnonymize" onclick="toggleAnonymize()" title="Mitarbeiternamen ausblenden">
-                <i class="fas fa-user-secret"></i> <span>Mitarbeiter</span>
+                <i class="material-symbols-outlined">person_off</i> <span>Mitarbeiter</span>
             </button>
             <button class="tb-btn tb-secondary" id="btnAnonymizeNu" onclick="toggleAnonymizeNu()" title="NU-Zeile ausblenden">
-                <i class="fas fa-building"></i> <span>NU-Firma</span>
+                <i class="material-symbols-outlined">apartment</i> <span>NU-Firma</span>
             </button>
             <button class="tb-btn tb-secondary" id="btnSignature" onclick="toggleDocAsset('signature')" title="Unterschrift auf das Dokument setzen">
-                <i class="fas fa-signature"></i> <span>Unterschrift</span>
+                <i class="material-symbols-outlined">signature</i> <span>Unterschrift</span>
             </button>
             <button class="tb-btn tb-secondary" id="btnStamp" onclick="toggleDocAsset('stamp')" title="Firmenstempel auf das Dokument setzen">
-                <i class="fas fa-stamp"></i> <span>Stempel</span>
+                <i class="material-symbols-outlined">approval</i> <span>Stempel</span>
             </button>
             <button class="tb-btn tb-secondary" id="btnSigRequest" onclick="openSigRequest()" title="Mitarbeiter in der App unterschreiben lassen" style="display:none">
-                <i class="fas fa-file-signature"></i> <span>MA-Unterschrift</span><span class="tb-badge" id="sigReqBadge" hidden></span>
+                <i class="material-symbols-outlined">edit_document</i> <span>MA-Unterschrift</span><span class="tb-badge" id="sigReqBadge" hidden></span>
             </button>
             <button class="tb-btn tb-secondary" id="btnArchiv" onclick="openArchiv()" title="Verlauf: archivierte PDF-Versionen" style="display:none">
-                <i class="fas fa-history"></i> <span>Verlauf</span>
+                <i class="material-symbols-outlined">history</i> <span>Verlauf</span>
             </button>
             <button class="tb-btn tb-primary" onclick="downloadPdfClient()" title="PDF herunterladen">
-                <i class="fas fa-download"></i> <span>Download</span>
+                <i class="material-symbols-outlined">download</i> <span>Download</span>
             </button>
             <button class="tb-btn tb-ghost" onclick="printDoc()" title="Drucken (exakt wie das PDF)">
-                <i class="fas fa-print"></i>
+                <i class="material-symbols-outlined">print</i>
             </button>
         </div>
     </header>
@@ -284,7 +287,7 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
         <!-- MAIN CANVAS -->
         <main class="canvas">
             <div class="page" id="orderForm">
-                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Lade Auftragsdaten…</div>
+                <div class="loading"><i class="material-symbols-outlined ms-spin">progress_activity</i> Lade Auftragsdaten…</div>
             </div>
         </main>
 
@@ -299,10 +302,10 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
                     <div class="modal-title">Verlauf · archivierte PDFs</div>
                     <div class="modal-subtitle" id="pdfsSubtitle"></div>
                 </div>
-                <button class="modal-close" onclick="closePdfsModal()"><i class="fas fa-times"></i></button>
+                <button class="modal-close" onclick="closePdfsModal()"><i class="material-symbols-outlined">close</i></button>
             </div>
             <div class="modal-body">
-                <div id="pdfsList"><div class="loading"><i class="fas fa-spinner fa-spin"></i> Lade…</div></div>
+                <div id="pdfsList"><div class="loading"><i class="material-symbols-outlined ms-spin">progress_activity</i> Lade…</div></div>
             </div>
         </div>
     </div>
@@ -316,7 +319,7 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
                     <div class="modal-title">Unterschrift der Mitarbeiter per App</div>
                     <div class="modal-subtitle" id="sigReqSubtitle"></div>
                 </div>
-                <button class="modal-close" onclick="closeSigRequest()"><i class="fas fa-times"></i></button>
+                <button class="modal-close" onclick="closeSigRequest()"><i class="material-symbols-outlined">close</i></button>
             </div>
             <div class="modal-body">
                 <p class="sigreq-info">Jeder Mitarbeiter erhält in der App eine Mitteilung mit <b>seinen eigenen</b> Einsätzen (Tage, Zeiten, Stunden) — nicht das Dokument. Nach seiner Unterschrift erscheint sie in seinen Zeilen der Spalte „Unterschrift“.</p>
@@ -324,7 +327,7 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
             </div>
             <div class="modal-footer">
                 <button class="btn btn-ghost" onclick="closeSigRequest()">Schließen</button>
-                <button class="btn btn-primary" id="sigReqSend" onclick="sendSigRequests()" disabled><i class="fas fa-paper-plane"></i> <span>Zur Unterschrift senden</span></button>
+                <button class="btn btn-primary" id="sigReqSend" onclick="sendSigRequests()" disabled><i class="material-symbols-outlined">send</i> <span>Zur Unterschrift senden</span></button>
             </div>
         </div>
     </div>
@@ -341,7 +344,7 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
 
             <!-- STEP 1 — Farbe & Schrift -->
             <div class="wizard-step active" data-step="1">
-                <div class="wz-icon"><i class="fas fa-palette"></i></div>
+                <div class="wz-icon"><i class="material-symbols-outlined">palette</i></div>
                 <h2>Willkommen! Wählen Sie Ihr Design</h2>
                 <p class="wz-sub">Farbe und Schrift werden auf alle Ihre PDF-Dokumente angewendet. Sie können das später jederzeit in den Einstellungen ändern.</p>
 
@@ -374,11 +377,11 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
 
             <!-- STEP 2 — Logo -->
             <div class="wizard-step" data-step="2">
-                <div class="wz-icon"><i class="fas fa-image"></i></div>
+                <div class="wz-icon"><i class="material-symbols-outlined">image</i></div>
                 <h2>Ihr Firmenlogo</h2>
                 <p class="wz-sub">Optional — erscheint im Kopf jedes Dokuments. Diesen Schritt können Sie überspringen.</p>
                 <div class="wz-logo-upload" id="wzLogoPreview" onclick="document.getElementById('wzLogoInput').click()">
-                    <i class="fas fa-cloud-upload-alt"></i><div>Logo hochladen (optional)</div>
+                    <i class="material-symbols-outlined">cloud_upload</i><div>Logo hochladen (optional)</div>
                 </div>
                 <input type="file" id="wzLogoInput" accept="image/*" hidden onchange="wizardHandleLogo(this)">
                 <div class="wz-field" style="margin-top:14px;">
@@ -393,22 +396,22 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
 
             <!-- STEP 3 — Fertig -->
             <div class="wizard-step" data-step="3">
-                <div class="wz-icon"><i class="fas fa-rocket"></i></div>
+                <div class="wz-icon"><i class="material-symbols-outlined">rocket_launch</i></div>
                 <h2>Alles bereit!</h2>
                 <p class="wz-sub">So nutzen Sie den Editor:</p>
                 <ul class="wz-tips">
 <?php if ($designUi): ?>
-                    <li><i class="fas fa-palette"></i><span><b>Vorlage</b> — Klassisch, Modern oder DIN 5008, dazu Farben, Schrift &amp; Logo.</span></li>
-                    <li><i class="fas fa-eye"></i><span><b>Inhalt</b> — Unterschrift, Stempel, Abschnitte und Tabellenspalten.</span></li>
-                    <li><i class="fas fa-sticky-note"></i><span><b>Textbausteine</b> — feste Texte im PDF und die E-Mail-Vorlage.</span></li>
-                    <li><i class="fas fa-save"></i><span><b>Automatisch gespeichert</b> — jede Änderung gilt sofort für alle Dokumente dieses Typs.</span></li>
+                    <li><i class="material-symbols-outlined">palette</i><span><b>Vorlage</b> — Klassisch, Modern oder DIN 5008, dazu Farben, Schrift &amp; Logo.</span></li>
+                    <li><i class="material-symbols-outlined">visibility</i><span><b>Inhalt</b> — Unterschrift, Stempel, Abschnitte und Tabellenspalten.</span></li>
+                    <li><i class="material-symbols-outlined">sticky_note_2</i><span><b>Textbausteine</b> — feste Texte im PDF und die E-Mail-Vorlage.</span></li>
+                    <li><i class="material-symbols-outlined">save</i><span><b>Automatisch gespeichert</b> — jede Änderung gilt sofort für alle Dokumente dieses Typs.</span></li>
 <?php endif; ?>
                 </ul>
             </div>
 
             <div class="wizard-foot">
-                <button class="wz-btn ghost" id="wzBack" onclick="wizardBack()" style="visibility:hidden"><i class="fas fa-arrow-left"></i> Zurück</button>
-                <button class="wz-btn primary" id="wzNext" onclick="wizardNext()">Weiter <i class="fas fa-arrow-right"></i></button>
+                <button class="wz-btn ghost" id="wzBack" onclick="wizardBack()" style="visibility:hidden"><i class="material-symbols-outlined">arrow_back</i> Zurück</button>
+                <button class="wz-btn primary" id="wzNext" onclick="wizardNext()">Weiter <i class="material-symbols-outlined">arrow_forward</i></button>
             </div>
         </div>
     </div>

@@ -329,7 +329,7 @@ function wkBentoHtml(s) {
 
             <div class="wk-kpi ${(s.birthdays_this_month || 0) > 0 ? '' : ''}" data-clickable="1" onclick="wkOpenBirthdays()" title="Geburtstage diesen Monat anzeigen" style="${(s.birthdays_this_month || 0) > 0 ? 'background:linear-gradient(135deg,#fdf2f8 0%,#fce7f3 100%);border-color:#fbcfe8' : ''}">
                 <div class="wk-kpi-head">
-                    <div class="wk-kpi-icon" style="background:#fce7f3;color:#be185d">${wkIcon('cake')}</div>
+                    <div class="wk-kpi-icon" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)">${wkIcon('cake')}</div>
                     <span class="wk-kpi-label">Geburtstage</span>
                 </div>
                 <div class="wk-kpi-value" style="${(s.birthdays_this_month || 0) > 0 ? 'color:#be185d' : ''}">${s.birthdays_this_month ?? 0}</div>
@@ -567,7 +567,7 @@ function wkCardHtml(w) {
                 ${isActive
                     ? `<button class="text-danger" onclick="event.stopPropagation();deactivateWorker('${w.dienst_nr}')">${wkIcon('block')} Deaktivieren</button>`
                     : `<button onclick="event.stopPropagation();reactivateWorker('${w.dienst_nr}')">${wkIcon('undo')} Reaktivieren</button>`}
-                <button class="text-danger" onclick="event.stopPropagation();deleteWorker('${w.dienst_nr}')" style="border-top:1px solid #fee2e2">${wkIcon('delete')} Endgültig löschen</button>
+                <button class="text-danger" onclick="event.stopPropagation();deleteWorker('${w.dienst_nr}')" style="border-top: 1px solid var(--md-sys-color-error-container)">${wkIcon('delete')} Endgültig löschen</button>
             </div>
             <div class="wk-avatar" style="background:${color}">
                 ${w.foto ? `<img src="${w.foto}" alt="">` : escapeHtml(initials)}
@@ -636,16 +636,16 @@ async function wkOpenExpiringDocs() {
               (a.last_resend_at ? ` (zuletzt ${formatDate(a.last_resend_at)}` + (a.last_resend_von ? ` von ${escapeHtml(a.last_resend_von)}` : '') + ')' : '')
             : '';
         const logTitle = 'Protokoll ansehen — wer und wann wurde benachrichtigt';
-        if (a.status === 'hochgeladen') return `<span style="background:#dbeafe;color:#1d4ed8;border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Vom Mitarbeiter hochgeladen, wartet auf Freigabe">${wkIcon('upload_file', 'font-size:13px;vertical-align:-2px')} Zur Prüfung</span>`;
-        if (a.status === 'abgelehnt')   return `<span style="background:#fee2e2;color:#dc2626;border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Das hochgeladene Dokument wurde abgelehnt — Mitarbeiter muss erneut hochladen\nZuletzt erneut gesendet: ${resendCount}x">${wkIcon('replay', 'font-size:13px;vertical-align:-2px')} Abgelehnt</span>`;
+        if (a.status === 'hochgeladen') return `<span style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Vom Mitarbeiter hochgeladen, wartet auf Freigabe">${wkIcon('upload_file', 'font-size:13px;vertical-align:-2px')} Zur Prüfung</span>`;
+        if (a.status === 'abgelehnt')   return `<span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Das hochgeladene Dokument wurde abgelehnt — Mitarbeiter muss erneut hochladen\nZuletzt erneut gesendet: ${resendCount}x">${wkIcon('replay', 'font-size:13px;vertical-align:-2px')} Abgelehnt</span>`;
         return `
-            <span style="display:inline-flex;align-items:center;gap:4px;background:#fef3c7;color:#b45309;border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Mitarbeiter wurde per E-Mail, App-Push und In-App-Benachrichtigung informiert\n${anfrageVon}\n${requestedAt}${resendInfo}">${wkIcon('send', 'font-size:13px;vertical-align:-2px')} Angefordert${resendCount > 0 ? ' · ' + resendCount + 'x erneut' : ''}</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Mitarbeiter wurde per E-Mail, App-Push und In-App-Benachrichtigung informiert\n${anfrageVon}\n${requestedAt}${resendInfo}">${wkIcon('send', 'font-size:13px;vertical-align:-2px')} Angefordert${resendCount > 0 ? ' · ' + resendCount + 'x erneut' : ''}</span>
             ${withResend ? `<md-icon-button style="--md-icon-button-icon-size:18px;--md-icon-button-icon-color:#b45309" onclick="event.stopPropagation();wkResendDocRenewal(${a.id})" title="Erinnerung erneut senden"><md-icon style="font-size:18px">send</md-icon></md-icon-button>` : ''}
             <md-icon-button style="--md-icon-button-icon-size:18px;--md-icon-button-icon-color:var(--wk-text-muted)" onclick="event.stopPropagation();wkOpenRenewalLog(${a.id})" title="${logTitle}"><md-icon style="font-size:18px">history</md-icon></md-icon-button>`;
     };
 
     const reviewSection = renewals.filter(a => a.status === 'hochgeladen').map(a => `
-        <div class="wk-cl-item" style="border-left:3px solid #3b82f6">
+        <div class="wk-cl-item" style="border-left: 3px solid var(--md-sys-color-primary)">
             ${wkIcon('picture_as_pdf', 'color:#3b82f6')}
             <div class="wk-cl-body">
                 <div class="wk-cl-title">${escapeHtml(a.titel)} — ${escapeHtml(a.vorname || '')} ${escapeHtml(a.name || '')}</div>
@@ -727,11 +727,11 @@ function wkOpenBirthdays() {
 
     const chip = (r) => {
         if (r._day === today) {
-            return `<span style="background:#fce7f3;color:#be185d;border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:700;white-space:nowrap">${wkIcon('celebration', 'font-size:13px;vertical-align:-2px')} Heute!</span>`;
+            return `<span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:700;white-space:nowrap">${wkIcon('celebration', 'font-size:13px;vertical-align:-2px')} Heute!</span>`;
         }
         if (r._day > today) {
             const diff = r._day - today;
-            return `<span style="background:#fdf2f8;color:#9d174d;border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap">${wkIcon('schedule', 'font-size:13px;vertical-align:-2px')} in ${diff} ${diff === 1 ? 'Tag' : 'Tagen'}</span>`;
+            return `<span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap">${wkIcon('schedule', 'font-size:13px;vertical-align:-2px')} in ${diff} ${diff === 1 ? 'Tag' : 'Tagen'}</span>`;
         }
         return `<span style="background:var(--wk-bg-soft);color:var(--wk-text-muted);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap">${wkIcon('check', 'font-size:13px;vertical-align:-2px')} war am ${r._day}.</span>`;
     };
@@ -739,7 +739,7 @@ function wkOpenBirthdays() {
     const html = `
         <div class="wk-cl-list">
             ${rows.map(r => `
-                <div class="wk-cl-item" style="cursor:pointer;border-left:3px solid #f472b6" onclick="wkOpenProfile('${r.dienst_nr}');closeWorkersDialog();">
+                <div class="wk-cl-item" style="cursor:pointer;border-left: 3px solid var(--md-sys-color-error-container)" onclick="wkOpenProfile('${r.dienst_nr}');closeWorkersDialog();">
                     <div style="width:36px;height:36px;border-radius:50%;flex:0 0 36px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:white;background:${wkAvatarColor(r.dienst_nr)};overflow:hidden">
                         ${r.foto ? `<img src="${r.foto}" alt="" style="width:100%;height:100%;object-fit:cover">` : wkInitials(r.vorname, r.name)}
                     </div>
@@ -800,14 +800,14 @@ function wkOpenTotalDetail() {
     });
     const bereichChips = Object.entries(byBereich).sort((a, b) => b[1] - a[1])
         .map(([b, n]) => b === 'Ohne Bereich'
-            ? `<span style="background:var(--wk-bg-soft);border:1px solid var(--wk-border,#e5e7eb);border-radius:12px;padding:3px 10px;font-size:0.78rem;font-weight:600;color:var(--wk-text-muted)">${escapeHtml(b)} <strong style="color:var(--wk-text)">${n}</strong></span>`
+            ? `<span style="background:var(--wk-bg-soft);border: 1px solid var(--wk-border,var(--md-sys-color-primary-container));border-radius:12px;padding:3px 10px;font-size:0.78rem;font-weight:600;color:var(--wk-text-muted)">${escapeHtml(b)} <strong style="color:var(--wk-text)">${n}</strong></span>`
             : `<span class="bc-chip bc-pill" style="${bereichColorVars(b)}">${escapeHtml(b)} <strong>${n}</strong></span>`).join(' ');
 
     const html = `
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-            <span style="background:#dcfce7;color:#166534;border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${aktiv.length} aktiv</span>
-            <span style="background:#fee2e2;color:#991b1b;border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${inaktiv.length} inaktiv</span>
-            <span style="background:#dbeafe;color:#1e40af;border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${neu.length} neu (30 T.)</span>
+            <span style="background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container);border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${aktiv.length} aktiv</span>
+            <span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${inaktiv.length} inaktiv</span>
+            <span style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary);border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">${neu.length} neu (30 T.)</span>
         </div>
         ${bereichChips ? `${wkSectionHead('domain', 'Aktiv nach Bereich')}<div style="display:flex;gap:6px;flex-wrap:wrap">${bereichChips}</div>` : ''}
         ${wkSectionHead('person_add', 'Neu eingetreten — letzte 30 Tage')}
@@ -848,10 +848,10 @@ function wkOpenBeschaeftigungDetail() {
                 <div class="wk-cl-body" style="flex:1">
                     <div class="wk-cl-title" style="display:flex;justify-content:space-between;align-items:center">
                         <span>${escapeHtml(typ)}</span>
-                        <span style="font-weight:700;color:var(--wk-accent,#0d9488)">${d.anzahl}</span>
+                        <span style="font-weight:700;color: var(--wk-accent,var(--md-ext-color-on-info-container))">${d.anzahl}</span>
                     </div>
                     <div style="height:6px;background:var(--wk-bg-soft);border-radius:3px;margin-top:6px;overflow:hidden">
-                        <div style="height:100%;width:${pct}%;background:var(--wk-accent,#0d9488);border-radius:3px"></div>
+                        <div style="height:100%;width:${pct}%;background: var(--wk-accent,var(--md-ext-color-info));border-radius:3px"></div>
                     </div>
                     <div class="wk-cl-meta" style="margin-top:4px">${pct} % der aktiven Mitarbeiter</div>
                 </div>
@@ -911,7 +911,7 @@ async function wkOpenUrlaubDetail() {
 
     const html = `
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-            <span style="background:#dbeafe;color:#1e40af;border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">Ø ${avg !== null ? avg + ' %' : '–'} Auslastung</span>
+            <span style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary);border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:700">Ø ${avg !== null ? avg + ' %' : '–'} Auslastung</span>
             <span style="background:var(--wk-bg-soft);color:var(--wk-text-muted);border-radius:12px;padding:4px 12px;font-size:0.8rem;font-weight:600">${withEnt.length} mit Urlaubsanspruch</span>
         </div>
         ${rows.length ? `<div class="wk-cl-list">${rows.map(r => `
@@ -1079,14 +1079,14 @@ async function wkOpenProfile(dienstNr) {
                 <div class="wk-profile-name">${escapeHtml(w.vorname)} ${escapeHtml(w.name)}</div>
                 <div class="wk-profile-role">${escapeHtml(w.art_der_beschaeftigung || 'Mitarbeiter')}</div>
                 <div class="wk-profile-dienst">${escapeHtml(w.dienst_nr)}</div>
-                ${w.stadion_gesperrt == 1 ? `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 4px;padding:8px 10px;border-radius:10px;font-size:0.8rem;font-weight:700;color:#dc2626;background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.35)">${wkIcon('block')} Gesperrt — keine Stadion-/DFB-Einsätze</div>` : ''}
+                ${w.stadion_gesperrt == 1 ? `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 4px;padding:8px 10px;border-radius:10px;font-size:0.8rem;font-weight:700;color: var(--md-sys-color-error);background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 35%, transparent)">${wkIcon('block')} Gesperrt — keine Stadion-/DFB-Einsätze</div>` : ''}
                 ${w.eintritt ? `<div class="wk-profile-eintritt">${wkIcon('work', 'font-size:13px')} Eintritt: ${formatDate(w.eintritt)}</div>` : ''}
                 <div class="wk-profile-actions">
                     <button class="wk-profile-action-btn btn-edit" onclick="openWorkerModal('${w.dienst_nr}')" title="Bearbeiten">${wkIcon('edit')}</button>
                     <button class="wk-profile-action-btn" onclick="document.getElementById('wkPhotoInput').click()" title="Foto hochladen">${wkIcon('photo_camera')}</button>
-                    <button class="wk-profile-action-btn" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" style="background:#fef3c7;color:#d97706">${wkIcon('key')}</button>
+                    <button class="wk-profile-action-btn" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" style="background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning)">${wkIcon('key')}</button>
                     <button class="wk-profile-action-btn btn-deactivate" onclick="${w.aktiv == 1 ? `deactivateWorker('${w.dienst_nr}')` : `reactivateWorker('${w.dienst_nr}')`}" title="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}">${wkIcon(w.aktiv == 1 ? 'block' : 'undo')}</button>
-                    <button class="wk-profile-action-btn btn-deactivate" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" style="background:#fee2e2;color:#dc2626">${wkIcon('delete')}</button>
+                    <button class="wk-profile-action-btn btn-deactivate" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)">${wkIcon('delete')}</button>
                 </div>
                 <button class="wk-profile-back" onclick="renderWorkers()">${wkIcon('arrow_back', 'font-size:14px')} Zurück zur Übersicht</button>
             </div>
@@ -1228,7 +1228,7 @@ function wkStammdatenTabHtml(w) {
             ['DFB-Pin', e(w.dfb_pin), { mono: true }],
             ['Barcode', e(w.barcode), { mono: true }],
             ['Ordnernummer', e(w.ordnernummer)],
-            ['Stadionverbot', w.stadion_gesperrt == 1 ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-weight:700;color:#dc2626;background:rgba(220,38,38,0.12)">${wkIcon('block', 'font-size:14px')} Gesperrt</span>` : 'Nein', { info: true }],
+            ['Stadionverbot', w.stadion_gesperrt == 1 ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-weight:700;color: var(--md-sys-color-error);background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent)">${wkIcon('block', 'font-size:14px')} Gesperrt</span>` : 'Nein', { info: true }],
             ] : []),
         ]) : '',
         wkQualViewHtml(w),
@@ -1674,14 +1674,14 @@ function wkAbsenceRowHtml(a, dienstNr) {
 
 function wkApproveAbsence(id, dienstNr) {
     const body = `
-        <div style="padding:8px 4px 12px;font-size:0.95rem;color:var(--wk-text,#1f2937);line-height:1.5">
+        <div style="padding:8px 4px 12px;font-size:0.95rem;color: var(--wk-text,var(--md-sys-color-on-primary-container));line-height:1.5">
             <div style="display:flex;align-items:flex-start;gap:12px">
-                <div style="width:44px;height:44px;border-radius:50%;background:#d1fae5;color:#065f46;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <div style="width:44px;height:44px;border-radius:50%;background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     ${wkIcon('check_circle')}
                 </div>
                 <div>
                     <div style="font-weight:600;margin-bottom:4px">Antrag genehmigen?</div>
-                    <div style="color:var(--wk-text-muted,#6b7280);font-size:0.85rem">
+                    <div style="color: var(--wk-text-muted,var(--md-sys-color-on-surface-variant));font-size:0.85rem">
                         Der Mitarbeiter erhält eine Benachrichtigung in der App und per E-Mail.
                     </div>
                 </div>
@@ -1710,14 +1710,14 @@ function wkApproveAbsence(id, dienstNr) {
 
 function wkRejectAbsence(id, dienstNr) {
     const body = `
-        <div style="padding:4px 4px 12px;font-size:0.95rem;color:var(--wk-text,#1f2937);line-height:1.5">
+        <div style="padding:4px 4px 12px;font-size:0.95rem;color: var(--wk-text,var(--md-sys-color-on-primary-container));line-height:1.5">
             <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
-                <div style="width:44px;height:44px;border-radius:50%;background:#fee2e2;color:#991b1b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <div style="width:44px;height:44px;border-radius:50%;background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     ${wkIcon('cancel')}
                 </div>
                 <div>
                     <div style="font-weight:600;margin-bottom:4px">Antrag ablehnen?</div>
-                    <div style="color:var(--wk-text-muted,#6b7280);font-size:0.85rem">
+                    <div style="color: var(--wk-text-muted,var(--md-sys-color-on-surface-variant));font-size:0.85rem">
                         Der Mitarbeiter erhält Ihre Begründung in der App und per E-Mail.
                     </div>
                 </div>
@@ -1877,14 +1877,14 @@ function wkDeleteAbsence(id, dienstNr) {
     // correct RESTful URL (/worker-absences/{id} — the legacy body-only
     // call was hitting a 405 because no route matches DELETE /worker-absences).
     const body = `
-        <div style="padding:8px 4px 12px;font-size:0.95rem;color:var(--wk-text,#1f2937);line-height:1.5">
+        <div style="padding:8px 4px 12px;font-size:0.95rem;color: var(--wk-text,var(--md-sys-color-on-primary-container));line-height:1.5">
             <div style="display:flex;align-items:flex-start;gap:12px">
-                <div style="width:44px;height:44px;border-radius:50%;background:#fee2e2;color:#991b1b;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <div style="width:44px;height:44px;border-radius:50%;background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);display:flex;align-items:center;justify-content:center;flex-shrink:0">
                     ${wkIcon('delete')}
                 </div>
                 <div>
                     <div style="font-weight:600;margin-bottom:4px">Diese Abwesenheit löschen?</div>
-                    <div style="color:var(--wk-text-muted,#6b7280);font-size:0.85rem">
+                    <div style="color: var(--wk-text-muted,var(--md-sys-color-on-surface-variant));font-size:0.85rem">
                         Der Eintrag wird unwiderruflich entfernt. Bereits versendete Benachrichtigungen bleiben in der App des Mitarbeiters sichtbar.
                     </div>
                 </div>
@@ -1995,7 +1995,7 @@ async function wkLoadActivity(dienstNr) {
         return `<span style="font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:20px;color:${c};background:${bg};white-space:nowrap">${escapeHtml(s || '–')}</span>`;
     };
     const shiftRow = (r, accentDate) => `
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--wk-border,#eef0f3)">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom: 1px solid var(--wk-border,var(--md-sys-color-primary-container))">
             <div style="width:42px;text-align:center;flex-shrink:0">
                 <div style="font-size:1.1rem;font-weight:800;color:${accentDate ? 'var(--wk-accent)' : 'var(--wk-text)'};line-height:1">${new Date(r.datum).getDate()}</div>
                 <div style="font-size:.6rem;color:var(--wk-text-muted);text-transform:uppercase;font-weight:700">${new Date(r.datum).toLocaleDateString('de-DE', { month: 'short' })}</div>
@@ -2029,7 +2029,7 @@ async function wkLoadActivity(dienstNr) {
             <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0">
                 <div style="font-size:.68rem;font-weight:700;color:var(--wk-text)">${m.hours ? num(m.hours) : ''}</div>
                 <div style="width:100%;max-width:44px;height:120px;display:flex;align-items:flex-end">
-                    <div title="${m.shifts} Einsätze · ${num(m.hours)} Std." style="width:100%;height:${Math.max(2, h)}%;background:linear-gradient(180deg,var(--wk-accent),rgba(59,130,246,.5));border-radius:6px 6px 0 0;transition:height .5s ease"></div>
+                    <div title="${m.shifts} Einsätze · ${num(m.hours)} Std." style="width:100%;height:${Math.max(2, h)}%;background: linear-gradient(180deg,var(--wk-accent),color-mix(in srgb, var(--md-sys-color-primary) 50%, transparent));border-radius:6px 6px 0 0;transition:height .5s ease"></div>
                 </div>
                 <div style="font-size:.66rem;color:var(--wk-text-muted);font-weight:600;text-transform:capitalize">${monthLabel(m.ym)}</div>
             </div>`;
@@ -2669,8 +2669,8 @@ function wkShowInitialPassword(dienstNr, password) {
         </div>
         <div style="background:var(--wk-bg-soft);border:1px solid var(--wk-border);border-radius:8px;padding:12px;font-size:0.83rem;color:var(--wk-text);line-height:1.5">
             <strong>Login-Daten für die Mitarbeiter-App:</strong><br>
-            <span style="color:var(--wk-text-muted)">Dienst-Nr.:</span> <code style="background:var(--white, #fff);padding:1px 6px;border-radius:4px;border:1px solid var(--wk-border)">${escapeHtml(dienstNr)}</code><br>
-            <span style="color:var(--wk-text-muted)">Passwort:</span> <code style="background:var(--white, #fff);padding:1px 6px;border-radius:4px;border:1px solid var(--wk-border)">${escapeHtml(password)}</code>
+            <span style="color:var(--wk-text-muted)">Dienst-Nr.:</span> <code style="background: var(--white, var(--md-sys-color-surface-container-lowest));padding:1px 6px;border-radius:4px;border:1px solid var(--wk-border)">${escapeHtml(dienstNr)}</code><br>
+            <span style="color:var(--wk-text-muted)">Passwort:</span> <code style="background: var(--white, var(--md-sys-color-surface-container-lowest));padding:1px 6px;border-radius:4px;border:1px solid var(--wk-border)">${escapeHtml(password)}</code>
         </div>
     `;
     const footer = `
@@ -2737,7 +2737,7 @@ async function deleteWorker(id) {
 // ============================================================
 function wkResetPasswordModal(dienstNr) {
     const body = `
-        <div style="background:var(--wk-warn-soft);border:1px solid #fde68a;border-left:3px solid var(--wk-warn);border-radius:8px;padding:11px 14px;font-size:0.82rem;color:#78350f;margin-bottom:18px">
+        <div style="background:var(--wk-warn-soft);border: 1px solid var(--md-ext-color-warning-container);border-left:3px solid var(--wk-warn);border-radius:8px;padding:11px 14px;font-size:0.82rem;color: var(--md-ext-color-on-warning-container);margin-bottom:18px">
             ${wkIcon('shield', 'font-size:14px;vertical-align:-2px')}
             <strong>Hinweis:</strong> Aus Sicherheitsgründen wird das aktuelle Passwort nicht angezeigt. Setzen Sie ein neues Passwort.
         </div>

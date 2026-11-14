@@ -161,12 +161,12 @@ async function nuLoadShifts() {
     const content = document.getElementById('nuContent');
     content.innerHTML = `
         <div class="nu-week-nav">
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(-1)"><i class="material-symbols-outlined">chevron_left</i></button>
             <span class="nu-week-label">${nuFormatWeekLabel(nuWeekStart)}</span>
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(1)"><i class="fas fa-chevron-right"></i></button>
+            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(1)"><i class="material-symbols-outlined">chevron_right</i></button>
             <button class="nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentWeek()">Diese Woche</button>
         </div>
-        <div id="nuShiftsList"><div class="nu-empty"><i class="fas fa-spinner fa-spin"></i><p>Lade Einsätze...</p></div></div>
+        <div id="nuShiftsList"><div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade Einsätze...</p></div></div>
     `;
 
     const data = await nuGet(NU_API + '/shifts?week_start=' + nuWeekStart);
@@ -175,7 +175,7 @@ async function nuLoadShifts() {
 
     const tasks = data.tasks || [];
     if (tasks.length === 0) {
-        container.innerHTML = '<div class="nu-empty"><i class="fas fa-calendar-xmark"></i><p>Keine Einsätze in dieser Woche</p></div>';
+        container.innerHTML = '<div class="nu-empty"><i class="material-symbols-outlined">event_busy</i><p>Keine Einsätze in dieser Woche</p></div>';
         return;
     }
 
@@ -188,13 +188,13 @@ async function nuLoadShifts() {
         const isAccepted = nuStatus === 'accepted';
         let statusBadge;
         if (task.hms_bestaetigt === 'ja') {
-            statusBadge = '<span class="nu-badge confirmed"><i class="fas fa-check"></i> Bestätigt</span>';
+            statusBadge = '<span class="nu-badge confirmed"><i class="material-symbols-outlined">check</i> Bestätigt</span>';
         } else if (isPending) {
-            statusBadge = '<span class="nu-badge nu-pending"><i class="fas fa-clock"></i> Neue Anfrage</span>';
+            statusBadge = '<span class="nu-badge nu-pending"><i class="material-symbols-outlined">schedule</i> Neue Anfrage</span>';
         } else if (isAccepted || task.pruefung === 'geplant') {
-            statusBadge = '<span class="nu-badge planned"><i class="fas fa-clipboard-list"></i> Angenommen</span>';
+            statusBadge = '<span class="nu-badge planned"><i class="material-symbols-outlined">assignment</i> Angenommen</span>';
         } else {
-            statusBadge = '<span class="nu-badge pending"><i class="fas fa-hourglass-half"></i> Ausstehend</span>';
+            statusBadge = '<span class="nu-badge pending"><i class="material-symbols-outlined">hourglass_top</i> Ausstehend</span>';
         }
 
         const positions = task.positionen || [];
@@ -209,7 +209,7 @@ async function nuLoadShifts() {
             <div class="nu-shift-header">
                 <div class="nu-shift-header-left">
                     <span class="nu-shift-date">${dayName}, ${nuFormatDate(task.datum)}</span>
-                    <span class="nu-shift-time"><i class="fas fa-clock"></i> ${nuFormatTime(task.ist_start)} – ${nuFormatTime(task.ist_ende)} Uhr</span>
+                    <span class="nu-shift-time"><i class="material-symbols-outlined">schedule</i> ${nuFormatTime(task.ist_start)} – ${nuFormatTime(task.ist_ende)} Uhr</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                     ${statusBadge}
@@ -226,10 +226,10 @@ async function nuLoadShifts() {
             </div>
             ${isPending ? `
             <div class="nu-shift-accept-bar">
-                <div class="nu-shift-accept-msg"><i class="fas fa-bell"></i> Neue Schichtanfrage — bitte bestätigen oder ablehnen</div>
+                <div class="nu-shift-accept-msg"><i class="material-symbols-outlined">notifications</i> Neue Schichtanfrage — bitte bestätigen oder ablehnen</div>
                 <div class="nu-shift-accept-actions">
-                    <button class="nu-btn nu-btn-success" onclick="nuAcceptShift('${task.einsatz_id}')"><i class="fas fa-check"></i> Annehmen</button>
-                    <button class="nu-btn nu-btn-danger" onclick="nuRejectShift('${task.einsatz_id}')"><i class="fas fa-times"></i> Ablehnen</button>
+                    <button class="nu-btn nu-btn-success" onclick="nuAcceptShift('${task.einsatz_id}')"><i class="material-symbols-outlined">check</i> Annehmen</button>
+                    <button class="nu-btn nu-btn-danger" onclick="nuRejectShift('${task.einsatz_id}')"><i class="material-symbols-outlined">close</i> Ablehnen</button>
                 </div>
             </div>` : ''}`;
 
@@ -244,7 +244,7 @@ async function nuLoadShifts() {
             positions.forEach((pos, idx) => {
                 const zuweisungen = pos.zuweisungen || [];
                 const assignedBadges = zuweisungen.length > 0
-                    ? '<div class="nu-assigned-badges">' + zuweisungen.map(z => `<span class="nu-assigned-badge"><i class="fas fa-user"></i> ${nuEscape(((z.vorname || '') + ' ' + (z.name || '')).trim())}${task.hms_bestaetigt !== 'ja' ? ` <i class="fas fa-times nu-badge-remove" onclick="nuDoUnassign(${pos.id}, ${z.nu_mitarbeiter_id})" title="Entfernen"></i>` : ''}</span>`).join('') + '</div>'
+                    ? '<div class="nu-assigned-badges">' + zuweisungen.map(z => `<span class="nu-assigned-badge"><i class="material-symbols-outlined">person</i> ${nuEscape(((z.vorname || '') + ' ' + (z.name || '')).trim())}${task.hms_bestaetigt !== 'ja' ? ` <i class="material-symbols-outlined nu-badge-remove" onclick="nuDoUnassign(${pos.id}, ${z.nu_mitarbeiter_id})" title="Entfernen">close</i>` : ''}</span>`).join('') + '</div>'
                     : '<em style="color:var(--nu-gray-400)">—</em>';
 
                 html += `<tr>
@@ -260,15 +260,15 @@ async function nuLoadShifts() {
                     <td>${nuEscape(pos.bemerkung || '–')}</td>
                     <td>
                         ${isPending ? '<span style="color:var(--nu-gray-400);font-size:0.75rem">Erst annehmen</span>' : (task.hms_bestaetigt !== 'ja' ? `
-                        <button class="nu-btn-icon success" onclick="nuOpenAssign(${pos.id}, '${nuEscape(pos.position_name)}', ${pos.anzahl}, ${pos.zugewiesen || 0})" title="Mitarbeiter zuweisen"><i class="fas fa-user-plus"></i></button>
-                        ${zuweisungen.length > 0 ? `<button class="nu-btn-icon danger" onclick="nuManageAssigned(${pos.id}, '${nuEscape(pos.position_name)}')" title="Zuweisungen verwalten"><i class="fas fa-users-cog"></i></button>` : ''}
+                        <button class="nu-btn-icon success" onclick="nuOpenAssign(${pos.id}, '${nuEscape(pos.position_name)}', ${pos.anzahl}, ${pos.zugewiesen || 0})" title="Mitarbeiter zuweisen"><i class="material-symbols-outlined">person_add</i></button>
+                        ${zuweisungen.length > 0 ? `<button class="nu-btn-icon danger" onclick="nuManageAssigned(${pos.id}, '${nuEscape(pos.position_name)}')" title="Zuweisungen verwalten"><i class="material-symbols-outlined">manage_accounts</i></button>` : ''}
                         ` : '<span style="color:var(--nu-gray-400);font-size:0.75rem">Gesperrt</span>')}
                     </td>
                 </tr>`;
             });
             html += '</tbody></table></div>';
         } else {
-            html += '<div style="padding:12px 20px;color:var(--nu-gray-400);font-size:0.82rem"><i class="fas fa-info-circle"></i> Keine Positionen definiert — bitte warten Sie auf die Anforderungen.</div>';
+            html += '<div style="padding:12px 20px;color:var(--nu-gray-400);font-size:0.82rem"><i class="material-symbols-outlined">info</i> Keine Positionen definiert — bitte warten Sie auf die Anforderungen.</div>';
         }
 
         html += '</div>';
@@ -329,12 +329,12 @@ async function nuOpenPositionManager(positionId) {
             <span class="nu-badge ${assigned.length >= maxCount ? 'full' : 'open'}">${assigned.length} / ${maxCount}</span>
         </div>
 
-        <div class="nu-pm-section-title"><i class="fas fa-users"></i> Zugewiesene Mitarbeiter</div>
+        <div class="nu-pm-section-title"><i class="material-symbols-outlined">group</i> Zugewiesene Mitarbeiter</div>
         <div class="nu-pm-list" id="nuPmAssigned">
     `;
 
     if (assigned.length === 0) {
-        body += '<div class="nu-empty" style="padding:16px"><i class="fas fa-user-slash"></i><p>Keine Mitarbeiter zugewiesen</p></div>';
+        body += '<div class="nu-empty" style="padding:16px"><i class="material-symbols-outlined">person_off</i><p>Keine Mitarbeiter zugewiesen</p></div>';
     } else {
         assigned.forEach(w => {
             const name = ((w.vorname || '') + ' ' + (w.name || '')).trim();
@@ -345,7 +345,7 @@ async function nuOpenPositionManager(positionId) {
                     <div class="nu-worker-name">${nuEscape(name)}</div>
                     <div class="nu-worker-meta">${nuEscape(w.personal_nr || '')}${w.qualifikation ? ' · ' + nuEscape(w.qualifikation) : ''}</div>
                 </div>
-                <button class="nu-btn nu-btn-outline nu-btn-sm" style="color:#c62828;border-color:#c62828" onclick="nuDoUnassign(${positionId}, ${w.nu_mitarbeiter_id})"><i class="fas fa-user-minus"></i> Entfernen</button>
+                <button class="nu-btn nu-btn-outline nu-btn-sm" style="color: var(--md-sys-color-error);border-color: var(--md-sys-color-error)" onclick="nuDoUnassign(${positionId}, ${w.nu_mitarbeiter_id})"><i class="material-symbols-outlined">person_remove</i> Entfernen</button>
             </div>`;
         });
     }
@@ -353,7 +353,7 @@ async function nuOpenPositionManager(positionId) {
 
     if (assigned.length < maxCount) {
         body += `
-        <div class="nu-pm-section-title" style="margin-top:18px"><i class="fas fa-user-plus"></i> Mitarbeiter hinzufügen</div>
+        <div class="nu-pm-section-title" style="margin-top:18px"><i class="material-symbols-outlined">person_add</i> Mitarbeiter hinzufügen</div>
         <div class="nu-form-group">
             <input type="text" class="nu-form-control" id="nuAssignSearch" placeholder="Mitarbeiter suchen..." oninput="nuFilterAssignList()">
         </div>
@@ -371,7 +371,7 @@ async function nuOpenPositionManager(positionId) {
                         <div class="nu-worker-name">${nuEscape(name)}</div>
                         <div class="nu-worker-meta">${nuEscape(w.personal_nr || '')}${w.qualifikation ? ' · ' + nuEscape(w.qualifikation) : ''}</div>
                     </div>
-                    <button class="nu-btn nu-btn-success nu-btn-sm" onclick="nuDoAssign(${positionId}, ${w.id})"><i class="fas fa-plus"></i> Zuweisen</button>
+                    <button class="nu-btn nu-btn-success nu-btn-sm" onclick="nuDoAssign(${positionId}, ${w.id})"><i class="material-symbols-outlined">add</i> Zuweisen</button>
                 </div>`;
             });
         }
@@ -419,11 +419,11 @@ async function nuLoadWorkers() {
     content.innerHTML = `
         <div class="nu-card">
             <div class="nu-card-header">
-                <h3><i class="fas fa-users"></i> Meine Mitarbeiter</h3>
-                <button class="nu-btn nu-btn-primary" onclick="nuOpenWorkerModal()"><i class="fas fa-plus"></i> Neuer Mitarbeiter</button>
+                <h3><i class="material-symbols-outlined">group</i> Meine Mitarbeiter</h3>
+                <button class="nu-btn nu-btn-primary" onclick="nuOpenWorkerModal()"><i class="material-symbols-outlined">add</i> Neuer Mitarbeiter</button>
             </div>
             <div class="nu-card-body no-pad" id="nuWorkersList">
-                <div class="nu-empty"><i class="fas fa-spinner fa-spin"></i><p>Lade...</p></div>
+                <div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade...</p></div>
             </div>
         </div>`;
 
@@ -432,7 +432,7 @@ async function nuLoadWorkers() {
     if (!workers || !container) return;
 
     if (workers.length === 0) {
-        container.innerHTML = '<div class="nu-empty"><i class="fas fa-users-slash"></i><p>Noch keine Mitarbeiter angelegt</p></div>';
+        container.innerHTML = '<div class="nu-empty"><i class="material-symbols-outlined">group_off</i><p>Noch keine Mitarbeiter angelegt</p></div>';
         return;
     }
 
@@ -451,11 +451,11 @@ async function nuLoadWorkers() {
             const bis = new Date(w.ausweis_gueltig_bis);
             const diffDays = Math.round((bis - today) / (1000*60*60*24));
             if (diffDays < 0) {
-                ausweisStatus = `<span class="nu-wcard-status expired"><i class="fas fa-exclamation-triangle"></i> Ausweis abgelaufen</span>`;
+                ausweisStatus = `<span class="nu-wcard-status expired"><i class="material-symbols-outlined">warning</i> Ausweis abgelaufen</span>`;
             } else if (diffDays < 60) {
-                ausweisStatus = `<span class="nu-wcard-status warn"><i class="fas fa-hourglass-half"></i> Läuft in ${diffDays} T. ab</span>`;
+                ausweisStatus = `<span class="nu-wcard-status warn"><i class="material-symbols-outlined">hourglass_top</i> Läuft in ${diffDays} T. ab</span>`;
             } else {
-                ausweisStatus = `<span class="nu-wcard-status ok"><i class="fas fa-check"></i> Ausweis gültig</span>`;
+                ausweisStatus = `<span class="nu-wcard-status ok"><i class="material-symbols-outlined">check</i> Ausweis gültig</span>`;
             }
         }
 
@@ -466,18 +466,18 @@ async function nuLoadWorkers() {
                 <div class="nu-wcard-name">${nuEscape(name || '—')} ${genderIcon ? `<span class="nu-wcard-gender">${genderIcon}</span>` : ''}</div>
                 ${w.personal_nr ? `<div class="nu-wcard-id">${nuEscape(w.personal_nr)}</div>` : ''}
                 <div class="nu-wcard-meta">
-                    ${w.qualifikation ? `<span><i class="fas fa-certificate"></i> ${nuEscape(w.qualifikation)}</span>` : ''}
-                    ${w.mobil ? `<span><i class="fas fa-mobile-alt"></i> ${nuEscape(w.mobil)}</span>` : (w.telefon ? `<span><i class="fas fa-phone"></i> ${nuEscape(w.telefon)}</span>` : '')}
-                    ${w.ort ? `<span><i class="fas fa-map-marker-alt"></i> ${nuEscape(w.ort)}</span>` : ''}
+                    ${w.qualifikation ? `<span><i class="material-symbols-outlined">verified</i> ${nuEscape(w.qualifikation)}</span>` : ''}
+                    ${w.mobil ? `<span><i class="material-symbols-outlined">smartphone</i> ${nuEscape(w.mobil)}</span>` : (w.telefon ? `<span><i class="material-symbols-outlined">call</i> ${nuEscape(w.telefon)}</span>` : '')}
+                    ${w.ort ? `<span><i class="material-symbols-outlined">location_on</i> ${nuEscape(w.ort)}</span>` : ''}
                 </div>
                 <div class="nu-wcard-footer">
                     ${ausweisStatus}
-                    ${w.aktiv == 1 ? '<span class="nu-wcard-status ok"><i class="fas fa-user-check"></i> Aktiv</span>' : '<span class="nu-wcard-status expired"><i class="fas fa-user-slash"></i> Inaktiv</span>'}
+                    ${w.aktiv == 1 ? '<span class="nu-wcard-status ok"><i class="material-symbols-outlined">how_to_reg</i> Aktiv</span>' : '<span class="nu-wcard-status expired"><i class="material-symbols-outlined">person_off</i> Inaktiv</span>'}
                 </div>
             </div>
             <div class="nu-wcard-actions">
-                <button class="nu-btn-icon" onclick="nuOpenWorkerModal(${w.id})" title="Bearbeiten"><i class="fas fa-pen"></i></button>
-                <button class="nu-btn-icon danger" onclick="nuDeleteWorker(${w.id}, '${nuEscape(name)}')" title="Löschen"><i class="fas fa-trash"></i></button>
+                <button class="nu-btn-icon" onclick="nuOpenWorkerModal(${w.id})" title="Bearbeiten"><i class="material-symbols-outlined">edit</i></button>
+                <button class="nu-btn-icon danger" onclick="nuDeleteWorker(${w.id}, '${nuEscape(name)}')" title="Löschen"><i class="material-symbols-outlined">delete</i></button>
             </div>
         </div>`;
     });
@@ -512,8 +512,8 @@ async function nuOpenWorkerModal(id = null) {
     const photoBlock = id
         ? (w.foto
             ? `<img src="${nuEscape(w.foto)}" alt="Foto" id="nuw_photo_img">`
-            : `<div class="nu-photo-placeholder" id="nuw_photo_img"><i class="fas fa-user"></i></div>`)
-        : `<div class="nu-photo-placeholder" id="nuw_photo_img"><i class="fas fa-user-plus"></i><small>Erst speichern,<br>dann Foto hochladen</small></div>`;
+            : `<div class="nu-photo-placeholder" id="nuw_photo_img"><i class="material-symbols-outlined">person</i></div>`)
+        : `<div class="nu-photo-placeholder" id="nuw_photo_img"><i class="material-symbols-outlined">person_add</i><small>Erst speichern,<br>dann Foto hochladen</small></div>`;
 
     const body = `
         <div class="nu-worker-form">
@@ -523,8 +523,8 @@ async function nuOpenWorkerModal(id = null) {
                     ${id ? `
                     <input type="file" id="nuw_photo_input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="nuUploadPhoto(${id})">
                     <div class="nu-photo-actions">
-                        <button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="document.getElementById('nuw_photo_input').click()"><i class="fas fa-camera"></i> Bild ändern</button>
-                        ${w.foto ? `<button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="nuDeletePhoto(${id})"><i class="fas fa-trash"></i></button>` : ''}
+                        <button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="document.getElementById('nuw_photo_input').click()"><i class="material-symbols-outlined">photo_camera</i> Bild ändern</button>
+                        ${w.foto ? `<button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="nuDeletePhoto(${id})"><i class="material-symbols-outlined">delete</i></button>` : ''}
                     </div>` : ''}
                 </div>
                 ${id ? `
@@ -539,7 +539,7 @@ async function nuOpenWorkerModal(id = null) {
 
             <div class="nu-worker-form-right">
                 <!-- PERSÖNLICHE DATEN -->
-                <div class="nu-form-section-title"><i class="fas fa-user"></i> Persönliche Daten</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">person</i> Persönliche Daten</div>
                 <div class="nu-form-row">
                     <div class="nu-form-group"><label>Vorname *</label><input type="text" class="nu-form-control" id="nuw_vorname" value="${nuEscape(w.vorname || '')}"></div>
                     <div class="nu-form-group"><label>Nachname *</label><input type="text" class="nu-form-control" id="nuw_name" value="${nuEscape(w.name || '')}"></div>
@@ -562,7 +562,7 @@ async function nuOpenWorkerModal(id = null) {
                 <div class="nu-form-group"><label>Geburtsland</label><input type="text" class="nu-form-control" id="nuw_geburtsland" value="${nuEscape(w.geburtsland || '')}" placeholder="z.B. Deutschland"></div>
 
                 <!-- IDENTIFIKATION -->
-                <div class="nu-form-section-title"><i class="fas fa-id-badge"></i> Identifikation</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">badge</i> Identifikation</div>
                 <div class="nu-form-group"><label>Personal-Nr.</label><input type="text" class="nu-form-control" id="nuw_personal_nr" value="${nuEscape(w.personal_nr || '')}" placeholder="z.B. MA-00004"></div>
                 <div class="nu-form-row"${showBew ? '' : ' style="display:none"'}>
                     <div class="nu-form-group"><label>Bewacherregister-ID</label><input type="text" class="nu-form-control" id="nuw_bewacher_id" value="${nuEscape(w.bewacher_id || '')}"></div>
@@ -578,7 +578,7 @@ async function nuOpenWorkerModal(id = null) {
                 <div class="nu-form-group"><label>Sozialversicherungsnr.</label><input type="text" class="nu-form-control" id="nuw_sv_nr" value="${nuEscape(w.sv_nr || '')}"></div>
 
                 <!-- PERSONALAUSWEIS -->
-                <div class="nu-form-section-title"><i class="fas fa-passport"></i> Personalausweis</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">id_card</i> Personalausweis</div>
                 <div class="nu-form-group"><label>Ausweis-Nummer</label><input type="text" class="nu-form-control" id="nuw_ausweis_nr" value="${nuEscape(w.ausweis_nr || '')}"></div>
                 <div class="nu-form-row">
                     <div class="nu-form-group"><label>Gültig ab</label><input type="date" class="nu-form-control" id="nuw_ausweis_gueltig_ab" value="${nuEscape(w.ausweis_gueltig_ab || '')}"></div>
@@ -586,7 +586,7 @@ async function nuOpenWorkerModal(id = null) {
                 </div>
 
                 <!-- ANSCHRIFT -->
-                <div class="nu-form-section-title"><i class="fas fa-map-marker-alt"></i> Anschrift</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">location_on</i> Anschrift</div>
                 <div class="nu-form-group"><label>Straße &amp; Hausnr.</label><input type="text" class="nu-form-control" id="nuw_strasse" value="${nuEscape(w.strasse || '')}"></div>
                 <div class="nu-form-row">
                     <div class="nu-form-group" style="flex:0 0 30%"><label>PLZ</label><input type="text" class="nu-form-control" id="nuw_plz" value="${nuEscape(w.plz || '')}"></div>
@@ -598,7 +598,7 @@ async function nuOpenWorkerModal(id = null) {
                 </div>
 
                 <!-- KONTAKT -->
-                <div class="nu-form-section-title"><i class="fas fa-phone-alt"></i> Kontakt</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">call</i> Kontakt</div>
                 <div class="nu-form-row">
                     <div class="nu-form-group"><label>Telefon</label><input type="text" class="nu-form-control" id="nuw_telefon" value="${nuEscape(w.telefon || '')}"></div>
                     <div class="nu-form-group"><label>Mobil</label><input type="text" class="nu-form-control" id="nuw_mobil" value="${nuEscape(w.mobil || '')}" placeholder="+49 ..."></div>
@@ -606,7 +606,7 @@ async function nuOpenWorkerModal(id = null) {
                 <div class="nu-form-group"><label>E-Mail</label><input type="email" class="nu-form-control" id="nuw_email" value="${nuEscape(w.email || '')}"></div>
 
                 <!-- QUALIFIKATION -->
-                <div class="nu-form-section-title"><i class="fas fa-award"></i> Qualifikation</div>
+                <div class="nu-form-section-title"><i class="material-symbols-outlined">workspace_premium</i> Qualifikation</div>
                 <div class="nu-form-row">
                     <div class="nu-form-group"><label>Qualifikation</label><input type="text" class="nu-form-control" id="nuw_qualifikation" value="${nuEscape(w.qualifikation || '')}" placeholder="z.B. Erste Hilfe, Staplerschein"></div>
                     <div class="nu-form-group"><label>Skills</label><input type="text" class="nu-form-control" id="nuw_skills" value="${nuEscape(w.skills || '')}" placeholder="z.B. Englisch, Brandschutz"></div>
@@ -760,12 +760,12 @@ async function nuLoadHistory() {
     const content = document.getElementById('nuContent');
     content.innerHTML = `
         <div class="nu-week-nav">
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(-1)"><i class="material-symbols-outlined">chevron_left</i></button>
             <span class="nu-week-label">${NU_MONTH_NAMES[nuHistoryMonat - 1]} ${nuHistoryJahr}</span>
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(1)"><i class="material-symbols-outlined">chevron_right</i></button>
             <button class="nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentMonth()">Aktueller Monat</button>
         </div>
-        <div id="nuHistoryList"><div class="nu-empty"><i class="fas fa-spinner fa-spin"></i><p>Lade Auftragshistorie...</p></div></div>
+        <div id="nuHistoryList"><div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade Auftragshistorie...</p></div></div>
     `;
 
     const data = await nuGet(NU_API + '/completed-shifts?monat=' + nuHistoryMonat + '&jahr=' + nuHistoryJahr);
@@ -784,7 +784,7 @@ async function nuLoadHistory() {
     `;
 
     if (shifts.length === 0) {
-        container.innerHTML = summaryHtml + '<div class="nu-empty"><i class="fas fa-clipboard-check"></i><p>Keine bestätigten Einsätze in diesem Monat</p></div>';
+        container.innerHTML = summaryHtml + '<div class="nu-empty"><i class="material-symbols-outlined">assignment_turned_in</i><p>Keine bestätigten Einsätze in diesem Monat</p></div>';
         return;
     }
 
@@ -799,9 +799,9 @@ async function nuLoadHistory() {
             <div class="nu-shift-header">
                 <div class="nu-shift-header-left">
                     <span class="nu-shift-date">${dayName}, ${nuFormatDate(shift.datum)}</span>
-                    <span class="nu-shift-time"><i class="fas fa-clock"></i> ${nuFormatTime(shift.ist_start)} – ${nuFormatTime(shift.ist_ende)} Uhr</span>
+                    <span class="nu-shift-time"><i class="material-symbols-outlined">schedule</i> ${nuFormatTime(shift.ist_start)} – ${nuFormatTime(shift.ist_ende)} Uhr</span>
                 </div>
-                <span class="nu-badge confirmed"><i class="fas fa-check-circle"></i> Bestätigt</span>
+                <span class="nu-badge confirmed"><i class="material-symbols-outlined">check_circle</i> Bestätigt</span>
             </div>
             <div class="nu-shift-meta">
                 <span><strong>Objekt:</strong> ${nuEscape(shift.objektname || '–')}</span>
@@ -811,7 +811,7 @@ async function nuLoadHistory() {
             </div>`;
 
         if (workers.length > 0) {
-            html += `<div class="nu-history-workers"><div class="nu-history-workers-title"><i class="fas fa-user-check"></i> Eingesetzte Mitarbeiter (${workers.length})</div><div class="nu-history-workers-list">`;
+            html += `<div class="nu-history-workers"><div class="nu-history-workers-title"><i class="material-symbols-outlined">how_to_reg</i> Eingesetzte Mitarbeiter (${workers.length})</div><div class="nu-history-workers-list">`;
             workers.forEach(w => {
                 const name = ((w.vorname || '') + ' ' + (w.name || '')).trim();
                 const stdDisplay = w.ist_std !== null ? w.ist_std.toFixed(1) + ' Std' : '–';
@@ -826,7 +826,7 @@ async function nuLoadHistory() {
             });
             html += '</div></div>';
         } else {
-            html += '<div style="padding:8px 20px;color:var(--nu-gray-400);font-size:0.82rem"><i class="fas fa-info-circle"></i> Keine Mitarbeiter zugewiesen</div>';
+            html += '<div style="padding:8px 20px;color:var(--nu-gray-400);font-size:0.82rem"><i class="material-symbols-outlined">info</i> Keine Mitarbeiter zugewiesen</div>';
         }
 
         html += '</div>';

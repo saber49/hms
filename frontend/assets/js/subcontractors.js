@@ -561,35 +561,35 @@ async function loadNuStats(id) {
         c.innerHTML = `
             <div class="customer-stats-grid">
                 <div class="customer-stat">
-                    <div class="customer-stat-icon" style="background:#dbeafe;color:#1d4ed8">${custIcon('group')}</div>
+                    <div class="customer-stat-icon" style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary)">${custIcon('group')}</div>
                     <div class="customer-stat-info">
                         <div class="customer-stat-value">${s.mitarbeiter_aktiv} <small>/ ${s.mitarbeiter_total}</small></div>
                         <div class="customer-stat-label">Mitarbeiter (aktiv / gesamt)</div>
                     </div>
                 </div>
                 <div class="customer-stat">
-                    <div class="customer-stat-icon" style="background:#fef3c7;color:${ausweisColor}">${custIcon('badge')}</div>
+                    <div class="customer-stat-icon" style="background: var(--md-ext-color-warning-container);color:${ausweisColor}">${custIcon('badge')}</div>
                     <div class="customer-stat-info">
                         <div class="customer-stat-value" style="color:${ausweisColor}">${s.ausweis_abgelaufen} / ${s.ausweis_ablaufend}</div>
                         <div class="customer-stat-label">Ausweis abgelaufen / läuft ab</div>
                     </div>
                 </div>
                 <div class="customer-stat">
-                    <div class="customer-stat-icon" style="background:#e0f2fe;color:#0369a1">${custIcon('folder')}</div>
+                    <div class="customer-stat-icon" style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary)">${custIcon('folder')}</div>
                     <div class="customer-stat-info">
                         <div class="customer-stat-value">${s.dokumente_total}</div>
                         <div class="customer-stat-label">Dokumente gesamt</div>
                     </div>
                 </div>
                 <div class="customer-stat">
-                    <div class="customer-stat-icon" style="background:#d1fae5;color:#059669">${custIcon('assignment')}</div>
+                    <div class="customer-stat-icon" style="background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container)">${custIcon('assignment')}</div>
                     <div class="customer-stat-info">
                         <div class="customer-stat-value">${s.einsaetze_offen} <small>/ ${s.einsaetze_total}</small></div>
                         <div class="customer-stat-label">Einsätze (offen / gesamt)</div>
                     </div>
                 </div>
                 <div class="customer-stat">
-                    <div class="customer-stat-icon" style="background:#fee2e2;color:#dc2626">${custIcon('calendar_today')}</div>
+                    <div class="customer-stat-icon" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)">${custIcon('calendar_today')}</div>
                     <div class="customer-stat-info">
                         <div class="customer-stat-value" style="font-size:1rem">${lastDate}</div>
                         <div class="customer-stat-label">Letzter Einsatz</div>
@@ -1034,7 +1034,7 @@ function renderNuWorkers() {
     if (statsEl) {
         statsEl.innerHTML = `
             <div class="nu-admin-stat"><span class="nu-admin-stat-num">${total}</span><span class="nu-admin-stat-lbl">Gesamt</span></div>
-            <div class="nu-admin-stat"><span class="nu-admin-stat-num" style="color:#16a34a">${active}</span><span class="nu-admin-stat-lbl">Aktiv</span></div>
+            <div class="nu-admin-stat"><span class="nu-admin-stat-num" style="color: var(--md-ext-color-success)">${active}</span><span class="nu-admin-stat-lbl">Aktiv</span></div>
             <div class="nu-admin-stat"><span class="nu-admin-stat-num" style="color:${expiring > 0 ? '#dc2626' : '#16a34a'}">${expiring}</span><span class="nu-admin-stat-lbl">Ausweis-Warnung</span></div>
         `;
     }

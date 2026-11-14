@@ -48,9 +48,9 @@
     // Quick-start suggestions shown on an empty chat — one click sends
     // the prompt. The first is the proactive "anything wrong?" check.
     const QUICK_PROMPTS = [
-        { icon: 'fa-exclamation-triangle', label: 'Probleme prüfen', text: 'Gibt es Probleme in der Disposition in den nächsten 7 Tagen? Prüfe unbesetzte, unterbesetzte und unbestätigte Einsätze.' },
-        { icon: 'fa-chart-line',           label: 'KPIs diesen Monat', text: 'Zeig mir die wichtigsten Kennzahlen für diesen Monat.' },
-        { icon: 'fa-calendar-day',         label: 'Heute',             text: 'Gib mir einen Überblick über heute.' },
+        { icon: 'warning', label: 'Probleme prüfen', text: 'Gibt es Probleme in der Disposition in den nächsten 7 Tagen? Prüfe unbesetzte, unterbesetzte und unbestätigte Einsätze.' },
+        { icon: 'monitoring',           label: 'KPIs diesen Monat', text: 'Zeig mir die wichtigsten Kennzahlen für diesen Monat.' },
+        { icon: 'calendar_today',         label: 'Heute',             text: 'Gib mir einen Überblick über heute.' },
     ];
 
     // Per-attachment limits — match backend (see config/ai.php).
@@ -88,7 +88,7 @@
         launcher.className = 'ai-launcher';
         launcher.id = 'aiLauncher';
         launcher.title = 'KI-Assistent öffnen';
-        launcher.innerHTML = '<i class="fas fa-robot"></i><span class="ai-launcher-dot"></span>';
+        launcher.innerHTML = '<i class="material-symbols-outlined">smart_toy</i><span class="ai-launcher-dot"></span>';
         document.body.appendChild(launcher);
 
         const panel = document.createElement('div');
@@ -96,25 +96,25 @@
         panel.id = 'aiPanel';
         panel.innerHTML = `
             <div class="ai-panel-header">
-                <div class="ai-avatar"><i class="fas fa-robot"></i></div>
+                <div class="ai-avatar"><i class="material-symbols-outlined">smart_toy</i></div>
                 <div class="ai-title">
                     <strong>KI-Assistent <span class="ai-badge-pro">Pro</span></strong>
-                    <small><i class="fas fa-circle ai-status-dot"></i> Multimodal • sieht Bilder &amp; PDFs</small>
+                    <small><i class="material-symbols-outlined ai-status-dot">circle</i> Multimodal • sieht Bilder &amp; PDFs</small>
                 </div>
-                <button class="ai-expand" id="aiExpand" title="Vergrößern/Verkleinern"><i class="fas fa-expand-alt"></i></button>
-                <button class="ai-clear" id="aiClear" title="Verlauf löschen"><i class="fas fa-trash"></i></button>
-                <button class="ai-close" id="aiClose" title="Schließen"><i class="fas fa-times"></i></button>
+                <button class="ai-expand" id="aiExpand" title="Vergrößern/Verkleinern"><i class="material-symbols-outlined">open_in_full</i></button>
+                <button class="ai-clear" id="aiClear" title="Verlauf löschen"><i class="material-symbols-outlined">delete</i></button>
+                <button class="ai-close" id="aiClose" title="Schließen"><i class="material-symbols-outlined">close</i></button>
             </div>
             <div class="ai-messages" id="aiMessages"></div>
             <div class="ai-attachments" id="aiAttachments"></div>
             <div class="ai-input-row">
                 <button class="ai-attach" id="aiAttach" title="PDF / Bild anhängen">
-                    <i class="fas fa-paperclip"></i>
+                    <i class="material-symbols-outlined">attach_file</i>
                 </button>
                 <textarea class="ai-input" id="aiInput" rows="1"
                     placeholder=""
                     maxlength="2000"></textarea>
-                <button class="ai-send" id="aiSend" title="Senden"><i class="fas fa-paper-plane"></i></button>
+                <button class="ai-send" id="aiSend" title="Senden"><i class="material-symbols-outlined">send</i></button>
                 <input type="file" id="aiFileInput" accept="application/pdf,image/jpeg,image/png,image/webp" style="display:none">
             </div>
             <div class="ai-footnote">KI-generierte Antworten — kritische Aktionen erfordern Bestätigung.</div>
@@ -170,7 +170,7 @@
         const panel = document.getElementById('aiPanel');
         panel.classList.toggle('expanded', on);
         const icon = panel.querySelector('#aiExpand i');
-        if (icon) icon.className = on ? 'fas fa-compress-alt' : 'fas fa-expand-alt';
+        if (icon) { icon.className = 'material-symbols-outlined'; icon.textContent = on ? 'close_fullscreen' : 'open_in_full'; }
         // Keep the newest messages in view after the size jump.
         const box = document.getElementById('aiMessages');
         if (box) box.scrollTop = box.scrollHeight;
@@ -341,7 +341,7 @@
             const isImg = a.mime.startsWith('image/');
             const thumb = isImg
                 ? `<img src="${a.dataUrl}" alt="${escapeHtml(a.name)}">`
-                : `<i class="fas fa-file-pdf"></i>`;
+                : `<i class="material-symbols-outlined">picture_as_pdf</i>`;
             const sizeKB = Math.round(a.size / 1024);
             return `
                 <div class="ai-att-chip">
@@ -351,7 +351,7 @@
                         <span>${sizeKB} KB</span>
                     </div>
                     <button type="button" class="ai-att-remove" data-idx="${i}" title="Entfernen">
-                        <i class="fas fa-times"></i>
+                        <i class="material-symbols-outlined">close</i>
                     </button>
                 </div>
             `;
@@ -473,7 +473,7 @@
                 if (a.mime && a.mime.startsWith('image/') && a.dataUrl) {
                     return `<a class="ai-msg-img" href="${a.dataUrl}" target="_blank" rel="noopener"><img src="${a.dataUrl}" alt="${escapeHtml(a.name)}"></a>`;
                 }
-                return `<div class="ai-msg-file"><i class="fas fa-file-pdf"></i> ${escapeHtml(a.name)}</div>`;
+                return `<div class="ai-msg-file"><i class="material-symbols-outlined">picture_as_pdf</i> ${escapeHtml(a.name)}</div>`;
             }).join('');
             // Assistant replies are rendered as Markdown (headings, tables,
             // lists, bold, code, …). User messages and error bubbles stay
@@ -513,7 +513,7 @@
     function renderQuickPrompts() {
         const chips = QUICK_PROMPTS.map((q, i) =>
             `<button type="button" class="ai-quick-chip" data-qi="${i}">
-                <i class="fas ${q.icon}"></i> ${escapeHtml(q.label)}
+                <i class="material-symbols-outlined">${q.icon}</i> ${escapeHtml(q.label)}
             </button>`
         ).join('');
         return `
@@ -542,13 +542,13 @@
     function renderFeedbackRow(m, idx) {
         const rated = m.feedback || '';
         if (rated) {
-            const icon = rated === 'up' ? 'fa-thumbs-up' : 'fa-thumbs-down';
-            return `<div class="ai-feedback rated"><i class="fas ${icon}"></i> Danke für dein Feedback</div>`;
+            const icon = rated === 'up' ? 'thumb_up' : 'thumb_down';
+            return `<div class="ai-feedback rated"><i class="material-symbols-outlined">${icon}</i> Danke für dein Feedback</div>`;
         }
         return `
             <div class="ai-feedback">
-                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="up" title="Hilfreich"><i class="far fa-thumbs-up"></i></button>
-                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="down" title="Nicht hilfreich"><i class="far fa-thumbs-down"></i></button>
+                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="up" title="Hilfreich"><i class="material-symbols-outlined">thumb_up</i></button>
+                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="down" title="Nicht hilfreich"><i class="material-symbols-outlined">thumb_down</i></button>
             </div>
         `;
     }
@@ -597,13 +597,13 @@
     function renderActionCard(action) {
         if (action.status === 'executed') {
             const desc = describeResult(action.tool_name, action.result);
-            return `<div class="ai-action-card done"><i class="fas fa-check-circle"></i> ${escapeHtml(desc || 'Aktion ausgeführt.')}</div>`;
+            return `<div class="ai-action-card done"><i class="material-symbols-outlined">check_circle</i> ${escapeHtml(desc || 'Aktion ausgeführt.')}</div>`;
         }
         if (action.status === 'cancelled') {
-            return `<div class="ai-action-card cancelled"><i class="fas fa-times-circle"></i> Aktion abgebrochen.</div>`;
+            return `<div class="ai-action-card cancelled"><i class="material-symbols-outlined">cancel</i> Aktion abgebrochen.</div>`;
         }
         if (action.status === 'failed') {
-            return `<div class="ai-action-card failed"><i class="fas fa-exclamation-triangle"></i> Fehlgeschlagen: ${escapeHtml(action.error_message || 'Unbekannter Fehler')}</div>`;
+            return `<div class="ai-action-card failed"><i class="material-symbols-outlined">warning</i> Fehlgeschlagen: ${escapeHtml(action.error_message || 'Unbekannter Fehler')}</div>`;
         }
         const p = action.preview || {};
         const title = p.titel || WRITE_TOOL_LABELS[action.tool_name] || action.tool_name;
@@ -625,16 +625,16 @@
         const hint = p.hinweis ? `<div class="ai-action-hint">${escapeHtml(p.hinweis)}</div>` : '';
         return `
             <div class="ai-action-card pending" data-action-id="${escapeHtml(action.action_id)}">
-                <div class="ai-action-card-title"><i class="fas fa-bolt"></i> ${escapeHtml(title)}</div>
+                <div class="ai-action-card-title"><i class="material-symbols-outlined">bolt</i> ${escapeHtml(title)}</div>
                 <div class="ai-action-card-body">${rows}</div>
                 ${tableHtml}
                 ${hint}
                 <div class="ai-action-card-buttons">
                     <button type="button" class="ai-action-cancel" data-action-id="${escapeHtml(action.action_id)}">
-                        <i class="fas fa-times"></i> Abbrechen
+                        <i class="material-symbols-outlined">close</i> Abbrechen
                     </button>
                     <button type="button" class="ai-action-confirm" data-action-id="${escapeHtml(action.action_id)}">
-                        <i class="fas fa-check"></i> Bestätigen
+                        <i class="material-symbols-outlined">check</i> Bestätigen
                     </button>
                 </div>
             </div>

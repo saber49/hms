@@ -142,8 +142,8 @@ function abRequestCard(r) {
     const kontoHtml = r.kategorie === 'urlaub' ? `
         <div class="ab-konto">
             <span title="Urlaubsanspruch">${abIcon('workspace_premium', 'font-size:14px')} ${konto.anspruch ?? '–'}</span>
-            <span title="Genommen" style="color:#16a34a">${abIcon('check_circle', 'font-size:14px')} ${konto.genommen ?? '–'}</span>
-            <span title="Beantragt (inkl. dieses Antrags)" style="color:#d97706">${abIcon('hourglass_top', 'font-size:14px')} ${konto.beantragt ?? '–'}</span>
+            <span title="Genommen" style="color: var(--md-ext-color-success)">${abIcon('check_circle', 'font-size:14px')} ${konto.genommen ?? '–'}</span>
+            <span title="Beantragt (inkl. dieses Antrags)" style="color: var(--md-ext-color-warning)">${abIcon('hourglass_top', 'font-size:14px')} ${konto.beantragt ?? '–'}</span>
             <span title="Rest nach allen Anträgen" style="color:${(konto.rest ?? 0) < 0 ? '#dc2626' : 'var(--text)'}">${abIcon('account_balance_wallet', 'font-size:14px')} ${konto.rest ?? '–'} Rest</span>
         </div>` : '';
     const canDecide = canEdit('absences');

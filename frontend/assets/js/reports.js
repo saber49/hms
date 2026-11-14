@@ -10,37 +10,37 @@ async function renderReports() {
     const nuOpts = await getSubcontractorOptions();
 
     content.innerHTML = `
-        <div class="filter-bar" style="background:var(--orange-light);border:1px solid #fed7aa">
+        <div class="filter-bar" style="background:var(--orange-light);border: 1px solid var(--md-ext-color-warning-container)">
             <div class="form-group">
-                <label><i class="fas fa-user"></i> Kunde</label>
+                <label><i class="material-symbols-outlined">person</i> Kunde</label>
                 <select class="form-control" id="rep_kunde"><option value="">Alle</option>${customerOpts}</select>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-map-marker-alt"></i> Objekt</label>
+                <label><i class="material-symbols-outlined">location_on</i> Objekt</label>
                 <select class="form-control" id="rep_objekt"><option value="">Alle</option></select>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-calendar"></i> Monat</label>
+                <label><i class="material-symbols-outlined">calendar_month</i> Monat</label>
                 <select class="form-control" id="rep_monat">
                     <option value="">Alle</option>
                     ${MONTHS_DE.map((m, i) => i > 0 ? `<option value="${i}" ${i === now.getMonth() + 1 ? 'selected' : ''}>${m}</option>` : '').join('')}
                 </select>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-calendar"></i> Jahr</label>
+                <label><i class="material-symbols-outlined">calendar_month</i> Jahr</label>
                 <input type="number" class="form-control" id="rep_jahr" value="${now.getFullYear()}">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-hard-hat"></i> NU</label>
+                <label><i class="material-symbols-outlined">engineering</i> NU</label>
                 <select class="form-control" id="rep_nu"><option value="">Alle</option>${nuOpts}</select>
             </div>
             <div class="form-group" style="align-self:flex-end">
-                <md-filled-button  class="md-btn-warning" onclick="loadReports()"><i slot="icon" class="fas fa-search"></i> Auswerten</md-filled-button>
+                <md-filled-button  class="md-btn-warning" onclick="loadReports()"><i slot="icon" class="material-symbols-outlined">search</i> Auswerten</md-filled-button>
             </div>
         </div>
         <div id="reportKPIs"></div>
         <div class="card mt-2">
-            <div class="card-header"><h3><i class="fas fa-list"></i> Detail-Ansicht — Einsätze</h3></div>
+            <div class="card-header"><h3><i class="material-symbols-outlined">list</i> Detail-Ansicht — Einsätze</h3></div>
             <div class="card-body no-pad"><div class="table-container" id="reportTable">
                 <p class="text-center text-muted" style="padding:40px">Filter setzen und "Auswerten" klicken</p>
             </div></div>
@@ -79,26 +79,26 @@ async function loadReports(useCache) {
         <div class="report-kpi-grid">
             <div class="card" style="border-top:4px solid var(--success)">
                 <div class="card-body">
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-euro-sign"></i> Einnahmen (bestätigt)</span><span class="quick-stat-value text-success">${formatCurrency(kpi.einnahmen)}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-cog"></i> Kosten NU</span><span class="quick-stat-value">${formatCurrency(kpi.nu_kosten)}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-chart-line"></i> Gewinn</span><span class="quick-stat-value text-success">${formatCurrency(kpi.gewinn)}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-percentage"></i> Marge</span><span class="quick-stat-value">${kpi.marge}%</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">euro</i> Einnahmen (bestätigt)</span><span class="quick-stat-value text-success">${formatCurrency(kpi.einnahmen)}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">settings</i> Kosten NU</span><span class="quick-stat-value">${formatCurrency(kpi.nu_kosten)}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">monitoring</i> Gewinn</span><span class="quick-stat-value text-success">${formatCurrency(kpi.gewinn)}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">percent</i> Marge</span><span class="quick-stat-value">${kpi.marge}%</span></div>
                 </div>
             </div>
             <div class="card" style="border-top:4px solid var(--accent)">
                 <div class="card-body">
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-check"></i> Bestätigte Einsätze</span><span class="quick-stat-value">${kpi.bestaetigt_count}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-hourglass"></i> Ausstehend</span><span class="quick-stat-value">${kpi.ausstehend_count}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-times"></i> Nicht bestätigt</span><span class="quick-stat-value text-danger">${kpi.nicht_bestaetigt_count}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-coins"></i> Ø Gewinn/Einsatz</span><span class="quick-stat-value">${formatCurrency(kpi.gewinn_pro_einsatz)}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">check</i> Bestätigte Einsätze</span><span class="quick-stat-value">${kpi.bestaetigt_count}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">hourglass_empty</i> Ausstehend</span><span class="quick-stat-value">${kpi.ausstehend_count}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">close</i> Nicht bestätigt</span><span class="quick-stat-value text-danger">${kpi.nicht_bestaetigt_count}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">paid</i> Ø Gewinn/Einsatz</span><span class="quick-stat-value">${formatCurrency(kpi.gewinn_pro_einsatz)}</span></div>
                 </div>
             </div>
             <div class="card" style="border-top:4px solid var(--warning)">
                 <div class="card-body">
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-file-invoice"></i> Bestellungen</span><span class="quick-stat-value">${kpi.bestellungen_total}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-clock"></i> Soll-Stunden</span><span class="quick-stat-value">${kpi.soll_stunden}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-stopwatch"></i> Ist-Stunden</span><span class="quick-stat-value">${kpi.ist_stunden_total}</span></div>
-                    <div class="quick-stat"><span class="quick-stat-label"><i class="fas fa-balance-scale"></i> Δ Soll – Ist</span><span class="quick-stat-value ${kpi.delta_stunden >= 0 ? '' : 'text-danger'}">${kpi.delta_stunden}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">receipt_long</i> Bestellungen</span><span class="quick-stat-value">${kpi.bestellungen_total}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">schedule</i> Soll-Stunden</span><span class="quick-stat-value">${kpi.soll_stunden}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">timer</i> Ist-Stunden</span><span class="quick-stat-value">${kpi.ist_stunden_total}</span></div>
+                    <div class="quick-stat"><span class="quick-stat-label"><i class="material-symbols-outlined">balance</i> Δ Soll – Ist</span><span class="quick-stat-value ${kpi.delta_stunden >= 0 ? '' : 'text-danger'}">${kpi.delta_stunden}</span></div>
                 </div>
             </div>
         </div>

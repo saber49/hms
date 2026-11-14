@@ -196,7 +196,7 @@ function customerRow(c) {
     const tags = (typeof bereichTagsOf === 'function') ? bereichTagsOf(c) : [c.bereich].filter(Boolean);
     return `<tr data-mk="${escapeHtml(c.kunde_id)}" data-bereich="${escapeHtml(tags.join('|'))}" data-aktiv="${c.aktiv}">
         <td><strong>${escapeHtml(c.kunde_id)}</strong></td>
-        <td>${c.farbe && /^#[0-9a-fA-F]{6}$/.test(c.farbe) ? `<span class="cust-color-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;background:${c.farbe};box-shadow:0 0 0 1px rgba(0,0,0,0.15)" title="Kundenfarbe ${c.farbe}"></span>` : ''}${escapeHtml(c.kundenname)}</td>
+        <td>${c.farbe && /^#[0-9a-fA-F]{6}$/.test(c.farbe) ? `<span class="cust-color-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;background:${c.farbe};box-shadow: 0 0 0 1px color-mix(in srgb, var(--md-sys-color-scrim) 15%, transparent)" title="Kundenfarbe ${c.farbe}"></span>` : ''}${escapeHtml(c.kundenname)}</td>
         <td>${escapeHtml(c.kunden_nr_kunde || '–')}</td>
         <td>${bereicheBadgesHtml(c.bereich, c.bereiche)}</td>
         <td>${c.ort ? escapeHtml(c.ort) : '–'}</td>
@@ -548,7 +548,7 @@ function custColorPickerHtml(current) {
             <button type="button" class="cust-color-swatch cust-color-none${!cur ? ' selected' : ''}" data-color=""
                     onclick="selectCustomerColor('')" title="Keine Farbe"
                     style="width:26px;height:26px;border-radius:50%;background:#fff;cursor:pointer;border:2px solid ${!cur ? 'var(--gray-800, #1f2937)' : '#d1d5db'};padding:0;position:relative">
-                <span class="material-symbols-outlined" style="font-size:16px;color:#9ca3af;line-height:22px">block</span>
+                <span class="material-symbols-outlined" style="font-size:16px;color: var(--md-sys-color-on-surface-variant);line-height:22px">block</span>
             </button>
             ${swatches}
             <label title="Eigene Farbe wählen" style="display:inline-flex;align-items:center;gap:4px;cursor:pointer">
@@ -947,7 +947,7 @@ function renderCustomerFavorites() {
         const initial = (w.vorname || w.name || dn || '?').charAt(0).toUpperCase();
         const avatar = w.foto
             ? `<img src="${escapeHtml(w.foto)}" alt="" style="width:38px;height:38px;border-radius:50%;object-fit:cover">`
-            : `<span style="width:38px;height:38px;border-radius:50%;background:var(--accent-soft, #e0e7ff);color:var(--accent, #4338ca);display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 auto">${escapeHtml(initial)}</span>`;
+            : `<span style="width:38px;height:38px;border-radius:50%;background: var(--accent-soft, var(--md-sys-color-primary-container));color: var(--accent, var(--md-sys-color-primary));display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 auto">${escapeHtml(initial)}</span>`;
         return `<div onclick="toggleCustomerFavorite('${escapeHtml(dn)}')" style="display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:6px;border:1px solid ${on ? 'var(--warning, #f59e0b)' : 'var(--gray-200, #e5e7eb)'};background:${on ? 'var(--warning-light, #fffbeb)' : 'var(--white, #fff)'};border-radius:10px;cursor:pointer;transition:all .12s">
             ${avatar}
             <div style="flex:1;min-width:0">

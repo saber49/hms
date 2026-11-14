@@ -331,7 +331,7 @@
             btn.className = 'topbar-icon-btn';
             btn.id = 'notifBellBtn';
             btn.title = 'Benachrichtigungen';
-            btn.innerHTML = '<i class="fas fa-bell"></i><span class="chat-badge" id="notifBellBadge"></span>';
+            btn.innerHTML = '<i class="material-symbols-outlined">notifications</i><span class="chat-badge" id="notifBellBadge"></span>';
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const dd = document.getElementById('notifDropdown');
@@ -349,7 +349,7 @@
             dd.className = 'notif-dropdown';
             dd.innerHTML = `
                 <div class="notif-dropdown-head">
-                    <span><i class="fas fa-bell"></i> Benachrichtigungen</span>
+                    <span><i class="material-symbols-outlined">notifications</i> Benachrichtigungen</span>
                     <button class="notif-mark-all" id="notifMarkAllBtn">Alle gelesen</button>
                 </div>
                 <div class="notif-dropdown-body" id="notifDropdownBody">

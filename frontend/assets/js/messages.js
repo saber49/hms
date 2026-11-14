@@ -63,7 +63,7 @@ async function showConversationList() {
         chatMessagePollInterval = null;
     }
 
-    document.getElementById('chatPanelTitle').innerHTML = '<i class="fas fa-comment-dots"></i> <span class="chat-title-text">Nachrichten</span>';
+    document.getElementById('chatPanelTitle').innerHTML = '<i class="material-symbols-outlined">forum</i> <span class="chat-title-text">Nachrichten</span>';
     document.getElementById('chatNewBtn').style.display = '';
     document.getElementById('chatBackBtn').style.display = 'none';
     document.getElementById('chatDeleteBtn').style.display = 'none';
@@ -74,15 +74,15 @@ async function showConversationList() {
     document.getElementById('chatMembersPop').style.display = 'none';
 
     const body = document.getElementById('chatPanelBody');
-    body.innerHTML = '<div class="chat-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    body.innerHTML = '<div class="chat-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
 
     const conversations = await apiGet(API.messages + '/conversations');
     if (!conversations || conversations.length === 0) {
         body.innerHTML = `
             <div class="chat-empty">
-                <i class="fas fa-comments"></i>
+                <i class="material-symbols-outlined">forum</i>
                 <p>Keine Nachrichten</p>
-                <md-filled-button  class="md-btn-sm" onclick="openNewChat()"><i slot="icon" class="fas fa-plus"></i> Neuen Chat starten</md-filled-button>
+                <md-filled-button  class="md-btn-sm" onclick="openNewChat()"><i slot="icon" class="material-symbols-outlined">add</i> Neuen Chat starten</md-filled-button>
             </div>
         `;
         return;
@@ -136,7 +136,7 @@ async function openConversation(convId) {
     document.getElementById('chatInputArea').style.display = 'flex';
 
     const body = document.getElementById('chatPanelBody');
-    body.innerHTML = '<div class="chat-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    body.innerHTML = '<div class="chat-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
 
     const messages = await apiGet(API.messages + '/messages?conversation_id=' + convId);
 
@@ -145,7 +145,7 @@ async function openConversation(convId) {
     const conv = (convs || []).find(c => c.id == convId);
     chatConvData = conv || null;
     if (conv) {
-        document.getElementById('chatPanelTitle').innerHTML = '<i class="fas fa-comment-dots"></i> <span class="chat-title-text">' + escapeHtml(getConvDisplayName(conv)) + '</span>';
+        document.getElementById('chatPanelTitle').innerHTML = '<i class="material-symbols-outlined">forum</i> <span class="chat-title-text">' + escapeHtml(getConvDisplayName(conv)) + '</span>';
         // @mentions only make sense in group chats — everyone else is a target.
         const all = conv.participants || [];
         chatConvIsGroup = all.length > 2;
@@ -157,7 +157,7 @@ async function openConversation(convId) {
     } else {
         chatConvParticipants = [];
         chatConvIsGroup = false;
-        document.getElementById('chatPanelTitle').innerHTML = '<i class="fas fa-comment-dots"></i> <span class="chat-title-text">Chat</span>';
+        document.getElementById('chatPanelTitle').innerHTML = '<i class="material-symbols-outlined">forum</i> <span class="chat-title-text">Chat</span>';
     }
 
     renderChatMessages(messages || [], true);
@@ -176,7 +176,7 @@ async function openConversation(convId) {
 function renderChatMessages(messages, scrollToBottom) {
     const body = document.getElementById('chatPanelBody');
     if (messages.length === 0) {
-        body.innerHTML = '<div class="chat-empty"><i class="fas fa-paper-plane"></i><p>Noch keine Nachrichten.<br>Schreibe die erste!</p></div>';
+        body.innerHTML = '<div class="chat-empty"><i class="material-symbols-outlined">send</i><p>Noch keine Nachrichten.<br>Schreibe die erste!</p></div>';
         return;
     }
 
@@ -347,14 +347,14 @@ async function openNewChat() {
     document.getElementById('chatAddBtn').style.display = 'none';
     document.getElementById('chatInfoBtn').style.display = 'none';
     document.getElementById('chatInputArea').style.display = 'none';
-    document.getElementById('chatPanelTitle').innerHTML = '<i class="fas fa-plus"></i> <span class="chat-title-text">Neuer Chat</span>';
+    document.getElementById('chatPanelTitle').innerHTML = '<i class="material-symbols-outlined">add</i> <span class="chat-title-text">Neuer Chat</span>';
 
     const body = document.getElementById('chatPanelBody');
-    body.innerHTML = '<div class="chat-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    body.innerHTML = '<div class="chat-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
 
     const users = await apiGet(API.messages + '/users');
     if (!users || users.length === 0) {
-        body.innerHTML = '<div class="chat-empty"><i class="fas fa-users"></i><p>Keine anderen Benutzer vorhanden</p></div>';
+        body.innerHTML = '<div class="chat-empty"><i class="material-symbols-outlined">group</i><p>Keine anderen Benutzer vorhanden</p></div>';
         return;
     }
 
@@ -374,7 +374,7 @@ async function openNewChat() {
             </ul>
             <label>Erste Nachricht</label>
             <textarea class="form-control" id="newChatMessage" rows="3" placeholder="Nachricht schreiben..."></textarea>
-            <md-filled-button  class="w-100 mt-1" onclick="createNewChat()"><i slot="icon" class="fas fa-paper-plane"></i> Chat starten</md-filled-button>
+            <md-filled-button  class="w-100 mt-1" onclick="createNewChat()"><i slot="icon" class="material-symbols-outlined">send</i> Chat starten</md-filled-button>
         </div>
     `;
 }
@@ -466,7 +466,7 @@ function openChatMembers() {
         const badge = isCreator ? '<span class="chat-member-badge creator">Ersteller</span>' : '';
         const meTag = isMe ? '<span class="chat-member-badge me">Du</span>' : '';
         return '<li class="chat-member-row">' +
-            '<i class="fas fa-user-circle chat-member-avatar"></i>' +
+            '<i class="material-symbols-outlined chat-member-avatar">account_circle</i>' +
             '<span class="chat-member-name">' + escapeHtml(p.full_name) + meTag + badge + '</span>' +
             '<small style="color:var(--md-sys-color-on-surface-variant);margin-left:auto">' + escapeHtml(p.role || '') + '</small>' +
         '</li>';
@@ -483,7 +483,7 @@ async function openAddMembers() {
     if (!chatCurrentConv) return;
     const pop = document.getElementById('chatAddPop');
     const list = document.getElementById('chatAddPopList');
-    list.innerHTML = '<div class="chat-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    list.innerHTML = '<div class="chat-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
     pop.style.display = 'flex';
 
     const users = await apiGet(API.messages + '/users');
@@ -491,7 +491,7 @@ async function openAddMembers() {
     const candidates = (users || []).filter(u => !existing.has(String(u.id)));
 
     if (!candidates.length) {
-        list.innerHTML = '<div class="chat-empty"><i class="fas fa-user-check"></i><p>Alle Benutzer sind bereits in diesem Chat</p></div>';
+        list.innerHTML = '<div class="chat-empty"><i class="material-symbols-outlined">how_to_reg</i><p>Alle Benutzer sind bereits in diesem Chat</p></div>';
         return;
     }
     list.innerHTML = `<ul class="chat-user-list" style="border:none;border-radius:0">` + candidates.map(u => `

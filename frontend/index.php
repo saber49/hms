@@ -13,13 +13,13 @@ header('Expires: 0');
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Clood-X — System</title>
     <style>
-        #hmsBoot{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:#f3f4f8;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .2s ease}
-        [data-theme="dark"] #hmsBoot{background:#111827;color:#f8fafc}
+        #hmsBoot{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background: var(--md-sys-color-primary-container);color: var(--md-sys-color-on-primary-container);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .2s ease}
+        [data-theme="dark"] #hmsBoot{background: var(--md-sys-color-primary);color: var(--md-sys-color-primary-container)}
         #hmsBoot.hms-boot-done{opacity:0;pointer-events:none}
         .hms-boot-box{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
-        .hms-boot-mark{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background:#0b57d0;color:#fff;font-size:25px;font-weight:800;box-shadow:0 16px 36px rgba(11,87,208,.24)}
+        .hms-boot-mark{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background: var(--md-sys-color-primary);color: #fff;font-size:25px;font-weight:800;box-shadow: 0 16px 36px color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent)}
         .hms-boot-title{font-size:24px;font-weight:750}.hms-boot-text{font-size:14px;opacity:.7}
-        .hms-boot-spinner{width:32px;height:32px;border:3px solid rgba(11,87,208,.18);border-top-color:#0b57d0;border-radius:50%;animation:hmsBootSpin .75s linear infinite}
+        .hms-boot-spinner{width:32px;height:32px;border: 3px solid color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);border-top-color: var(--md-sys-color-primary);border-radius:50%;animation:hmsBootSpin .75s linear infinite}
         @keyframes hmsBootSpin{to{transform:rotate(360deg)}}
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,7 +210,6 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/search-field.css?v=20261114md3b">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <!-- Markdown rendering + sanitization for the AI assistant's rich replies.
          Defer so they don't block parsing; both will be ready before DOMContentLoaded. -->
@@ -255,7 +254,7 @@ header('Expires: 0');
                 <span class="logo-name" id="sidebarLogoName">Clood-X</span>
             </div>
             <button class="sidebar-close" id="sidebarClose" onclick="document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('active')">
-                <i class="fas fa-times"></i>
+                <i class="material-symbols-outlined">close</i>
             </button>
             <small class="sidebar-subtitle">Management System</small>
         </div>
@@ -263,119 +262,119 @@ header('Expires: 0');
             <div class="nav-section">
                 <div class="nav-section-title">Dashboard</div>
                 <a href="#" class="nav-item active" data-page="dashboard">
-                    <i class="fas fa-tachometer-alt"></i><span>Übersicht</span>
+                    <i class="material-symbols-outlined">speed</i><span>Übersicht</span>
                 </a>
             </div>
             <div class="nav-section nav-section-fav" id="navFavSection">
                 <div class="nav-section-title">Favoriten</div>
                 <div class="nav-fav-list" id="navFavList"></div>
-                <div class="nav-fav-hint" id="navFavHint"><i class="far fa-star"></i> Stern neben einem Menüpunkt anklicken, um ihn hier anzuheften</div>
+                <div class="nav-fav-hint" id="navFavHint"><i class="material-symbols-outlined">star</i> Stern neben einem Menüpunkt anklicken, um ihn hier anzuheften</div>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Aufgaben</div>
                 <a href="#" class="nav-item" data-page="aufgaben">
-                    <i class="fas fa-list-check"></i><span>Aufgaben</span>
+                    <i class="material-symbols-outlined">checklist</i><span>Aufgaben</span>
                     <span class="badge" id="badge-aufgaben" style="display:none">0</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Stammdaten</div>
                 <a href="#" class="nav-item" data-page="interessenten">
-                    <i class="fas fa-user-plus"></i><span>Interessenten</span>
+                    <i class="material-symbols-outlined">person_add</i><span>Interessenten</span>
                 </a>
                 <a href="#" class="nav-item" data-page="customers">
-                    <i class="fas fa-users"></i><span>Kunden</span>
+                    <i class="material-symbols-outlined">group</i><span>Kunden</span>
                 </a>
                 <a href="#" class="nav-item" data-page="objects">
-                    <i class="fas fa-map-marker-alt"></i><span>Objekte & Artikel</span>
+                    <i class="material-symbols-outlined">location_on</i><span>Objekte & Artikel</span>
                 </a>
                 <a href="#" class="nav-item" data-page="price_history">
-                    <i class="fas fa-history"></i><span>Preishistorie</span>
+                    <i class="material-symbols-outlined">history</i><span>Preishistorie</span>
                 </a>
                 <a href="#" class="nav-item" data-page="lager">
-                    <i class="fas fa-boxes"></i><span>Lager &amp; Ausrüstung</span>
+                    <i class="material-symbols-outlined">inventory_2</i><span>Lager &amp; Ausrüstung</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Personal</div>
                 <a href="#" class="nav-item" data-page="workers">
-                    <i class="fas fa-id-badge"></i><span>Mitarbeiter</span>
+                    <i class="material-symbols-outlined">badge</i><span>Mitarbeiter</span>
                 </a>
                 <a href="#" class="nav-item" data-page="subcontractors">
-                    <i class="fas fa-hard-hat"></i><span>Nachunternehmer</span>
+                    <i class="material-symbols-outlined">engineering</i><span>Nachunternehmer</span>
                 </a>
                 <a href="#" class="nav-item" data-page="absences">
-                    <i class="fas fa-calendar-check"></i><span>Anträge &amp; Urlaub</span>
+                    <i class="material-symbols-outlined">event_available</i><span>Anträge &amp; Urlaub</span>
                     <span class="badge" id="badge-absences" style="display:none">0</span>
                 </a>
                 <a href="#" class="nav-item" data-page="aueg" style="display:none">
-                    <i class="fas fa-handshake"></i><span>AÜG-Fristen</span>
+                    <i class="material-symbols-outlined">handshake</i><span>AÜG-Fristen</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Disposition</div>
                 <a href="#" class="nav-item" data-page="tasks">
-                    <i class="fas fa-tasks"></i><span>Planung</span>
+                    <i class="material-symbols-outlined">task_alt</i><span>Planung</span>
                 </a>
                 <a href="#" class="nav-item" data-page="monatsabschluss">
-                    <i class="fas fa-clipboard-check"></i><span>Zeiterfassung</span>
+                    <i class="material-symbols-outlined">assignment_turned_in</i><span>Zeiterfassung</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Qualität</div>
                 <a href="#" class="nav-item" data-page="qm_wachbuch">
-                    <i class="fas fa-book"></i><span id="navQmWachbuchLabel">Wachbuch</span>
+                    <i class="material-symbols-outlined">menu_book</i><span id="navQmWachbuchLabel">Wachbuch</span>
                 </a>
                 <a href="#" class="nav-item" data-page="qm">
-                    <i class="fas fa-award"></i><span>Qualitätsmanagement</span>
+                    <i class="material-symbols-outlined">workspace_premium</i><span>Qualitätsmanagement</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Verkauf</div>
                 <a href="#" class="nav-item" data-page="incoming_orders">
-                    <i class="fas fa-inbox"></i><span>Bestelleingang</span>
+                    <i class="material-symbols-outlined">inbox</i><span>Bestelleingang</span>
                 </a>
                 <a href="#" class="nav-item" data-page="auftragsbestaetigung">
-                    <i class="fas fa-file-signature"></i><span>Auftragsbestätigung</span>
+                    <i class="material-symbols-outlined">edit_document</i><span>Auftragsbestätigung</span>
                 </a>
                 <a href="#" class="nav-item" data-page="orders">
-                    <i class="fas fa-file-invoice"></i><span>Bestellungen</span>
+                    <i class="material-symbols-outlined">receipt_long</i><span>Bestellungen</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Finanzen</div>
                 <a href="#" class="nav-item" data-page="reports">
-                    <i class="fas fa-chart-line"></i><span>Auswertung</span>
+                    <i class="material-symbols-outlined">monitoring</i><span>Auswertung</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Kommunikation</div>
                 <a href="#" class="nav-item" data-page="worker_messages">
-                    <i class="fas fa-comment-alt"></i><span>MA-Nachrichten</span>
+                    <i class="material-symbols-outlined">comment</i><span>MA-Nachrichten</span>
                     <span class="badge" id="badge-worker-messages" style="display:none">0</span>
                 </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">System</div>
                 <a href="#" class="nav-item" data-page="users" id="nav-users" style="display:none">
-                    <i class="fas fa-user-shield"></i><span>Benutzerverwaltung</span>
+                    <i class="material-symbols-outlined">admin_panel_settings</i><span>Benutzerverwaltung</span>
                 </a>
                 <a href="#" class="nav-item" data-page="einstellungen" id="nav-einstellungen">
-                    <i class="fas fa-sliders"></i><span>Einstellungen</span>
+                    <i class="material-symbols-outlined">tune</i><span>Einstellungen</span>
                 </a>
             </div>
         </nav>
 
         <div class="sidebar-user">
             <div class="user-info" onclick="openAccountModal()" style="cursor:pointer" title="Konto-Einstellungen">
-                <i class="fas fa-user-circle"></i>
+                <i class="material-symbols-outlined">account_circle</i>
                 <div>
                     <div class="user-name" id="sidebarUserName">Benutzer</div>
                     <div class="user-role" id="sidebarUserRole">viewer</div>
                 </div>
             </div>
             <button class="btn-logout" onclick="handleLogout()" title="Abmelden">
-                <i class="fas fa-sign-out-alt"></i>
+                <i class="material-symbols-outlined">logout</i>
             </button>
         </div>
     </aside>
@@ -387,16 +386,16 @@ header('Expires: 0');
     <main class="main-content">
         <header class="topbar">
             <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
+                <i class="material-symbols-outlined">menu</i>
             </button>
             <h1 class="page-title" id="pageTitle">Übersicht</h1>
             <div class="topbar-right">
                 <span class="current-date" id="currentDate"></span>
                 <button class="topbar-icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Dunkles Design">
-                    <i class="fas fa-moon"></i>
+                    <i class="material-symbols-outlined">dark_mode</i>
                 </button>
                 <button class="topbar-icon-btn" id="chatToggleBtn" onclick="toggleChatPanel()" title="Nachrichten">
-                    <i class="fas fa-comment-dots"></i>
+                    <i class="material-symbols-outlined">forum</i>
                     <span class="chat-badge" id="chatBadge"></span>
                 </button>
             </div>
@@ -423,42 +422,42 @@ header('Expires: 0');
     <div class="chat-overlay" id="chatOverlay" onclick="toggleChatPanel()"></div>
     <div class="chat-panel" id="chatPanel">
         <div class="chat-panel-header">
-            <button class="chat-header-btn" id="chatBackBtn" onclick="showConversationList()" title="Zurück" style="display:none"><i class="fas fa-arrow-left"></i></button>
-            <h3 id="chatPanelTitle"><i class="fas fa-comment-dots"></i> <span class="chat-title-text">Nachrichten</span></h3>
+            <button class="chat-header-btn" id="chatBackBtn" onclick="showConversationList()" title="Zurück" style="display:none"><i class="material-symbols-outlined">arrow_back</i></button>
+            <h3 id="chatPanelTitle"><i class="material-symbols-outlined">forum</i> <span class="chat-title-text">Nachrichten</span></h3>
             <div class="chat-panel-actions">
-                <button class="chat-header-btn" id="chatNewBtn" onclick="openNewChat()" title="Neuer Chat"><i class="fas fa-plus"></i></button>
-                <button class="chat-header-btn" id="chatAddBtn" onclick="openAddMembers()" title="Mitglied hinzufügen" style="display:none"><i class="fas fa-user-plus"></i></button>
-                <button class="chat-header-btn" id="chatInfoBtn" onclick="openChatMembers()" title="Mitglieder" style="display:none"><i class="fas fa-users"></i></button>
-                <button class="chat-header-btn chat-delete-btn" id="chatDeleteBtn" onclick="deleteChat()" title="Chat löschen" style="display:none"><i class="fas fa-trash"></i></button>
-                <button class="chat-header-btn" onclick="toggleChatPanel()" title="Schließen"><i class="fas fa-times"></i></button>
+                <button class="chat-header-btn" id="chatNewBtn" onclick="openNewChat()" title="Neuer Chat"><i class="material-symbols-outlined">add</i></button>
+                <button class="chat-header-btn" id="chatAddBtn" onclick="openAddMembers()" title="Mitglied hinzufügen" style="display:none"><i class="material-symbols-outlined">person_add</i></button>
+                <button class="chat-header-btn" id="chatInfoBtn" onclick="openChatMembers()" title="Mitglieder" style="display:none"><i class="material-symbols-outlined">group</i></button>
+                <button class="chat-header-btn chat-delete-btn" id="chatDeleteBtn" onclick="deleteChat()" title="Chat löschen" style="display:none"><i class="material-symbols-outlined">delete</i></button>
+                <button class="chat-header-btn" onclick="toggleChatPanel()" title="Schließen"><i class="material-symbols-outlined">close</i></button>
             </div>
         </div>
         <div class="chat-panel-body" id="chatPanelBody">
-            <div class="chat-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>
+            <div class="chat-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>
         </div>
         <div class="chat-mention-pop" id="chatMentionPop" style="display:none"></div>
         <div class="chat-addpop" id="chatAddPop" style="display:none">
             <div class="chat-addpop-head">
-                <span><i class="fas fa-user-plus"></i> Mitglieder hinzufügen</span>
-                <button class="chat-header-btn" onclick="document.getElementById('chatAddPop').style.display='none'" title="Schließen"><i class="fas fa-times"></i></button>
+                <span><i class="material-symbols-outlined">person_add</i> Mitglieder hinzufügen</span>
+                <button class="chat-header-btn" onclick="document.getElementById('chatAddPop').style.display='none'" title="Schließen"><i class="material-symbols-outlined">close</i></button>
             </div>
             <div class="chat-addpop-list" id="chatAddPopList"></div>
             <div class="chat-addpop-foot">
-                <md-filled-button style="width:100%" onclick="chatAddMembers()"><i slot="icon" class="fas fa-user-plus"></i> Hinzufügen</md-filled-button>
+                <md-filled-button style="width:100%" onclick="chatAddMembers()"><i slot="icon" class="material-symbols-outlined">person_add</i> Hinzufügen</md-filled-button>
             </div>
         </div>
         <div class="chat-addpop" id="chatMembersPop" style="display:none">
             <div class="chat-addpop-head">
-                <span><i class="fas fa-users"></i> <span id="chatMembersTitle">Mitglieder</span></span>
-                <button class="chat-header-btn" onclick="document.getElementById('chatMembersPop').style.display='none'" title="Schließen"><i class="fas fa-times"></i></button>
+                <span><i class="material-symbols-outlined">group</i> <span id="chatMembersTitle">Mitglieder</span></span>
+                <button class="chat-header-btn" onclick="document.getElementById('chatMembersPop').style.display='none'" title="Schließen"><i class="material-symbols-outlined">close</i></button>
             </div>
             <div class="chat-addpop-list" id="chatMembersList"></div>
         </div>
         <div class="chat-input-area" id="chatInputArea" style="display:none">
             <input type="file" id="chatImageInput" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none" onchange="sendChatImage()">
-            <button class="chat-img-btn" onclick="document.getElementById('chatImageInput').click()" title="Bild senden"><i class="fas fa-image"></i></button>
+            <button class="chat-img-btn" onclick="document.getElementById('chatImageInput').click()" title="Bild senden"><i class="material-symbols-outlined">image</i></button>
             <input type="text" class="chat-input" id="chatMessageInput" placeholder="Nachricht schreiben..." onkeydown="chatInputKeydown(event)" autocomplete="off">
-            <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+            <button class="chat-send-btn" onclick="sendChatMessage()"><i class="material-symbols-outlined">send</i></button>
         </div>
     </div>
 
@@ -736,7 +735,7 @@ header('Expires: 0');
                 'box-shadow:0 1px 3px rgba(0,0,0,0.08)',
             ].join(';');
             const days = Number(tenant.trial_days_remaining);
-            banner.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Testphase endet in ' + days + ' Tagen. <a href="#" style="color:#92400e;text-decoration:underline">Jetzt upgraden</a>';
+            banner.innerHTML = '<i class="material-symbols-outlined">warning</i> Testphase endet in ' + days + ' Tagen. <a href="#" style="color: var(--md-ext-color-on-warning-container);text-decoration: underline">Jetzt upgraden</a>';
             if (!existing) document.body.appendChild(banner);
             const applyOffset = () => {
                 const h = banner.offsetHeight || 36;

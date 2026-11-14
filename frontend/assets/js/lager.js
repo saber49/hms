@@ -621,7 +621,7 @@ async function openLgArtikelDialog(id = null) {
                     </div>
                 </div>
                 <div class="lg-foto-row">
-                    <span class="lg-thumb lg-thumb-ph" id="lgRechIcon" style="width:64px;height:64px;background:rgba(100,116,139,.12);color:var(--gray-500)">${lgRechIcon(a)}</span>
+                    <span class="lg-thumb lg-thumb-ph" id="lgRechIcon" style="width:64px;height:64px;background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);color:var(--gray-500)">${lgRechIcon(a)}</span>
                     <div style="flex:1;min-width:0" id="lgRechBox">${lgRechBoxHtml()}</div>
                 </div>
                 <div class="customer-form-section-title">${lgIcon('inventory_2')} Artikeldaten</div>

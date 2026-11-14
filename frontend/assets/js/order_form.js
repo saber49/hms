@@ -298,7 +298,7 @@
         const showError = (msg) => {
             state.loadError = msg;
             document.getElementById('orderForm').innerHTML =
-                '<div class="loading"><i class="fas fa-exclamation-circle"></i><br>' + esc(msg) + '</div>';
+                '<div class="loading"><i class="material-symbols-outlined">error</i><br>' + esc(msg) + '</div>';
         };
 
         // Only plain document ids are accepted — they end up in API paths.
@@ -1167,7 +1167,7 @@
                         <td class="ocd-num" ${E}>${n2(d.totalStd)}</td>
                     </tr></tfoot>` : ''}
                 </table>
-                ${count ? `<div class="wkd-legend" ${K('wk.legend')} style="margin-top:8px;font-size:0.78em;line-height:1.45;color:var(--gray-500,#6b7280)">Von / Bis = angerechnete Arbeitszeit (auf Viertelstunden gerundet): Beginn frühestens zum Planbeginn, Ende spätestens zum Planende bzw. zum Ende einer begründeten Verlängerung. Std = Von bis Bis abzüglich Pause.</div>` : ''}
+                ${count ? `<div class="wkd-legend" ${K('wk.legend')} style="margin-top:8px;font-size:0.78em;line-height:1.45;color: var(--gray-500,var(--md-sys-color-on-surface-variant))">Von / Bis = angerechnete Arbeitszeit (auf Viertelstunden gerundet): Beginn frühestens zum Planbeginn, Ende spätestens zum Planende bzw. zum Ende einer begründeten Verlängerung. Std = Von bis Bis abzüglich Pause.</div>` : ''}
             </div>
 
             <div class="wkd-summary" id="summarySection" data-draggable data-mkey="wk.summary">
@@ -1222,7 +1222,7 @@
         b.id = 'btnDesignToggle';
         b.title = 'Zwischen eigenem KI-Design und Standard-Layout wechseln';
         b.onclick = toggleDesign;
-        b.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> <span>Eigenes Design</span>';
+        b.innerHTML = '<i class="material-symbols-outlined">auto_fix_high</i> <span>Eigenes Design</span>';
         center.appendChild(b);
     }
 
@@ -1989,9 +1989,9 @@
             if (hasLogo && !hidden) {
                 preview.innerHTML = '<img src="' + state.logoDataUrl + '" alt="Logo">';
             } else if (hasLogo && hidden) {
-                preview.innerHTML = '<i class="fas fa-eye-slash"></i><div>Logo ausgeblendet</div>';
+                preview.innerHTML = '<i class="material-symbols-outlined">visibility_off</i><div>Logo ausgeblendet</div>';
             } else {
-                preview.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><div>Logo hochladen</div>';
+                preview.innerHTML = '<i class="material-symbols-outlined">cloud_upload</i><div>Logo hochladen</div>';
             }
         }
         if (removeBtn) removeBtn.style.display = (hasLogo && !hidden) ? '' : 'none';
@@ -2482,7 +2482,7 @@
         const title = modal.querySelector('.modal-title');
         if (title) title.textContent = 'Verlauf · archivierte PDFs';
         document.getElementById('pdfsSubtitle').textContent = ref.label;
-        list.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Lade…</div>';
+        list.innerHTML = '<div class="loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Lade…</div>';
         modal.classList.add('show');
         try {
             const res = await fetch(API + '/dokument-archiv?doc_type=' + encodeURIComponent(state.docType) + '&ref_id=' + encodeURIComponent(ref.id), { headers: HEADERS() });
@@ -2490,13 +2490,13 @@
             if (!res.ok) throw new Error(d.error || ('HTTP ' + res.status));
             const rows = d.entries || [];
             if (!rows.length) {
-                list.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><h3>Noch keine archivierten PDFs</h3><p>Jeder Download, Druck oder Versand wird hier automatisch als Version gesichert.</p></div>';
+                list.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">history</i><h3>Noch keine archivierten PDFs</h3><p>Jeder Download, Druck oder Versand wird hier automatisch als Version gesichert.</p></div>';
                 return;
             }
             state.archivRows = rows;
             list.innerHTML = rows.map((r, i) => `
                 <div class="pdf-row">
-                    <i class="fas fa-file-pdf pdf-icon"></i>
+                    <i class="material-symbols-outlined pdf-icon">picture_as_pdf</i>
                     <div class="pdf-info">
                         <div class="pdf-name">${r.version ? 'Version ' + parseInt(r.version, 10) + ' · ' : ''}${esc(ARCHIV_AKTION[r.aktion] || r.aktion)}</div>
                         <div class="pdf-meta">
@@ -2505,11 +2505,11 @@
                         </div>
                     </div>
                     <div class="pdf-actions">
-                        <button class="primary" onclick="downloadArchiv(${i})" title="Herunterladen"><i class="fas fa-download"></i></button>
+                        <button class="primary" onclick="downloadArchiv(${i})" title="Herunterladen"><i class="material-symbols-outlined">download</i></button>
                     </div>
                 </div>`).join('');
         } catch (e) {
-            list.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><h3>Fehler beim Laden</h3><p>' + esc(e.message) + '</p></div>';
+            list.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">error</i><h3>Fehler beim Laden</h3><p>' + esc(e.message) + '</p></div>';
         }
     }
     window.openArchiv = openArchiv;
@@ -2645,14 +2645,14 @@
                 + '<span><b>' + esc(w.name || dn) + '</b><small>' + (parseInt(w.einsaetze, 10) || 0) + (w.einsaetze === 1 ? ' Einsatz' : ' Einsätze') + ' · ' + std + ' Std</small></span></label>'
                 + chip
                 + (w.status === 'offen' && w.offen_id && state.sig.canSend
-                    ? '<button type="button" class="sigreq-x" data-withdraw="' + parseInt(w.offen_id, 10) + '" title="Anfrage zurückziehen"><i class="fas fa-times"></i></button>' : '')
+                    ? '<button type="button" class="sigreq-x" data-withdraw="' + parseInt(w.offen_id, 10) + '" title="Anfrage zurückziehen"><i class="material-symbols-outlined">close</i></button>' : '')
                 + ((w.status === 'signiert' || w.status === 'veraltet') && w.signiert_id && state.sig.canSend
-                    ? '<button type="button" class="sigreq-x" data-discard="' + parseInt(w.signiert_id, 10) + '" data-name="' + esc(w.name || dn) + '" title="Unterschrift löschen (danach neu anfragen)"><i class="fas fa-trash"></i></button>' : '')
+                    ? '<button type="button" class="sigreq-x" data-discard="' + parseInt(w.signiert_id, 10) + '" data-name="' + esc(w.name || dn) + '" title="Unterschrift löschen (danach neu anfragen)"><i class="material-symbols-outlined">delete</i></button>' : '')
                 + '</div>'
                 + (w.status === 'abgelehnt' && w.grund ? '<div class="sigreq-note">„' + esc(w.grund) + '“</div>' : '')
                 + (w.status === 'veraltet' ? '<div class="sigreq-note">Die Zeiten wurden nach der Unterschrift geändert — bitte erneut senden.</div>' : '');
         }).join('');
-        if (!ws.length) html = '<div class="empty-state"><i class="fas fa-user-clock"></i><h3>Keine freigegebenen Einsätze</h3><p>Erst nach der Kunden-Freigabe im Monatsabschluss kann unterschrieben werden.</p></div>';
+        if (!ws.length) html = '<div class="empty-state"><i class="material-symbols-outlined">pending_actions</i><h3>Keine freigegebenen Einsätze</h3><p>Erst nach der Kunden-Freigabe im Monatsabschluss kann unterschrieben werden.</p></div>';
         if (nuCount) html += '<div class="sigreq-note is-foot">' + nuCount + ' NU-Mitarbeiter nutzen die App nicht — ihre Unterschrift bitte auf Papier einholen.</div>';
         list.innerHTML = html;
         list.querySelectorAll('input[data-dn]').forEach(cb => cb.addEventListener('change', syncSigSendButton));
@@ -2855,7 +2855,7 @@
         if (state.logoDataUrl && !state.settings.hide_logo) {
             box.innerHTML = '<img src="' + state.logoDataUrl + '" alt="Logo">';
         } else {
-            box.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><div>Logo hochladen (optional)</div>';
+            box.innerHTML = '<i class="material-symbols-outlined">cloud_upload</i><div>Logo hochladen (optional)</div>';
         }
     }
 
@@ -2885,8 +2885,8 @@
         const next = document.getElementById('wzNext');
         if (back) back.style.visibility = (n === 1) ? 'hidden' : 'visible';
         if (next) next.innerHTML = (n === WIZARD_STEPS)
-            ? 'Fertig <i class="fas fa-check"></i>'
-            : 'Weiter <i class="fas fa-arrow-right"></i>';
+            ? 'Fertig <i class="material-symbols-outlined">check</i>'
+            : 'Weiter <i class="material-symbols-outlined">arrow_forward</i>';
     }
 
     function wizardNext() { if ((state.wizardStep || 1) >= WIZARD_STEPS) wizardFinish(); else wizardGoTo((state.wizardStep || 1) + 1); }
@@ -3399,7 +3399,7 @@
         const el = document.createElement('div');
         el.className = 'toast ' + (type || '');
         el.dataset.msg = msg;
-        el.innerHTML = '<i class="fas ' + (type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-check-circle') + '"></i> ' + esc(msg);
+        el.innerHTML = '<i class="material-symbols-outlined">' + (type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'check_circle') + '</i> ' + esc(msg);
         host.appendChild(el);
         const t = ms || 2200;
         setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(80px)'; }, t);

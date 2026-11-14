@@ -347,10 +347,10 @@ async function openObjectModal(id = null) {
                     <md-outlined-text-field id="f_adresse" label="Adresse" value="${escapeHtml(obj.adresse || '')}" placeholder="Musterstraße 12" oninput="objAdresseInput(event)" onblur="objAdresseHide()"></md-outlined-text-field>
                     <div id="f_adresse_suggest" class="obj-adr-suggest" style="display:none"></div>
                     <style>
-                      .obj-adr-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 10px 28px rgba(15,23,42,.14);max-height:240px;overflow:auto;margin-top:4px}
+                      .obj-adr-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
                       .obj-adr-item{padding:8px 10px;cursor:pointer;border-bottom:1px solid var(--gray-200);font-size:.85rem;display:flex;align-items:flex-start;gap:8px;color:var(--gray-700);line-height:1.3}
                       .obj-adr-item:last-child{border-bottom:0}
-                      .obj-adr-item:hover{background:color-mix(in srgb, var(--accent, #2563eb) 10%, transparent)}
+                      .obj-adr-item:hover{background: color-mix(in srgb, var(--accent, var(--md-sys-color-primary)) 10%, transparent)}
                       .obj-adr-empty{padding:8px 10px;font-size:.8rem;color:var(--gray-400)}
                     </style>
                 </div>
@@ -666,10 +666,10 @@ async function openArtikelModal(objId, artikelId = null) {
                 <div id="f_art_leistung_hint" class="art-leistung-hint"></div>
                 <style>
                     .art-leistung-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.8rem;color:var(--gray-600);margin-top:4px;min-height:1px}
-                    .art-leistung-hint .material-symbols-outlined{font-size:16px;color:var(--accent,#1a73e8)}
+                    .art-leistung-hint .material-symbols-outlined{font-size:16px;color: var(--accent,var(--md-sys-color-primary))}
                     .art-lh-src{color:var(--gray-400)}
                     .art-lh-badge{font-size:.7rem;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--gray-100);color:var(--gray-700);cursor:help}
-                    .art-lh-sk{background:#fef3c7;color:#92400e}
+                    .art-lh-sk{background: var(--md-ext-color-warning-container);color: var(--md-ext-color-on-warning-container)}
                 </style>
             </div>
             <div class="form-group">
@@ -1072,7 +1072,7 @@ async function objAdresseFetch(q) {
             const postcode = p.postcode || '';
             const state = p.state || '';
             html += `<div class="obj-adr-item" data-street="${escapeHtml(street)}" data-postcode="${escapeHtml(postcode)}" data-city="${escapeHtml(city)}" data-state="${escapeHtml(state)}" data-label="${escapeHtml(label)}" onmousedown="objAdressePick(this)">
-                <span class="material-symbols-outlined" style="color:#3b82f6;font-size:15px;margin-top:1px;flex-shrink:0">location_on</span>
+                <span class="material-symbols-outlined" style="color: var(--md-sys-color-primary);font-size:15px;margin-top:1px;flex-shrink:0">location_on</span>
                 <span style="line-height:1.3">${escapeHtml(label)}</span>
             </div>`;
         }
@@ -1142,7 +1142,7 @@ async function objKontaktFetch(q) {
                 ${sub ? `<div style="font-size:.76rem;color:var(--gray-500)">${escapeHtml(sub)}</div>` : '<div style="font-size:.76rem;color:var(--gray-400)">keine Kontaktdaten hinterlegt</div>'}
                 ${where ? `<div style="font-size:.7rem;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(where)}</div>` : ''}
             </span>
-            ${r.same_kunde ? '<span style="font-size:.66rem;background:#d1fae5;color:#047857;border-radius:999px;padding:1px 7px;align-self:center;white-space:nowrap">gleicher Kunde</span>' : ''}
+            ${r.same_kunde ? '<span style="font-size:.66rem;background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container);border-radius:999px;padding:1px 7px;align-self:center;white-space:nowrap">gleicher Kunde</span>' : ''}
         </div>`;
     }).join('');
     box.style.display = 'block';

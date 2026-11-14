@@ -61,7 +61,7 @@ function _cdocsTabDefs(isAdmin) {
 
 async function renderCompanyDocuments() {
     const content = document.getElementById('content');
-    content.innerHTML = '<div class="text-center mt-3"><i class="fas fa-spinner fa-spin fa-2x text-muted"></i></div>';
+    content.innerHTML = '<div class="text-center mt-3"><md-circular-progress indeterminate></md-circular-progress></div>';
 
     const ctx = _cdocsCtx();
 
@@ -248,13 +248,13 @@ window.cdocsSaveCompany = cdocsSaveCompany;
    time (opt-out model — unset keys stay on). */
 
 async function _cdocsNotifRender(panel) {
-    panel.innerHTML = '<div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+    panel.innerHTML = '<div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
     let data = null;
     try {
         data = await apiGet(API_BASE + '/notifications/preferences');
     } catch (e) { /* fall through to error box */ }
     if (!data || data.error) {
-        panel.innerHTML = '<div class="acc-info-box"><i class="fas fa-triangle-exclamation"></i> Benachrichtigungs-Einstellungen konnten nicht geladen werden.</div>';
+        panel.innerHTML = '<div class="acc-info-box"><i class="material-symbols-outlined">warning</i> Benachrichtigungs-Einstellungen konnten nicht geladen werden.</div>';
         return;
     }
     panel.innerHTML = _cdocsNotifHtml(data);
@@ -295,7 +295,7 @@ function _cdocsNotifHtml(data) {
 
     return `
         <div class="acc-info-box" style="margin-bottom:16px">
-            <i class="fas fa-info-circle"></i>
+            <i class="material-symbols-outlined">info</i>
             Persönliche Einstellung — gilt nur für Ihr Konto. Meldungen kommen in der
             Glocke (oben rechts) und als Push auf Ihre Clood-X App (Android / iOS / Desktop).
             Ein deaktivierter Schalter wirkt sofort; andere Benutzer bleiben unberührt.
@@ -404,7 +404,7 @@ function _cdocsDocsPanelHtml() {
 
     return `
         <div class="acc-info-box" style="margin-bottom:16px">
-            <i class="fas fa-info-circle"></i>
+            <i class="material-symbols-outlined">info</i>
             Hinterlegen Sie offizielle Unternehmensunterlagen — Gewerbeschein, Handelsregisterauszug,
             Steuerbescheid, Versicherungsnachweise &hellip; Erlaubt: PDF, JPG, PNG, WEBP &middot; max. 10&nbsp;MB pro Datei.
         </div>
@@ -483,7 +483,7 @@ function _cdocsRenderList() {
 
 function _cdocsCardHtml(d) {
     const isPdf = (d.mime_type || '').includes('pdf');
-    const icon  = isPdf ? 'fa-file-pdf' : 'fa-file-image';
+    const icon  = isPdf ? 'picture_as_pdf' : 'image';
     const iconColor = isPdf ? '#dc2626' : '#2563eb';
     const dateStr = d.created_at
         ? new Date(d.created_at).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -493,7 +493,7 @@ function _cdocsCardHtml(d) {
     return `
     <div class="cdocs-doc" data-id="${d.id}">
         <div class="doc-thumb cdocs-doc-thumb" data-thumb-url="${escapeHtml(thumbUrl)}">
-            <i class="fas ${icon}" style="color:${iconColor}"></i>
+            <i class="material-symbols-outlined" style="color:${iconColor}">${icon}</i>
         </div>
         <div class="cdocs-doc-body">
             <div class="cdocs-doc-title md-typescale-title-small" title="${escapeHtml(d.original_filename || '')}">${escapeHtml(d.title)}</div>
@@ -752,7 +752,7 @@ async function _cdocsBereicheRender(panel, quiet) {
     // quiet=true keeps the current DOM while refetching (no "Laden…" flash)
     // — used for the reload after own edits and for realtime pushes.
     if (!quiet) {
-        panel.innerHTML = '<div class="acc-loading"><i class="fas fa-spinner fa-spin"></i> Laden...</div>';
+        panel.innerHTML = '<div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>';
     }
     _bcatBindRealtime();
     let data = null;
@@ -766,7 +766,7 @@ async function _cdocsBereicheRender(panel, quiet) {
     } catch (e) { /* error box below */ }
     if (!data || !Array.isArray(data.mains)) {
         if (!quiet) {
-            panel.innerHTML = '<div class="acc-info-box"><i class="fas fa-triangle-exclamation"></i> Bereiche konnten nicht geladen werden.</div>';
+            panel.innerHTML = '<div class="acc-info-box"><i class="material-symbols-outlined">warning</i> Bereiche konnten nicht geladen werden.</div>';
         }
         return;
     }
@@ -1046,17 +1046,17 @@ function _cdocsBereicheHtml() {
         .bsec-top{display:flex;gap:14px;align-items:center;margin-bottom:16px}
         .bsec-top h3{margin:0}
         .bsec-top p{margin:2px 0 0;color:var(--gray-600);font-size:.9rem}
-        .bsec-top-ic{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;background:linear-gradient(135deg,#1e3a8a,#2563eb)}
+        .bsec-top-ic{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;color: #fff;background: linear-gradient(135deg,var(--md-sys-color-primary),var(--md-sys-color-primary))}
         .bsec-mains{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
         .bsec-main-pill{border:1px solid var(--gray-300);background:var(--white);border-radius:999px;padding:4px 12px;font:inherit;font-size:.82rem;cursor:pointer}
-        .bsec-main-pill.is-on{background:var(--gray-900,#111827);color:#fff;border-color:transparent}
+        .bsec-main-pill.is-on{background: var(--gray-900,var(--md-sys-color-primary));color: #fff;border-color:transparent}
         .bsec-tabs{display:flex;gap:4px;border-bottom:1px solid var(--gray-200);margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
         .bsec-tab{display:inline-flex;align-items:center;gap:6px;border:0;background:none;font:inherit;font-size:.9rem;color:var(--gray-600);padding:10px 14px;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;position:relative}
         .bsec-tab .material-symbols-outlined{font-size:19px}
-        .bsec-tab:hover{color:var(--gray-900,#111827)}
-        .bsec-tab.is-on{color:var(--accent,#1a73e8);border-bottom-color:var(--accent,#1a73e8);font-weight:600}
+        .bsec-tab:hover{color: var(--gray-900,var(--md-sys-color-on-primary-container))}
+        .bsec-tab.is-on{color: var(--accent,var(--md-sys-color-primary));border-bottom-color: var(--accent,var(--md-sys-color-primary));font-weight:600}
         .bsec-tab-n{font-size:.72rem;background:var(--gray-100);color:var(--gray-700);border-radius:999px;padding:0 7px;font-weight:600}
-        .bsec-tab-dot{width:7px;height:7px;border-radius:50%;background:#f59e0b}
+        .bsec-tab-dot{width:7px;height:7px;border-radius:50%;background: var(--md-ext-color-warning)}
         .bsec-card{border:1px solid var(--gray-200);border-radius:14px;background:var(--white);padding:18px;margin-bottom:14px}
         .bsec-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
         .bsec-head > div:first-child{flex:1 1 320px;min-width:0}
@@ -1064,9 +1064,9 @@ function _cdocsBereicheHtml() {
         .bsec-head p{margin:0;color:var(--gray-600);font-size:.85rem;line-height:1.45}
         .bsec-used{display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex:0 1 auto}
         .bsec-used-lbl{font-size:.68rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--gray-500)}
-        .bsec-chip{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;color:#1e3a8a;background:#eff6ff;border:1px solid #dbeafe;border-radius:999px;padding:2px 9px}
+        .bsec-chip{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;color: var(--md-sys-color-primary);background: var(--md-sys-color-primary-container);border: 1px solid var(--md-sys-color-primary-container);border-radius:999px;padding:2px 9px}
         .bsec-chip .material-symbols-outlined{font-size:14px}
-        .bsec-warn{display:flex;gap:6px;align-items:center;font-size:.82rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 10px;margin-bottom:12px}
+        .bsec-warn{display:flex;gap:6px;align-items:center;font-size:.82rem;color: var(--md-ext-color-on-warning-container);background: var(--md-ext-color-warning-container);border: 1px solid var(--md-ext-color-warning-container);border-radius:10px;padding:8px 10px;margin-bottom:12px}
         .bsec-warn .material-symbols-outlined{font-size:18px}
         .bsec-table{border:1px solid var(--gray-200);border-radius:10px;overflow:hidden}
         .bsec-tr{display:grid;grid-template-columns:minmax(160px,1.2fr) minmax(200px,1.6fr) 120px 110px;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--gray-100)}
@@ -1078,10 +1078,10 @@ function _cdocsBereicheHtml() {
         .bsec-c-name{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:500;min-width:0;overflow-wrap:anywhere}
         .bsec-c-act{display:flex;justify-content:flex-end;gap:2px}
         .bsec-sel{width:100%;font:inherit;font-size:.82rem;padding:5px 8px;border:1px solid var(--gray-200);border-radius:8px;background:var(--white);color:var(--gray-800)}
-        .bsec-sel-open{border-color:#f59e0b;background:#fffbeb;color:#92400e}
+        .bsec-sel-open{border-color: var(--md-ext-color-warning);background: var(--md-ext-color-warning-container);color: var(--md-ext-color-on-warning-container)}
         .bsec-badge{font-size:.7rem;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--gray-100);color:var(--gray-700);cursor:help;white-space:nowrap}
-        .bsec-badge-sk{background:#fef3c7;color:#92400e}
-        .bsec-badge-ok{background:#ecfdf5;color:#065f46;cursor:default}
+        .bsec-badge-sk{background: var(--md-ext-color-warning-container);color: var(--md-ext-color-on-warning-container)}
+        .bsec-badge-ok{background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container);cursor:default}
         .bsec-muted{font-size:.82rem;color:var(--gray-500)}
         .bsec-empty{color:var(--gray-400);font-size:.85rem;padding:10px 12px}
         .bsec-add{display:flex;gap:8px;align-items:center;margin-top:12px}
@@ -1091,9 +1091,9 @@ function _cdocsBereicheHtml() {
         .bsec-toolbar{margin-bottom:12px}
         .bsec-lists{display:flex;flex-direction:column;gap:8px}
         .bsec-list{border:1px solid var(--gray-200);border-radius:10px;background:var(--white)}
-        .bsec-list.is-open{border-color:var(--gray-300);box-shadow:0 1px 6px rgba(15,23,42,.05)}
+        .bsec-list.is-open{border-color:var(--gray-300);box-shadow: 0 1px 6px color-mix(in srgb, var(--md-sys-color-primary) 5%, transparent)}
         .bsec-list-head{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer}
-        .bsec-list-ic{font-size:19px;color:var(--bc,var(--accent,#1a73e8))}
+        .bsec-list-ic{font-size:19px;color: var(--bc,var(--accent,var(--md-sys-color-primary)))}
         .bsec-list-name{flex:1;font-weight:600;font-size:.92rem;min-width:0;overflow-wrap:anywhere}
         .bsec-count{font-size:.75rem;color:var(--gray-500);white-space:nowrap}
         .bsec-list-act{display:flex;gap:2px}
@@ -1105,7 +1105,7 @@ function _cdocsBereicheHtml() {
         .bsec-opt-name{flex:1;font-size:.88rem;min-width:0;overflow-wrap:anywhere}
         .bsec-flags{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
         .bsec-flag{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--gray-200);border-radius:10px;padding:10px 12px;cursor:pointer}
-        .bsec-flag input{margin-top:3px;accent-color:var(--bc,var(--accent,#1a73e8))}
+        .bsec-flag input{margin-top:3px;accent-color: var(--bc,var(--accent,var(--md-sys-color-primary)))}
         .bsec-flag span{display:flex;flex-direction:column;font-size:.88rem}
         .bsec-flag small{color:var(--gray-500);font-size:.76rem}
         .bsec-flag-fixed{background:var(--gray-50);cursor:default}
@@ -1115,7 +1115,7 @@ function _cdocsBereicheHtml() {
         .bcat-branche-hint{font-size:.78rem;color:var(--gray-500);margin:8px 0 0 8px}
         .bcat-std-btn{flex:none}
         @media (max-width:560px){.bcat-branche-row .bcat-input{flex:1 1 100%}}
-        .bcat-color{position:relative;width:26px;height:26px;border-radius:50%;flex:none;cursor:pointer;background:var(--bc);box-shadow:0 0 0 3px var(--bc-bg),0 1px 3px rgba(0,0,0,.25)}
+        .bcat-color{position:relative;width:26px;height:26px;border-radius:50%;flex:none;cursor:pointer;background:var(--bc);box-shadow: 0 0 0 3px var(--bc-bg),0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 25%, transparent)}
         .bcat-color-ro{cursor:default}
         .bcat-color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:inherit;border:0;padding:0}
         .bcat-sub-dot{width:9px;height:9px;border-radius:50%;background:var(--bc);flex:none}
@@ -1123,7 +1123,7 @@ function _cdocsBereicheHtml() {
         .bcat-input{min-width:0;padding:9px 12px;border:1px solid var(--gray-300);border-radius:8px;font:inherit;font-size:.9rem}
         .bcat-btn{border:0;background:none;cursor:pointer;font-family:'Material Symbols Outlined';font-size:18px;color:var(--gray-500);padding:4px;border-radius:6px;line-height:1}
         .bcat-btn:hover{background:var(--gray-100);color:var(--gray-800)}
-        .bcat-del:hover{color:#b91c1c}
+        .bcat-del:hover{color: var(--md-sys-color-error)}
         @media (max-width:760px){
             .bsec-wrap{padding:12px}
             .bsec-th{display:none}

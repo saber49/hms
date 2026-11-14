@@ -259,7 +259,7 @@ async function openWmThread(dienstNr) {
             <strong>${escapeHtml(name)}</strong>
             <small>${escapeHtml(w.dienst_nr || '')}${w.bereich ? ' · ' + escapeHtml(w.bereich) : ''}</small>
         </div>
-        ${canCall ? `<button class="wm-back-btn wm-call-btn" title="Anrufen" onclick="CloodCall.start('${escapeHtml(dienstNr)}', '${escapeHtml(name).replace(/'/g, "\\'")}')"><i class="fas fa-phone"></i></button>` : ''}
+        ${canCall ? `<button class="wm-back-btn wm-call-btn" title="Anrufen" onclick="CloodCall.start('${escapeHtml(dienstNr)}', '${escapeHtml(name).replace(/'/g, "\\'")}')"><i class="material-symbols-outlined">call</i></button>` : ''}
     `;
 
     const msgs = data.nachrichten || [];
@@ -289,13 +289,13 @@ function wmBubble(msg) {
     // Site photos from the worker app chat — show the picture inline.
     const attachment = msg.datei_pfad && /\.(jpe?g|png|webp)$/i.test(msg.datei_pfad) ? `
         <a href="${fileUrl}" target="_blank" rel="noopener" style="display:block;margin-top:6px">
-            <img src="${fileUrl}" alt="Foto" loading="lazy" style="display:block;width:100%;max-width:280px;border-radius:10px;background:rgba(0,0,0,.06)">
+            <img src="${fileUrl}" alt="Foto" loading="lazy" style="display:block;width:100%;max-width:280px;border-radius:10px;background: color-mix(in srgb, var(--md-sys-color-scrim) 6%, transparent)">
         </a>` : msg.datei_pfad ? `
-        <a href="#" onclick="hmsOpenFile('${hmsFileArg(msg.datei_pfad)}');return false" style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-top:6px;background:rgba(0,0,0,.05);border-radius:8px;text-decoration:none;color:inherit;border:1px solid rgba(0,0,0,.1)">
+        <a href="#" onclick="hmsOpenFile('${hmsFileArg(msg.datei_pfad)}');return false" style="display:flex;align-items:center;gap:8px;padding:8px 12px;margin-top:6px;background: color-mix(in srgb, var(--md-sys-color-scrim) 5%, transparent);border-radius:8px;text-decoration:none;color:inherit;border: 1px solid color-mix(in srgb, var(--md-sys-color-scrim) 10%, transparent)">
             ${wmIcon('picture_as_pdf', 'font-size:1.2rem;color:#dc2626')}
             <div style="flex:1;min-width:0">
                 <div style="font-size:0.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(msg.datei_name || 'Dokument')}</div>
-                <div style="font-size:0.7rem;color:#666">Dokument öffnen</div>
+                <div style="font-size:0.7rem;color: var(--md-sys-color-on-surface)">Dokument öffnen</div>
             </div>
             ${wmIcon('open_in_new', 'font-size:0.8rem;color:#888')}
         </a>` : '';

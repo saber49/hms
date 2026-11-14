@@ -393,7 +393,7 @@ function mlBodyDoc(m, remote) {
         ? m.html
         : `<pre>${mlEsc(m.text || '').replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>')}</pre>`;
     return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><base target="_blank">`
-        + `<style>html,body{margin:0;background:#fff}body{padding:18px 22px;font:14px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1f2937;overflow-wrap:anywhere}img{max-width:100%;height:auto}pre{white-space:pre-wrap;font:inherit;margin:0}a{color:#2563eb}blockquote{margin:0 0 0 8px;padding-left:10px;border-left:3px solid #e5e7eb;color:#4b5563}</style>`
+        + `<style>html,body{margin:0;background: var(--md-sys-color-surface-container-lowest)}body{padding:18px 22px;font:14px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color: var(--md-sys-color-on-primary-container);overflow-wrap:anywhere}img{max-width:100%;height:auto}pre{white-space:pre-wrap;font:inherit;margin:0}a{color: var(--md-sys-color-primary)}blockquote{margin:0 0 0 8px;padding-left:10px;border-left: 3px solid var(--md-sys-color-primary-container);color: var(--md-sys-color-primary)}</style>`
         + `</head><body>${inner}</body></html>`;
 }
 

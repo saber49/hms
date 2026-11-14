@@ -306,11 +306,11 @@ window.FE = (() => {
         const tb = document.createElement('div');
         tb.className = 'fe-toolbar';
         tb.innerHTML = `
-            <button data-act="move" class="fe-grip" title="Gedrückt halten und ziehen zum Verschieben"><i class="fas fa-arrows-alt"></i></button>
-            <button data-act="up" title="Nach oben (Z+)"><i class="fas fa-arrow-up"></i></button>
-            <button data-act="down" title="Nach unten (Z-)"><i class="fas fa-arrow-down"></i></button>
-            <button data-act="dup" title="Duplizieren"><i class="fas fa-copy"></i></button>
-            <button data-act="del" class="danger" title="Löschen"><i class="fas fa-trash"></i></button>
+            <button data-act="move" class="fe-grip" title="Gedrückt halten und ziehen zum Verschieben"><i class="material-symbols-outlined">drag_pan</i></button>
+            <button data-act="up" title="Nach oben (Z+)"><i class="material-symbols-outlined">arrow_upward</i></button>
+            <button data-act="down" title="Nach unten (Z-)"><i class="material-symbols-outlined">arrow_downward</i></button>
+            <button data-act="dup" title="Duplizieren"><i class="material-symbols-outlined">content_copy</i></button>
+            <button data-act="del" class="danger" title="Löschen"><i class="material-symbols-outlined">delete</i></button>
         `;
         div.appendChild(tb);
         tb.addEventListener('click', (e) => {

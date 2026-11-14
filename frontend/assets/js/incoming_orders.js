@@ -881,11 +881,11 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                             <input type="text" class="form-control" id="wiz_shift_ort" required autocomplete="off" placeholder="z.B. Haupteingang, Musterstr. 1, 04109 Leipzig" oninput="beOrtInput(event); wizRefreshOrtHints()" onblur="beOrtHide()">
                             <div id="wiz_ort_suggest" class="be-ort-suggest" style="display:none"></div>
                             <style>
-                              .be-ort-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow:0 10px 28px rgba(15,23,42,.14);max-height:240px;overflow:auto;margin-top:4px}
+                              .be-ort-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
                               .be-ort-item{padding:8px 10px;cursor:pointer;border-bottom:1px solid var(--gray-100);font-size:.85rem;display:flex;align-items:flex-start;gap:8px;color:var(--gray-700);line-height:1.3}
                               .be-ort-item:last-child{border-bottom:0}
-                              .be-ort-item:hover{background:var(--be-accent-soft, #eff6ff)}
-                              .be-ort-item .material-symbols-outlined{color:#3b82f6;font-size:15px;margin-top:1px}
+                              .be-ort-item:hover{background: var(--be-accent-soft, var(--md-sys-color-primary-container))}
+                              .be-ort-item .material-symbols-outlined{color: var(--md-sys-color-primary);font-size:15px;margin-top:1px}
                               .be-ort-empty{padding:8px 10px;font-size:.8rem;color:var(--gray-400)}
                             </style>
                         </div>
@@ -1329,7 +1329,7 @@ function wizRenderArtikelArea(articles) {
 
     if (articles.length === 0) {
         wrap.innerHTML = `
-            <div class="be-info-box" style="background:var(--be-warn-soft);border-color:#fde68a;border-left-color:var(--be-warn)">
+            <div class="be-info-box" style="background:var(--be-warn-soft);border-color: var(--md-ext-color-warning-container);border-left-color:var(--be-warn)">
                 ${beIcon('warning', 'color:var(--be-warn);font-size:16px')}
                 <div>Für dieses Objekt sind <strong>keine aktiven Artikel</strong> hinterlegt. Bitte legen Sie zuerst einen Artikel im Bereich "Objekte" an.</div>
             </div>
@@ -2034,7 +2034,7 @@ function wizRedrawDayRow(tr, idx) {
     // (shown greyed as inherited), else nothing.
     const headerOrtNow = (document.getElementById('wiz_shift_ort')?.value || '').trim();
     const ortLine = ort
-        ? `<div style="font-size:.72rem;color:var(--gray-500);margin-top:2px">${beIcon('location_on', 'color:#3b82f6;font-size:11px;vertical-align:-2px;margin-right:3px')}${escapeHtml(ort)} <span style="color:#b45309;font-size:.68rem;font-weight:600" title="Eigener Einsatzort für diesen Tag — hat Vorrang vor Ort / Treffpunkt">· Tag-Ort</span></div>`
+        ? `<div style="font-size:.72rem;color:var(--gray-500);margin-top:2px">${beIcon('location_on', 'color:#3b82f6;font-size:11px;vertical-align:-2px;margin-right:3px')}${escapeHtml(ort)} <span style="color: var(--md-ext-color-warning);font-size:.68rem;font-weight:600" title="Eigener Einsatzort für diesen Tag — hat Vorrang vor Ort / Treffpunkt">· Tag-Ort</span></div>`
         : (headerOrtNow
             ? `<div class="be-day-ort-inherit" style="font-size:.72rem;color:var(--gray-400);margin-top:2px" title="Kein Tag-Ort — der Einsatz übernimmt Ort / Treffpunkt der Schicht-Vorlage">${beIcon('location_on', 'font-size:11px;vertical-align:-2px;margin-right:3px')}${escapeHtml(headerOrtNow)} <span style="font-size:.68rem">· Standard</span></div>`
             : '');
@@ -2052,14 +2052,14 @@ function wizRedrawDayRow(tr, idx) {
     const rowArtId = tr.dataset.artikel || (selArts[0]?.artikel_id ?? '');
     const rowArtObj = selArts.find(a => String(a.artikel_id) === String(rowArtId));
     const artChip = selArts.length > 1 && rowArtId
-        ? `<div style="margin-top:2px"><span class="be-art-chip-mini" style="display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:600;color:var(--be-accent,#2563eb);background:rgba(37,99,235,.08);padding:1px 7px;border-radius:10px" title="Leistung dieses Tages">${beIcon('sell', 'font-size:10px')}${escapeHtml(rowArtObj?.artikel_name || rowArtId)}</span></div>`
+        ? `<div style="margin-top:2px"><span class="be-art-chip-mini" style="display:inline-flex;align-items:center;gap:3px;font-size:.68rem;font-weight:600;color: var(--be-accent,var(--md-sys-color-primary));background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);padding:1px 7px;border-radius:10px" title="Leistung dieses Tages">${beIcon('sell', 'font-size:10px')}${escapeHtml(rowArtObj?.artikel_name || rowArtId)}</span></div>`
         : '';
     // Scope lock: the row's Leistung sits outside the caller's Bereich —
     // the backend re-merges it on save, so editing/removing would be a no-op
     // that pretends to work. Render it read-only instead.
     const scopeLocked = tr.dataset.scopeLocked === '1';
     const scopeBadge = scopeLocked
-        ? `<span class="be-dispo-status-badge" style="background:var(--gray-100, #f1f5f9);color:var(--gray-500, #64748b)" title="Leistung außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:11px;vertical-align:-2px')} Bereich</span>`
+        ? `<span class="be-dispo-status-badge" style="background: var(--gray-100, var(--md-sys-color-primary-container));color: var(--gray-500, var(--md-sys-color-primary))" title="Leistung außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:11px;vertical-align:-2px')} Bereich</span>`
         : '';
     tr.dataset.wochentag = DAYS_DE[dayOfWeek];
     tr.innerHTML = `
@@ -2075,7 +2075,7 @@ function wizRedrawDayRow(tr, idx) {
         <td class="be-day-desc-cell"><div class="be-day-desc${beschreibung.length > 60 ? ' is-long' : ''}"${beschreibung ? ` title="${escapeHtml(beschreibung)}"` : ''}${beschreibung.length > 60 ? ' onclick="this.classList.toggle(\'is-open\')"' : ''}>${escapeHtml(beschreibung) || '–'}</div>${ortLine}${anfChip}</td>
         <td><div style="display:flex;gap:6px;justify-content:flex-end">
             ${scopeLocked
-                ? `<span style="color:#94a3b8" title="Außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:14px')}</span>`
+                ? `<span style="color: var(--md-sys-color-primary)" title="Außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:14px')}</span>`
                 : `<button class="be-day-row-action" onclick="wizEditDay(this)" title="Tag bearbeiten">${beIcon('edit', 'font-size:13px')}</button>
             <button class="be-day-row-action" onclick="wizDuplicateDay(this)" title="2. Schicht am selben Tag hinzufügen">${beIcon('content_copy', 'font-size:13px')}</button>
             <button class="be-day-row-action" onclick="wizRemoveDay(this)" title="Entfernen">${beIcon('close', 'font-size:13px')}</button>`}
@@ -2100,9 +2100,9 @@ function wizDayMengeInfo(tr) {
 function wizDayMengeCellHtml(tr) {
     const { menge, mixM, mixW, mixMismatch } = wizDayMengeInfo(tr);
     const mixLine = (mixM > 0 || mixW > 0)
-        ? `<div style="font-size:.72rem;margin-top:2px;font-weight:700" title="Geschlecht-Mix für diesen Tag"><span style="color:#2563eb">M ${mixM}</span> <span style="color:#db2777;margin-left:6px">W ${mixW}</span></div>`
+        ? `<div style="font-size:.72rem;margin-top:2px;font-weight:700" title="Geschlecht-Mix für diesen Tag"><span style="color: var(--md-sys-color-primary)">M ${mixM}</span> <span style="color: var(--md-sys-color-error);margin-left:6px">W ${mixW}</span></div>`
         : '';
-    return `<strong${mixMismatch ? ' style="color:#dc2626"' : ''}>${menge}</strong>${mixLine}${mixMismatch ? `<div style="font-size:.68rem;color:#dc2626;margin-top:2px">⚠ Mix > Menge</div>` : ''}`;
+    return `<strong${mixMismatch ? ' style="color: var(--md-sys-color-error)"' : ''}>${menge}</strong>${mixLine}${mixMismatch ? `<div style="font-size:.68rem;color: var(--md-sys-color-error);margin-top:2px">⚠ Mix > Menge</div>` : ''}`;
 }
 
 // Menge cell in EDIT mode: Menge input + M/W inputs. No onchange handlers —
@@ -2112,8 +2112,8 @@ function wizDayMengeEditHtml(tr) {
     const { menge, mixM, mixW } = wizDayMengeInfo(tr);
     return `<input type="number" class="form-control be-day-menge" value="${menge}" min="1" style="width:64px;text-align:right;padding:2px 6px">
         <div class="be-day-mix" style="display:flex;gap:4px;justify-content:flex-end;margin-top:3px" title="Geschlecht-Mix für diesen Tag (Summe ≤ Menge; 0/0 = egal)">
-            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color:#2563eb;font-weight:700">M<input type="number" class="form-control be-day-mix-m" value="${mixM}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
-            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color:#db2777;font-weight:700">W<input type="number" class="form-control be-day-mix-w" value="${mixW}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
+            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-primary);font-weight:700">M<input type="number" class="form-control be-day-mix-m" value="${mixM}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
+            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-error);font-weight:700">W<input type="number" class="form-control be-day-mix-w" value="${mixW}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
         </div>`;
 }
 
@@ -2187,7 +2187,7 @@ async function wizEditDay(btn) {
             <div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div>
         </div>`;
     cells[10].innerHTML = `<div style="display:flex;gap:6px;justify-content:flex-end">
-        <button type="button" class="be-day-row-action" onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color:#16a34a">${beIcon('check', 'font-size:13px')}</button>
+        <button type="button" class="be-day-row-action" onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color: var(--md-ext-color-success)">${beIcon('check', 'font-size:13px')}</button>
         <button type="button" class="be-day-row-action" onclick="wizCancelDayEdit(this)" title="Abbrechen">${beIcon('undo', 'font-size:13px')}</button>
     </div>`;
 }
@@ -2517,7 +2517,7 @@ function wizUpdateLockLegend(rows) {
     const lines = [];
     if (confirmed) lines.push(`<div><span class="be-dispo-status-badge be-dispo-confirmed">${beIcon('block', 'font-size:11px;vertical-align:-2px')} Bestätigt</span> <strong>${confirmed}</strong> Tag(e) — Einsatz bestätigt, weder änderbar noch entfernbar.</div>`);
     if (planned) lines.push(`<div><span class="be-dispo-status-badge be-dispo-planned">${beIcon('warning', 'font-size:11px;vertical-align:-2px')} Geplant</span> <strong>${planned}</strong> Tag(e) — erst in der Disposition „Plan aufheben“, dann hier bearbeitbar.</div>`);
-    if (scope) lines.push(`<div><span class="be-dispo-status-badge" style="background:var(--gray-100, #f1f5f9);color:var(--gray-500, #64748b)">${beIcon('lock', 'font-size:11px;vertical-align:-2px')} Bereich</span> <strong>${scope}</strong> Tag(e) — Leistung außerhalb Ihres Bereichs, schreibgeschützt.</div>`);
+    if (scope) lines.push(`<div><span class="be-dispo-status-badge" style="background: var(--gray-100, var(--md-sys-color-primary-container));color: var(--gray-500, var(--md-sys-color-primary))">${beIcon('lock', 'font-size:11px;vertical-align:-2px')} Bereich</span> <strong>${scope}</strong> Tag(e) — Leistung außerhalb Ihres Bereichs, schreibgeschützt.</div>`);
     box.innerHTML = lines.join('');
     box.style.display = lines.length ? '' : 'none';
 }
@@ -2964,7 +2964,7 @@ function _beCalCardHtml(r, n) {
         _beCalFact('schedule', 'Zeit', `${escapeHtml(von || '–')} – ${escapeHtml(bis || '–')}${beIsOvernight(von, bis) ? ' <small>(+1 Tag)</small>' : ''}`),
         _beCalFact('timelapse', 'Stunden', isNaN(std) ? '–' : `${_beCalFmtStd(std)} Std`),
         _beCalFact('free_breakfast', 'Pause', pauseTxt),
-        _beCalFact('group', 'Personen', `<span${mixMismatch ? ' style="color:var(--be-danger,#dc2626)"' : ''}>${menge}</span>${mix}`),
+        _beCalFact('group', 'Personen', `<span${mixMismatch ? ' style="color: var(--be-danger,var(--md-sys-color-error))"' : ''}>${menge}</span>${mix}`),
         _beCalFact('location_on', 'Ort / Treffpunkt', ortTxt, true),
         anf.qualifikation ? _beCalFact('workspace_premium', anfOver ? 'Qualifikation · Tag' : 'Qualifikation', escapeHtml(anf.qualifikation)) : '',
         anf.kleidung ? _beCalFact('apparel', anfOver ? 'Kleidung · Tag' : 'Kleidung', escapeHtml(anf.kleidung)) : '',
@@ -4080,8 +4080,8 @@ function geschlechtMixLabel(anf) {
     const mix = anf.geschlecht_mix;
     if (mix && (mix.maennlich > 0 || mix.weiblich > 0)) {
         const parts = [];
-        if (mix.maennlich > 0) parts.push(`<span style="font-weight:700;color:#2563eb">M ${mix.maennlich}</span>`);
-        if (mix.weiblich > 0) parts.push(`<span style="font-weight:700;color:#db2777">W ${mix.weiblich}</span>`);
+        if (mix.maennlich > 0) parts.push(`<span style="font-weight:700;color: var(--md-sys-color-primary)">M ${mix.maennlich}</span>`);
+        if (mix.weiblich > 0) parts.push(`<span style="font-weight:700;color: var(--md-sys-color-error)">W ${mix.weiblich}</span>`);
         return parts.join(' · ');
     }
     return anf.geschlecht ? geschlechtLabel(anf.geschlecht) : '';
@@ -4150,16 +4150,16 @@ function beHistoryViewHtml(history) {
             }).join('')}</div>
         <style>
             .be-hist{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto}
-            .be-hist-row{border:1px solid var(--be-border,#e2e8f0);border-radius:10px;padding:8px 12px}
+            .be-hist-row{border: 1px solid var(--be-border,var(--md-sys-color-primary-container));border-radius:10px;padding:8px 12px}
             .be-hist-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-            .be-hist-act{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--md-sys-color-secondary-container,#dbeafe);color:var(--md-sys-color-on-secondary-container,#1e3a8a);white-space:nowrap}
-            .be-hist-act.abg{background:var(--be-danger-light,#fee2e2);color:var(--be-danger,#dc2626)}
-            .be-hist-act.done{background:#dcfce7;color:#166534}
-            [data-theme="dark"] .be-hist-act.done{background:#14532d;color:#86efac}
-            .be-hist-meta{margin-left:auto;font-size:.78rem;color:var(--be-text-muted,#64748b);white-space:nowrap}
-            .be-hist-changes{margin:6px 0 0;padding-left:18px;font-size:.8rem;color:var(--be-text,#1f2937)}
+            .be-hist-act{font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;background: var(--md-sys-color-secondary-container,var(--md-sys-color-primary-container));color: var(--md-sys-color-on-secondary-container,var(--md-sys-color-primary));white-space:nowrap}
+            .be-hist-act.abg{background: var(--be-danger-light,var(--md-sys-color-error-container));color: var(--be-danger,var(--md-sys-color-error))}
+            .be-hist-act.done{background: var(--md-ext-color-success-container);color: var(--md-ext-color-on-success-container)}
+            [data-theme="dark"] .be-hist-act.done{background: var(--md-ext-color-success);color: var(--md-ext-color-success-container)}
+            .be-hist-meta{margin-left:auto;font-size:.78rem;color: var(--be-text-muted,var(--md-sys-color-primary));white-space:nowrap}
+            .be-hist-changes{margin:6px 0 0;padding-left:18px;font-size:.8rem;color: var(--be-text,var(--md-sys-color-on-primary-container))}
             .be-hist-changes li{margin:2px 0}
-            .be-hist-changes .v{color:var(--be-text-muted,#64748b)}
+            .be-hist-changes .v{color: var(--be-text-muted,var(--md-sys-color-primary))}
             .be-hist-changes .n{font-weight:600}
         </style>`;
 }
@@ -4267,7 +4267,7 @@ async function viewIncomingOrder(id) {
                     return formatCurrency(order.kundenpreis);
                 })()}</div></div>
                 <div class="form-group"><label>Zeit</label><div>${formatTime(order.zeit_von)} – ${formatTime(order.zeit_bis)}</div></div>
-                <div class="form-group" style="grid-column:span 3"><label>Bemerkung</label>${order.bemerkung ? `<div style="display:flex;gap:10px;align-items:flex-start;background:var(--warning-light, #fffbeb);border:1px solid #fde68a;border-left:4px solid var(--warning, #f59e0b);border-radius:8px;padding:10px 14px;margin-top:4px;font-size:0.86rem;line-height:1.55;color:var(--md-ext-color-on-warning-container, #78350f);white-space:pre-wrap">${beIcon('info', 'color:var(--warning, #f59e0b);font-size:15px;margin-top:3px;flex-shrink:0')}<span>${escapeHtml(order.bemerkung)}</span></div>` : '<div style="color:var(--be-text-muted)">–</div>'}</div>
+                <div class="form-group" style="grid-column:span 3"><label>Bemerkung</label>${order.bemerkung ? `<div style="display:flex;gap:10px;align-items:flex-start;background: var(--warning-light, var(--md-ext-color-warning-container));border: 1px solid var(--md-ext-color-warning-container);border-left: 4px solid var(--warning, var(--md-ext-color-warning));border-radius:8px;padding:10px 14px;margin-top:4px;font-size:0.86rem;line-height:1.55;color: var(--md-ext-color-on-warning-container, var(--md-ext-color-on-warning-container));white-space:pre-wrap">${beIcon('info', 'color:var(--warning, #f59e0b);font-size:15px;margin-top:3px;flex-shrink:0')}<span>${escapeHtml(order.bemerkung)}</span></div>` : '<div style="color:var(--be-text-muted)">–</div>'}</div>
                 <div class="form-group"><label>Erstellt am</label><div>${order.created_at ? formatDateTimeLocal(order.created_at) : '–'}${order.created_by_name ? `<div style="margin-top:2px;color:var(--be-text-muted);font-size:0.8rem">${beIcon('person', 'font-size:11px;vertical-align:-1px;margin-right:4px')}${escapeHtml(order.created_by_name)}</div>` : ''}</div></div>
                 <div class="form-group"><label>Geändert am</label><div>${edited ? `<span style="color:var(--be-warn)">${beIcon('edit', 'font-size:11px;vertical-align:-1px;margin-right:4px')}${formatDateTimeLocal(order.updated_at)}</span>${order.updated_by_name ? `<div style="margin-top:2px;color:var(--be-text-muted);font-size:0.8rem">${beIcon('person', 'font-size:11px;vertical-align:-1px;margin-right:4px')}${escapeHtml(order.updated_by_name)}</div>` : ''}` : '–'}${window._beViewHist.length ? `<div style="margin-top:6px"><md-outlined-button onclick="beShowHistory()" style="--md-outlined-button-container-height:30px"><md-icon slot="icon">history</md-icon>Verlauf (${window._beViewHist.length})</md-outlined-button></div>` : ''}</div></div>
             </div>
@@ -4340,8 +4340,8 @@ async function editIncomingOrder(id) {
         if (order.has_confirmed_tasks) {
             const proceedConfirmed = await mdConfirm(
                 'Diese Bestellung enthält bereits <strong>bestätigte Einsätze</strong> in der Disposition.<br><br>' +
-                '<div style="text-align:left;background:var(--warning-light, #fff7ed);border:1px solid #fed7aa;border-radius:10px;padding:12px 16px">' +
-                `<strong style="color:var(--warning, #c2410c)">${beIcon('warning', 'font-size:14px;vertical-align:-2px')} Bitte beachten:</strong><br>` +
+                '<div style="text-align:left;background: var(--warning-light, var(--md-ext-color-warning-container));border: 1px solid var(--md-ext-color-warning-container);border-radius:10px;padding:12px 16px">' +
+                `<strong style="color: var(--warning, var(--md-ext-color-warning))">${beIcon('warning', 'font-size:14px;vertical-align:-2px')} Bitte beachten:</strong><br>` +
                 '&bull; Tage mit <strong>bestätigten</strong> Einsätzen sind gesperrt — weder änderbar noch entfernbar.<br>' +
                 '&bull; Tage mit <strong>geplanten</strong> Einsätzen sind geschützt — den Plan zuerst in der Dispo aufheben, dann wird der Tag hier bearbeitbar.<br>' +
                 '&bull; Alle übrigen Tage sowie neue Tage können Sie normal bearbeiten.' +
@@ -4355,8 +4355,8 @@ async function editIncomingOrder(id) {
             // dispatcher in anyway — the warning replaces a full hard lock.
             const proceed = await mdConfirm(
                 'Diese Bestellung hat bereits <strong>geplante Einsätze</strong> in der Disposition.<br><br>' +
-                '<div style="text-align:left;background:var(--warning-light, #fff7ed);border:1px solid #fed7aa;border-radius:10px;padding:12px 16px">' +
-                `<strong style="color:var(--warning, #c2410c)">${beIcon('warning', 'font-size:14px;vertical-align:-2px')} Bitte beachten:</strong><br>` +
+                '<div style="text-align:left;background: var(--warning-light, var(--md-ext-color-warning-container));border: 1px solid var(--md-ext-color-warning-container);border-radius:10px;padding:12px 16px">' +
+                `<strong style="color: var(--warning, var(--md-ext-color-warning))">${beIcon('warning', 'font-size:14px;vertical-align:-2px')} Bitte beachten:</strong><br>` +
                 '&bull; Tage mit eingeplanten Mitarbeitern sind <strong>gesperrt</strong> — weder änderbar noch entfernbar (Zeiten, Pausen, Ort bleiben wie in der Dispo).<br>' +
                 '&bull; Alle übrigen Tage sowie neue Tage können Sie normal bearbeiten.<br>' +
                 '&bull; Für einen gesperrten Tag: den Plan zuerst in der Dispo aufheben.' +
@@ -4666,7 +4666,7 @@ async function copyIncomingOrder(id) {
         `<option value="${y}" ${y === defJ ? 'selected' : ''}>${y}</option>`).join('');
 
     const body = `
-        <div style="margin-bottom:16px;background:var(--gray-50,#f8fafc);border:1px solid var(--gray-200,#e2e8f0);border-radius:10px;padding:12px 16px">
+        <div style="margin-bottom:16px;background: var(--gray-50,var(--md-sys-color-primary-container));border: 1px solid var(--gray-200,var(--md-sys-color-primary-container));border-radius:10px;padding:12px 16px">
             <div style="font-weight:600;margin-bottom:4px">${beIcon('content_copy', 'font-size:14px;vertical-align:-2px')} Vorlage: ${escapeHtml(order.eingang_id)}</div>
             <div style="font-size:0.85rem;color:var(--be-text-muted)">
                 ${escapeHtml(order.kundenname || order.kunden_id || '–')} — ${escapeHtml(order.objektname || order.obj_id || '–')}<br>
