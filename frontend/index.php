@@ -204,7 +204,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/worker-panels.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/dashboard.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/controlling.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/users.css?v=20261114md3b">
+    <link rel="stylesheet" href="assets/css/users.css?v=20261114md3d">
     <link rel="stylesheet" href="assets/css/pdf_design.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/company_documents.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3b">

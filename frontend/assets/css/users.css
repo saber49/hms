@@ -432,6 +432,7 @@ md-tabs.u-modal-tabs { margin-bottom: 14px; }
 .u-sec-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
 .u-sec-row .u-sec-head { margin-bottom: 0; }
 .u-sec-head > .material-symbols-outlined { font-size: 20px; color: var(--accent, var(--md-sys-color-primary)); margin-top: 1px; }
+.u-sec-head > div { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .u-sec-head strong { display: block; font-size: .9rem; color: var(--gray-800); }
 .u-sec-head small { display: block; font-size: .78rem; color: var(--gray-500); margin-top: 1px; }
 .u-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
