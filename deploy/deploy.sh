@@ -48,6 +48,8 @@ git fetch -q origin
 NEW=$(git rev-parse "origin/$BRANCH")
 OLD=$(cat "$SHA" 2>/dev/null || git rev-parse HEAD)
 echo "== $ENV: baseline ${OLD:0:8} -> deploy ${NEW:0:8} (origin/$BRANCH)"
+# Move the mirror worktree to the target commit (read-only mirror — exact match)
+git checkout -qB "$BRANCH" "origin/$BRANCH"
 
 # --- 1) drift check: live vs last-deployed baseline --------------------------
 rm -rf /tmp/hms-base && mkdir -p /tmp/hms-base
