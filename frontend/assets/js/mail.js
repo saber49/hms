@@ -99,7 +99,7 @@ async function renderMail() {
 
     const data = await apiGet(ML_API + '/accounts');
     if (!data || !Array.isArray(data.accounts)) {
-        content.innerHTML = `<div class="empty-state">${mlIcon('error')}<p>${mlEsc(mlErr(data, 'Fehler beim Laden'))}</p><button class="btn btn-primary" onclick="loadPage('mail')">Erneut versuchen</button></div>`;
+        content.innerHTML = `<div class="empty-state">${mlIcon('error')}<p>${mlEsc(mlErr(data, 'Fehler beim Laden'))}</p><md-filled-button  onclick="loadPage('mail')">Erneut versuchen</md-filled-button></div>`;
         return;
     }
     _ml.accounts = data.accounts;

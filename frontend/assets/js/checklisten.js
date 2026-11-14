@@ -214,9 +214,9 @@ async function clOpenProtokoll(id) {
             <div class="cl-sub" style="margin-top:10px">Protokoll Nr. ${p.id} · Vorlage Version ${p.vorlage_version}</div>
         </div>`;
     const footer = `
-        ${clCanEdit() ? `<button class="btn btn-outline" style="color:#b91c1c;margin-right:auto" onclick="clDeleteProtokoll(${p.id})">Löschen</button>` : ''}
-        <button class="btn btn-outline" onclick="closeModal()">Schließen</button>
-        <button class="btn btn-primary" onclick="clPdf(${p.id})">PDF</button>`;
+        ${clCanEdit() ? `<md-outlined-button  style="color:#b91c1c;margin-right:auto" onclick="clDeleteProtokoll(${p.id})">Löschen</md-outlined-button>` : ''}
+        <md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>
+        <md-filled-button  onclick="clPdf(${p.id})">PDF</md-filled-button>`;
     openModal(p.vorlage_name, body + clStyles(), footer, 'modal-xl');
     document.querySelectorAll('.cl-d img[data-foto]').forEach(async img => { const u = await clBlob(CL_API + '/fotos/' + img.dataset.foto); if (u) img.src = u; });
     document.querySelectorAll('.cl-d img[data-sig]').forEach(async img => { const u = await clBlob(CL_API + '/protokolle/' + p.id + '/unterschrift/' + img.dataset.sig); if (u) img.src = u; });
@@ -266,11 +266,11 @@ async function clLoadVorlagen() {
             <div class="cl-info">${clIcon('info')}<div>Vorlagen erscheinen beim Mitarbeiter in der App an jeder Schicht, deren ${escapeHtml(clTerm('objekt'))} zur Vorlage passt
                 (alle ${escapeHtml(clTerm('objekte'))} des Bereichs oder gezielt zugeordnete). <b>Pflicht</b>-Zuordnungen werden in der App hervorgehoben.
                 Änderungen an Feldern gelten für neue Protokolle — bestehende behalten ihren Stand.</div></div>
-            ${edit ? `<button class="btn btn-primary" onclick="clEditVorlage(null)">${clIcon('add')} Neue Vorlage</button>` : ''}
+            ${edit ? `<md-filled-button  onclick="clEditVorlage(null)">${clIcon('add')} Neue Vorlage</md-filled-button>` : ''}
         </div>
         ${edit && pakete.length ? `<div class="cl-pakete">${pakete.map(x => `
             <div class="cl-paket">${clIcon('library_add')}<div><b>Branchen-Vorlagen für „${escapeHtml(x.b.name)}“</b><span>${escapeHtml(x.pk.label)}: ${x.pk.vorlagen.map(escapeHtml).join(' · ')}</span></div>
-                <button class="btn btn-outline" onclick="clInstallPaket('${escapeHtml(x.pk.key)}', ${x.b.id})">Übernehmen</button></div>`).join('')}</div>` : ''}
+                <md-outlined-button  onclick="clInstallPaket('${escapeHtml(x.pk.key)}', ${x.b.id})">Übernehmen</md-outlined-button></div>`).join('')}</div>` : ''}
         ${d.vorlagen.length ? Object.entries(byKat).map(([k, list]) => `
             <h3 class="cl-h">${escapeHtml(d.kategorien[k] || k)} <span>${list.length}</span></h3>
             <div class="cl-vgrid">${list.map(v => `
@@ -379,7 +379,7 @@ function clRenderBuilder() {
             <div id="clbRows">${rows}</div>
             <div class="cl-b-add">${['ok_nok', 'check', 'bewertung', 'text', 'zahl', 'auswahl', 'zeit', 'foto', 'abschnitt'].map(k => `<button class="cl-tbtn" onclick="clAddField('${k}')">${clIcon(CL_TYPEN[k].icon)} ${CL_TYPEN[k].label}</button>`).join('')}</div>
         </div>`;
-    const footer = `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="clSaveVorlage()">Speichern</button>`;
+    const footer = `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="clSaveVorlage()">Speichern</md-filled-button>`;
     const keep = document.getElementById('modalBody') && document.querySelector('.cl-b') ? document.getElementById('modalBody').scrollTop : 0;
     clSyncHead();
     openModal(id ? 'Vorlage bearbeiten' : 'Neue Vorlage', body + clStyles(), footer, 'modal-xl');
@@ -446,7 +446,7 @@ async function clOpenObjekte(id) {
             <div class="cl-o-tools"><button class="cl-tbtn" onclick="clObjAll(true)">Alle sichtbaren wählen</button><button class="cl-tbtn" onclick="clObjAll(false)">Keine</button></div>
             <div id="clOList" class="cl-o-list"></div>
         </div>`;
-    openModal((v ? v.name + ' — ' : '') + clTerm('objekte'), body + clStyles(), `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="clSaveObjekte()">Speichern</button>`, 'modal-xl');
+    openModal((v ? v.name + ' — ' : '') + clTerm('objekte'), body + clStyles(), `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="clSaveObjekte()">Speichern</md-filled-button>`, 'modal-xl');
     clRenderObjekte();
 }
 function clObjVisible() { const q = _cl.objekte.q; return _cl.objekte.list.filter(o => !q || `${o.objektname} ${o.kundenname} ${o.stadt} ${o.obj_id}`.toLowerCase().includes(q)); }

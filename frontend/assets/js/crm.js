@@ -655,7 +655,7 @@ function crmAnrufDialog(vorErg = '') {
             <label class="crm-field">Zeitpunkt<input id="cf_zeit" type="datetime-local" class="crm-input" value="${crmNowLocal()}"></label>
             ${crmFolgeFelder('Nachfassen: ' + [k.vorname, k.nachname].filter(Boolean).join(' '))}
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmAnrufSpeichern()">${crmIcon('save')} Speichern</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAnrufSpeichern()">${crmIcon('save')} Speichern</md-filled-button>`);
 }
 
 async function crmAnrufSpeichern() {
@@ -704,7 +704,7 @@ function crmAktivitaetDialog(bezugTyp, bezugId, typ = 'notiz') {
             </div>
             ${istLead ? '<div class="crm-muted">Ausgehende E-Mails zählen als Kontaktversuch (A4), eingehende setzen den Lead auf „Verbunden“ (A5).</div>' : ''}
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmAktivitaetSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Speichern</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAktivitaetSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Speichern</md-filled-button>`);
 }
 
 async function crmAktivitaetSpeichern(bezugTyp, bezugId) {
@@ -739,7 +739,7 @@ function crmAufgabeDialog(bezugTyp, bezugId) {
             <label class="crm-field">Zugewiesen an<select id="cf_a_an" class="crm-input" data-f="zugewiesen_an">${crmOptions(crm.opt.owners || [], d.owner_id || crm.opt.ich.id)}</select></label>
             <label class="crm-field crm-span3">Beschreibung<textarea id="cf_a_text" class="crm-input" rows="3" maxlength="5000"></textarea></label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmAufgabeSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Anlegen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmAufgabeSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Anlegen</md-filled-button>`);
 }
 async function crmAufgabeSpeichern(bezugTyp, bezugId) {
     const r = await crmReq('POST', CRM_API + '/aufgaben', {
@@ -775,7 +775,7 @@ function crmQualifizierenDialog() {
             </div>
             <div class="crm-muted">Lead → Qualifiziert, Lifecycle → Opportunity, der Termin wird als Aufgabe angelegt. In der Lead-Phase keine Preise/Angebote.</div>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-success" id="crmSaveBtn" onclick="crmQualifizieren()">${crmIcon('verified')} Qualifizieren</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-success" id="crmSaveBtn" onclick="crmQualifizieren()">${crmIcon('verified')} Qualifizieren</md-filled-button>`);
 }
 function crmQSync() {
     const d = crmV('cq_termin_am'), t = crmV('cq_termin_zeit') || '10:00';
@@ -816,7 +816,7 @@ function crmDisqualifizierenDialog() {
             </div>
             <label class="crm-field">Notiz <span id="cdNotizPflicht" class="crm-muted"></span><textarea id="cd_notiz" class="crm-input" rows="3" maxlength="5000" data-f="notiz"></textarea></label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-danger" id="crmSaveBtn" onclick="crmDisqualifizieren()">${crmIcon('block')} Disqualifizieren</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-danger" id="crmSaveBtn" onclick="crmDisqualifizieren()">${crmIcon('block')} Disqualifizieren</md-filled-button>`);
 }
 function crmDisqToggle() {
     const p = document.getElementById('cd_grund')?.selectedOptions?.[0]?.dataset?.pflicht || '';
@@ -848,7 +848,7 @@ async function crmDisqualifizieren() {
 // ---------- Owner umverteilen (Vertriebsleitung) ----------
 function crmOwnerDialog(art, id, cur) {
     openModal('Owner umverteilen', `<label class="crm-field">Neuer Owner<select id="co_owner" class="crm-input" data-f="owner_id">${crmOptions(crm.opt.owners || [], cur)}</select></label>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmOwnerSpeichern('${art}','${id}')">Speichern</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmOwnerSpeichern('${art}','${id}')">Speichern</md-filled-button>`);
 }
 async function crmOwnerSpeichern(art, id) {
     const r = await crmReq('PUT', CRM_API + '/' + art + '/' + id, { owner_id: crmV('co_owner') });
@@ -1031,7 +1031,7 @@ function crmPhaseDialog(ziel) {
             <div class="crm-form-grid">${need.map(f => inp[f] ? inp[f]() : '').join('')}${extra}</div>
             ${hint ? `<div class="crm-banner">${crmIcon('info')} ${hint}</div>` : ''}
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn ${ziel === 'verloren' ? 'btn-danger' : 'btn-primary'}" id="crmSaveBtn" onclick="crmPhaseSpeichern('${ziel}')">Phase setzen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button class="${ziel === 'verloren' ? 'md-btn-danger' : ''}" id="crmSaveBtn" onclick="crmPhaseSpeichern('${ziel}')">Phase setzen</md-filled-button>`);
 }
 async function crmPhaseSpeichern(ziel) {
     const id = crmC().id;
@@ -1254,7 +1254,7 @@ async function crmLifecycle(stage, sel) {
 function crmSparteWahl(text) {
     return new Promise(resolve => {
         openModal('Sparte', `<p>${crmE(text)}</p><select id="cs_sparte" class="crm-input">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select>`,
-            `<button class="btn btn-outline" id="csCancel">Abbrechen</button><button class="btn btn-primary" id="csOk">OK</button>`);
+            `<md-outlined-button  id="csCancel">Abbrechen</md-outlined-button><md-filled-button  id="csOk">OK</md-filled-button>`);
         document.getElementById('csCancel').onclick = () => { closeModal(); resolve(null); };
         document.getElementById('csOk').onclick = () => { const v = crmV('cs_sparte'); if (!v) return showToast('Sparte wählen', 'error'); closeModal(); resolve(v); };
     });
@@ -1268,7 +1268,7 @@ function crmLeadDialog(kontaktId) {
             ${crmCan('all') ? `<label class="crm-field">Owner<select id="cl_owner" class="crm-input" data-f="owner_id"><option value="auto" selected>Automatisch (Zuweisungsregel)</option>${crmOptions(crm.opt.owners || [], '')}</select></label>` : ''}
             <div class="crm-muted crm-span3">Pro Sparte gibt es höchstens einen offenen Lead je Kontakt (A3). Aufgabe „Erstkontakt“ wird heute fällig.</div>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmLeadSpeichern('${kontaktId}')">Anlegen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmLeadSpeichern('${kontaktId}')">Anlegen</md-filled-button>`);
 }
 async function crmLeadSpeichern(kontaktId) {
     const r = await crmReq('POST', CRM_API + '/leads', { kontakt_id: kontaktId, sparte: crmV('cl_sparte'), prioritaet: crmV('cl_prio'), owner_id: crmV('cl_owner') || null });
@@ -1286,7 +1286,7 @@ function crmZusatzDealDialog(kontaktId) {
             <label class="crm-field">Besichtigung am *<input id="cz_besichtigung" type="datetime-local" class="crm-input" data-f="besichtigung_am"></label>
             <label class="crm-field">Erwarteter Abschluss *<input id="cz_abschluss" type="date" class="crm-input" data-f="erwarteter_abschluss" value="${crmAddDays(30)}"></label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmZusatzDealSpeichern('${kontaktId}')">Anlegen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmZusatzDealSpeichern('${kontaktId}')">Anlegen</md-filled-button>`);
 }
 async function crmZusatzDealSpeichern(kontaktId) {
     const r = await crmReq('POST', CRM_API + '/deals', { kontakt_id: kontaktId, titel: crmV('cz_titel'), sparte: crmV('cz_sparte'), objektadresse: crmV('cz_adresse'), besichtigung_am: crmV('cz_besichtigung'), erwarteter_abschluss: crmV('cz_abschluss') });
@@ -1314,7 +1314,7 @@ function crmFirmaDaten(p) {
 }
 function crmFirmaDialog(f = null) {
     openModal(f ? 'Firma bearbeiten' : 'Neue Firma', `<div class="crm-form crm-form-grid">${crmFirmaFelder('cf_f_', f || {})}</div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmFirmaSpeichern(${f ? `'${f.id}'` : 'null'})">Speichern</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmFirmaSpeichern(${f ? `'${f.id}'` : 'null'})">Speichern</md-filled-button>`);
 }
 async function crmFirmaSpeichern(id, trotzdem = false) {
     const body = { ...crmFirmaDaten('cf_f_'), trotzdem };
@@ -1347,7 +1347,7 @@ function crmKontaktDaten() {
 }
 function crmKontaktDialog(k) {
     openModal('Kontakt bearbeiten', `<div class="crm-form crm-form-grid">${crmKontaktFelder(k)}</div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="crmKontaktUpdate('${k.id}')">Speichern</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmKontaktUpdate('${k.id}')">Speichern</md-filled-button>`);
 }
 async function crmKontaktUpdate(id, trotzdem = false) {
     const k = crm.detail.data;
@@ -1382,7 +1382,7 @@ function crmNeuerKontakt(pre = {}) {
                 ${crmCan('all') ? `<label class="crm-field">Owner<select id="cn_owner" class="crm-input" data-f="owner_id"><option value="auto" selected>Automatisch (Zuweisungsregel)</option>${crmOptions(crm.opt.owners || [], '')}</select></label>` : ''}
             </div>` : ''}
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmKontaktAnlegen()">${crmIcon('save')} Anlegen</button>`, 'modal-xl');
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmKontaktAnlegen()">${crmIcon('save')} Anlegen</md-filled-button>`, 'modal-xl');
 }
 function crmFModus() {
     const m = document.querySelector('input[name="cn_fmodus"]:checked')?.value;
@@ -1420,7 +1420,7 @@ function crmDublettenHinweis(list, weiter, imDialog = true) {
     const html = `<div id="crmDupBox" class="crm-banner crm-banner-amber"><div><strong>${crmIcon('content_copy')} Mögliche Dublette (A1):</strong>
         ${list.map(t => `<div class="crm-dup">${crmE(t.art === 'firma' ? 'Firma' : 'Kontakt')}: <a href="#" onclick="closeModal();crmOpenDetail('${t.art}','${t.id}');return false">${crmE(t.name)}</a> ${t.firma ? '· ' + crmE(t.firma) : ''} <span class="crm-chip">${crmE(t.grund)}</span></div>`).join('')}
         <div class="crm-muted">Zusammenführen folgt in Phase 2 — vorhandenen Datensatz öffnen oder bewusst neu anlegen.</div>
-        <button class="btn btn-sm btn-outline" id="crmDupGo">Trotzdem speichern</button></div></div>`;
+        <md-outlined-button  class="md-btn-sm" id="crmDupGo">Trotzdem speichern</md-outlined-button></div></div>`;
     const body = document.getElementById('modalBody');
     if (imDialog && body) { body.insertAdjacentHTML('afterbegin', html); body.scrollTop = 0; document.getElementById('crmDupGo').onclick = weiter; }
 }
@@ -1620,7 +1620,7 @@ function crmMergeDialog(typ, zielId) {
             <label class="crm-field">Dublette suchen<input class="crm-input" placeholder="${istKontakt ? 'Name, E-Mail, Telefon…' : 'Firmenname, PLZ, Ort…'}" oninput="crmMergeSuche('${typ}','${zielId}',this.value)"></label>
             <select id="cm_quelle" class="crm-input" size="7" data-f="quelle_id"></select>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmMergeAusfuehren('${typ}','${zielId}')">${crmIcon('merge')} Zusammenführen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmMergeAusfuehren('${typ}','${zielId}')">${crmIcon('merge')} Zusammenführen</md-filled-button>`);
 }
 let _crmMergeT = null;
 function crmMergeSuche(typ, zielId, q) {
@@ -1658,7 +1658,7 @@ function crmImportDialog() {
                 ${crmE(crm.opt.einstellungen?.import_max_zeilen || 2000)} Zeilen je Import. Jede Zeile wird auf Dubletten geprüft (A1, auch innerhalb der Datei).</div>
             <label class="crm-field">Datei<input id="ci_datei" type="file" class="crm-input" data-f="datei" accept=".csv,.txt,.xlsx,.xls"></label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmImportVorschau()">${crmIcon('upload')} Weiter</button>`, 'modal-xl');
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportVorschau()">${crmIcon('upload')} Weiter</md-filled-button>`, 'modal-xl');
 }
 async function crmImportVorschau() {
     const f = document.getElementById('ci_datei')?.files?.[0];
@@ -1692,7 +1692,7 @@ async function crmImportVorschau() {
                 <label class="crm-field">Priorität<select id="ci_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>
             </div>
         </div>`,
-        `<button class="btn btn-outline" onclick="crmImportDialog()">Zurück</button><button class="btn btn-primary" id="crmSaveBtn" onclick="crmImportAusfuehren()">${crmIcon('play_arrow')} Import starten</button>`, 'modal-xl');
+        `<md-outlined-button  onclick="crmImportDialog()">Zurück</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportAusfuehren()">${crmIcon('play_arrow')} Import starten</md-filled-button>`, 'modal-xl');
 }
 async function crmImportAusfuehren() {
     const v = _crmImport; if (!v) return;
@@ -1719,7 +1719,7 @@ async function crmImportAusfuehren() {
             ${d.fehler_liste?.length ? `<div class="crm-sec">Fehlerhafte Zeilen</div><div class="crm-import-preview"><table class="crm-proto"><tbody>
                 ${d.fehler_liste.map(f => `<tr><td>Zeile ${f.zeile}</td><td>${crmE(f.grund)}</td></tr>`).join('')}</tbody></table></div>` : ''}
         </div>`,
-        `<button class="btn btn-primary" onclick="closeModal();crmSetView('stamm')">Fertig</button>`);
+        `<md-filled-button  onclick="closeModal();crmSetView('stamm')">Fertig</md-filled-button>`);
 }
 
 // ============================================

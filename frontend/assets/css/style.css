@@ -785,6 +785,34 @@ tbody td {
     display: flex;
     gap: 6px;
 }
+
+/* md-* button semantic variants — map legacy btn-danger/success/warning/sm
+   onto the Material tokens so migrated markup keeps its meaning. */
+md-filled-button.md-btn-danger {
+    --md-filled-button-container-color: var(--md-sys-color-error);
+    --md-filled-button-label-text-color: var(--md-sys-color-on-error);
+    --md-filled-button-icon-color: var(--md-sys-color-on-error);
+}
+md-filled-button.md-btn-success {
+    --md-filled-button-container-color: var(--md-ext-color-success);
+    --md-filled-button-label-text-color: var(--md-ext-color-on-success);
+    --md-filled-button-icon-color: var(--md-ext-color-on-success);
+}
+md-filled-button.md-btn-warning {
+    --md-filled-button-container-color: var(--md-ext-color-warning);
+    --md-filled-button-label-text-color: var(--md-ext-color-on-warning);
+    --md-filled-button-icon-color: var(--md-ext-color-on-warning);
+}
+md-filled-button.md-btn-sm,
+md-outlined-button.md-btn-sm,
+md-text-button.md-btn-sm {
+    --md-filled-button-container-height: 32px;
+    --md-outlined-button-container-height: 32px;
+    --md-text-button-container-height: 32px;
+}
+md-icon-button.md-icon-danger {
+    --md-icon-button-icon-color: var(--md-sys-color-error);
+}
 /* ============================================
    Forms
    ============================================ */

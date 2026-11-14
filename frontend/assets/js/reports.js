@@ -35,7 +35,7 @@ async function renderReports() {
                 <select class="form-control" id="rep_nu"><option value="">Alle</option>${nuOpts}</select>
             </div>
             <div class="form-group" style="align-self:flex-end">
-                <button class="btn btn-warning" onclick="loadReports()"><i class="fas fa-search"></i> Auswerten</button>
+                <md-filled-button  class="md-btn-warning" onclick="loadReports()"><i slot="icon" class="fas fa-search"></i> Auswerten</md-filled-button>
             </div>
         </div>
         <div id="reportKPIs"></div>

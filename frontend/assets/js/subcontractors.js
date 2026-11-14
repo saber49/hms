@@ -920,8 +920,8 @@ async function loadNuDocs(nuId) {
                     ${statusBadge}
                 </div>
                 <div class="doc-actions">
-                    <a href="#" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}');return false" class="btn btn-sm btn-outline" title="Anzeigen">${custIcon('visibility', 'font-size:14px')}</a>
-                    <a href="#" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}', true);return false" class="btn btn-sm btn-outline" title="Herunterladen">${custIcon('download', 'font-size:14px')}</a>
+                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}')" title="Anzeigen">${custIcon('visibility', 'font-size:14px')}</md-outlined-button>
+                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}', true)" title="Herunterladen">${custIcon('download', 'font-size:14px')}</md-outlined-button>
                     <md-icon-button class="danger" onclick="deleteNuDoc(${d.id},'${d.nu_id}')" title="Löschen"><md-icon>delete</md-icon></md-icon-button>
                 </div>
             </div>

@@ -82,7 +82,7 @@ async function showConversationList() {
             <div class="chat-empty">
                 <i class="fas fa-comments"></i>
                 <p>Keine Nachrichten</p>
-                <button class="btn btn-sm btn-primary" onclick="openNewChat()"><i class="fas fa-plus"></i> Neuen Chat starten</button>
+                <md-filled-button  class="md-btn-sm" onclick="openNewChat()"><i slot="icon" class="fas fa-plus"></i> Neuen Chat starten</md-filled-button>
             </div>
         `;
         return;
@@ -374,7 +374,7 @@ async function openNewChat() {
             </ul>
             <label>Erste Nachricht</label>
             <textarea class="form-control" id="newChatMessage" rows="3" placeholder="Nachricht schreiben..."></textarea>
-            <button class="btn btn-primary w-100 mt-1" onclick="createNewChat()"><i class="fas fa-paper-plane"></i> Chat starten</button>
+            <md-filled-button  class="w-100 mt-1" onclick="createNewChat()"><i slot="icon" class="fas fa-paper-plane"></i> Chat starten</md-filled-button>
         </div>
     `;
 }

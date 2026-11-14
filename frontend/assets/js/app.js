@@ -867,7 +867,7 @@ async function loadPage(page) {
         await Promise.race([ensureBereichColors(), new Promise(r => setTimeout(r, 1500))]);
     } catch (error) {
         _scriptCacheBust = Date.now().toString(36);
-        content.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><p>Bereich konnte nicht geladen werden.</p><button class="btn btn-primary" onclick="loadPage(\'' + page + '\')">Erneut versuchen</button></div>';
+        content.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
         showToast(error.message || 'Bereich konnte nicht geladen werden', 'error');
         if (!window.__hmsBootReady) {
             window.__hmsBootReady = true;
@@ -922,7 +922,7 @@ async function loadPage(page) {
         // The cache-buster makes "Erneut versuchen" bypass the bad entry.
         console.error('Page render failed:', e);
         _scriptCacheBust = Date.now().toString(36);
-        content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht gestartet werden.</p><button class="btn btn-primary" onclick="loadPage(\'' + page + '\')">Erneut versuchen</button></div>';
+        content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht gestartet werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
         if (!window.__hmsBootReady) {
             window.__hmsBootReady = true;
             document.dispatchEvent(new CustomEvent('hms:page-ready'));
@@ -937,7 +937,7 @@ async function loadPage(page) {
             if (!content.querySelector('.data-toolbar, table, .nu-stats-grid, .stats-grid')) {
                 console.error('Page render rejected:', e);
                 _scriptCacheBust = Date.now().toString(36);
-                content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht geladen werden.</p><button class="btn btn-primary" onclick="loadPage(\'' + page + '\')">Erneut versuchen</button></div>';
+                content.innerHTML = '<div class="empty-state"><i class="fas fa-triangle-exclamation"></i><p>Bereich konnte nicht geladen werden.</p><md-filled-button  onclick="loadPage(\'' + page + '\')">Erneut versuchen</md-filled-button></div>';
             }
         });
     }
@@ -1255,8 +1255,8 @@ async function openAccountModal(activeTab) {
     `;
 
     const footer = `
-        <button class="btn btn-outline" onclick="closeModal()">Schließen</button>
-        <button class="btn btn-primary" id="accSaveBtn" style="display:none" onclick="saveAccountActiveTab()"><i class="fas fa-save"></i> Speichern</button>
+        <md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>
+        <md-filled-button  id="accSaveBtn" style="display:none" onclick="saveAccountActiveTab()"><i slot="icon" class="fas fa-save"></i> Speichern</md-filled-button>
     `;
 
     openModal('Mein Konto', body, footer, 'modal-lg');
@@ -1388,7 +1388,7 @@ function renderProfileTab(ctx, c) {
                 </div>
             </div>
             <div style="text-align:right;margin-top:8px">
-                <button class="btn btn-primary" onclick="saveAccountPassword()"><i class="fas fa-save"></i> Passwort ändern</button>
+                <md-filled-button  onclick="saveAccountPassword()"><i slot="icon" class="fas fa-save"></i> Passwort ändern</md-filled-button>
             </div>
         </div>
 
@@ -1426,10 +1426,10 @@ function renderDocAssetsSection(c, ctx) {
             <div class="doc-asset-status ${cls}" id="${kind}Status">${status}</div>
             <div class="logo-buttons" style="justify-content:center">
                 <input type="file" id="${kind}File" accept="image/png,image/webp,image/svg+xml,image/jpeg" style="display:none" onchange="uploadDocAsset(this,'${kind}')">
-                <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('${kind}File').click()">
+                <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('${kind}File').click()">
                     <i class="fas fa-upload"></i> ${own ? 'Ersetzen' : 'Hochladen'}
                 </button>
-                <button type="button" class="btn btn-outline btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}>
+                <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}>
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -1596,10 +1596,10 @@ function renderLogoUploader(c) {
                 <div class="logo-actions">
                     <div class="logo-buttons">
                         <input type="file" id="companyLogoFile" accept="image/png,image/jpeg,image/svg+xml" style="display:none" onchange="uploadCompanyLogo(this)">
-                        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('companyLogoFile').click()">
+                        <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('companyLogoFile').click()">
                             <i class="fas fa-upload"></i> Logo hochladen
                         </button>
-                        <button type="button" class="btn btn-outline btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}>
+                        <md-outlined-button type="button"  class="md-btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}>
                             <i class="fas fa-trash"></i> Entfernen
                         </button>
                     </div>
@@ -1752,7 +1752,7 @@ function renderCompanyTab(c) {
                 <span></span>
             </div>
             <div id="cfPauseRules"></div>
-            <button type="button" class="btn btn-outline btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px">
+            <md-outlined-button type="button"  class="md-btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px">
                 <i class="fas fa-plus"></i> Regel hinzufügen
             </button>
         </div>
@@ -1867,7 +1867,7 @@ function cfPauseRuleRowHtml(von, bis, min) {
         <input type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01">
         <input type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00">
         <input type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30">
-        <button type="button" class="btn btn-outline btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color:var(--danger,#dc2626)">
+        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color:var(--danger,#dc2626)">
             <i class="fas fa-trash"></i>
         </button>
     </div>`;
@@ -2024,7 +2024,7 @@ function renderDocumentsTabHtml(items, categories) {
                     </div>
                 </div>
                 <div class="docs-uploader-actions">
-                    <button type="button" class="btn btn-primary" id="docUploadBtn">
+                    <md-filled-button type="button"  id="docUploadBtn">
                         <i class="fas fa-upload"></i> Hochladen
                     </button>
                 </div>
@@ -2075,9 +2075,9 @@ function docCardHtml(d) {
                 </div>
             </div>
             <div class="doc-actions">
-                <button type="button" class="btn-icon" title="Anzeigen" onclick="openTenantDocument(${d.id})"><i class="fas fa-eye"></i></button>
-                <button type="button" class="btn-icon" title="Herunterladen" onclick="downloadTenantDocument(${d.id})"><i class="fas fa-download"></i></button>
-                <button type="button" class="btn-icon btn-icon-danger" title="L\u00f6schen" onclick="deleteTenantDocument(${d.id})"><i class="fas fa-trash"></i></button>
+                <md-icon-button type="button"  title="Anzeigen" onclick="openTenantDocument(${d.id})"><i class="fas fa-eye"></i></md-icon-button>
+                <md-icon-button type="button"  title="Herunterladen" onclick="downloadTenantDocument(${d.id})"><i class="fas fa-download"></i></md-icon-button>
+                <md-icon-button type="button"  class="md-icon-danger" title="L\u00f6schen" onclick="deleteTenantDocument(${d.id})"><i class="fas fa-trash"></i></md-icon-button>
             </div>
         </div>
     `;
@@ -2731,8 +2731,8 @@ function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Be
                 <div style="font-size:1.15rem;font-weight:700;color:var(--gray-900);margin-bottom:10px">${title}</div>
                 <div style="font-size:0.9rem;color:var(--gray-500);line-height:1.6;margin-bottom:28px">${message}</div>
                 <div style="display:flex;gap:12px;justify-content:center">
-                    <button class="btn btn-outline" style="min-width:130px;padding:11px 22px;border-radius:10px;font-weight:600;font-size:0.85rem;cursor:pointer" data-action="cancel">${cancelText}</button>
-                    <button class="btn" style="min-width:130px;padding:11px 22px;border-radius:10px;font-weight:600;font-size:0.85rem;cursor:pointer;background:${accent};color:#fff;border-color:${accent}" data-action="ok">${confirmText}</button>
+                    <md-outlined-button style="min-width:130px" data-action="cancel">${cancelText}</md-outlined-button>
+                    <md-filled-button style="min-width:130px;--md-filled-button-container-color:${accent}" data-action="ok">${confirmText}</md-filled-button>
                 </div>
             </div>
         `;

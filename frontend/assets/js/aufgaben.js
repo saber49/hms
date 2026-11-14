@@ -159,8 +159,8 @@ async function auOpenDetail(id) {
                 ${mine.status !== 'offen' ? `<button class="au-btn" onclick="auSetMine(${mine.id}, 'offen', ${a.id})">${auIcon('undo')} Wieder offen</button>` : ''}
             </div>` : ''}
         </div>`;
-    const footer = `${a.darf_loeschen ? `<button class="btn btn-danger" onclick="auDelete(${a.id})">${auIcon('delete')} Löschen</button>` : ''}
-        <button class="btn btn-outline" onclick="closeModal()">Schließen</button>`;
+    const footer = `${a.darf_loeschen ? `<md-filled-button  class="md-btn-danger" onclick="auDelete(${a.id})">${auIcon('delete')} Löschen</md-filled-button>` : ''}
+        <md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>`;
     openModal('Aufgabe', body, footer, 'modal-lg');
 }
 
@@ -206,8 +206,8 @@ async function auOpenCreate() {
                 <div class="au-emp-pick" id="auEmpPick"></div>
             </div>
         </div>`;
-    const footer = `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button>
-        <button class="btn btn-primary" id="auSendBtn" onclick="auSave()">${auIcon('send')} Speichern & senden</button>`;
+    const footer = `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button>
+        <md-filled-button  id="auSendBtn" onclick="auSave()">${auIcon('send')} Speichern & senden</md-filled-button>`;
     openModal('Neue Aufgabe', body, footer, 'modal-lg');
     auRenderEmp();
     setTimeout(() => document.getElementById('auTitel')?.focus(), 50);

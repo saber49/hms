@@ -444,7 +444,7 @@ header('Expires: 0');
             </div>
             <div class="chat-addpop-list" id="chatAddPopList"></div>
             <div class="chat-addpop-foot">
-                <button class="btn btn-primary" style="width:100%" onclick="chatAddMembers()"><i class="fas fa-user-plus"></i> Hinzufügen</button>
+                <md-filled-button style="width:100%" onclick="chatAddMembers()"><i slot="icon" class="fas fa-user-plus"></i> Hinzufügen</md-filled-button>
             </div>
         </div>
         <div class="chat-addpop" id="chatMembersPop" style="display:none">

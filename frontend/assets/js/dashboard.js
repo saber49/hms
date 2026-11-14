@@ -279,8 +279,8 @@ function dashShiftRows(rows, datum) {
 }
 function dashShiftModal(title, body, datum) {
     openModal(title, body,
-        `<button class="btn btn-outline" onclick="closeModal()">Schließen</button>
-         <button class="btn btn-primary" onclick="dashOpenPlanung('${dashEscape(datum)}')">In der Planung öffnen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>
+         <md-filled-button  onclick="dashOpenPlanung('${dashEscape(datum)}')">In der Planung öffnen</md-filled-button>`);
 }
 function dashShowToday(key) {
     const f = DASH_TODAY_FILTERS[key] || DASH_TODAY_FILTERS.alle;
@@ -313,8 +313,8 @@ function dashShowLate() {
         </li>`).join('')}</ul>`
         : `<div class="dash-alert-empty">${dashIcon('check_circle')}Niemand ist verspätet — alle eingeplanten Mitarbeiter haben pünktlich eingestempelt.</div>`;
     openModal(`Verspätet — nicht eingestempelt (${(_dashHeute && _dashHeute.verspaetet) || 0})`, body,
-        `<button class="btn btn-outline" onclick="closeModal()">Schließen</button>
-         <button class="btn btn-primary" onclick="closeModal();dashOpenActiveWorkersPanel()">Live-Ansicht öffnen</button>`);
+        `<md-outlined-button  onclick="closeModal()">Schließen</md-outlined-button>
+         <md-filled-button  onclick="closeModal();dashOpenActiveWorkersPanel()">Live-Ansicht öffnen</md-filled-button>`);
 }
 
 function dashNowHtml(h) {
