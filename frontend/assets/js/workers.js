@@ -1436,7 +1436,7 @@ async function wkSaveDocEdit(docId, dienstNr) {
 // (kept for backward compat — the eye/download buttons still use it).
 function wkOpenDoc(docId) {
     const card = document.querySelector('.wk-doc-card [data-thumb-url*="/' + docId + '/thumb"]');
-    const link = card?.parentElement?.querySelector('.wk-doc-actions a[title="Anzeigen"]');
+    const link = card?.parentElement?.querySelector('.wk-doc-actions md-icon-button[title="Anzeigen"]');
     if (link) link.click();
 }
 window.wkOpenDoc = wkOpenDoc;

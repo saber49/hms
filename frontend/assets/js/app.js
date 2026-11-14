@@ -640,7 +640,7 @@ const PAGE_MODULE_SCRIPTS = {
         'assets/js/controlling/controlling-cockpit.js?v=20261114md3g',
         'assets/js/controlling.js?v=20261114md3g'
     ],
-    workers: ['assets/js/workers.js?v=20261114md3g'],
+    workers: ['assets/js/workers.js?v=20261114md3h'],
     absences: ['assets/js/absences.js?v=20261114md3g'],
     users: ['assets/js/users.js?v=20261114md3g'],
     pdf_design: ['assets/js/pdf_design.js?v=20261114md3g'],
