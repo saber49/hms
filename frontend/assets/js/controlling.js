@@ -167,9 +167,9 @@ function ctrlFiltersHtml(customerOpts, nuOpts) {
         <div class="form-group ctrl-custom-range" style="${CTRL.state.period === 'custom' ? '' : 'display:none'}">
           <label>${ctrlIcon('date_range', 'font-size:12px;vertical-align:-2px')} Zeitraum</label>
           <div class="ctrl-date-range">
-            <input type="date" class="form-control" id="ctrlFrom" value="${CTRL.state.from || ''}">
+            <md-outlined-text-field type="date" class="form-control" id="ctrlFrom" value="${CTRL.state.from || ''}"></md-outlined-text-field>
             <span class="sep">→</span>
-            <input type="date" class="form-control" id="ctrlTo" value="${CTRL.state.to || ''}">
+            <md-outlined-text-field type="date" class="form-control" id="ctrlTo" value="${CTRL.state.to || ''}"></md-outlined-text-field>
           </div>
         </div>
         <md-outlined-button id="ctrlBtnClearFilters" class="ctrl-clear-btn" title="Alle Filter zurücksetzen">

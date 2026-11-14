@@ -355,7 +355,7 @@ async function nuOpenPositionManager(positionId) {
         body += `
         <div class="nu-pm-section-title" style="margin-top:18px"><i class="material-symbols-outlined">person_add</i> Mitarbeiter hinzufügen</div>
         <div class="nu-form-group">
-            <input type="text" class="nu-form-control" id="nuAssignSearch" placeholder="Mitarbeiter suchen..." oninput="nuFilterAssignList()">
+            <md-outlined-text-field type="text" class="nu-form-control" id="nuAssignSearch" placeholder="Mitarbeiter suchen..." oninput="nuFilterAssignList()"></md-outlined-text-field>
         </div>
         <div class="nu-worker-list" id="nuAssignWorkerList">`;
 
@@ -530,10 +530,10 @@ async function nuOpenWorkerModal(id = null) {
                 ${id ? `
                 <div class="nu-form-group" style="margin-top:14px">
                     <label>Status</label>
-                    <select class="nu-form-control" id="nuw_aktiv">
-                        <option value="1" ${w.aktiv == 1 ? 'selected' : ''}>Aktiv</option>
-                        <option value="0" ${w.aktiv == 0 ? 'selected' : ''}>Inaktiv</option>
-                    </select>
+                    <md-outlined-select class="nu-form-control" id="nuw_aktiv">
+                        <md-select-option value="1" ${w.aktiv == 1 ? 'selected' : ''}>Aktiv</md-select-option>
+                        <md-select-option value="0" ${w.aktiv == 0 ? 'selected' : ''}>Inaktiv</md-select-option>
+                    </md-outlined-select>
                 </div>` : ''}
             </div>
 
@@ -541,75 +541,75 @@ async function nuOpenWorkerModal(id = null) {
                 <!-- PERSÖNLICHE DATEN -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">person</i> Persönliche Daten</div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Vorname *</label><input type="text" class="nu-form-control" id="nuw_vorname" value="${nuEscape(w.vorname || '')}"></div>
-                    <div class="nu-form-group"><label>Nachname *</label><input type="text" class="nu-form-control" id="nuw_name" value="${nuEscape(w.name || '')}"></div>
+                    <div class="nu-form-group"><label>Vorname *</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_vorname" value="${nuEscape(w.vorname || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Nachname *</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_name" value="${nuEscape(w.name || '')}"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-row">
                     <div class="nu-form-group"><label>Geschlecht</label>
-                        <select class="nu-form-control" id="nuw_geschlecht">
-                            <option value="">—</option>
-                            <option value="m" ${w.geschlecht === 'm' ? 'selected' : ''}>Männlich</option>
-                            <option value="w" ${w.geschlecht === 'w' ? 'selected' : ''}>Weiblich</option>
-                            <option value="d" ${w.geschlecht === 'd' ? 'selected' : ''}>Divers</option>
-                        </select>
+                        <md-outlined-select class="nu-form-control" id="nuw_geschlecht">
+                            <md-select-option value="">—</md-select-option>
+                            <md-select-option value="m" ${w.geschlecht === 'm' ? 'selected' : ''}>Männlich</md-select-option>
+                            <md-select-option value="w" ${w.geschlecht === 'w' ? 'selected' : ''}>Weiblich</md-select-option>
+                            <md-select-option value="d" ${w.geschlecht === 'd' ? 'selected' : ''}>Divers</md-select-option>
+                        </md-outlined-select>
                     </div>
-                    <div class="nu-form-group"><label>Geburtsname</label><input type="text" class="nu-form-control" id="nuw_geburtsname" value="${nuEscape(w.geburtsname || '')}"></div>
+                    <div class="nu-form-group"><label>Geburtsname</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_geburtsname" value="${nuEscape(w.geburtsname || '')}"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Geburtstag</label><input type="date" class="nu-form-control" id="nuw_geburtstag" value="${nuEscape(w.geburtstag || '')}"></div>
-                    <div class="nu-form-group"><label>Geburtsort</label><input type="text" class="nu-form-control" id="nuw_geburtsort" value="${nuEscape(w.geburtsort || '')}"></div>
+                    <div class="nu-form-group"><label>Geburtstag</label><md-outlined-text-field type="date" class="nu-form-control" id="nuw_geburtstag" value="${nuEscape(w.geburtstag || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Geburtsort</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_geburtsort" value="${nuEscape(w.geburtsort || '')}"></md-outlined-text-field></div>
                 </div>
-                <div class="nu-form-group"><label>Geburtsland</label><input type="text" class="nu-form-control" id="nuw_geburtsland" value="${nuEscape(w.geburtsland || '')}" placeholder="z.B. Deutschland"></div>
+                <div class="nu-form-group"><label>Geburtsland</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_geburtsland" value="${nuEscape(w.geburtsland || '')}" placeholder="z.B. Deutschland"></md-outlined-text-field></div>
 
                 <!-- IDENTIFIKATION -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">badge</i> Identifikation</div>
-                <div class="nu-form-group"><label>Personal-Nr.</label><input type="text" class="nu-form-control" id="nuw_personal_nr" value="${nuEscape(w.personal_nr || '')}" placeholder="z.B. MA-00004"></div>
+                <div class="nu-form-group"><label>Personal-Nr.</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_personal_nr" value="${nuEscape(w.personal_nr || '')}" placeholder="z.B. MA-00004"></md-outlined-text-field></div>
                 <div class="nu-form-row"${showBew ? '' : ' style="display:none"'}>
-                    <div class="nu-form-group"><label>Bewacherregister-ID</label><input type="text" class="nu-form-control" id="nuw_bewacher_id" value="${nuEscape(w.bewacher_id || '')}"></div>
-                    <div class="nu-form-group"><label>Funkrufname</label><input type="text" class="nu-form-control" id="nuw_funkrufname" value="${nuEscape(w.funkrufname || '')}"></div>
+                    <div class="nu-form-group"><label>Bewacherregister-ID</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_bewacher_id" value="${nuEscape(w.bewacher_id || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Funkrufname</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_funkrufname" value="${nuEscape(w.funkrufname || '')}"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-row"${showStd ? '' : ' style="display:none"'}>
-                    <div class="nu-form-group"><label>Ordnernummer</label><input type="text" class="nu-form-control" id="nuw_ordner_nr" value="${nuEscape(w.ordner_nr || '')}"></div>
-                    <div class="nu-form-group"><label>Barcode</label><input type="text" class="nu-form-control" id="nuw_barcode" value="${nuEscape(w.barcode || '')}"></div>
+                    <div class="nu-form-group"><label>Ordnernummer</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_ordner_nr" value="${nuEscape(w.ordner_nr || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Barcode</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_barcode" value="${nuEscape(w.barcode || '')}"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-row"${showStd ? '' : ' style="display:none"'}>
-                    <div class="nu-form-group"><label>DFB-Pin</label><input type="text" class="nu-form-control" id="nuw_dfb_pin" value="${nuEscape(w.dfb_pin || '')}"></div>
+                    <div class="nu-form-group"><label>DFB-Pin</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_dfb_pin" value="${nuEscape(w.dfb_pin || '')}"></md-outlined-text-field></div>
                 </div>
-                <div class="nu-form-group"><label>Sozialversicherungsnr.</label><input type="text" class="nu-form-control" id="nuw_sv_nr" value="${nuEscape(w.sv_nr || '')}"></div>
+                <div class="nu-form-group"><label>Sozialversicherungsnr.</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_sv_nr" value="${nuEscape(w.sv_nr || '')}"></md-outlined-text-field></div>
 
                 <!-- PERSONALAUSWEIS -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">id_card</i> Personalausweis</div>
-                <div class="nu-form-group"><label>Ausweis-Nummer</label><input type="text" class="nu-form-control" id="nuw_ausweis_nr" value="${nuEscape(w.ausweis_nr || '')}"></div>
+                <div class="nu-form-group"><label>Ausweis-Nummer</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_ausweis_nr" value="${nuEscape(w.ausweis_nr || '')}"></md-outlined-text-field></div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Gültig ab</label><input type="date" class="nu-form-control" id="nuw_ausweis_gueltig_ab" value="${nuEscape(w.ausweis_gueltig_ab || '')}"></div>
-                    <div class="nu-form-group"><label>Gültig bis</label><input type="date" class="nu-form-control" id="nuw_ausweis_gueltig_bis" value="${nuEscape(w.ausweis_gueltig_bis || '')}"></div>
+                    <div class="nu-form-group"><label>Gültig ab</label><md-outlined-text-field type="date" class="nu-form-control" id="nuw_ausweis_gueltig_ab" value="${nuEscape(w.ausweis_gueltig_ab || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Gültig bis</label><md-outlined-text-field type="date" class="nu-form-control" id="nuw_ausweis_gueltig_bis" value="${nuEscape(w.ausweis_gueltig_bis || '')}"></md-outlined-text-field></div>
                 </div>
 
                 <!-- ANSCHRIFT -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">location_on</i> Anschrift</div>
-                <div class="nu-form-group"><label>Straße &amp; Hausnr.</label><input type="text" class="nu-form-control" id="nuw_strasse" value="${nuEscape(w.strasse || '')}"></div>
+                <div class="nu-form-group"><label>Straße &amp; Hausnr.</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_strasse" value="${nuEscape(w.strasse || '')}"></md-outlined-text-field></div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group" style="flex:0 0 30%"><label>PLZ</label><input type="text" class="nu-form-control" id="nuw_plz" value="${nuEscape(w.plz || '')}"></div>
-                    <div class="nu-form-group"><label>Ort</label><input type="text" class="nu-form-control" id="nuw_ort" value="${nuEscape(w.ort || '')}"></div>
+                    <div class="nu-form-group" style="flex:0 0 30%"><label>PLZ</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_plz" value="${nuEscape(w.plz || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Ort</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_ort" value="${nuEscape(w.ort || '')}"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Bundesland</label><input type="text" class="nu-form-control" id="nuw_bundesland" value="${nuEscape(w.bundesland || '')}" placeholder="z.B. Sachsen-Anhalt"></div>
-                    <div class="nu-form-group"><label>Land</label><input type="text" class="nu-form-control" id="nuw_land" value="${nuEscape(w.land || 'Deutschland')}"></div>
+                    <div class="nu-form-group"><label>Bundesland</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_bundesland" value="${nuEscape(w.bundesland || '')}" placeholder="z.B. Sachsen-Anhalt"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Land</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_land" value="${nuEscape(w.land || 'Deutschland')}"></md-outlined-text-field></div>
                 </div>
 
                 <!-- KONTAKT -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">call</i> Kontakt</div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Telefon</label><input type="text" class="nu-form-control" id="nuw_telefon" value="${nuEscape(w.telefon || '')}"></div>
-                    <div class="nu-form-group"><label>Mobil</label><input type="text" class="nu-form-control" id="nuw_mobil" value="${nuEscape(w.mobil || '')}" placeholder="+49 ..."></div>
+                    <div class="nu-form-group"><label>Telefon</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_telefon" value="${nuEscape(w.telefon || '')}"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Mobil</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_mobil" value="${nuEscape(w.mobil || '')}" placeholder="+49 ..."></md-outlined-text-field></div>
                 </div>
-                <div class="nu-form-group"><label>E-Mail</label><input type="email" class="nu-form-control" id="nuw_email" value="${nuEscape(w.email || '')}"></div>
+                <div class="nu-form-group"><label>E-Mail</label><md-outlined-text-field type="email" class="nu-form-control" id="nuw_email" value="${nuEscape(w.email || '')}"></md-outlined-text-field></div>
 
                 <!-- QUALIFIKATION -->
                 <div class="nu-form-section-title"><i class="material-symbols-outlined">workspace_premium</i> Qualifikation</div>
                 <div class="nu-form-row">
-                    <div class="nu-form-group"><label>Qualifikation</label><input type="text" class="nu-form-control" id="nuw_qualifikation" value="${nuEscape(w.qualifikation || '')}" placeholder="z.B. Erste Hilfe, Staplerschein"></div>
-                    <div class="nu-form-group"><label>Skills</label><input type="text" class="nu-form-control" id="nuw_skills" value="${nuEscape(w.skills || '')}" placeholder="z.B. Englisch, Brandschutz"></div>
+                    <div class="nu-form-group"><label>Qualifikation</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_qualifikation" value="${nuEscape(w.qualifikation || '')}" placeholder="z.B. Erste Hilfe, Staplerschein"></md-outlined-text-field></div>
+                    <div class="nu-form-group"><label>Skills</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_skills" value="${nuEscape(w.skills || '')}" placeholder="z.B. Englisch, Brandschutz"></md-outlined-text-field></div>
                 </div>
                 <div class="nu-form-group"><label>Bemerkung</label><textarea class="nu-form-control" id="nuw_bemerkung" rows="2">${nuEscape(w.bemerkung || '')}</textarea></div>
             </div>

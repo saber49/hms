@@ -118,7 +118,7 @@ if (window.HMSRealtime && typeof HMSRealtime.on === 'function') {
         if (typeof currentPage === 'undefined' || currentPage !== 'interessenten') return;
         if (Date.now() - (crm.lastWrite || 0) < 4000) return; // echo of my own save — already reloaded
         if (crm.detail) {
-            if (crm.dirty || document.getElementById('modalOverlay')?.classList.contains('active')) {
+            if (crm.dirty || document.getElementById('modalOverlay')?.open) {
                 document.getElementById('crmStaleBar')?.classList.add('show');
             } else crmOpenDetail(crm.detail.typ, crm.detail.id, true);
         } else crmLoadView();

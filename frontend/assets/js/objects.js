@@ -714,9 +714,9 @@ async function openArtikelModal(objId, artikelId = null) {
             <div class="zuschlag-body" id="zuschlagBody">
                 <div class="zuschlag-night-window">
                     <span class="zuschlag-night-label">${custIcon('schedule')} Definition Nachtdienst:</span>
-                    <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control zuschlag-time t24" id="f_art_nacht_von" value="${normalizeTime(art.nacht_von)}" oninput="recalcZuschlagPreview()">
+                    <md-outlined-text-field type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control zuschlag-time t24" id="f_art_nacht_von" value="${normalizeTime(art.nacht_von)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                     <span class="zuschlag-night-arrow">→</span>
-                    <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control zuschlag-time t24" id="f_art_nacht_bis" value="${normalizeTime(art.nacht_bis)}" oninput="recalcZuschlagPreview()">
+                    <md-outlined-text-field type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control zuschlag-time t24" id="f_art_nacht_bis" value="${normalizeTime(art.nacht_bis)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                     <span class="zuschlag-night-hint">(Standard: 22:00 – 06:00 Uhr nach § 6 Abs. 1 ArbZG)</span>
                 </div>
 
@@ -735,7 +735,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('light_mode')}</span><strong>Tagdienst Mo–Sa</strong> <span class="zt-tag">Grundpreis</span></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_tag" value="${parseFloat(art.zuschlag_tag_pct || 0).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_tag" value="${parseFloat(art.zuschlag_tag_pct || 0).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>
@@ -746,7 +746,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('bedtime')}</span><strong>Nachtdienst</strong> <span class="zt-tag" id="zt-nachtwindow">22:00 – 06:00 Uhr</span></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nacht" value="${parseFloat(art.zuschlag_nacht_pct).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nacht" value="${parseFloat(art.zuschlag_nacht_pct).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>
@@ -757,7 +757,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('event')}</span><strong>Sonntag</strong></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_sonntag" value="${parseFloat(art.zuschlag_sonntag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_sonntag" value="${parseFloat(art.zuschlag_sonntag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>
@@ -768,7 +768,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('star')}</span><strong>Feiertag</strong> <span class="zt-tag">gesetzlich</span></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_feiertag" value="${parseFloat(art.zuschlag_feiertag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_feiertag" value="${parseFloat(art.zuschlag_feiertag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>
@@ -779,7 +779,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('bedtime')}${custIcon('add')}${custIcon('event')}</span><strong>Nacht + Sonntag</strong> <span class="zt-tag">kombiniert</span></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nachtsonntag" value="${parseFloat(art.zuschlag_nacht_sonntag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nachtsonntag" value="${parseFloat(art.zuschlag_nacht_sonntag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>
@@ -790,7 +790,7 @@ async function openArtikelModal(objId, artikelId = null) {
                                 <td><span class="zt-icon">${custIcon('bedtime')}${custIcon('add')}${custIcon('star')}</span><strong>Nacht + Feiertag</strong> <span class="zt-tag">kombiniert</span></td>
                                 <td class="text-right">
                                     <div class="zt-pct-input">
-                                        <input type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nachtfeiertag" value="${parseFloat(art.zuschlag_nacht_feiertag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()">
+                                        <md-outlined-text-field type="number" step="0.5" min="0" max="200" class="form-control" id="f_art_z_nachtfeiertag" value="${parseFloat(art.zuschlag_nacht_feiertag_pct).toFixed(2)}" oninput="recalcZuschlagPreview()"></md-outlined-text-field>
                                         <span>%</span>
                                     </div>
                                 </td>

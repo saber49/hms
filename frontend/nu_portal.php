@@ -60,6 +60,7 @@
             }
         });
     </script>
-    <script src="assets/js/nu_portal.js?v=20261020br1"></script>
+    <script defer src="assets/js/material-web.bundle.js?v=20260928local1"></script>
+    <script src="assets/js/nu_portal.js?v=20261114md3"></script>
 </body>
 </html>

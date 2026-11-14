@@ -55,11 +55,11 @@ async function openListModal(id = null) {
     }
     const body = `
         <div class="form-grid">
-            <div class="form-group"><label>Kategorie *</label><input type="text" class="form-control" id="f_list_kat" value="${item.kategorie || ''}" placeholder="z.B. modell"></div>
-            <div class="form-group"><label>Wert *</label><input type="text" class="form-control" id="f_list_wert" value="${item.wert || ''}"></div>
-            <div class="form-group"><label>Beschreibung</label><input type="text" class="form-control" id="f_list_beschr" value="${item.beschreibung || ''}"></div>
-            <div class="form-group"><label>Sortierung</label><input type="number" class="form-control" id="f_list_sort" value="${item.sortierung || 0}"></div>
-            <div class="form-group"><label>Aktiv</label><select class="form-control" id="f_list_aktiv"><option value="1" ${item.aktiv != 0 ? 'selected' : ''}>Ja</option><option value="0" ${item.aktiv == 0 ? 'selected' : ''}>Nein</option></select></div>
+            <div class="form-group"><label>Kategorie *</label><md-outlined-text-field type="text" class="form-control" id="f_list_kat" value="${item.kategorie || ''}" placeholder="z.B. modell"></md-outlined-text-field></div>
+            <div class="form-group"><label>Wert *</label><md-outlined-text-field type="text" class="form-control" id="f_list_wert" value="${item.wert || ''}"></md-outlined-text-field></div>
+            <div class="form-group"><label>Beschreibung</label><md-outlined-text-field type="text" class="form-control" id="f_list_beschr" value="${item.beschreibung || ''}"></md-outlined-text-field></div>
+            <div class="form-group"><label>Sortierung</label><md-outlined-text-field type="number" class="form-control" id="f_list_sort" value="${item.sortierung || 0}"></md-outlined-text-field></div>
+            <div class="form-group"><label>Aktiv</label><md-outlined-select class="form-control" id="f_list_aktiv"><md-select-option value="1" ${item.aktiv != 0 ? 'selected' : ''}>Ja</md-select-option><md-select-option value="0" ${item.aktiv == 0 ? 'selected' : ''}>Nein</md-select-option></md-outlined-select></div>
         </div>
     `;
     const footer = `

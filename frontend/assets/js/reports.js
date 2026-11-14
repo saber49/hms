@@ -13,26 +13,26 @@ async function renderReports() {
         <div class="filter-bar" style="background:var(--orange-light);border: 1px solid var(--md-ext-color-warning-container)">
             <div class="form-group">
                 <label><i class="material-symbols-outlined">person</i> Kunde</label>
-                <select class="form-control" id="rep_kunde"><option value="">Alle</option>${customerOpts}</select>
+                <md-outlined-select class="form-control" id="rep_kunde"><md-select-option value="">Alle</md-select-option>${customerOpts}</md-outlined-select>
             </div>
             <div class="form-group">
                 <label><i class="material-symbols-outlined">location_on</i> Objekt</label>
-                <select class="form-control" id="rep_objekt"><option value="">Alle</option></select>
+                <md-outlined-select class="form-control" id="rep_objekt"><md-select-option value="">Alle</md-select-option></md-outlined-select>
             </div>
             <div class="form-group">
                 <label><i class="material-symbols-outlined">calendar_month</i> Monat</label>
-                <select class="form-control" id="rep_monat">
-                    <option value="">Alle</option>
-                    ${MONTHS_DE.map((m, i) => i > 0 ? `<option value="${i}" ${i === now.getMonth() + 1 ? 'selected' : ''}>${m}</option>` : '').join('')}
-                </select>
+                <md-outlined-select class="form-control" id="rep_monat">
+                    <md-select-option value="">Alle</md-select-option>
+                    ${MONTHS_DE.map((m, i) => i > 0 ? `<md-select-option value="${i}" ${i === now.getMonth() + 1 ? 'selected' : ''}>${m}</md-select-option>` : '').join('')}
+                </md-outlined-select>
             </div>
             <div class="form-group">
                 <label><i class="material-symbols-outlined">calendar_month</i> Jahr</label>
-                <input type="number" class="form-control" id="rep_jahr" value="${now.getFullYear()}">
+                <md-outlined-text-field type="number" class="form-control" id="rep_jahr" value="${now.getFullYear()}"></md-outlined-text-field>
             </div>
             <div class="form-group">
                 <label><i class="material-symbols-outlined">engineering</i> NU</label>
-                <select class="form-control" id="rep_nu"><option value="">Alle</option>${nuOpts}</select>
+                <md-outlined-select class="form-control" id="rep_nu"><md-select-option value="">Alle</md-select-option>${nuOpts}</md-outlined-select>
             </div>
             <div class="form-group" style="align-self:flex-end">
                 <md-filled-button  class="md-btn-warning" onclick="loadReports()"><i slot="icon" class="material-symbols-outlined">search</i> Auswerten</md-filled-button>
@@ -50,7 +50,7 @@ async function renderReports() {
     document.getElementById('rep_kunde').addEventListener('change', async () => {
         const kundeId = document.getElementById('rep_kunde').value;
         const objOpts = kundeId ? await getObjectOptions(kundeId) : '';
-        document.getElementById('rep_objekt').innerHTML = '<option value="">Alle</option>' + objOpts;
+        document.getElementById('rep_objekt').innerHTML = '<md-select-option value="">Alle</md-select-option>' + objOpts;
     });
 
     loadReports();

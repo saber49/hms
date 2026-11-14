@@ -862,6 +862,16 @@ textarea.form-control {
     resize: vertical;
     min-height: 80px;
 }
+md-outlined-text-field[class*="form-control"],
+md-outlined-select[class*="form-control"] {
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    min-height: 0;
+    height: auto;
+    width: 100%;
+}
 .form-group.full-width {
     grid-column: 1 / -1;
 }
@@ -1020,6 +1030,21 @@ to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-attention {
     animation: modalAttentionShake 0.5s ease, modalAttentionRing 0.9s ease;
+}
+/* #modalOverlay is a real md-dialog — the container supplies surface,
+   scrim and scroll; the inner .modal only carries sizing classes. */
+#modalOverlay .modal {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    animation: none;
+    max-height: none;
+    overflow-y: visible;
+}
+/* the inner .modal owns the width contract (700px / xl / lg / max) —
+   let the md-dialog container grow to fit instead of capping at 560px */
+#modalOverlay::part(container) {
+    max-width: calc(100vw - 48px);
 }
 .modal.modal-xl {
     max-width: 1280px;

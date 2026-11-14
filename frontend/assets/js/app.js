@@ -612,10 +612,10 @@ const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
     qm: QM_MODULE_SCRIPTS,
     einstellungen: ['assets/js/einstellungen.js?v=20261109prod1'],
-    interessenten: ['assets/js/crm.js?v=20261109prod1'],
-    customers: ['assets/js/customers.js?v=20261109prod1'],
-    objects: ['assets/js/objects.js?v=20261109prod1'],
-    subcontractors: ['assets/js/subcontractors.js?v=20261104pager1'],
+    interessenten: ['assets/js/crm.js?v=20261114md3c'],
+    customers: ['assets/js/customers.js?v=20261114md3c'],
+    objects: ['assets/js/objects.js?v=20261114md3c'],
+    subcontractors: ['assets/js/subcontractors.js?v=20261114md3c'],
     price_history: ['assets/js/price_history.js?v=20261018ph3'],
     lager: ['assets/js/lager.js?v=20261104pager1'],
     orders: ['assets/js/orders.js?v=20261104pager1'],
@@ -624,7 +624,7 @@ const PAGE_MODULE_SCRIPTS = {
     disposition: TASKS_MODULE_SCRIPTS,
     monatsabschluss: TASKS_MODULE_SCRIPTS,
     reports: [
-        'assets/js/reports.js?v=20261104pager1',
+        'assets/js/reports.js?v=20261114md3c',
         'assets/js/controlling/controlling-core.js?v=20261021u1',
         'assets/js/controlling/controlling-charts.js?v=20261004bfarbe1',
         'assets/js/controlling/controlling-widgets.js?v=20261021u1',
@@ -633,14 +633,14 @@ const PAGE_MODULE_SCRIPTS = {
         'assets/js/controlling/controlling-drilldown.js?v=20261021u2',
         'assets/js/controlling/controlling-snapshots.js?v=ctrlfix202611030142',
         'assets/js/controlling/controlling-cockpit.js?v=20261021cc2',
-        'assets/js/controlling.js?v=20261021cc2'
+        'assets/js/controlling.js?v=20261114md3c'
     ],
-    workers: ['assets/js/workers.js?v=20261104pager1'],
+    workers: ['assets/js/workers.js?v=20261114md3c'],
     absences: ['assets/js/absences.js?v=20261104pager1'],
-    users: ['assets/js/users.js?v=20261109prod1'],
+    users: ['assets/js/users.js?v=20261114md3c'],
     pdf_design: ['assets/js/pdf_design.js?v=20261109prod1'],
     company_documents: ['assets/js/company_documents.js?v=20261114sek1'],
-    aufgaben: ['assets/js/aufgaben.js?v=20261104pager1'],
+    aufgaben: ['assets/js/aufgaben.js?v=20261114md3c'],
     aueg: ['assets/js/aueg.js?v=20261104pager1']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app
@@ -1376,15 +1376,15 @@ function renderProfileTab(ctx, c) {
             <div class="acc-grid acc-grid-3">
                 <div class="form-group">
                     <label>Aktuelles Passwort</label>
-                    <input type="password" class="form-control" id="acc_old_pw" placeholder="Aktuelles Passwort">
+                    <md-outlined-text-field type="password" class="form-control" id="acc_old_pw" placeholder="Aktuelles Passwort"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Neues Passwort</label>
-                    <input type="password" class="form-control" id="acc_new_pw" placeholder="Mind. 8 Zeichen">
+                    <md-outlined-text-field type="password" class="form-control" id="acc_new_pw" placeholder="Mind. 8 Zeichen"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Bestätigen</label>
-                    <input type="password" class="form-control" id="acc_new_pw2" placeholder="Wiederholen">
+                    <md-outlined-text-field type="password" class="form-control" id="acc_new_pw2" placeholder="Wiederholen"></md-outlined-text-field>
                 </div>
             </div>
             <div style="text-align:right;margin-top:8px">
@@ -1678,22 +1678,22 @@ function renderCompanyTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group acc-span-2">
                     <label>Firmenname *</label>
-                    <input type="text" class="form-control" id="cf_name" value="${escapeHtml(c.name || '')}" placeholder="Mustermann GmbH">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_name" value="${escapeHtml(c.name || '')}" placeholder="Mustermann GmbH"></md-outlined-text-field>
                 </div>
                 <div class="form-group acc-span-2">
                     <label>Zusatz</label>
-                    <input type="text" class="form-control" id="cf_firmen_zusatz" maxlength="150" value="${escapeHtml(c.firmen_zusatz || '')}" placeholder="z.B. Sicherheitsdienst · Bewachung · Service">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_firmen_zusatz" maxlength="150" value="${escapeHtml(c.firmen_zusatz || '')}" placeholder="z.B. Sicherheitsdienst · Bewachung · Service"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Rechtsform</label>
-                    <select class="form-control" id="cf_rechtsform">
-                        <option value="">–</option>
-                        ${RECHTSFORMEN.map(r => `<option value="${r}" ${c.rechtsform === r ? 'selected' : ''}>${r}</option>`).join('')}
-                    </select>
+                    <md-outlined-select class="form-control" id="cf_rechtsform">
+                        <md-select-option value="">–</md-select-option>
+                        ${RECHTSFORMEN.map(r => `<md-select-option value="${r}" ${c.rechtsform === r ? 'selected' : ''}>${r}</md-select-option>`).join('')}
+                    </md-outlined-select>
                 </div>
                 <div class="form-group">
                     <label>Geschäftsführer / Vertretungsberechtigt</label>
-                    <input type="text" class="form-control" id="cf_geschaeftsfuehrer" value="${escapeHtml(c.geschaeftsfuehrer || '')}" placeholder="Max Mustermann">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_geschaeftsfuehrer" value="${escapeHtml(c.geschaeftsfuehrer || '')}" placeholder="Max Mustermann"></md-outlined-text-field>
                 </div>
             </div>
         </div>
@@ -1703,35 +1703,35 @@ function renderCompanyTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>E-Mail</label>
-                    <input type="email" class="form-control" id="cf_company_email" value="${escapeHtml(c.company_email || '')}" placeholder="info@firma.de">
+                    <md-outlined-text-field type="email" class="form-control" id="cf_company_email" value="${escapeHtml(c.company_email || '')}" placeholder="info@firma.de"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Telefon</label>
-                    <input type="text" class="form-control" id="cf_company_phone" value="${escapeHtml(c.company_phone || '')}" placeholder="+49 30 123456">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_company_phone" value="${escapeHtml(c.company_phone || '')}" placeholder="+49 30 123456"></md-outlined-text-field>
                 </div>
                 <div class="form-group acc-span-2">
                     <label>Webseite</label>
-                    <input type="url" class="form-control" id="cf_website" value="${escapeHtml(c.website || '')}" placeholder="https://www.firma.de">
+                    <md-outlined-text-field type="url" class="form-control" id="cf_website" value="${escapeHtml(c.website || '')}" placeholder="https://www.firma.de"></md-outlined-text-field>
                 </div>
                 <div class="form-group acc-span-2">
                     <label>Straße & Hausnummer</label>
-                    <input type="text" class="form-control" id="cf_company_address" value="${escapeHtml(c.company_address || '')}" placeholder="Musterstraße 12">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_company_address" value="${escapeHtml(c.company_address || '')}" placeholder="Musterstraße 12"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>PLZ</label>
-                    <input type="text" class="form-control" id="cf_company_zip" value="${escapeHtml(c.company_zip || '')}" placeholder="10115" maxlength="20">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_company_zip" value="${escapeHtml(c.company_zip || '')}" placeholder="10115" maxlength="20"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Stadt</label>
-                    <input type="text" class="form-control" id="cf_company_city" value="${escapeHtml(c.company_city || '')}" placeholder="Berlin">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_company_city" value="${escapeHtml(c.company_city || '')}" placeholder="Berlin"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Land</label>
-                    <select class="form-control" id="cf_company_country">
-                        <option value="DE" ${(c.company_country || 'DE') === 'DE' ? 'selected' : ''}>Deutschland</option>
-                        <option value="AT" ${c.company_country === 'AT' ? 'selected' : ''}>Österreich</option>
-                        <option value="CH" ${c.company_country === 'CH' ? 'selected' : ''}>Schweiz</option>
-                    </select>
+                    <md-outlined-select class="form-control" id="cf_company_country">
+                        <md-select-option value="DE" ${(c.company_country || 'DE') === 'DE' ? 'selected' : ''}>Deutschland</md-select-option>
+                        <md-select-option value="AT" ${c.company_country === 'AT' ? 'selected' : ''}>Österreich</md-select-option>
+                        <md-select-option value="CH" ${c.company_country === 'CH' ? 'selected' : ''}>Schweiz</md-select-option>
+                    </md-outlined-select>
                 </div>
             </div>
         </div>
@@ -1768,22 +1768,22 @@ function renderCompanyTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group acc-span-2">
                     <label>Hauptbranche des Unternehmens</label>
-                    <select class="form-control" id="cf_branche" onchange="cfBrancheChanged(this.value)">
-                        <option value="">— keine (neutrale Begriffe) —</option>
-                        ${c.branchen.map(b => `<option value="${escapeHtml(b.key)}" ${b.key === c.branche ? 'selected' : ''}>${escapeHtml(b.label)}</option>`).join('')}
-                    </select>
+                    <md-outlined-select class="form-control" id="cf_branche" onchange="cfBrancheChanged(this.value)">
+                        <md-select-option value="">— keine (neutrale Begriffe) —</md-select-option>
+                        ${c.branchen.map(b => `<md-select-option value="${escapeHtml(b.key)}" ${b.key === c.branche ? 'selected' : ''}>${escapeHtml(b.label)}</md-select-option>`).join('')}
+                    </md-outlined-select>
                 </div>
                 ${[['kunde', 'Begriff für Kunde (Einzahl)'], ['kunden', 'Begriff für Kunden (Mehrzahl)'], ['objekt', 'Begriff für Objekt (Einzahl)'], ['objekte', 'Begriff für Objekte (Mehrzahl)']].map(([k, l]) => `
                 <div class="form-group">
                     <label>${l}</label>
-                    <input type="text" class="form-control cf-term" data-term="${k}" maxlength="40" value="${escapeHtml((c.terms_custom || {})[k] || '')}" placeholder="${escapeHtml((c.terms_default || {})[k] || TERM_DEFAULTS[k])}">
+                    <md-outlined-text-field type="text" class="form-control cf-term" data-term="${k}" maxlength="40" value="${escapeHtml((c.terms_custom || {})[k] || '')}" placeholder="${escapeHtml((c.terms_default || {})[k] || TERM_DEFAULTS[k])}"></md-outlined-text-field>
                 </div>`).join('')}
                 <div class="form-group acc-span-2"><small style="color:var(--gray-500)">Leer = Begriff der gewählten Branche (grau angezeigt).</small></div>
             </div>` : ''}
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>Name des Schicht-Protokolls</label>
-                    <input type="text" class="form-control" id="cf_objektbuch_label" maxlength="40" value="${escapeHtml(c.objektbuch_label_custom || '')}" placeholder="${escapeHtml(c.objektbuch_label_default || 'Wachbuch')}">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_objektbuch_label" maxlength="40" value="${escapeHtml(c.objektbuch_label_custom || '')}" placeholder="${escapeHtml(c.objektbuch_label_default || 'Wachbuch')}"></md-outlined-text-field>
                     <small style="color:var(--gray-500)">Wird in der Mitarbeiter-App, bei den Objekten und im Kundenportal angezeigt (z.B. Wachbuch, Objektbuch, Schichtbuch). Leer = „${escapeHtml(c.objektbuch_label_default || 'Wachbuch')}“.</small>
                 </div>
             </div>
@@ -1806,11 +1806,11 @@ function renderCompanyTab(c) {
                 </div>
                 <div class="form-group">
                     <label>Höchstarbeitszeit pro Tag (Std)</label>
-                    <input type="number" class="form-control" id="cf_arbzg_max_tag" min="6" max="24" step="0.5" value="${escapeHtml(String(c.arbzg.max_tag))}">
+                    <md-outlined-text-field type="number" class="form-control" id="cf_arbzg_max_tag" min="6" max="24" step="0.5" value="${escapeHtml(String(c.arbzg.max_tag))}"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Mindestruhezeit zwischen Schichten (Std)</label>
-                    <input type="number" class="form-control" id="cf_arbzg_ruhezeit" min="5" max="24" step="0.5" value="${escapeHtml(String(c.arbzg.ruhezeit))}">
+                    <md-outlined-text-field type="number" class="form-control" id="cf_arbzg_ruhezeit" min="5" max="24" step="0.5" value="${escapeHtml(String(c.arbzg.ruhezeit))}"></md-outlined-text-field>
                 </div>
             </div>
         </div>` : ''}
@@ -1864,9 +1864,9 @@ function cfPauseRuleRowHtml(von, bis, min) {
     const v = x => x !== null && x !== undefined ? escapeHtml(String(x)) : '';
     return `
     <div class="cf-pause-rule acc-grid" style="grid-template-columns:1fr 1fr 1fr 36px;gap:12px;align-items:center;margin-bottom:8px">
-        <input type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01">
-        <input type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00">
-        <input type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30">
+        <md-outlined-text-field type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01"></md-outlined-text-field>
+        <md-outlined-text-field type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00"></md-outlined-text-field>
+        <md-outlined-text-field type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30"></md-outlined-text-field>
         <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))">
             <i class="material-symbols-outlined">delete</i>
         </button>
@@ -1912,11 +1912,11 @@ function renderLegalTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>Handelsregister-Nr.</label>
-                    <input type="text" class="form-control" id="cf_handelsregister_nr" value="${escapeHtml(c.handelsregister_nr || '')}" placeholder="HRB 123456">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_handelsregister_nr" value="${escapeHtml(c.handelsregister_nr || '')}" placeholder="HRB 123456"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>Registergericht</label>
-                    <input type="text" class="form-control" id="cf_registergericht" value="${escapeHtml(c.registergericht || '')}" placeholder="Amtsgericht Berlin (Charlottenburg)">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_registergericht" value="${escapeHtml(c.registergericht || '')}" placeholder="Amtsgericht Berlin (Charlottenburg)"></md-outlined-text-field>
                 </div>
             </div>
         </div>
@@ -1926,12 +1926,12 @@ function renderLegalTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group">
                     <label>Umsatzsteuer-ID (USt-IdNr.)</label>
-                    <input type="text" class="form-control" id="cf_ust_id" value="${escapeHtml(c.ust_id || '')}" placeholder="DE123456789" maxlength="30">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_ust_id" value="${escapeHtml(c.ust_id || '')}" placeholder="DE123456789" maxlength="30"></md-outlined-text-field>
                     <small class="acc-hint">Format: DE + 9 Ziffern</small>
                 </div>
                 <div class="form-group">
                     <label>Steuernummer</label>
-                    <input type="text" class="form-control" id="cf_steuernummer" value="${escapeHtml(c.steuernummer || '')}" placeholder="12/345/67890">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_steuernummer" value="${escapeHtml(c.steuernummer || '')}" placeholder="12/345/67890"></md-outlined-text-field>
                     <small class="acc-hint">Vom Finanzamt vergeben</small>
                 </div>
             </div>
@@ -1950,15 +1950,15 @@ function renderBankTab(c) {
             <div class="acc-grid acc-grid-2">
                 <div class="form-group acc-span-2">
                     <label>Name der Bank</label>
-                    <input type="text" class="form-control" id="cf_bank_name" value="${escapeHtml(c.bank_name || '')}" placeholder="Sparkasse Musterstadt">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_bank_name" value="${escapeHtml(c.bank_name || '')}" placeholder="Sparkasse Musterstadt"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>IBAN</label>
-                    <input type="text" class="form-control" id="cf_iban" value="${escapeHtml(c.iban || '')}" placeholder="DE89 3704 0044 0532 0130 00" maxlength="34" style="font-family:monospace;letter-spacing:1px">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_iban" value="${escapeHtml(c.iban || '')}" placeholder="DE89 3704 0044 0532 0130 00" maxlength="34" style="font-family:monospace;letter-spacing:1px"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <label>BIC / SWIFT</label>
-                    <input type="text" class="form-control" id="cf_bic" value="${escapeHtml(c.bic || '')}" placeholder="COBADEFFXXX" maxlength="11" style="font-family:monospace">
+                    <md-outlined-text-field type="text" class="form-control" id="cf_bic" value="${escapeHtml(c.bic || '')}" placeholder="COBADEFFXXX" maxlength="11" style="font-family:monospace"></md-outlined-text-field>
                 </div>
             </div>
         </div>
@@ -1988,7 +1988,7 @@ async function renderDocumentsTab(container) {
 
 function renderDocumentsTabHtml(items, categories) {
     const catOptions = Object.entries(categories || {})
-        .map(([k, label]) => `<option value="${escapeHtml(k)}">${escapeHtml(label)}</option>`)
+        .map(([k, label]) => `<md-select-option value="${escapeHtml(k)}">${escapeHtml(label)}</md-select-option>`)
         .join('');
 
     const listHtml = items.length === 0
@@ -2009,14 +2009,14 @@ function renderDocumentsTabHtml(items, categories) {
                 <div class="docs-uploader-row">
                     <div class="form-group">
                         <label>Kategorie *</label>
-                        <select class="form-control" id="docUploadCategory">
-                            <option value="">– bitte wählen –</option>
+                        <md-outlined-select class="form-control" id="docUploadCategory">
+                            <md-select-option value="">– bitte wählen –</md-select-option>
                             ${catOptions}
-                        </select>
+                        </md-outlined-select>
                     </div>
                     <div class="form-group">
                         <label>Bezeichnung *</label>
-                        <input type="text" class="form-control" id="docUploadTitle" placeholder="z.&nbsp;B. Gewerbeschein 2026" maxlength="200">
+                        <md-outlined-text-field type="text" class="form-control" id="docUploadTitle" placeholder="z.&nbsp;B. Gewerbeschein 2026" maxlength="200"></md-outlined-text-field>
                     </div>
                     <div class="form-group">
                         <label>Datei *</label>
@@ -2456,6 +2456,8 @@ async function handleLogout() {
 // ============================================
 function initModal() {
     document.getElementById('modalClose').addEventListener('click', closeModal);
+    // md-dialog closes itself on Escape/scrim — run the same cleanup.
+    document.getElementById('modalOverlay').addEventListener('close', closeModal);
 }
 
 function openModal(title, bodyHtml, footerHtml = '', sizeClass = '') {
@@ -2474,7 +2476,9 @@ function openModal(title, bodyHtml, footerHtml = '', sizeClass = '') {
         dialog.classList.remove('modal-xl', 'modal-max');
         if (sizeClass) dialog.classList.add(sizeClass);
     }
-    document.getElementById('modalOverlay').classList.add('active');
+    const modalOv = document.getElementById('modalOverlay');
+    if (typeof modalOv.show === 'function') modalOv.show();
+    else modalOv.setAttribute('open', '');
     syncBodyScrollLock();
 }
 
@@ -2513,7 +2517,7 @@ function ensureLegacyModalMaxBtn(header) {
  * nav-item handlers installed in initNavigation().
  */
 const MODAL_GUARD_OVERLAYS = [
-    '.modal-overlay.active',          // shared #modalOverlay (openModal)
+    'md-dialog#modalOverlay[open]',   // shared #modalOverlay (openModal)
     '.wp-overlay.active',             // worker slide-in panels
     '.system-confirm-overlay.active', // system confirm dialog
     '.planner-nu-select-overlay.active', // NU selection popup (body-level)
@@ -2696,7 +2700,9 @@ document.addEventListener('wheel', _swallowOutsideScroll, { passive: false });
 
 function closeModal() {
     if (typeof window._plannerViewportCleanup === 'function') window._plannerViewportCleanup();
-    document.getElementById('modalOverlay').classList.remove('active');
+    const modalOv = document.getElementById('modalOverlay');
+    if (typeof modalOv.close === 'function') modalOv.close();
+    else modalOv.removeAttribute('open');
     // The NU selection overlay lives at <body> level (outside the modal
     // DOM) — close it too so it can't linger above a closed modal.
     if (typeof plannerCloseNuAddOverlay === 'function') plannerCloseNuAddOverlay();
@@ -3294,7 +3300,7 @@ window.bereichDotHtml = bereichDotHtml;
 async function populateBereichDatalist(datalistId) {
     const bereiche = await getBereichSuggestions();
     const dl = document.getElementById(datalistId);
-    if (dl) dl.innerHTML = bereiche.map(b => `<option value="${b}">`).join('');
+    if (dl) dl.innerHTML = bereiche.map(b => `<md-select-option value="${b}">`).join('');
 }
 
 // Single-select dropdown fed by the managed catalog — used where a field
@@ -3343,23 +3349,23 @@ async function getCustomerOptions(bereich) {
     let url = API.customers + '?aktiv=1';
     if (bereich) url += '&bereich=' + encodeURIComponent(bereich);
     const data = await apiGet(url);
-    return data.map(c => `<option value="${escapeHtml(c.kunde_id)}">${escapeHtml(c.kunde_id)} – ${escapeHtml(c.kundenname)}</option>`).join('');
+    return data.map(c => `<md-select-option value="${escapeHtml(c.kunde_id)}">${escapeHtml(c.kunde_id)} – ${escapeHtml(c.kundenname)}</md-select-option>`).join('');
 }
 
 async function getObjectOptions(kundenId) {
     const url = kundenId ? API.objects + `?kunden_id=${kundenId}&aktiv=1` : API.objects + '?aktiv=1';
     const data = await apiGet(url);
-    return data.map(o => `<option value="${escapeHtml(o.obj_id)}">${escapeHtml(o.obj_id)} – ${escapeHtml(o.objektname)}</option>`).join('');
+    return data.map(o => `<md-select-option value="${escapeHtml(o.obj_id)}">${escapeHtml(o.obj_id)} – ${escapeHtml(o.objektname)}</md-select-option>`).join('');
 }
 
 async function getSubcontractorOptions() {
     const data = await apiGet(API.subcontractors + '?aktiv=1');
-    return data.map(n => `<option value="${escapeHtml(n.nu_id)}">${escapeHtml(n.nu_id)} – ${escapeHtml(n.firmenname)}</option>`).join('');
+    return data.map(n => `<md-select-option value="${escapeHtml(n.nu_id)}">${escapeHtml(n.nu_id)} – ${escapeHtml(n.firmenname)}</md-select-option>`).join('');
 }
 
 async function getOrderOptions() {
     const data = await apiGet(API.orders);
-    return data.map(o => `<option value="${escapeHtml(o.bestell_id)}">${escapeHtml(o.bestell_id)} – ${escapeHtml(o.objektname || o.obj_id)}</option>`).join('');
+    return data.map(o => `<md-select-option value="${escapeHtml(o.bestell_id)}">${escapeHtml(o.bestell_id)} – ${escapeHtml(o.objektname || o.obj_id)}</md-select-option>`).join('');
 }
 
 // ============================================

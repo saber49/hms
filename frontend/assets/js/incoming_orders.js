@@ -757,16 +757,16 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
             <div class="form-grid be-ko-grid" style="grid-template-columns:1fr 1fr;gap:12px">
                 <div class="form-group">
                     <label>Kunde *</label>
-                    <select class="form-control" id="wiz_kunde" onchange="wizLoadObjects()">
-                        <option value="">— Kunde wählen —</option>
+                    <md-outlined-select class="form-control" id="wiz_kunde" onchange="wizLoadObjects()">
+                        <md-select-option value="">— Kunde wählen —</md-select-option>
                         ${customerOpts}
-                    </select>
+                    </md-outlined-select>
                 </div>
                 <div class="form-group">
                     <label>Objekt *</label>
-                    <select class="form-control" id="wiz_objekt" onchange="wizLoadArtikel()">
-                        <option value="">— Objekt wählen —</option>
-                    </select>
+                    <md-outlined-select class="form-control" id="wiz_objekt" onchange="wizLoadArtikel()">
+                        <md-select-option value="">— Objekt wählen —</md-select-option>
+                    </md-outlined-select>
                 </div>
             </div>
             <div class="form-grid be-ko-grid" style="grid-template-columns:1fr 1fr;gap:12px">
@@ -835,15 +835,15 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                     <div class="be-vl-grid be-vl-time">
                         <div class="be-vl-field">
                             <label for="wiz_shift_von">Von</label>
-                            <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control t24" id="wiz_shift_von" value="08:00" oninput="wizAutoPauseFromTimes()" onchange="wizAutoPauseFromTimes()">
+                            <md-outlined-text-field type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control t24" id="wiz_shift_von" value="08:00" oninput="wizAutoPauseFromTimes()" onchange="wizAutoPauseFromTimes()"></md-outlined-text-field>
                         </div>
                         <div class="be-vl-field">
                             <label for="wiz_shift_bis">Bis</label>
-                            <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control t24" id="wiz_shift_bis" value="16:00" oninput="wizAutoPauseFromTimes()" onchange="wizAutoPauseFromTimes()">
+                            <md-outlined-text-field type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="form-control t24" id="wiz_shift_bis" value="16:00" oninput="wizAutoPauseFromTimes()" onchange="wizAutoPauseFromTimes()"></md-outlined-text-field>
                         </div>
                         <div class="be-vl-field">
                             <label for="wiz_shift_pause" title="Eine Pause für Mitarbeiter und Kunde">Pause (Min)</label>
-                            <input type="number" class="form-control" id="wiz_shift_pause" value="0" min="0" step="5" title="Gilt für Mitarbeiter-Stunden und Kunden-Abrechnung" oninput="this.dataset.manual = '1'; wizCalcShiftDuration(); wizSyncPausenToRows()" onchange="this.dataset.manual = '1'; wizCalcShiftDuration(); wizSyncPausenToRows()">
+                            <md-outlined-text-field type="number" class="form-control" id="wiz_shift_pause" value="0" min="0" step="5" title="Gilt für Mitarbeiter-Stunden und Kunden-Abrechnung" oninput="this.dataset.manual = '1'; wizCalcShiftDuration(); wizSyncPausenToRows()" onchange="this.dataset.manual = '1'; wizCalcShiftDuration(); wizSyncPausenToRows()"></md-outlined-text-field>
                             <input type="hidden" id="wizGesetzlPause" value="0">
                         </div>
                         <div class="be-vl-duration" title="Netto-Arbeitszeit pro Person">
@@ -859,15 +859,15 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                     <div class="be-vl-grid be-vl-staff">
                         <div class="be-vl-field">
                             <label for="wiz_shift_menge">Menge (Personen)</label>
-                            <input type="number" class="form-control" id="wiz_shift_menge" value="1" min="1" step="1" onchange="wizAnfMixChanged(null)">
+                            <md-outlined-text-field type="number" class="form-control" id="wiz_shift_menge" value="1" min="1" step="1" onchange="wizAnfMixChanged(null)"></md-outlined-text-field>
                         </div>
                         <div class="be-vl-field be-vl-m">
                             <label for="wiz_anf_m">M davon Männer</label>
-                            <input type="number" class="form-control" id="wiz_anf_m" min="0" step="1" placeholder="egal" title="Anzahl Männer" onchange="wizAnfMixChanged(this)">
+                            <md-outlined-text-field type="number" class="form-control" id="wiz_anf_m" min="0" step="1" placeholder="egal" title="Anzahl Männer" onchange="wizAnfMixChanged(this)"></md-outlined-text-field>
                         </div>
                         <div class="be-vl-field be-vl-w">
                             <label for="wiz_anf_w">W davon Frauen</label>
-                            <input type="number" class="form-control" id="wiz_anf_w" min="0" step="1" placeholder="egal" title="Anzahl Frauen" onchange="wizAnfMixChanged(this)">
+                            <md-outlined-text-field type="number" class="form-control" id="wiz_anf_w" min="0" step="1" placeholder="egal" title="Anzahl Frauen" onchange="wizAnfMixChanged(this)"></md-outlined-text-field>
                         </div>
                     </div>
                     <div class="be-vl-help">M + W dürfen die Menge nicht überschreiten — leer = Geschlecht egal.</div>
@@ -878,7 +878,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                     <div class="be-vl-grid be-vl-place">
                         <div class="be-vl-field be-vl-ort">
                             <label for="wiz_shift_ort">Ort / Treffpunkt <span class="be-vl-req">*</span> <small>Pflichtfeld · ein eigener Tag-Ort hat Vorrang</small></label>
-                            <input type="text" class="form-control" id="wiz_shift_ort" required autocomplete="off" placeholder="z.B. Haupteingang, Musterstr. 1, 04109 Leipzig" oninput="beOrtInput(event); wizRefreshOrtHints()" onblur="beOrtHide()">
+                            <md-outlined-text-field type="text" class="form-control" id="wiz_shift_ort" required autocomplete="off" placeholder="z.B. Haupteingang, Musterstr. 1, 04109 Leipzig" oninput="beOrtInput(event); wizRefreshOrtHints()" onblur="beOrtHide()"></md-outlined-text-field>
                             <div id="wiz_ort_suggest" class="be-ort-suggest" style="display:none"></div>
                             <style>
                               .be-ort-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
@@ -891,7 +891,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                         </div>
                         <div class="be-vl-field">
                             <label for="wiz_shift_beschreibung">Beschreibung <span class="be-vl-req">*</span> <small>Pflichtfeld · gilt für alle Tage ohne eigene Beschreibung</small></label>
-                            <input type="text" class="form-control" id="wiz_shift_beschreibung" placeholder="z.B. Dienstausweis mitbringen, 15 Min vor Dienstbeginn da sein" onchange="wizApplyMetaToRows()" oninput="wizUpdateObjBeschreibungHint()">
+                            <md-outlined-text-field type="text" class="form-control" id="wiz_shift_beschreibung" placeholder="z.B. Dienstausweis mitbringen, 15 Min vor Dienstbeginn da sein" onchange="wizApplyMetaToRows()" oninput="wizUpdateObjBeschreibungHint()"></md-outlined-text-field>
                             <div id="wizObjBeschreibungHint" class="be-obj-beschr-hint" style="display:none"></div>
                         </div>
                     </div>
@@ -908,15 +908,15 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-grid be-vl-reqs">
                     <div class="be-vl-field">
                         <label for="wiz_anf_qualifikation">${beIcon('workspace_premium', 'font-size:14px')} Qualifikation</label>
-                        <input type="text" class="form-control" id="wiz_anf_qualifikation" placeholder="z.B. Sachkunde §34a, Erste Hilfe" onchange="wizApplyMetaToRows()">
+                        <md-outlined-text-field type="text" class="form-control" id="wiz_anf_qualifikation" placeholder="z.B. Sachkunde §34a, Erste Hilfe" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
                     </div>
                     <div class="be-vl-field">
                         <label for="wiz_anf_kleidung">${beIcon('apparel', 'font-size:14px')} Kleidung</label>
-                        <input type="text" class="form-control" id="wiz_anf_kleidung" placeholder="z.B. neutrale DK, schwarze Hose" onchange="wizApplyMetaToRows()">
+                        <md-outlined-text-field type="text" class="form-control" id="wiz_anf_kleidung" placeholder="z.B. neutrale DK, schwarze Hose" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
                     </div>
                     <div class="be-vl-field">
                         <label for="wiz_anf_skill">${beIcon('translate', 'font-size:14px')} Skill / Sprache</label>
-                        <input type="text" class="form-control" id="wiz_anf_skill" placeholder="z.B. Deutsch B1" onchange="wizApplyMetaToRows()">
+                        <md-outlined-text-field type="text" class="form-control" id="wiz_anf_skill" placeholder="z.B. Deutsch B1" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
                     </div>
                 </div>
                 <div class="be-anf-positions be-vl-pos">
@@ -940,13 +940,13 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-grid be-vl-period">
                     <div class="be-vl-field">
                         <label for="wiz_monat">Bestellmonat</label>
-                        <select class="form-control" id="wiz_monat">
-                            ${MONTHS_DE.map((m, i) => i > 0 ? `<option value="${i}" ${i === (prefill.monat || now.getMonth() + 1) ? 'selected' : ''}>${m}</option>` : '').join('')}
-                        </select>
+                        <md-outlined-select class="form-control" id="wiz_monat">
+                            ${MONTHS_DE.map((m, i) => i > 0 ? `<md-select-option value="${i}" ${i === (prefill.monat || now.getMonth() + 1) ? 'selected' : ''}>${m}</md-select-option>` : '').join('')}
+                        </md-outlined-select>
                     </div>
                     <div class="be-vl-field">
                         <label for="wiz_jahr">Jahr</label>
-                        <input type="number" class="form-control" id="wiz_jahr" min="2020" max="2100" value="${prefill.jahr || now.getFullYear()}">
+                        <md-outlined-text-field type="number" class="form-control" id="wiz_jahr" min="2020" max="2100" value="${prefill.jahr || now.getFullYear()}"></md-outlined-text-field>
                     </div>
                 </div>
                 <div class="be-vl-seg" role="tablist">
@@ -979,11 +979,11 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-panel" data-panel="zeitraum">
                     <div class="be-vl-field">
                         <label for="wiz_range_von">Von</label>
-                        <input type="date" class="form-control" id="wiz_range_von">
+                        <md-outlined-text-field type="date" class="form-control" id="wiz_range_von"></md-outlined-text-field>
                     </div>
                     <div class="be-vl-field">
                         <label for="wiz_range_bis">Bis</label>
-                        <input type="date" class="form-control" id="wiz_range_bis" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizGenerateRange(); }">
+                        <md-outlined-text-field type="date" class="form-control" id="wiz_range_bis" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizGenerateRange(); }"></md-outlined-text-field>
                     </div>
                     <md-filled-button onclick="wizGenerateRange()" style="--md-filled-button-container-color:var(--be-accent)"><md-icon slot="icon">event_repeat</md-icon>Zeitraum generieren</md-filled-button>
                     <div class="be-vl-panel-info">Ohne gewählte Wochentage wird jeder Tag im Zeitraum erzeugt.</div>
@@ -991,7 +991,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-panel" data-panel="einzel">
                     <div class="be-vl-field">
                         <label for="wiz_single_date">Datum</label>
-                        <input type="date" class="form-control" id="wiz_single_date" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizAddSingleDay(); }">
+                        <md-outlined-text-field type="date" class="form-control" id="wiz_single_date" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizAddSingleDay(); }"></md-outlined-text-field>
                     </div>
                     <md-filled-button onclick="wizAddSingleDay()" style="--md-filled-button-container-color:var(--be-accent)"><md-icon slot="icon">add</md-icon>Einzeltag hinzufügen</md-filled-button>
                     <div class="be-vl-panel-info">Tipp: Ein Klick auf einen Tag im Kalender fügt ebenfalls eine Schicht hinzu.</div>
@@ -1211,7 +1211,7 @@ async function wizLoadObjects() {
     wizUpdateKundePreview(customer);
 
     const opts = await getObjectOptions(kundenId);
-    document.getElementById('wiz_objekt').innerHTML = '<option value="">— Objekt wählen —</option>' + opts;
+    document.getElementById('wiz_objekt').innerHTML = '<md-select-option value="">— Objekt wählen —</md-select-option>' + opts;
 
     _beState.selObj = null;
     _beState.selArt = null;
@@ -1367,10 +1367,10 @@ function wizRenderArtikelArea(articles) {
         wrap.innerHTML = `
             <div class="form-group">
                 <label>Artikel / Leistung *</label>
-                <select class="form-control" id="wiz_artikel" onchange="wizSelectArtikel(this.value)">
-                    <option value="">— Artikel wählen —</option>
-                    ${articles.map(a => `<option value="${a.artikel_id}">${a.artikel_id} – ${escapeHtml(a.artikel_name)}${a.bereich ? ' (' + escapeHtml(a.bereich) + ')' : ''}</option>`).join('')}
-                </select>
+                <md-outlined-select class="form-control" id="wiz_artikel" onchange="wizSelectArtikel(this.value)">
+                    <md-select-option value="">— Artikel wählen —</md-select-option>
+                    ${articles.map(a => `<md-select-option value="${a.artikel_id}">${a.artikel_id} – ${escapeHtml(a.artikel_name)}${a.bereich ? ' (' + escapeHtml(a.bereich) + ')' : ''}</md-select-option>`).join('')}
+                </md-outlined-select>
             </div>
             <div class="be-artikel-preview" id="wizArtPreview">
                 <div class="be-preview-icon">${beIcon('sell')}</div>
@@ -1422,12 +1422,12 @@ async function wizSelectArtikel(artikelId) {
     }
 
     // Hidden input keeps the PRIMARY artikel id (legacy save-path readers).
-    // In dropdown mode wiz_artikel IS the visible picker — a single <select>
+    // In dropdown mode wiz_artikel IS the visible picker — a single <md-outlined-select>
     // cannot show a multi-selection, so after each pick it resets to the
     // placeholder and the preview chips below carry the real selection.
     const hidden = document.getElementById('wiz_artikel');
     if (hidden) {
-        if (hidden.tagName === 'SELECT') {
+        if (hidden.tagName === 'SELECT' || hidden.tagName === 'MD-OUTLINED-SELECT') {
             hidden.value = '';
         } else {
             hidden.value = _beState.selArt ? _beState.selArt.artikel_id : '';
@@ -1561,13 +1561,13 @@ function wizRenderPreisPanels() {
                     <label>Kundenpreis</label>
                     <div class="be-input-with-icon">
                         <span class="be-input-icon">€</span>
-                        <input type="number" step="0.01" class="form-control be-art-preis" data-art="${escapeHtml(String(a.artikel_id))}" value="${preis}"${ro}>
+                        <md-outlined-text-field type="number" step="0.01" class="form-control be-art-preis" data-art="${escapeHtml(String(a.artikel_id))}" value="${preis}"${ro}></md-outlined-text-field>
                     </div>
                 </div>
             </div>
             <div class="form-group" style="margin-top:10px;margin-bottom:0">
                 <label>Bemerkung (nur diese Leistung)</label>
-                <input type="text" class="form-control be-art-bemerkung" data-art="${escapeHtml(String(a.artikel_id))}" value="${escapeHtml(p.bemerkung || '')}" placeholder="z. B. besondere Hinweise zu dieser Leistung"${ro}>
+                <md-outlined-text-field type="text" class="form-control be-art-bemerkung" data-art="${escapeHtml(String(a.artikel_id))}" value="${escapeHtml(p.bemerkung || '')}" placeholder="z. B. besondere Hinweise zu dieser Leistung"${ro}></md-outlined-text-field>
             </div>
         </div>`;
     }).join('');
@@ -2110,10 +2110,10 @@ function wizDayMengeCellHtml(tr) {
 // here would destroy the ✓ button under the user's click).
 function wizDayMengeEditHtml(tr) {
     const { menge, mixM, mixW } = wizDayMengeInfo(tr);
-    return `<input type="number" class="form-control be-day-menge" value="${menge}" min="1" style="width:64px;text-align:right;padding:2px 6px">
+    return `<md-outlined-text-field type="number" class="form-control be-day-menge" value="${menge}" min="1" style="width:64px;text-align:right;padding:2px 6px"></md-outlined-text-field>
         <div class="be-day-mix" style="display:flex;gap:4px;justify-content:flex-end;margin-top:3px" title="Geschlecht-Mix für diesen Tag (Summe ≤ Menge; 0/0 = egal)">
-            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-primary);font-weight:700">M<input type="number" class="form-control be-day-mix-m" value="${mixM}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
-            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-error);font-weight:700">W<input type="number" class="form-control be-day-mix-w" value="${mixW}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></span>
+            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-primary);font-weight:700">M<md-outlined-text-field type="number" class="form-control be-day-mix-m" value="${mixM}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></md-outlined-text-field></span>
+            <span style="display:inline-flex;align-items:center;gap:2px;font-size:.72rem;color: var(--md-sys-color-error);font-weight:700">W<md-outlined-text-field type="number" class="form-control be-day-mix-w" value="${mixW}" min="0" style="width:44px;text-align:right;padding:1px 4px;font-size:.75rem"></md-outlined-text-field></span>
         </div>`;
 }
 
@@ -2145,7 +2145,7 @@ async function wizEditDay(btn) {
     row.classList.add('be-day-editing');
     const cells = row.querySelectorAll('td');
     const inp = (type, value, extra) => `<input type="${type}" class="form-control" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;${extra || ''}">`;
-    const tInp = (value) => `<input type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;width:86px">`;
+    const tInp = (value) => `<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;width:86px"></md-outlined-text-field>`;
     cells[1].innerHTML = inp('date', row.dataset.datum || '', 'width:130px');
     cells[3].innerHTML = tInp(row.dataset.von || '');
     cells[4].innerHTML = tInp(row.dataset.bis || '');
@@ -2180,10 +2180,10 @@ async function wizEditDay(btn) {
     cells[9].innerHTML = `
         <div class="be-day-ort-beschr" style="font-size:.78rem">${escapeHtml(row.dataset.beschreibung || '') || '–'}${anfChipEdit}</div>
         <div style="position:relative;margin-top:3px">
-            <input type="text" class="form-control be-day-ort-edit" value="${escapeHtml(row.dataset.ort || '')}"
+            <md-outlined-text-field type="text" class="form-control be-day-ort-edit" value="${escapeHtml(row.dataset.ort || '')}"
                    placeholder="Tag-Ort (geht in die Dispo) — leer = kein Ort" autocomplete="off"${confirmedOrtHint}
                    oninput="beOrtInput(event)" onblur="beOrtHide(event)"
-                   style="padding:2px 6px;font-size:.78rem;min-width:190px">
+                   style="padding:2px 6px;font-size:.78rem;min-width:190px"></md-outlined-text-field>
             <div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div>
         </div>`;
     cells[10].innerHTML = `<div style="display:flex;gap:6px;justify-content:flex-end">
@@ -3007,19 +3007,19 @@ function _beCalEditHtml(r, n) {
     const posTxt = pos.map(p => `${p.anzahl ? p.anzahl + '× ' : ''}${escapeHtml([p.funktion, geschlechtLabelText(p.geschlecht), p.qualifikation].filter(Boolean).join(' · ')) || '–'}`).join(', ');
     const val = v => escapeHtml(String(v ?? ''));
     return `<div class="be-cal-edit" data-n="${n}">
-        <label>Datum<input type="date" class="form-control" data-f="datum" value="${val(r.dataset.datum)}" min="${val(document.getElementById('wiz_single_date')?.min)}" max="${val(document.getElementById('wiz_single_date')?.max)}"></label>
-        <label>Von<input type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="von" value="${val(r.dataset.von)}"></label>
-        <label>Bis<input type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="bis" value="${val(r.dataset.bis)}"></label>
-        <label>Pause (Min)<input type="number" class="form-control" min="0" data-f="pause" value="${parseInt(r.dataset.pauseMinuten) || 0}"></label>
-        <label>Menge<input type="number" class="form-control" min="1" data-f="menge" value="${menge}"></label>
-        <label class="m">M Männer<input type="number" class="form-control" min="0" data-f="m" value="${mixM}"></label>
-        <label class="w">W Frauen<input type="number" class="form-control" min="0" data-f="w" value="${mixW}"></label>
+        <label>Datum<md-outlined-text-field type="date" class="form-control" data-f="datum" value="${val(r.dataset.datum)}" min="${val(document.getElementById('wiz_single_date')?.min)}" max="${val(document.getElementById('wiz_single_date')?.max)}"></md-outlined-text-field></label>
+        <label>Von<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="von" value="${val(r.dataset.von)}"></md-outlined-text-field></label>
+        <label>Bis<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="bis" value="${val(r.dataset.bis)}"></md-outlined-text-field></label>
+        <label>Pause (Min)<md-outlined-text-field type="number" class="form-control" min="0" data-f="pause" value="${parseInt(r.dataset.pauseMinuten) || 0}"></md-outlined-text-field></label>
+        <label>Menge<md-outlined-text-field type="number" class="form-control" min="1" data-f="menge" value="${menge}"></md-outlined-text-field></label>
+        <label class="m">M Männer<md-outlined-text-field type="number" class="form-control" min="0" data-f="m" value="${mixM}"></md-outlined-text-field></label>
+        <label class="w">W Frauen<md-outlined-text-field type="number" class="form-control" min="0" data-f="w" value="${mixW}"></md-outlined-text-field></label>
         <label></label>
-        <label class="wide">Tag-Ort<input type="text" class="form-control be-day-ort-edit" data-f="ort" autocomplete="off" value="${val(r.dataset.ort)}" placeholder="leer = Ort / Treffpunkt der Vorlage" oninput="beOrtInput(event)" onblur="beOrtHide(event)"><div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div></label>
+        <label class="wide">Tag-Ort<md-outlined-text-field type="text" class="form-control be-day-ort-edit" data-f="ort" autocomplete="off" value="${val(r.dataset.ort)}" placeholder="leer = Ort / Treffpunkt der Vorlage" oninput="beOrtInput(event)" onblur="beOrtHide(event)"></md-outlined-text-field><div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div></label>
         <div class="be-cal-anf">
-            <label>Qualifikation<input type="text" class="form-control anf-qual" data-f="qual" value="${val(anfEff.qualifikation)}" placeholder="wie Vorlage"></label>
-            <label>Kleidung<input type="text" class="form-control anf-kleidung" data-f="kleid" value="${val(anfEff.kleidung)}" placeholder="wie Vorlage"></label>
-            <label>Skill / Sprache<input type="text" class="form-control" data-f="skill" value="${val(anfEff.skill)}" placeholder="wie Vorlage"></label>
+            <label>Qualifikation<md-outlined-text-field type="text" class="form-control anf-qual" data-f="qual" value="${val(anfEff.qualifikation)}" placeholder="wie Vorlage"></md-outlined-text-field></label>
+            <label>Kleidung<md-outlined-text-field type="text" class="form-control anf-kleidung" data-f="kleid" value="${val(anfEff.kleidung)}" placeholder="wie Vorlage"></md-outlined-text-field></label>
+            <label>Skill / Sprache<md-outlined-text-field type="text" class="form-control" data-f="skill" value="${val(anfEff.skill)}" placeholder="wie Vorlage"></md-outlined-text-field></label>
             ${pos.length ? `<div class="be-cal-edit-pos">${beIcon('format_list_numbered', 'font-size:13px;vertical-align:-2px')} Positionen (${pos.length}) kommen aus der Vorlage: ${posTxt}</div>` : ''}
         </div>
         <div class="be-cal-actions">
@@ -3414,15 +3414,15 @@ function wizAddPosition(values) {
     const row = document.createElement('div');
     row.className = 'be-anf-pos-row';
     row.innerHTML = `
-        <input type="number" class="form-control anf-anzahl" min="1" placeholder="Anz." value="${v.anzahl != null ? v.anzahl : ''}" onchange="wizApplyMetaToRows()">
-        <input type="text" class="form-control anf-funktion" placeholder="z.B. Checker" value="${escapeHtml(v.funktion || '')}" onchange="wizApplyMetaToRows()">
-        <select class="form-control anf-geschlecht" onchange="wizApplyMetaToRows()">
-            <option value="">Egal</option>
-            <option value="maennlich" ${v.geschlecht === 'maennlich' ? 'selected' : ''}>Männlich</option>
-            <option value="weiblich" ${v.geschlecht === 'weiblich' ? 'selected' : ''}>Weiblich</option>
-        </select>
-        <input type="text" class="form-control anf-qual" placeholder="z.B. Erste Hilfe, Staplerschein" value="${escapeHtml(v.qualifikation || '')}" onchange="wizApplyMetaToRows()">
-        <input type="text" class="form-control anf-kleidung" placeholder="z.B. schwarze Hose" value="${escapeHtml(v.kleidung || '')}" onchange="wizApplyMetaToRows()">
+        <md-outlined-text-field type="number" class="form-control anf-anzahl" min="1" placeholder="Anz." value="${v.anzahl != null ? v.anzahl : ''}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
+        <md-outlined-text-field type="text" class="form-control anf-funktion" placeholder="z.B. Checker" value="${escapeHtml(v.funktion || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
+        <md-outlined-select class="form-control anf-geschlecht" onchange="wizApplyMetaToRows()">
+            <md-select-option value="">Egal</md-select-option>
+            <md-select-option value="maennlich" ${v.geschlecht === 'maennlich' ? 'selected' : ''}>Männlich</md-select-option>
+            <md-select-option value="weiblich" ${v.geschlecht === 'weiblich' ? 'selected' : ''}>Weiblich</md-select-option>
+        </md-outlined-select>
+        <md-outlined-text-field type="text" class="form-control anf-qual" placeholder="z.B. Erste Hilfe, Staplerschein" value="${escapeHtml(v.qualifikation || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
+        <md-outlined-text-field type="text" class="form-control anf-kleidung" placeholder="z.B. schwarze Hose" value="${escapeHtml(v.kleidung || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
         <button type="button" class="be-anf-pos-remove" onclick="wizRemovePosition(this)" title="Entfernen">${beIcon('close', 'font-size:13px')}</button>
     `;
     body.appendChild(row);
@@ -4381,10 +4381,10 @@ async function editIncomingOrder(id) {
     ]);
     const allArr = Array.isArray(allCustomers) ? allCustomers : [];
     const activeCustomers = allArr.filter(c => c.aktiv == 1);
-    let customerOpts = activeCustomers.map(c => `<option value="${c.kunde_id}">${c.kunde_id} – ${escapeHtml(c.kundenname)}</option>`).join('');
+    let customerOpts = activeCustomers.map(c => `<md-select-option value="${c.kunde_id}">${c.kunde_id} – ${escapeHtml(c.kundenname)}</md-select-option>`).join('');
     if (order.kunden_id && !activeCustomers.find(c => String(c.kunde_id) === String(order.kunden_id))) {
         const inactiveCust = allArr.find(c => String(c.kunde_id) === String(order.kunden_id));
-        if (inactiveCust) customerOpts += `<option value="${inactiveCust.kunde_id}">${inactiveCust.kunde_id} – ${escapeHtml(inactiveCust.kundenname)} (inaktiv)</option>`;
+        if (inactiveCust) customerOpts += `<md-select-option value="${inactiveCust.kunde_id}">${inactiveCust.kunde_id} – ${escapeHtml(inactiveCust.kundenname)} (inaktiv)</md-select-option>`;
     }
     const customerBereich = order.kunden_bereich || (allArr.find(c => String(c.kunde_id) === String(order.kunden_id))?.bereich) || '';
 
@@ -4401,7 +4401,7 @@ async function editIncomingOrder(id) {
 
     // Inject Step 2 dropdown options (already loaded)
     const objSel = document.getElementById('wiz_objekt');
-    if (objSel) objSel.innerHTML = '<option value="">— Objekt wählen —</option>' + objOpts;
+    if (objSel) objSel.innerHTML = '<md-select-option value="">— Objekt wählen —</md-select-option>' + objOpts;
 
     // Pre-select bereich, kunde, objekt
     document.getElementById('wiz_kunde').value = order.kunden_id;
@@ -4661,9 +4661,9 @@ async function copyIncomingOrder(id) {
     const defJ = srcM === 12 ? srcJ + 1 : srcJ;
 
     const monthOpts = Array.from({ length: 12 }, (_, i) => i + 1).map(m =>
-        `<option value="${m}" ${m === defM ? 'selected' : ''}>${MONTHS_DE[m]}</option>`).join('');
+        `<md-select-option value="${m}" ${m === defM ? 'selected' : ''}>${MONTHS_DE[m]}</md-select-option>`).join('');
     const yearOpts = [srcJ - 1, srcJ, srcJ + 1, srcJ + 2].map(y =>
-        `<option value="${y}" ${y === defJ ? 'selected' : ''}>${y}</option>`).join('');
+        `<md-select-option value="${y}" ${y === defJ ? 'selected' : ''}>${y}</md-select-option>`).join('');
 
     const body = `
         <div style="margin-bottom:16px;background: var(--gray-50,var(--md-sys-color-primary-container));border: 1px solid var(--gray-200,var(--md-sys-color-primary-container));border-radius:10px;padding:12px 16px">
@@ -4677,8 +4677,8 @@ async function copyIncomingOrder(id) {
         <div class="form-group">
             <label style="font-weight:600">Neuer Zeitraum</label>
             <div style="display:flex;gap:10px;margin-top:6px">
-                <select id="beCopyMonat" class="form-control" style="flex:1" onchange="beCopyUpdatePreview()">${monthOpts}</select>
-                <select id="beCopyJahr" class="form-control" style="width:110px" onchange="beCopyUpdatePreview()">${yearOpts}</select>
+                <md-outlined-select id="beCopyMonat" class="form-control" style="flex:1" onchange="beCopyUpdatePreview()">${monthOpts}</md-outlined-select>
+                <md-outlined-select id="beCopyJahr" class="form-control" style="width:110px" onchange="beCopyUpdatePreview()">${yearOpts}</md-outlined-select>
             </div>
         </div>
         <div class="form-group" style="margin-top:14px">

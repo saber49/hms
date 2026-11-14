@@ -361,7 +361,7 @@ async function openNewChat() {
     body.innerHTML = `
         <div class="chat-new-form">
             <label>Chat-Titel (optional)</label>
-            <input type="text" class="form-control" id="newChatTitle" placeholder="z.B. Projektbesprechung">
+            <md-outlined-text-field type="text" class="form-control" id="newChatTitle" placeholder="z.B. Projektbesprechung"></md-outlined-text-field>
             <label>Teilnehmer auswählen</label>
             <ul class="chat-user-list">
                 ${users.map(u => `
@@ -373,7 +373,7 @@ async function openNewChat() {
                 `).join('')}
             </ul>
             <label>Erste Nachricht</label>
-            <textarea class="form-control" id="newChatMessage" rows="3" placeholder="Nachricht schreiben..."></textarea>
+            <md-outlined-text-field class="form-control" id="newChatMessage" rows="3" placeholder="Nachricht schreiben..." type="textarea"></md-outlined-text-field>
             <md-filled-button  class="w-100 mt-1" onclick="createNewChat()"><i slot="icon" class="material-symbols-outlined">send</i> Chat starten</md-filled-button>
         </div>
     `;

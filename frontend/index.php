@@ -183,7 +183,7 @@ header('Expires: 0');
     </script>
     <!-- Material Design 3 — official design tokens (must load BEFORE all module sheets) -->
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3b">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3b">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261114md3c">
     <link rel="stylesheet" href="assets/css/customers.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/interessenten.css?v=20261114md3b">
     <link rel="stylesheet" href="assets/css/qm.css?v=20261114md3b">
@@ -407,8 +407,8 @@ header('Expires: 0');
     </main>
 
     <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modal">
+    <md-dialog id="modalOverlay">
+        <div slot="content" class="modal" id="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">Modal</h2>
                 <button class="modal-close" id="modalClose">&times;</button>
@@ -416,7 +416,7 @@ header('Expires: 0');
             <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer" id="modalFooter"></div>
         </div>
-    </div>
+    </md-dialog>
 
     <!-- Chat Panel -->
     <div class="chat-overlay" id="chatOverlay" onclick="toggleChatPanel()"></div>
@@ -804,11 +804,11 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=smooth202611020658"></script>
-    <script defer src="assets/js/app.js?v=20261114sek1"></script>
+    <script defer src="assets/js/app.js?v=20261114md3c"></script>
     <script defer src="assets/js/dashboard.js?v=20261021u1"></script>
-    <script defer src="assets/js/incoming_orders.js?v=besch20261104"></script>
-    <script defer src="assets/js/messages.js?v=20260921chat5"></script>
-    <script defer src="assets/js/worker_messages.js?v=20261020sec1"></script>
+    <script defer src="assets/js/incoming_orders.js?v=20261114md3c"></script>
+    <script defer src="assets/js/messages.js?v=20261114md3c"></script>
+    <script defer src="assets/js/worker_messages.js?v=20261114md3c"></script>
     <script defer src="assets/js/notifications.js?v=20261019au1"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/pusher-js@8/dist/web/pusher.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
