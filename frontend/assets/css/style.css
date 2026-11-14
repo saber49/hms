@@ -602,10 +602,9 @@ to { opacity: 1; transform: translateY(0); }
    Cards & Panels
    ============================================ */
 .card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    background: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
     overflow: hidden;
 }
 .card-header {
@@ -687,9 +686,9 @@ table {
     font-size: 0.85rem;
 }
 thead {
-    background: var(--gray-50);
-    color: var(--gray-600);
-    border-bottom: 1px solid var(--gray-200);
+    background: var(--md-sys-color-surface-container-low);
+    color: var(--md-sys-color-on-surface-variant);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 thead th {
     padding: 12px 14px;
@@ -736,12 +735,12 @@ tbody td {
     box-shadow: 0 0 0 3px var(--accent-line);
 }
 .btn-primary {
-    background: var(--accent);
-    color: white;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
 }
 .btn-primary:hover {
-    background: var(--accent-hover);
-    box-shadow: var(--shadow);
+    background: color-mix(in srgb, var(--md-sys-color-primary) 92%, var(--md-sys-color-on-primary));
+    box-shadow: var(--md-sys-elevation-level1);
 }
 .btn-primary:active { background: var(--accent-pressed); }
 .btn-success {
@@ -808,21 +807,21 @@ tbody td {
 }
 .form-control {
     padding: 9px 12px;
-    border: 1px solid var(--gray-300);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-extra-small);
     font-size: 0.875rem;
     transition: var(--transition);
-    background: var(--white);
-    color: var(--gray-800);
+    background: var(--md-sys-color-surface-container-lowest);
+    color: var(--md-sys-color-on-surface);
     font-family: inherit;
 }
 .form-control:hover:not(:focus) {
-    border-color: var(--gray-400);
+    border-color: var(--md-sys-color-on-surface);
 }
 .form-control:focus {
     outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent);
+    border-color: var(--md-sys-color-primary);
+    box-shadow: inset 0 0 0 1px var(--md-sys-color-primary);
 }
 select.form-control {
     appearance: none;
@@ -945,7 +944,7 @@ textarea.form-control {
     left: 0;
     right: 0;
     bottom: 0;
-    background: color-mix(in srgb, var(--md-sys-color-primary) 45%, transparent);
+    background: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     z-index: 200;
