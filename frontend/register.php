@@ -16,70 +16,17 @@ exit;
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="assets/css/auth-md3.css?v=20261116ui1">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family:'Google Sans','Roboto','Segoe UI',-apple-system,sans-serif;
-            -webkit-font-smoothing:antialiased;
-            background: linear-gradient(135deg,var(--md-sys-color-primary) 0%,var(--md-sys-color-primary) 55%,var(--md-sys-color-primary) 100%);
-            min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
-        }
-        .container { width:100%; max-width:480px; }
-        .logo { text-align:center; margin-bottom:24px; }
-        .logo .icon {
-            width:64px; height:64px; background: rgba(255,255,255,0.1); border-radius:16px;
-            display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px;
-        }
-        .logo .icon i { font-size:1.8rem; color: var(--md-sys-color-primary); }
-        .logo .icon img { width:100%; height:100%; object-fit:cover; border-radius:16px; display:block; }
-        .logo h1 { font-size:1.5rem; color:white; font-weight:700; }
-        .logo p  { color: rgba(255,255,255,0.5); font-size:0.85rem; margin-top:4px; }
-        .card { background:white; border-radius:12px; padding:32px; box-shadow: 0 20px 60px color-mix(in srgb, var(--md-sys-color-scrim) 30%, transparent); }
-        .card h2 { font-size:1.2rem; color: var(--md-sys-color-on-primary-container); margin-bottom:6px; text-align:center; }
-        .card .lead { font-size:0.86rem; color: var(--md-sys-color-primary); text-align:center; margin-bottom:22px; }
-        .form-group { margin-bottom:16px; }
-        .form-row { display:flex; gap:12px; }
-        .form-row .form-group { flex:1; }
-        label { display:block; font-size:0.78rem; font-weight:600; color: var(--md-sys-color-primary); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
-        .input-wrapper { position:relative; }
-        .input-wrapper > i {
-            position:absolute; left:14px; top:50%; transform:translateY(-50%);
-            color: var(--md-sys-color-primary); font-size:0.9rem;
-        }
-        input, select {
-            width:100%; padding:12px 14px 12px 42px; border: 2px solid var(--md-sys-color-primary-container);
-            border-radius:8px; font-size:0.95rem; font-family:inherit;
-            transition:all 0.2s ease; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);
-        }
-        select { cursor:pointer; }
-        input:focus, select:focus {
-            outline:none; border-color: var(--md-sys-color-primary); background:white;
-            box-shadow: 0 0 0 4px color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
-        }
-        .toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:transparent; border:0; cursor:pointer; color: var(--md-sys-color-primary); padding:6px; }
-        .pw-hint { font-size:0.76rem; color: var(--md-sys-color-primary); margin-top:5px; padding-inline-start:4px; }
-        .terms { display:flex; align-items:flex-start; gap:9px; margin:6px 0 18px; }
-        .terms input { width:auto; padding:0; margin-top:2px; }
-        .terms label { text-transform:none; letter-spacing:0; font-weight:400; font-size:0.82rem; color: var(--md-sys-color-primary); margin:0; }
-        .terms a { color: var(--md-sys-color-primary); text-decoration:none; }
-        .btn {
-            width:100%; padding:13px; background: var(--md-sys-color-primary); color:white; border:none;
-            border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer;
-            transition:all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:8px; font-family:inherit;
-        }
-        .btn:hover { background: var(--md-sys-color-primary); transform:translateY(-1px); box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent); }
-        .btn:disabled { background: var(--md-sys-color-primary); cursor:not-allowed; transform:none; box-shadow:none; }
-        .alert { padding:12px 16px; border-radius:8px; font-size:0.86rem; margin-bottom:18px; display:none; align-items:center; gap:10px; border:1px solid transparent; }
-        .alert.visible { display:flex; }
-        .alert.error   { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); border-color: var(--md-sys-color-error-container); }
-        .alert.success { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); border-color: var(--md-ext-color-success-container); }
-        .back-link { display:block; text-align:center; margin-top:18px; color: var(--md-sys-color-primary); text-decoration:none; font-size:0.85rem; font-weight:500; }
-        .back-link:hover { text-decoration:underline; }
-        .footer { text-align:center; margin-top:22px; color: rgba(255,255,255,0.4); font-size:0.75rem; }
-    
-.material-symbols-outlined.ms-spin, .ms-spin { animation: msSpin 1s linear infinite; }
-@keyframes msSpin { to { transform: rotate(360deg); } }
-</style>
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+        .input-wrapper select { cursor: pointer; }
+        .terms { display: flex; align-items: flex-start; gap: 9px; margin: 6px 0 18px; }
+        .terms input { margin-top: 3px; accent-color: var(--md-sys-color-primary); }
+        .terms label { margin: 0; font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant); }
+        .terms a { color: var(--md-sys-color-primary); text-decoration: none; }
+        @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } }
+    </style>
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">

@@ -141,6 +141,11 @@
        scroll container, so the sticky filter block + month heads work. */
     overflow: clip;
 }
+/* md fields fill their grid cell; tabs take the bar, counts sit in the label */
+.ph-toolbar > md-outlined-select { width: 100%; min-width: 0; --md-outlined-field-top-space: 8px; --md-outlined-field-bottom-space: 8px; }
+.ph-tabbar > md-tabs { flex: 1 1 auto; min-width: 0; --md-primary-tab-container-color: transparent; }
+.ph-tab-count { margin-left: 6px; }
+.ph-csv-range > md-outlined-text-field { flex: 1 1 150px; }
 /* Row 1: search grows, three selects share the rest */
 .ph-toolbar {
     display: grid;
@@ -148,70 +153,6 @@
     gap: 10px;
     padding: 14px 16px 8px;
     align-items: end;
-}
-.ph-search {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid var(--ph-border);
-    border-radius: var(--md-sys-shape-corner-full);
-    background: var(--ph-bg-soft);
-    color: var(--ph-text-muted);
-    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
-}
-.ph-search:focus-within {
-    border-color: var(--ph-accent);
-    background: var(--ph-surface);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-}
-.ph-search input {
-    flex: 1;
-    min-width: 0;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: var(--ph-text);
-    font-size: 0.86rem;
-}
-.ph-select {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-}
-.ph-select > span {
-    font-size: 0.64rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--ph-text-muted);
-    padding-left: 4px;
-}
-.ph-select select {
-    height: 40px;
-    min-width: 0;
-    width: 100%;
-    padding: 0 10px;
-    border: 1px solid var(--ph-border);
-    border-radius: var(--md-sys-shape-corner-medium);
-    background: var(--ph-surface);
-    color: var(--ph-text);
-    font-size: 0.84rem;
-    text-overflow: ellipsis;
-    transition: border-color .15s ease, box-shadow .15s ease;
-}
-.ph-select select:focus {
-    outline: none;
-    border-color: var(--ph-accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
-}
-.ph-select.is-set select {
-    border-color: var(--ph-accent-line);
-    background: var(--ph-accent-tint);
-    color: var(--ph-accent);
-    font-weight: 600;
 }
 /* Row 2: Typ chips + reset */
 .ph-toolbar-row2 {
@@ -222,40 +163,6 @@
     flex-wrap: wrap;
     padding: 4px 16px 12px;
 }
-.ph-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.ph-chip {
-    height: 30px;
-    padding: 0 12px;
-    border-radius: var(--md-sys-shape-corner-small);
-    border: 1px solid var(--ph-border);
-    background: var(--ph-surface);
-    color: var(--ph-text-muted);
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .15s ease;
-}
-.ph-chip:hover { border-color: var(--ph-accent-line); color: var(--ph-text); }
-.ph-chip.active {
-    background: var(--ph-accent-soft);
-    border-color: var(--ph-accent-line);
-    color: var(--ph-accent);
-}
-.ph-reset-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    height: 30px;
-    padding: 0 12px;
-    border: none;
-    border-radius: var(--md-sys-shape-corner-small);
-    background: transparent;
-    color: var(--ph-accent);
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-.ph-reset-btn:hover { background: var(--ph-accent-tint); }
 /* ===== 4. Tabs (underline style) + result info + CSV ===== */
 .ph-tabbar {
     display: flex;
@@ -267,41 +174,6 @@
     border-bottom: 1px solid var(--ph-border);
     background: var(--ph-bg-soft);
 }
-.ph-tabs {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-.ph-tabs::-webkit-scrollbar { display: none; }
-.ph-tab {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    height: 46px;
-    padding: 0 14px;
-    border: none;
-    background: none;
-    color: var(--ph-text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: color .15s ease;
-}
-.ph-tab::after {
-    content: '';
-    position: absolute;
-    left: 10px; right: 10px; bottom: -1px;
-    height: 3px;
-    border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
-    background: transparent;
-    transition: background .15s ease;
-}
-.ph-tab:hover { color: var(--ph-text); }
-.ph-tab.active { color: var(--ph-accent); }
-.ph-tab.active::after { background: var(--ph-accent); }
 .ph-tab-count {
     display: inline-flex;
     align-items: center;
@@ -315,7 +187,6 @@
     font-size: 0.66rem;
     font-weight: 700;
 }
-.ph-tab.active .ph-tab-count { background: var(--ph-accent-soft); color: var(--ph-accent); }
 .ph-tabbar-side {
     display: flex;
     align-items: center;
@@ -326,23 +197,6 @@
 .ph-result-info { font-size: 0.76rem; color: var(--ph-text-muted); white-space: nowrap; }
 .ph-result-info strong { color: var(--ph-text); }
 .ph-trunc { color: var(--md-ext-color-warning); font-weight: 600; }
-.ph-csv-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 14px;
-    border-radius: var(--md-sys-shape-corner-full);
-    border: 1px solid var(--ph-accent-line);
-    background: var(--ph-surface);
-    color: var(--ph-accent);
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .15s ease;
-}
-.ph-csv-btn:hover:not(:disabled) { background: var(--ph-accent); color: #fff; border-color: var(--ph-accent); }
-.ph-csv-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .ph-tab-hint {
     padding: 10px 16px 0;
     font-size: 0.76rem;
@@ -355,11 +209,7 @@
 @media (max-width: 720px) {
 .ph-toolbar { grid-template-columns: 1fr; padding: 12px 12px 6px; }
 .ph-toolbar-row2 { padding: 4px 12px 10px; }
-.ph-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; width: 100%; }
-.ph-chip { flex-shrink: 0; }
 .ph-tabbar { flex-direction: column; align-items: stretch; padding: 0 8px; }
-.ph-tab { flex: 1; justify-content: center; padding: 0 8px; }
-.ph-tab > span:not(.ph-tab-count):not(.material-symbols-outlined) { font-size: 0.8rem; }
 .ph-tabbar-side { justify-content: space-between; height: 44px; border-top: 1px solid var(--ph-border); }
 .ph-tab-hint { padding: 10px 12px 0; }
 }
@@ -819,23 +669,6 @@
 .ph-detail-table tr:last-child td { border-bottom: none; }
 .ph-detail-table .text-right { text-align: right; }
 /* ===== 9. Empty state ===== */
-.ph-empty {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--ph-text-soft);
-}
-.ph-empty i {
-    font-size: 2.6rem;
-    color: var(--ph-border-strong);
-    margin-bottom: 10px;
-    display: block;
-}
-.ph-empty p { font-size: 0.9rem; }
-.ph-empty .ph-empty-hint {
-    font-size: 0.78rem;
-    color: var(--ph-text-soft);
-    margin-top: 6px;
-}
 /* Loading */
 .ph-loading {
     text-align: center;
@@ -906,15 +739,6 @@ md-dialog.ph-context [slot="headline"] {
 }
 /* --- Material Symbols sizing in page chrome --- */
 .ph-kpi-icon .material-symbols-outlined { font-size: 17px; }
-.ph-tab .material-symbols-outlined { vertical-align: -2px; }
-.ph-empty .material-symbols-outlined {
-    font-size: 2.6rem;
-    color: var(--ph-border-strong);
-    margin-bottom: 10px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
 .ph-loading md-circular-progress {
     vertical-align: middle;
     margin-right: 8px;
@@ -936,7 +760,6 @@ md-dialog.ph-context [slot="headline"] {
 .ph-card .ph-art-table { border: none; border-radius: 0; }
 .ph-card .ph-art-table { border-top: 1px solid var(--ph-border); margin-top: 6px; }
 .ph-card .ph-top-grid { padding: 6px 16px 16px; }
-.ph-card .ph-empty { padding: 48px 20px; }
 /* Month groups in Verlauf */
 .ph-month-head {
     position: sticky;
@@ -992,7 +815,6 @@ md-dialog.ph-context [slot="headline"] {
 }
 .ph-top-card-header .ph-tab-count { margin-left: auto; }
 /* Empty state actions */
-.ph-empty-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
 /* Period navigation in the topbar (look shared with Zeiterfassung) */
 .ph-period-nav .ph-seg {
     display: inline-flex;
@@ -1042,8 +864,6 @@ md-dialog.ph-context [slot="headline"] {
     }
 }
 @media (max-width: 720px) {
-.ph-tab .material-symbols-outlined { display: none; }
-.ph-tab { gap: 5px; padding: 0 4px; font-size: 0.78rem; }
 .ph-period-nav .ph-seg-btn { padding: 0 7px; font-size: 0.68rem; }
 .ph-period-nav .ma-month-label { min-width: 0; }
 .ph-range-inline input { width: 118px; padding: 0 4px; }
@@ -1098,9 +918,5 @@ md-dialog.ph-context [slot="headline"] {
 .ph-csv-label { font-size: .72rem; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--ph-text-muted); margin: 14px 0 8px; }
 .ph-csv-label:first-child { margin-top: 2px; }
 .ph-csv-range { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-.ph-csv-range label { display: flex; flex-direction: column; gap: 4px; font-size: .74rem; color: var(--ph-text-muted); flex: 1 1 150px; }
-.ph-csv-range input { height: 38px; padding: 0 10px; border: 1px solid var(--ph-border); border-radius: var(--md-sys-shape-corner-medium); background: var(--ph-surface); color: var(--ph-text); font: inherit; font-size: .86rem; }
 .ph-csv-note { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding: 8px 10px; border-radius: var(--md-sys-shape-corner-small); background: var(--ph-bg-soft); color: var(--ph-text-muted); font-size: .78rem; }
 .ph-csv-muted { color: var(--ph-text-muted); font-size: .8rem; }
-#phMdDialog .ph-csv-btn:disabled { opacity: .55; cursor: progress; }
-[data-theme="dark"] .ph-csv-range input { color-scheme: dark; }

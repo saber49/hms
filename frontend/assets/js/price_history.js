@@ -180,6 +180,10 @@ async function renderPriceHistory() {
     phWatchStickyHeight();
     phMountPeriodNav();
     phBindFilterEvents();
+    document.getElementById('phTabs')?.addEventListener('change', e => {
+        const tab = e.target.activeTab?.dataset?.tab;
+        if (tab && tab !== _phState.currentTab) phSwitchTab(tab);
+    });
     phReloadObjectOptions();
     phReloadArtikelOptions();
     await phLoad();
@@ -218,12 +222,10 @@ function phLayoutHtml() {
             <div class="ph-sticky" id="phSticky">
             ${phFilterBarHtml()}
             <div class="ph-tabbar">
-                <div class="ph-tabs" role="tablist">${phTabsHtml()}</div>
+                <md-tabs id="phTabs" class="ph-tabs">${phTabsHtml()}</md-tabs>
                 <div class="ph-tabbar-side">
                     <span class="ph-result-info" id="phResultInfo"></span>
-                    <button type="button" class="ph-csv-btn" id="phCsvBtn" onclick="phExportCsv()" title="Gewählten Zeitraum mit allen Filtern als CSV herunterladen">
-                        ${phIcon('download', 'font-size:16px')} <span>CSV</span>
-                    </button>
+                    ${uiButton('CSV', { variant: 'outlined', size: 'sm', icon: 'download', id: 'phCsvBtn', onclick: 'phExportCsv()', title: 'Gewählten Zeitraum mit allen Filtern als CSV herunterladen' })}
                 </div>
             </div>
             </div>
@@ -264,13 +266,13 @@ async function phLoad() {
         ]);
     } catch (e) {
         if (seq !== _phState.loadSeq) return;
-        if (pane) pane.innerHTML = `<div class="ph-empty">${phIcon('warning')}<p>Fehler beim Laden</p><div class="ph-empty-hint">${escapeHtml(e.message || '')}</div></div>`;
+        if (pane) pane.innerHTML = uiEmptyState('warning', e.message || '', { title: 'Fehler beim Laden' });
         return;
     }
     if (seq !== _phState.loadSeq) return; // a newer request superseded this one
     if (history && history.error) {
         const c = document.getElementById('content');
-        if (c) c.innerHTML = `<div class="ph-empty">${phIcon('lock')}<p>${escapeHtml(history.error)}</p><div class="ph-empty-hint">Preishistorie erfordert die Berechtigung „Preishistorie ansehen".</div></div>`;
+        if (c) c.innerHTML = uiEmptyState('lock', 'Preishistorie erfordert die Berechtigung „Preishistorie ansehen".', { title: history.error });
         return;
     }
     _phState.history = Array.isArray(history) ? history : [];
@@ -370,37 +372,19 @@ const PH_TYPES = [
 
 function phFilterBarHtml() {
     const f = _phState.filters;
-    const opt = (value, label, sel) =>
-        `<option value="${escapeHtml(value)}"${String(sel) === String(value) ? ' selected' : ''}>${escapeHtml(label)}</option>`;
     const customerOpts = _phState.customers
-        .map(c => opt(c.kunde_id, c.kundenname ? `${c.kundenname} (${c.kunde_id})` : c.kunde_id, f.kunden_id))
+        .map(c => uiOption(c.kunde_id, c.kundenname ? `${c.kundenname} (${c.kunde_id})` : c.kunde_id, String(f.kunden_id) === String(c.kunde_id)))
         .join('');
     return `
         <div class="ph-toolbar">
-            <div class="ph-search">
-                ${phIcon('search', 'font-size:18px')}
-                <input type="search" id="phFltSearch" value="${escapeHtml(f.search)}" placeholder="Suche: Artikel, Objekt, Kunde, Grund…" autocomplete="off">
-            </div>
-            <label class="ph-select">
-                <span>Kunde</span>
-                <select id="phFltKunde">${opt('', 'Alle Kunden', f.kunden_id)}${customerOpts}</select>
-            </label>
-            <label class="ph-select">
-                <span>Objekt</span>
-                <select id="phFltObj">${opt('', 'Alle Objekte', f.obj_id)}</select>
-            </label>
-            <label class="ph-select">
-                <span>Artikel</span>
-                <select id="phFltArtikel">${opt('', 'Alle Artikel', f.artikel_id)}</select>
-            </label>
+            ${uiTextField({ id: 'phFltSearch', type: 'search', icon: 'search', cls: 'ph-search', value: f.search, placeholder: 'Suche: Artikel, Objekt, Kunde, Grund…', attrs: 'autocomplete="off"' })}
+            ${uiSelect({ id: 'phFltKunde', label: 'Kunde', optionsHtml: uiOption('', 'Alle Kunden', !f.kunden_id) + customerOpts })}
+            ${uiSelect({ id: 'phFltObj', label: 'Objekt', optionsHtml: uiOption('', 'Alle Objekte', true) })}
+            ${uiSelect({ id: 'phFltArtikel', label: 'Artikel', optionsHtml: uiOption('', 'Alle Artikel', true) })}
         </div>
         <div class="ph-toolbar-row2">
-            <div class="ph-chips" id="phTypeChips" role="radiogroup" aria-label="Typ">
-                ${PH_TYPES.map(([v, l]) => `<button type="button" class="ph-chip ${f.change_type === v ? 'active' : ''}" data-type="${v}" onclick="phSetType('${v}')">${l}</button>`).join('')}
-            </div>
-            <button type="button" class="ph-reset-btn" id="phResetBtn" onclick="phResetFilters()" style="display:none">
-                ${phIcon('filter_alt_off', 'font-size:16px')} Filter zurücksetzen <span id="phFilterCount"></span>
-            </button>
+            ${uiChips(PH_TYPES.map(([v, l]) => uiChip(l, { kind: 'filter', selected: f.change_type === v, attrs: `data-type="${v}"`, onclick: `phSetType('${v}')` })).join(''), { id: 'phTypeChips' })}
+            ${uiButton('Filter zurücksetzen', { variant: 'text', icon: 'filter_alt_off', id: 'phResetBtn', onclick: 'phResetFilters()', attrs: 'style="display:none"' })}
         </div>
     `;
 }
@@ -445,7 +429,7 @@ function phBindFilterEvents() {
 
 function phSetType(v) {
     _phState.filters.change_type = v;
-    document.querySelectorAll('#phTypeChips .ph-chip').forEach(c => c.classList.toggle('active', c.dataset.type === v));
+    document.querySelectorAll('#phTypeChips md-filter-chip').forEach(c => { c.selected = c.dataset.type === v; });
     phLoad();
 }
 
@@ -455,8 +439,9 @@ async function phReloadObjectOptions() {
     const kundeId = _phState.filters.kunden_id;
     const data = await apiGet(kundeId ? PH_API.objects + '?kunden_id=' + encodeURIComponent(kundeId) : PH_API.objects);
     _phState.objects = Array.isArray(data) ? data : [];
-    objSel.innerHTML = '<option value="">Alle Objekte</option>'
-        + _phState.objects.map(o => `<option value="${escapeHtml(o.obj_id)}"${String(_phState.filters.obj_id) === String(o.obj_id) ? ' selected' : ''}>${escapeHtml((o.objektname || o.obj_id) + (o.objektname ? ' (' + o.obj_id + ')' : ''))}</option>`).join('');
+    objSel.innerHTML = uiOption('', 'Alle Objekte', !_phState.filters.obj_id)
+        + _phState.objects.map(o => uiOption(o.obj_id, (o.objektname || o.obj_id) + (o.objektname ? ' (' + o.obj_id + ')' : ''), String(_phState.filters.obj_id) === String(o.obj_id))).join('');
+    objSel.value = _phState.filters.obj_id || '';
 }
 
 async function phReloadArtikelOptions() {
@@ -466,8 +451,9 @@ async function phReloadArtikelOptions() {
     const qs = objId ? '?obj_id=' + encodeURIComponent(objId) : (kundeId ? '?kunden_id=' + encodeURIComponent(kundeId) : '');
     const data = await apiGet(PH_API.artikel + qs);
     _phState.artikel = Array.isArray(data) ? data : [];
-    artSel.innerHTML = '<option value="">Alle Artikel</option>'
-        + _phState.artikel.map(a => `<option value="${escapeHtml(a.artikel_id)}"${String(_phState.filters.artikel_id) === String(a.artikel_id) ? ' selected' : ''}>${escapeHtml((a.artikel_name || a.artikel_id) + (a.artikel_name ? ' (' + a.artikel_id + ')' : ''))}</option>`).join('');
+    artSel.innerHTML = uiOption('', 'Alle Artikel', !_phState.filters.artikel_id)
+        + _phState.artikel.map(a => uiOption(a.artikel_id, (a.artikel_name || a.artikel_id) + (a.artikel_name ? ' (' + a.artikel_id + ')' : ''), String(_phState.filters.artikel_id) === String(a.artikel_id))).join('');
+    artSel.value = _phState.filters.artikel_id || '';
 }
 
 function phActiveFilterCount() {
@@ -477,11 +463,10 @@ function phActiveFilterCount() {
 function phRefreshFilterState() {
     const n = phActiveFilterCount();
     const btn = document.getElementById('phResetBtn');
-    if (btn) btn.style.display = n ? '' : 'none';
-    const cnt = document.getElementById('phFilterCount');
-    if (cnt) cnt.textContent = n ? `(${n})` : '';
-    const map = { phFltKunde: 'kunden_id', phFltObj: 'obj_id', phFltArtikel: 'artikel_id' };
-    Object.entries(map).forEach(([id, k]) => document.getElementById(id)?.closest('.ph-select')?.classList.toggle('is-set', !!_phState.filters[k]));
+    if (btn) {
+        btn.style.display = n ? '' : 'none';
+        btn.lastChild.textContent = n ? `Filter zurücksetzen (${n})` : 'Filter zurücksetzen';
+    }
 }
 
 function phResetFilters() {
@@ -489,7 +474,7 @@ function phResetFilters() {
     const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
     set('phFltKunde', '');
     set('phFltSearch', '');
-    document.querySelectorAll('#phTypeChips .ph-chip').forEach(c => c.classList.toggle('active', c.dataset.type === ''));
+    document.querySelectorAll('#phTypeChips md-filter-chip').forEach(c => { c.selected = c.dataset.type === ''; });
     phReloadObjectOptions();
     phReloadArtikelOptions();
     phLoad();
@@ -517,15 +502,17 @@ function phTabCounts() {
 function phTabsHtml() {
     const counts = phTabCounts();
     return PH_TABS.map(([id, icon, label]) => `
-        <button type="button" role="tab" class="ph-tab ${_phState.currentTab === id ? 'active' : ''}" data-tab="${id}" aria-selected="${_phState.currentTab === id}" onclick="phSwitchTab('${id}')">
-            ${phIcon(icon, 'font-size:17px')} <span>${label}</span>
-            <span class="ph-tab-count">${counts[id]}</span>
-        </button>`).join('');
+        <md-primary-tab inline-icon data-tab="${id}"${_phState.currentTab === id ? ' active' : ''}>
+            ${uiIcon(icon, { slot: 'icon' })}${label}<span class="ph-tab-count">${counts[id]}</span>
+        </md-primary-tab>`).join('');
 }
 
 function phRefreshTabs() {
-    const tabs = document.querySelector('.ph-tabs');
-    if (tabs) tabs.innerHTML = phTabsHtml();
+    const counts = phTabCounts();
+    document.querySelectorAll('#phTabs md-primary-tab').forEach(t => {
+        const c = t.querySelector('.ph-tab-count');
+        if (c) c.textContent = counts[t.dataset.tab];
+    });
     const hint = document.getElementById('phTabHint');
     const def = PH_TABS.find(t => t[0] === _phState.currentTab);
     if (hint) hint.textContent = def ? def[3] : '';
@@ -542,11 +529,7 @@ function phRefreshTabs() {
 function phSwitchTab(tab) {
     _phState.currentTab = tab;
     try { localStorage.setItem(PH_TAB_KEY, tab); } catch (e) {}
-    document.querySelectorAll('.ph-tab').forEach(t => {
-        const on = t.dataset.tab === tab;
-        t.classList.toggle('active', on);
-        t.setAttribute('aria-selected', on);
-    });
+    document.querySelectorAll('#phTabs md-primary-tab').forEach(t => { t.active = t.dataset.tab === tab; });
     document.querySelectorAll('.ph-pane').forEach(p => p.classList.toggle('active', p.id === 'phPane-' + tab));
     phRefreshTabs();
     phRenderActivePane();
@@ -560,16 +543,12 @@ function phRenderActivePane() {
 
 function phEmptyHtml(icon, title) {
     const hasFilter = phActiveFilterCount() > 0;
-    return `
-        <div class="ph-empty">
-            ${phIcon(icon)}
-            <p>${title}</p>
-            <div class="ph-empty-hint">Im Zeitraum <strong>${escapeHtml(phPeriodBounds().label)}</strong>${hasFilter ? ' mit den gewählten Filtern' : ''} gibt es keine Einträge.</div>
-            <div class="ph-empty-actions">
-                ${hasFilter ? `<button type="button" class="ph-reset-btn" onclick="phResetFilters()">${phIcon('filter_alt_off', 'font-size:16px')} Filter zurücksetzen</button>` : ''}
-                ${_phState.period.mode !== 'all' ? `<button type="button" class="ph-reset-btn" onclick="phSetPeriodMode('all')">${phIcon('all_inclusive', 'font-size:16px')} Gesamten Zeitraum anzeigen</button>` : ''}
-            </div>
-        </div>`;
+    const actions = (hasFilter ? uiButton('Filter zurücksetzen', { variant: 'text', icon: 'filter_alt_off', onclick: 'phResetFilters()' }) : '')
+        + (_phState.period.mode !== 'all' ? uiButton('Gesamten Zeitraum anzeigen', { variant: 'text', icon: 'all_inclusive', onclick: "phSetPeriodMode('all')" }) : '');
+    return uiEmptyState(icon, '', {
+        title,
+        actionHtml: `<p class="ui-empty-text">Im Zeitraum <strong>${escapeHtml(phPeriodBounds().label)}</strong>${hasFilter ? ' mit den gewählten Filtern' : ''} gibt es keine Einträge.</p>${actions ? uiActions(actions) : ''}`,
+    });
 }
 
 // ============================================================
@@ -850,12 +829,12 @@ async function phOpenArticleDetail(artikelId) {
     try {
         data = await apiGet(PH_API.article(artikelId));
     } catch (e) {
-        document.getElementById('phDialogBody').innerHTML = `<div class="ph-empty">${phIcon('warning')}<p>Fehler beim Laden</p></div>`;
+        document.getElementById('phDialogBody').innerHTML = uiEmptyState('warning', '', { title: 'Fehler beim Laden' });
         return;
     }
 
     if (!data || !data.artikel) {
-        document.getElementById('phDialogBody').innerHTML = `<div class="ph-empty">${phIcon('help')}<p>Artikel nicht gefunden</p></div>`;
+        document.getElementById('phDialogBody').innerHTML = uiEmptyState('help', '', { title: 'Artikel nicht gefunden' });
         return;
     }
 
@@ -1049,25 +1028,25 @@ async function phExportCsv() {
         ['90', 'Letzte 90 Tage'], ['year', 'Dieses Jahr'], ['all', 'Gesamter Zeitraum'],
     ];
     const bereichChips = _phCsvBereiche.length
-        ? `<button type="button" class="ph-chip active" data-b="" onclick="phCsvPickBereich(this)">Alle Bereiche</button>`
-          + _phCsvBereiche.map(n => `<button type="button" class="ph-chip" data-b="${escapeHtml(n)}" onclick="phCsvPickBereich(this)">${escapeHtml(n)}</button>`).join('')
+        ? uiChips(uiChip('Alle Bereiche', { kind: 'filter', selected: true, attrs: 'data-b=""', onclick: 'phCsvPickBereich(this)' })
+          + _phCsvBereiche.map(n => uiChip(n, { kind: 'filter', attrs: `data-b="${escapeHtml(n)}"`, onclick: 'phCsvPickBereich(this)' })).join(''), { id: 'phCsvBereiche' })
         : '<span class="ph-csv-muted">Keine Bereiche angelegt — es werden alle exportiert.</span>';
     openPhDialog(`${phIcon('download', 'vertical-align:-4px')} CSV exportieren`, `
         <div class="ph-csv-label">Zeitraum</div>
-        <div class="ph-chips ph-csv-presets">${presets.map(([v, l], i) => `<button type="button" class="ph-chip ${i === 0 ? 'active' : ''}" data-p="${v}" onclick="phCsvPreset(this)">${escapeHtml(l)}</button>`).join('')}</div>
+        ${uiChips(presets.map(([v, l], i) => uiChip(l, { kind: 'filter', selected: i === 0, attrs: `data-p="${v}"`, onclick: 'phCsvPreset(this)' })).join(''), { id: 'phCsvPresets' })}
         <div class="ph-csv-range">
-            <label>Von <input type="date" id="phCsvFrom" value="${b.from || ''}" onchange="phCsvCustom()"></label>
-            <label>Bis <input type="date" id="phCsvTo" value="${b.to || ''}" onchange="phCsvCustom()"></label>
+            ${uiTextField({ id: 'phCsvFrom', type: 'date', label: 'Von', value: b.from || '', attrs: 'onchange="phCsvCustom()"' })}
+            ${uiTextField({ id: 'phCsvTo', type: 'date', label: 'Bis', value: b.to || '', attrs: 'onchange="phCsvCustom()"' })}
         </div>
         <div class="ph-csv-label">Bereich</div>
-        <div class="ph-chips" id="phCsvBereiche">${bereichChips}</div>
+        ${bereichChips}
         ${filterNote}`,
-        `<button type="button" class="ph-reset-btn" onclick="closePhDialog()">Abbrechen</button>
-         <button type="button" class="ph-csv-btn" id="phCsvGo" onclick="phCsvRun()">${phIcon('download', 'font-size:16px')} <span>Exportieren</span></button>`);
+        uiButton('Abbrechen', { variant: 'text', onclick: 'closePhDialog()' })
+        + uiButton('Exportieren', { icon: 'download', id: 'phCsvGo', onclick: 'phCsvRun()' }));
 }
 
 function phCsvPreset(btn) {
-    document.querySelectorAll('.ph-csv-presets .ph-chip').forEach(c => c.classList.toggle('active', c === btn));
+    document.querySelectorAll('#phCsvPresets md-filter-chip').forEach(c => { c.selected = c === btn; });
     const p = btn.dataset.p, now = new Date();
     let from = '', to = '';
     if (p === 'view') { const b = phPeriodBounds(); from = b.from || ''; to = b.to || ''; }
@@ -1077,24 +1056,24 @@ function phCsvPreset(btn) {
     document.getElementById('phCsvTo').value = to;
 }
 function phCsvCustom() {
-    document.querySelectorAll('.ph-csv-presets .ph-chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('#phCsvPresets md-filter-chip').forEach(c => { c.selected = false; });
 }
 function phCsvPickBereich(btn) {
-    const all = document.querySelectorAll('#phCsvBereiche .ph-chip');
+    // md-filter-chip has already toggled itself when this click handler runs
+    const all = document.querySelectorAll('#phCsvBereiche md-filter-chip');
     if (btn.dataset.b === '') {
-        all.forEach(c => c.classList.toggle('active', c === btn));
+        all.forEach(c => { c.selected = c === btn; });
         return;
     }
-    btn.classList.toggle('active');
-    const any = [...all].some(c => c.dataset.b !== '' && c.classList.contains('active'));
-    all.forEach(c => { if (c.dataset.b === '') c.classList.toggle('active', !any); });
+    const any = [...all].some(c => c.dataset.b !== '' && c.selected);
+    all.forEach(c => { if (c.dataset.b === '') c.selected = !any; });
 }
 
 async function phCsvRun() {
     const from = document.getElementById('phCsvFrom')?.value || '';
     const to = document.getElementById('phCsvTo')?.value || '';
     if (from && to && from > to) { showToast('„Von" liegt nach „Bis"', 'error'); return; }
-    const bereiche = [...document.querySelectorAll('#phCsvBereiche .ph-chip.active')].map(c => c.dataset.b).filter(Boolean);
+    const bereiche = [...document.querySelectorAll('#phCsvBereiche md-filter-chip')].filter(c => c.selected).map(c => c.dataset.b).filter(Boolean);
     const params = new URLSearchParams();
     if (from) params.append('from', from);
     if (to) params.append('to', to);

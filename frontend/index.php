@@ -190,14 +190,14 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/subcontractors.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/price_history.css?v=20261114md3h">
+    <link rel="stylesheet" href="assets/css/price_history.css?v=20261116ui1">
     <link rel="stylesheet" href="assets/css/workers.css?v=20261114md3h">
     <link rel="stylesheet" href="assets/css/absences.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/tasks.css?v=20261116md3k">
     <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261114md3h">
-    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261116ui1">
     <link rel="stylesheet" href="assets/css/orders.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/messages.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/worker_messages.css?v=20261114md3g">
@@ -209,7 +209,9 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/company_documents.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/ai-assistant.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/theme-unified.css?v=20261114md3h">
-    <link rel="stylesheet" href="assets/css/search-field.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/aufgaben.css?v=20261116ui1">
+    <link rel="stylesheet" href="assets/css/ui-components.css?v=20261116ui1">
+    <link rel="stylesheet" href="assets/css/search-field.css?v=20261116ui1">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <!-- Markdown rendering + sanitization for the AI assistant's rich replies.
          Defer so they don't block parsing; both will be ready before DOMContentLoaded. -->
@@ -804,7 +806,8 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=20261114md3g"></script>
-    <script defer src="assets/js/app.js?v=20261114md3g"></script>
+    <script defer src="assets/js/app.js?v=20261116ui1"></script>
+    <script defer src="assets/js/ui-components.js?v=20261116ui1"></script>
     <script defer src="assets/js/dashboard.js?v=20261114md3g"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261114md3g"></script>
     <script defer src="assets/js/messages.js?v=20261114md3g"></script>

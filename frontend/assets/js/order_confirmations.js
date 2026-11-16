@@ -99,8 +99,9 @@ async function abLoadFilterOptions() {
 function abFillFilterSelects() {
     const ks = document.getElementById('abKunde');
     if (ks) {
-        ks.innerHTML = `<option value="">Alle Kunden</option>` + (_abOpts.kunden || [])
-            .map(c => `<option value="${escapeHtml(c.kunde_id)}"${c.kunde_id === _abState.filterKunde ? ' selected' : ''}>${escapeHtml(c.kundenname || c.kunde_id)}</option>`).join('');
+        ks.innerHTML = uiOption('', 'Alle Kunden', !_abState.filterKunde) + (_abOpts.kunden || [])
+            .map(c => uiOption(c.kunde_id, c.kundenname || c.kunde_id, c.kunde_id === _abState.filterKunde)).join('');
+        ks.value = _abState.filterKunde || '';
     }
     const os = document.getElementById('abObjekt');
     if (os) {
@@ -108,8 +109,9 @@ function abFillFilterSelects() {
             ? (_abOpts.objekte || []).filter(o => o.kunden_id === _abState.filterKunde)
             : (_abOpts.objekte || []);
         if (_abState.filterObjekt && !list.some(o => o.obj_id === _abState.filterObjekt)) _abState.filterObjekt = '';
-        os.innerHTML = `<option value="">Alle Objekte</option>` + list
-            .map(o => `<option value="${escapeHtml(o.obj_id)}"${o.obj_id === _abState.filterObjekt ? ' selected' : ''}>${escapeHtml(o.objektname || o.obj_id)}</option>`).join('');
+        os.innerHTML = uiOption('', 'Alle Objekte', !_abState.filterObjekt) + list
+            .map(o => uiOption(o.obj_id, o.objektname || o.obj_id, o.obj_id === _abState.filterObjekt)).join('');
+        os.value = _abState.filterObjekt || '';
     }
     abUpdateResetBtn();
 }
@@ -140,7 +142,7 @@ async function abReload() {
         rows = await apiGet(API.order_confirmations + (qs ? '?' + qs : ''));
     } catch (e) {
         document.getElementById('abMainBody').innerHTML =
-            `<div class="oc-empty">${abIcon('warning')}<p>Fehler beim Laden</p></div>`;
+            uiEmptyState('warning', '', { title: 'Fehler beim Laden' });
         return;
     }
     _abState.rows = Array.isArray(rows) ? rows : [];
@@ -171,23 +173,16 @@ function abBuildHeader() {
 }
 
 function abBuildToolbar() {
+    const label = { alle: 'Alle', bereit: 'Bereit', versendet: 'Versendet', geaendert: 'Geändert' };
     return `
         <div class="oc-toolbar">
-            <div class="oc-search">
-                ${abIcon('search')}
-                <input type="text" id="abSearch" placeholder="Suchen (Nr., Kunde, Objekt, Leistung)..." value="${escapeHtml(_abState.search)}">
-            </div>
-            <select id="abKunde" class="oc-select" title="Nach Kunde filtern"><option value="">Alle Kunden</option></select>
-            <select id="abObjekt" class="oc-select" title="Nach Objekt filtern"><option value="">Alle Objekte</option></select>
-            <input type="month" id="abMonth" class="oc-month" value="${_abState.filterMonth}">
-            <div class="oc-status-filter">
-                ${['alle', 'bereit', 'versendet', 'geaendert'].map(s => `
-                    <button class="oc-chip${_abState.filterStatus === s ? ' active' : ''}" data-status="${s}">
-                        ${s === 'alle' ? 'Alle' : s === 'bereit' ? 'Bereit' : s === 'versendet' ? 'Versendet' : 'Geändert'}
-                    </button>`).join('')}
-            </div>
-            <button class="oc-refresh" id="abResetFilters" title="Alle Filter zurücksetzen" hidden>${abIcon('filter_alt_off')}</button>
-            <button class="oc-refresh" id="abRefresh" title="Aktualisieren">${abIcon('refresh')}</button>
+            ${uiTextField({ id: 'abSearch', type: 'search', icon: 'search', cls: 'oc-search', value: _abState.search, placeholder: 'Suchen (Nr., Kunde, Objekt, Leistung)...' })}
+            ${uiSelect({ id: 'abKunde', cls: 'oc-select', label: 'Kunde', optionsHtml: uiOption('', 'Alle Kunden', true) })}
+            ${uiSelect({ id: 'abObjekt', cls: 'oc-select', label: 'Objekt', optionsHtml: uiOption('', 'Alle Objekte', true) })}
+            ${uiTextField({ id: 'abMonth', type: 'month', cls: 'oc-month', label: 'Monat', value: _abState.filterMonth })}
+            ${uiChips(['alle', 'bereit', 'versendet', 'geaendert'].map(st => uiChip(label[st], { kind: 'filter', selected: _abState.filterStatus === st, attrs: `data-status="${st}"` })).join(''), { cls: 'oc-status-filter' })}
+            ${uiIconButton('filter_alt_off', { id: 'abResetFilters', title: 'Alle Filter zurücksetzen', attrs: 'hidden' })}
+            ${uiIconButton('refresh', { id: 'abRefresh', title: 'Aktualisieren' })}
         </div>`;
 }
 
@@ -208,9 +203,9 @@ function abBindToolbar() {
     document.getElementById('abObjekt')?.addEventListener('change', (e) => {
         _abState.filterObjekt = e.target.value; abUpdateResetBtn(); abReload();
     });
-    document.querySelectorAll('.oc-chip').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll('.oc-status-filter md-filter-chip').forEach(c => c.addEventListener('click', () => {
         _abState.filterStatus = c.dataset.status;
-        document.querySelectorAll('.oc-chip').forEach(x => x.classList.toggle('active', x === c));
+        document.querySelectorAll('.oc-status-filter md-filter-chip').forEach(x => { x.selected = x === c; });
         abUpdateResetBtn();
         abReload();
     }));
@@ -218,7 +213,7 @@ function abBindToolbar() {
         Object.assign(_abState, { search: '', filterMonth: '', filterStatus: 'alle', filterKunde: '', filterObjekt: '' });
         const s = document.getElementById('abSearch'); if (s) s.value = '';
         const m = document.getElementById('abMonth');  if (m) m.value = '';
-        document.querySelectorAll('.oc-chip').forEach(x => x.classList.toggle('active', x.dataset.status === 'alle'));
+        document.querySelectorAll('.oc-status-filter md-filter-chip').forEach(x => { x.selected = x.dataset.status === 'alle'; });
         abFillFilterSelects();
         abReload();
     });
@@ -236,8 +231,7 @@ function abRenderTable() {
     const editable = canEdit('auftragsbestaetigung');
 
     if (!rows.length) {
-        body.innerHTML = `<div class="oc-empty">${abIcon('description')}<p>Keine Auftragsbestätigungen gefunden</p>
-            <span>${abHasFilters() ? 'Für die gewählten Filter gibt es keine Einträge.' : 'Bestellungen erscheinen hier, sobald sie im Bestelleingang angelegt wurden.'}</span></div>`;
+        body.innerHTML = uiEmptyState('description', abHasFilters() ? 'Für die gewählten Filter gibt es keine Einträge.' : 'Bestellungen erscheinen hier, sobald sie im Bestelleingang angelegt wurden.', { title: 'Keine Auftragsbestätigungen gefunden' });
         return;
     }
 
@@ -281,19 +275,17 @@ function abRowHtml(r, editable) {
             <td class="num" data-label="Tage">${r.tage_count}</td>
             <td class="num" data-label="Stunden"><strong>${parseFloat(r.stunden) > 0 ? abHours(r.stunden) : '–'}</strong></td>
             <td data-label="Status">
-                <span class="oc-badge ${sent ? 'sent' : 'ready'}" title="${escapeHtml(sentTitle)}">
-                    ${abIcon(sent ? 'send' : 'schedule', 'font-size:12px;vertical-align:-2px')}
-                    ${sent ? 'Versendet' + (r.ab_version > 1 ? ' · V' + r.ab_version : '') : 'Bereit'}
-                </span>
-                ${sent && r.changed_since_sent ? `<span class="oc-badge oc-badge-changed" title="Der Auftrag wurde nach dem Versand geändert — die versendete Version bleibt archiviert">${abIcon('edit_note', 'font-size:12px;vertical-align:-2px')} Geändert</span>` : ''}
+                <span class="oc-badges" title="${escapeHtml(sentTitle)}">${uiBadge(sent ? 'Versendet' + (r.ab_version > 1 ? ' · V' + r.ab_version : '') : 'Bereit', sent ? 'success' : 'info', sent ? 'send' : 'schedule')}</span>
+                ${sent && r.changed_since_sent ? `<span class="oc-badges" title="Der Auftrag wurde nach dem Versand geändert — die versendete Version bleibt archiviert">${uiBadge('Geändert', 'warning', 'edit_note')}</span>` : ''}
             </td>
             <td class="acts">
-                <button class="oc-act" title="Vorschau" onclick="abPreview('${r.eingang_id}')">${abIcon('visibility', 'font-size:15px')}</button>
-                <button class="oc-act" title="PDF ansehen" onclick="abViewPdf('${r.eingang_id}')">${abIcon('picture_as_pdf', 'font-size:15px')}</button>
-                <button class="oc-act" title="PDF herunterladen" onclick="abDownloadPdf('${r.eingang_id}')">${abIcon('download', 'font-size:15px')}</button>
+                ${uiIconButton('visibility', { title: 'Vorschau', onclick: `abPreview('${r.eingang_id}')` })}
+                ${uiIconButton('picture_as_pdf', { title: 'PDF ansehen', onclick: `abViewPdf('${r.eingang_id}')` })}
+                ${uiIconButton('download', { title: 'PDF herunterladen', onclick: `abDownloadPdf('${r.eingang_id}')` })}
                 ${editable ? (sent
-                    ? `${r.changed_since_sent ? `<button class="oc-act ok" title="Neue Version senden (V${(r.ab_version || 1) + 1})" onclick="abMarkSent('${r.eingang_id}')">${abIcon('forward_to_inbox', 'font-size:15px')}</button>` : ''}<button class="oc-act warn" title="Versand zurücknehmen" onclick="abUnmarkSent('${r.eingang_id}')">${abIcon('undo', 'font-size:15px')}</button>`
-                    : `<button class="oc-act ok" title="Als versendet markieren" onclick="abMarkSent('${r.eingang_id}')">${abIcon('send', 'font-size:15px')}</button>`)
+                    ? (r.changed_since_sent ? uiIconButton('forward_to_inbox', { tone: 'success', title: `Neue Version senden (V${(r.ab_version || 1) + 1})`, onclick: `abMarkSent('${r.eingang_id}')` }) : '')
+                      + uiIconButton('undo', { tone: 'warning', title: 'Versand zurücknehmen', onclick: `abUnmarkSent('${r.eingang_id}')` })
+                    : uiIconButton('send', { tone: 'success', title: 'Als versendet markieren', onclick: `abMarkSent('${r.eingang_id}')` }))
                 : ''}
             </td>
         </tr>`;
@@ -359,26 +351,10 @@ function _ocDocHtml(d) {
                 ${d.versions.map(v => `<div class="oc-doc-version">
                     ${abIcon('inventory_2', 'font-size:16px')}
                     <span><strong>Version ${v.version}</strong> · versendet am ${new Date(String(v.sent_at).replace(' ', 'T')).toLocaleString('de-DE')}${v.sent_by_name ? ' von ' + escapeHtml(v.sent_by_name) : ''}</span>
-                    <button class="oc-act" title="Archivierte PDF öffnen" onclick="abOpenArchive('${escapeHtml(d.eingang_id)}', ${parseInt(v.version, 10)})">${abIcon('picture_as_pdf', 'font-size:15px')}</button>
+                    ${uiIconButton('picture_as_pdf', { title: 'Archivierte PDF öffnen', onclick: `abOpenArchive('${escapeHtml(d.eingang_id)}', ${parseInt(v.version, 10)})` })}
                 </div>`).join('')}
             </div>` : ''}
-        </div>
-        <style>
-            .oc-doc-bearb{grid-column:1/-1;flex-basis:100%}
-            .oc-doc-bearb select{font:inherit;font-weight:600;padding:3px 6px;border:1px solid var(--gray-300);border-radius:6px;background:var(--white);color:inherit;max-width:100%;width:min(420px,100%)}
-            .oc-doc-changed{display:flex;gap:8px;align-items:flex-start;margin:10px 0;padding:10px 12px;border-radius:8px;background: var(--md-ext-color-warning-container);border: 1px solid var(--md-ext-color-warning-container);color: var(--md-ext-color-warning);font-size:.85rem}
-            [data-theme="dark"] .oc-doc-changed{background: color-mix(in srgb, var(--md-ext-color-warning) 12%, transparent);border-color: color-mix(in srgb, var(--md-ext-color-warning) 45%, transparent);color: var(--md-ext-color-warning-container)}
-            [data-theme="dark"] .oc-badge-changed{background: color-mix(in srgb, var(--md-ext-color-warning) 14%, transparent)!important;color: var(--md-ext-color-warning-container)!important;border-color: color-mix(in srgb, var(--md-ext-color-warning) 45%, transparent)!important}
-            .oc-notes-input{width:100%;box-sizing:border-box;min-height:90px;resize:vertical;font:inherit;font-size:.9rem;line-height:1.45;padding:9px 11px;border:1px solid var(--gray-300);border-radius:8px;background:var(--white);color:inherit}
-            .oc-notes-input:focus{outline:none;border-color: var(--primary,var(--md-sys-color-primary));box-shadow: 0 0 0 3px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent)}
-            .oc-notes-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;font-size:.78rem;color:var(--gray-500)}
-            .oc-notes-save{font:inherit;font-weight:600;font-size:.82rem;padding:6px 14px;border-radius:999px;border:0;background: var(--primary,var(--md-sys-color-primary));color: #fff;cursor:pointer}
-            .oc-notes-save:disabled{opacity:.45;cursor:default}
-            .oc-doc-versions{margin-top:12px}
-            .oc-doc-version{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--gray-100)}
-            .oc-doc-version span:nth-child(2){flex:1}
-            .oc-badge-changed{background: var(--md-ext-color-warning-container)!important;color: var(--md-ext-color-warning)!important;border-color: var(--md-ext-color-warning-container)!important;margin-left:4px}
-        </style>`;
+        </div>`;
 }
 
 // "Bearbeiter" = responsible person of the order. Automatic default: the
@@ -403,10 +379,9 @@ function _ocBearbeiterHtml(d) {
     // Automatic option names its live source (Kundenbetreuer / Ersteller).
     const src = _AB_BEARB_SOURCE[d.bearbeiter_source] || 'Kundenbetreuer bzw. Ersteller';
     const autoName = !cur && !d.frozen && d.meta && d.meta.bearbeiter ? ': ' + name : '';
-    return `<select title="Zuständiger Bearbeiter dieses Auftrags — automatisch: Kundenbetreuer des Kunden, sonst Ersteller" onchange="abSetBearbeiter('${escapeHtml(d.eingang_id)}', this.value)">
-        <option value="" ${cur ? '' : 'selected'}>Automatisch (${escapeHtml(cur ? 'Kundenbetreuer bzw. Ersteller' : src)}${autoName})</option>
-        ${_abBearbeiterOpts.map(o => `<option value="${parseInt(o.id, 10)}" ${String(o.id) === cur ? 'selected' : ''}>${escapeHtml(o.name)}</option>`).join('')}
-    </select>${d.frozen ? ` <small style="color:var(--gray-500)">versendet mit: ${name}</small>` : ''}`;
+    return `${uiSelect({ cls: 'oc-bearb-select', attrs: `title="Zuständiger Bearbeiter dieses Auftrags — automatisch: Kundenbetreuer des Kunden, sonst Ersteller" onchange="abSetBearbeiter('${escapeHtml(d.eingang_id)}', this.value)"`,
+        optionsHtml: `<md-select-option value=""${cur ? '' : ' selected'}><div slot="headline">Automatisch (${escapeHtml(cur ? 'Kundenbetreuer bzw. Ersteller' : src)}${autoName})</div></md-select-option>`
+            + _abBearbeiterOpts.map(o => uiOption(parseInt(o.id, 10), o.name, String(o.id) === cur)).join('') })}${d.frozen ? ` <small style="color:var(--gray-500)">versendet mit: ${name}</small>` : ''}`;
 }
 
 async function abSetBearbeiter(id, userId) {
@@ -430,11 +405,11 @@ function _ocNotesHtml(d) {
     }
     return `<div class="oc-doc-notes">
         <div class="oc-doc-block-title">Bemerkungen</div>
-        <textarea id="ocNotesInput" class="oc-notes-input" maxlength="5000" placeholder="Bemerkungen für den Kunden…"
-            oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';document.getElementById('ocNotesSave').disabled=false">${escapeHtml(live.join('\n\n'))}</textarea>
+        <md-outlined-text-field id="ocNotesInput" class="oc-notes-input" type="textarea" rows="4" maxlength="5000" placeholder="Bemerkungen für den Kunden…"
+            value="${escapeHtml(live.join('\n\n'))}" oninput="document.getElementById('ocNotesSave').disabled=false"></md-outlined-text-field>
         <div class="oc-notes-actions">
             <span>${d.frozen ? 'Gilt ab der nächsten Version — die versendete bleibt archiviert.' : 'Erscheint so in der Auftragsbestätigung (PDF).'}</span>
-            <button type="button" id="ocNotesSave" class="oc-notes-save" disabled onclick="abSaveBemerkung('${escapeHtml(d.eingang_id)}')">Speichern</button>
+            ${uiButton('Speichern', { variant: 'tonal', size: 'sm', id: 'ocNotesSave', disabled: true, onclick: `abSaveBemerkung('${escapeHtml(d.eingang_id)}')` })}
         </div>
     </div>`;
 }
@@ -490,11 +465,11 @@ async function abPreview(id) {
     try {
         d = await apiGet(API.order_confirmations + '/' + encodeURIComponent(id));
     } catch (e) {
-        document.getElementById('abDialogBody').innerHTML = `<div class="oc-empty">${abIcon('warning')}<p>Nicht gefunden</p></div>`;
+        document.getElementById('abDialogBody').innerHTML = uiEmptyState('warning', '', { title: 'Nicht gefunden' });
         return;
     }
     if (!d || d.error) {
-        document.getElementById('abDialogBody').innerHTML = `<div class="oc-empty">${abIcon('warning')}<p>${escapeHtml(d?.error || 'Nicht gefunden')}</p></div>`;
+        document.getElementById('abDialogBody').innerHTML = uiEmptyState('warning', '', { title: d?.error || 'Nicht gefunden' });
         return;
     }
 
@@ -630,11 +605,11 @@ async function abShowArchiv(id) {
                     <div style="font-weight:600">${e.version ? 'Version ' + parseInt(e.version, 10) + ' · ' : ''}${escapeHtml(_AB_AKTION[e.aktion] || e.aktion)}</div>
                     <div style="font-size:.8rem;opacity:.7">${e.at ? escapeHtml(new Date(String(e.at).replace(' ', 'T')).toLocaleString('de-DE')) : '–'}${e.by ? ' · ' + escapeHtml(e.by) : ''}</div>
                 </div>
-                <md-icon-button title="Herunterladen" onclick="abDownloadArchiv(${i})"><md-icon>download</md-icon></md-icon-button>
+                ${uiIconButton('download', { title: 'Herunterladen', onclick: `abDownloadArchiv(${i})` })}
             </div>`).join('')
-            : `<div class="oc-empty">${abIcon('history')}<p>Noch keine archivierten PDFs. Jeder Download, jede Weitergabe und jeder Versand wird hier automatisch gesichert.</p></div>`;
+            : uiEmptyState('history', 'Jeder Download, jede Weitergabe und jeder Versand wird hier automatisch gesichert.', { title: 'Noch keine archivierten PDFs' });
     } catch (e) {
-        if (body) body.innerHTML = `<div class="oc-empty">${abIcon('warning')}<p>${escapeHtml(e.message || 'Verlauf konnte nicht geladen werden')}</p></div>`;
+        if (body) body.innerHTML = uiEmptyState('warning', '', { title: e.message || 'Verlauf konnte nicht geladen werden' });
     }
 }
 async function abDownloadArchiv(i) {
@@ -718,10 +693,10 @@ function _ocEnsureViewer() {
     dlg.className = 'oc-viewer';
     dlg.innerHTML = `
         <div class="oc-viewer-bar">
-            <button class="oc-viewer-btn" data-act="close" title="Schließen">${abIcon('arrow_back')}</button>
+            ${uiIconButton('arrow_back', { title: 'Schließen', attrs: 'data-act="close"' })}
             <div class="oc-viewer-title"><span id="ocViewerTitle">Auftragsbestätigung</span><small id="ocViewerSub"></small></div>
-            <button class="oc-viewer-btn" data-act="zoom-out" title="Verkleinern">${abIcon('zoom_out')}</button>
-            <button class="oc-viewer-btn" data-act="zoom-in" title="Vergrößern">${abIcon('zoom_in')}</button>
+            ${uiIconButton('zoom_out', { title: 'Verkleinern', attrs: 'data-act="zoom-out"' })}
+            ${uiIconButton('zoom_in', { title: 'Vergrößern', attrs: 'data-act="zoom-in"' })}
         </div>
         <div class="oc-viewer-body" id="ocViewerBody"></div>
         <div class="oc-viewer-actions" id="ocViewerActions"></div>`;
@@ -757,21 +732,18 @@ function _ocEnsureViewer() {
 function _ocViewerActionsHtml(row) {
     const editable = canEdit('auftragsbestaetigung');
     const sent = !!(row && row.ab_sent_at);
+    const act = (label, icon, a, primary = false) => uiButton(label, { variant: primary ? 'filled' : 'outlined', icon, attrs: `data-act="${a}"` });
     if (_ocViewer.mode === 'summary') {
-        return `
-        ${editable ? (sent
-            ? `${row.changed_since_sent ? `<button class="oc-viewer-act" data-act="sent">${abIcon('forward_to_inbox')}<span>Neue Version</span></button>` : ''}<button class="oc-viewer-act" data-act="unsent">${abIcon('undo')}<span>Zurücknehmen</span></button>`
-            : `<button class="oc-viewer-act" data-act="sent">${abIcon('send')}<span>Versendet</span></button>`) : ''}
-        <button class="oc-viewer-act primary" data-act="pdf">${abIcon('picture_as_pdf')}<span>PDF ansehen</span></button>`;
+        return (editable ? (sent
+            ? (row.changed_since_sent ? act('Neue Version', 'forward_to_inbox', 'sent') : '') + act('Zurücknehmen', 'undo', 'unsent')
+            : act('Versendet', 'send', 'sent')) : '')
+            + act('PDF ansehen', 'picture_as_pdf', 'pdf', true);
     }
     const canShare = !!(navigator.canShare && window.File
         && navigator.canShare({ files: [new File([''], 'x.pdf', { type: 'application/pdf' })] }));
-    return `
-        ${editable ? (sent
-            ? `<button class="oc-viewer-act" data-act="unsent">${abIcon('undo')}<span>Zurücknehmen</span></button>`
-            : `<button class="oc-viewer-act" data-act="sent">${abIcon('send')}<span>Versendet</span></button>`) : ''}
-        ${canShare ? `<button class="oc-viewer-act" data-act="share">${abIcon('share')}<span>Teilen</span></button>` : ''}
-        <button class="oc-viewer-act primary" data-act="download">${abIcon('download')}<span>Download</span></button>`;
+    return (editable ? (sent ? act('Zurücknehmen', 'undo', 'unsent') : act('Versendet', 'send', 'sent')) : '')
+        + (canShare ? act('Teilen', 'share', 'share') : '')
+        + act('Download', 'download', 'download', true);
 }
 
 function _ocViewerReset(id, mode, fromSummary) {
@@ -799,7 +771,7 @@ async function ocOpenSummary(id) {
     if (canEdit('auftragsbestaetigung')) await _abLoadBearbeiter();
     if (token !== _ocViewer.token) return;
     if (!d || d.error) {
-        body.innerHTML = `<div class="oc-empty">${abIcon('warning')}<p>${escapeHtml(d?.error || 'Nicht gefunden')}</p></div>`;
+        body.innerHTML = uiEmptyState('warning', '', { title: d?.error || 'Nicht gefunden' });
         return;
     }
     body.innerHTML = `<div class="oc-viewer-sheet">${_ocDocHtml(d)}</div>`;
@@ -822,7 +794,7 @@ async function ocOpenPdfViewer(id, fromSummary) {
     } catch (e) {
         if (token !== _ocViewer.token) return;
         document.getElementById('ocViewerBody').innerHTML =
-            `<div class="oc-empty">${abIcon('warning')}<p>${escapeHtml(e.message || 'PDF konnte nicht geladen werden')}</p></div>`;
+            uiEmptyState('warning', '', { title: e.message || 'PDF konnte nicht geladen werden' });
     }
 }
 

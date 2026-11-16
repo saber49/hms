@@ -14,7 +14,7 @@
 
 /* ── A) MD3 search fields ─────────────────────────────────────────── */
 html body md-outlined-text-field:is(.cust-search, .be-search, .or-search, .nu-search,
-        .wk-search, .ma-search, .cdocs-search, #u_search) {
+        .wk-search, .ma-search, .cdocs-search, .ph-search, .oc-search, .au-search, #u_search) {
     flex: 1 1 240px;
     min-width: 200px;
     max-width: 340px;
@@ -26,7 +26,7 @@ html body md-outlined-text-field:is(.cust-search, .be-search, .or-search, .nu-se
 }
 
 /* ── B) plain input + icon wrappers ───────────────────────────────── */
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) {
+html body :is(.ag-search, .dispo-search-wrap) {
     position: relative;
     display: flex;
     align-items: center;
@@ -44,15 +44,15 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     box-shadow: none;
     transition: border-color .15s ease;
 }
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):hover {
+html body :is(.ag-search, .dispo-search-wrap):hover {
     border-color: var(--md-sys-color-on-surface, var(--md-sys-color-outline));
 }
 /* Focus = 2px primary outline (padding −1px so nothing jumps). */
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap):focus-within {
+html body :is(.ag-search, .dispo-search-wrap):focus-within {
     border: 2px solid var(--md-sys-color-primary, var(--md-sys-color-primary));
     padding: 0 13px 0 11px;
 }
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap)
+html body :is(.ag-search, .dispo-search-wrap)
         > :is(.material-symbols-outlined, i, svg):first-child {
     position: static;
     transform: none;
@@ -63,7 +63,7 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface));
     pointer-events: none;
 }
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input {
+html body :is(.ag-search, .dispo-search-wrap) input {
     flex: 1 1 auto;
     min-width: 0;
     width: auto;
@@ -82,11 +82,11 @@ html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap
     -webkit-appearance: none;
     appearance: none;
 }
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::placeholder {
+html body :is(.ag-search, .dispo-search-wrap) input::placeholder {
     color: var(--md-sys-color-on-surface-variant, var(--md-sys-color-on-surface));
     opacity: 1;
 }
-html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) input::-webkit-search-cancel-button {
+html body :is(.ag-search, .dispo-search-wrap) input::-webkit-search-cancel-button {
     -webkit-appearance: none;
 }
 /* Dispo "x" (clear) button stays inside the pill on the right. */
@@ -103,8 +103,8 @@ html body .dispo-search-wrap .dispo-search-clear[hidden] { display: none !import
 /* ── Phones: search takes the full row (same as Interessenten) ─────── */
 @media (max-width: 640px) {
     html body md-outlined-text-field:is(.cust-search, .be-search, .or-search, .nu-search,
-            .wk-search, .ma-search, .cdocs-search, #u_search),
-    html body :is(.ag-search, .au-search, .oc-search, .ph-search, .dispo-search-wrap) {
+            .wk-search, .ma-search, .cdocs-search, .ph-search, .oc-search, .au-search, #u_search),
+    html body :is(.ag-search, .dispo-search-wrap) {
         flex: 1 1 100%;
         max-width: none;
         min-width: 0;

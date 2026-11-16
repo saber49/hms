@@ -621,10 +621,10 @@ const PAGE_MODULE_SCRIPTS = {
     customers: ['assets/js/customers.js?v=20261114md3g'],
     objects: ['assets/js/objects.js?v=20261114md3g'],
     subcontractors: ['assets/js/subcontractors.js?v=20261114md3g'],
-    price_history: ['assets/js/price_history.js?v=20261114md3g'],
+    price_history: ['assets/js/price_history.js?v=20261116ui1'],
     lager: ['assets/js/lager.js?v=20261114md3g'],
     orders: ['assets/js/orders.js?v=20261114md3g'],
-    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261114md3g'],
+    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261116ui1'],
     tasks: TASKS_MODULE_SCRIPTS,
     disposition: TASKS_MODULE_SCRIPTS,
     monatsabschluss: TASKS_MODULE_SCRIPTS,
@@ -645,7 +645,7 @@ const PAGE_MODULE_SCRIPTS = {
     users: ['assets/js/users.js?v=20261114md3g'],
     pdf_design: ['assets/js/pdf_design.js?v=20261114md3g'],
     company_documents: ['assets/js/company_documents.js?v=20261114md3g'],
-    aufgaben: ['assets/js/aufgaben.js?v=20261114md3g'],
+    aufgaben: ['assets/js/aufgaben.js?v=20261116ui1'],
     aueg: ['assets/js/aueg.js?v=20261114md3g']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app

@@ -1,0 +1,162 @@
+/* =====================================================================
+   ui-components.css — the shared building blocks @material/web does
+   NOT ship (card, toolbar, empty state, status badge) plus layout glue
+   for the md components it does ship (chip-set, tabs, button rows).
+
+   Rules:
+   - Emitted by the helpers in assets/js/ui-components.js — new UI calls
+     uiCard()/uiToolbar()/uiEmptyState()/uiBadge() instead of writing a
+     new per-module class. Never fork these into a module stylesheet;
+     extend with a modifier here if a real variant is needed.
+   - Tokens only (md-sys/md-ext). No hex, no raw radius, no raw px font
+     sizes — typography comes from the MD3 typescale.
+   Loaded in index.php after theme-unified.css.
+===================================================================== */
+
+/* ── Card ─────────────────────────────────────────────────────────── */
+.ui-card {
+    background: var(--md-sys-color-surface-container-lowest);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-sys-shape-corner-large);
+    overflow: hidden;
+    min-width: 0;
+}
+.ui-card.is-elevated {
+    border-color: transparent;
+    box-shadow: var(--md-sys-elevation-level1);
+}
+.ui-card-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+.ui-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    color: var(--md-sys-color-on-surface);
+}
+.ui-card-title > .material-symbols-outlined {
+    font-size: 20px;
+    color: var(--md-sys-color-primary);
+}
+.ui-card-sub {
+    font-size: var(--md-sys-typescale-body-small-size);
+    line-height: var(--md-sys-typescale-body-small-line-height);
+    color: var(--md-sys-color-on-surface-variant);
+}
+.ui-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+.ui-card-body { padding: 20px; }
+.ui-card-body.is-flush { padding: 0; }
+
+/* ── Toolbar (above lists / tables) ───────────────────────────────── */
+.ui-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.ui-toolbar-start,
+.ui-toolbar-end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.ui-toolbar-start { flex: 1 1 auto; }
+.ui-toolbar-end { margin-left: auto; }
+
+/* ── Empty state ──────────────────────────────────────────────────── */
+.ui-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 48px 20px;
+    text-align: center;
+    color: var(--md-sys-color-on-surface-variant);
+}
+.ui-empty > .material-symbols-outlined {
+    font-size: 48px;
+    color: var(--md-sys-color-outline);
+}
+.ui-empty-title {
+    margin: 0;
+    font-size: var(--md-sys-typescale-title-medium-size);
+    line-height: var(--md-sys-typescale-title-medium-line-height);
+    font-weight: var(--md-sys-typescale-title-medium-weight);
+    color: var(--md-sys-color-on-surface);
+}
+.ui-empty-text {
+    margin: 0;
+    font-size: var(--md-sys-typescale-body-medium-size);
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+}
+.ui-empty-action { margin-top: 8px; }
+
+/* ── Status badge (read-only label — use md chips for interaction) ── */
+.ui-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: var(--md-sys-shape-corner-small);
+    font-size: var(--md-sys-typescale-label-medium-size);
+    line-height: var(--md-sys-typescale-label-medium-line-height);
+    font-weight: var(--md-sys-typescale-label-medium-weight);
+    white-space: nowrap;
+    background: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface-variant);
+}
+.ui-badge > .material-symbols-outlined { font-size: 16px; }
+.ui-badge.is-info    { background: var(--md-ext-color-info-container);    color: var(--md-ext-color-on-info-container); }
+.ui-badge.is-success { background: var(--md-ext-color-success-container); color: var(--md-ext-color-on-success-container); }
+.ui-badge.is-warning { background: var(--md-ext-color-warning-container); color: var(--md-ext-color-on-warning-container); }
+.ui-badge.is-error   { background: var(--md-sys-color-error-container);   color: var(--md-sys-color-on-error-container); }
+.ui-badge.is-primary { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+
+/* ── Glue for shipped md components ───────────────────────────────── */
+md-chip-set.ui-chips { gap: 8px; }
+md-tabs.ui-tabs { margin-bottom: 16px; }
+.ui-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.ui-actions.is-end { justify-content: flex-end; }
+
+/* tone modifiers for every md button flavour (filled variants live in
+   style.css as md-btn-*; these cover outlined/text + icon buttons) */
+md-outlined-button.md-btn-danger,
+md-text-button.md-btn-danger {
+    --md-outlined-button-label-text-color: var(--md-sys-color-error);
+    --md-outlined-button-icon-color: var(--md-sys-color-error);
+    --md-text-button-label-text-color: var(--md-sys-color-error);
+    --md-text-button-icon-color: var(--md-sys-color-error);
+}
+md-icon-button.md-icon-success { --md-icon-button-icon-color: var(--md-ext-color-success); }
+md-icon-button.md-icon-primary { --md-icon-button-icon-color: var(--md-sys-color-primary); }
+md-icon-button.md-icon-warning { --md-icon-button-icon-color: var(--md-ext-color-warning); }
+
+@media (max-width: 640px) {
+    .ui-card-head { padding: 12px 16px; flex-wrap: wrap; }
+    .ui-card-body { padding: 16px; }
+    .ui-toolbar-end { margin-left: 0; width: 100%; }
+}
