@@ -3107,14 +3107,15 @@ to { opacity: 1; transform: translate(-50%, -50%); }
 @media (max-width: 640px), (max-height: 500px) and (pointer: coarse) {
 #modalOverlay:has(.planner-modal-header) {
         align-items: stretch;
+        --md-dialog-container-shape: 0px;
         padding: var(--sa-top, 0px) 0 var(--sa-bottom, 0px);
     }
 #modalOverlay:has(.planner-modal-header) .modal {
         display: flex;
         flex-direction: column;
-        width: 100%;
-        height: 100%;
-        max-width: none;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: calc(100dvh - var(--sa-top, 0px) - var(--sa-bottom, 0px));
         max-height: none;
         min-height: 0;
         overflow: hidden;
