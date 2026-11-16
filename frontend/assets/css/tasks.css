@@ -1176,8 +1176,21 @@
 .planner-worker-search {
     width: 100%;
 }
+.planner-worker-search > .material-symbols-outlined {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--md-sys-color-on-surface-variant);
+    pointer-events: none;
+}
 .planner-worker-search input {
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
+    box-sizing: border-box;
+    padding-left: 38px;
 }
 .planner-worker-item {
     border: 1px solid var(--gray-200);
@@ -1244,6 +1257,7 @@
 /* Bulk "team task" bar — type once, apply to all assigned workers. */
 .planner-bulk-task {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     margin: 8px 0 10px;
@@ -1258,7 +1272,7 @@
     flex-shrink: 0;
 }
 .planner-bulk-task-input {
-    flex: 1;
+    flex: 1 1 220px;
     min-width: 0;
     border: 1px solid var(--gray-200);
     border-radius: var(--md-sys-shape-corner-small);
