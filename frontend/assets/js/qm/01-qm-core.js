@@ -35,7 +35,7 @@ function qmCan(aktion) { return !!qm.opt?.ich?.rechte?.[aktion]; }
 function qmUser(id) { return (qm.opt?.benutzer || []).find(u => +u.id === +id)?.name || '–'; }
 function qmObj(id) { return (qm.opt?.objekte || []).find(o => o.obj_id === id); }
 function qmLabel() { return qm.opt?.label || (typeof objektbuchLabel === 'function' ? objektbuchLabel() : 'Wachbuch'); }
-function qmV(id) { const el = document.getElementById(id); if (!el) return undefined; return el.type === 'checkbox' ? el.checked : String(el.value ?? '').trim(); }
+function qmV(id) { const el = document.getElementById(id); if (!el) return undefined; if (el.tagName === 'MD-SWITCH') return !!el.selected; return el.type === 'checkbox' || el.tagName === 'MD-CHECKBOX' ? !!el.checked : String(el.value ?? '').trim(); }
 function qmBadge(text, tone = '') { return `<span class="qm-badge${tone ? ' qm-' + tone : ''}">${qmE(text)}</span>`; }
 function qmListe(key) { return qm.opt?.listen?.[key] || {}; }
 
@@ -110,7 +110,7 @@ function qmLoadImages(root) {
 }
 function qmFotoGross(url, text = '') {
     openModal('Foto', `<div class="qm-foto-gross"><img data-qm-src="${qmE(url)}" alt="">${text ? `<p>${qmE(text)}</p>` : ''}</div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Schließen</button>`, 'modal-lg');
+        `<md-outlined-button onclick="closeModal()">Schließen</md-outlined-button>`, 'modal-lg');
     qmLoadImages(document.getElementById('modalOverlay'));
 }
 
@@ -125,7 +125,7 @@ function qmGeheim(title, rows, hint) {
             ${rows.map(([k, v]) => `<div class="qm-geheim-row"><span>${qmE(k)}</span><strong>${qmE(v)}</strong>
                 <md-icon-button onclick="qmCopy('${qmE(v)}')" title="Kopieren"><md-icon>content_copy</md-icon></md-icon-button></div>`).join('')}
             <div class="crm-banner crm-banner-amber">${qmIcon('visibility_off')} ${qmE(hint || 'Wird nur jetzt angezeigt — bitte notieren und persönlich weitergeben.')}</div>
-        </div>`, `<button class="btn btn-primary" onclick="closeModal()">Verstanden</button>`);
+        </div>`, `<md-filled-button onclick="closeModal()">Verstanden</md-filled-button>`);
 }
 
 // ---------- shared design-system building blocks ----------
@@ -201,15 +201,15 @@ function qmFehlerBox(r, retry) {
 /** Objekt select for dialogs (only objects inside the user's QM scope). */
 function qmObjOptions(cur, nurWachbuch = false) {
     return (qm.opt?.objekte || []).filter(o => !nurWachbuch || o.wachbuch_aktiv)
-        .map(o => `<option value="${qmE(o.obj_id)}" ${o.obj_id === cur ? 'selected' : ''}>${qmE(o.objektname)}${o.kundenname ? ' — ' + qmE(o.kundenname) : ''}</option>`).join('');
+        .map(o => `<md-select-option value="${qmE(o.obj_id)}" ${o.obj_id === cur ? 'selected' : ''}><div slot="headline">${qmE(o.objektname)}${o.kundenname ? ' — ' + qmE(o.kundenname) : ''}</div></md-select-option>`).join('');
 }
 function qmUserOptions(cur, placeholder = '— wählen —') {
-    return `<option value="">${qmE(placeholder)}</option>` + (qm.opt?.benutzer || [])
-        .map(u => `<option value="${u.id}" ${+u.id === +cur ? 'selected' : ''}>${qmE(u.name)}</option>`).join('');
+    return `<md-select-option value=""><div slot="headline">${qmE(placeholder)}</div></md-select-option>` + (qm.opt?.benutzer || [])
+        .map(u => `<md-select-option value="${u.id}" ${+u.id === +cur ? 'selected' : ''}><div slot="headline">${qmE(u.name)}</div></md-select-option>`).join('');
 }
 function qmSelectOptions(map, cur, placeholder) {
-    return (placeholder !== undefined ? `<option value="">${qmE(placeholder)}</option>` : '')
-        + Object.entries(map).map(([k, v]) => `<option value="${qmE(k)}" ${k === cur ? 'selected' : ''}>${qmE(v)}</option>`).join('');
+    return (placeholder !== undefined ? `<md-select-option value=""><div slot="headline">${qmE(placeholder)}</div></md-select-option>` : '')
+        + Object.entries(map).map(([k, v]) => `<md-select-option value="${qmE(k)}" ${k === cur ? 'selected' : ''}><div slot="headline">${qmE(v)}</div></md-select-option>`).join('');
 }
 
 /** Change log ("Verlauf") of a record — every QM detail page shows it. */

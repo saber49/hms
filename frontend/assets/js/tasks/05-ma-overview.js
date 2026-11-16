@@ -461,15 +461,15 @@ function maBuildBento(data) {
 function maBuildToolbar() {
     const scope = maResolveScopeLists();
     const scopeOpts = (list, cur) => list.map(v =>
-        `<option value="${escapeHtml(v)}"${v === cur ? ' selected' : ''}>${escapeHtml(v)}</option>`
+        `<md-select-option value="${escapeHtml(v)}"${v === cur ? ' selected' : ''}><div slot="headline">${escapeHtml(v)}</div></md-select-option>`
     ).join('');
     return `
         <div class="ma-toolbar${_maMode === 'kunde' ? ' is-kunde' : ''}">
             <div class="ma-toolbar-top">
-                <div class="ma-tabs">
-                    <button class="ma-tab ${_maTab === 'overview' ? 'active' : ''}" onclick="maSetTab('overview')">${maIcon('checklist', 'font-size:14px')} Übersicht</button>
-                    <button class="ma-tab ${_maTab === 'analytics' ? 'active' : ''}" onclick="maSetTab('analytics')">${maIcon('bar_chart', 'font-size:14px')} Analytics</button>
-                </div>
+                <md-tabs class="ma-tabs">
+                    <md-secondary-tab data-seg inline-icon class="ma-tab ${_maTab === 'overview' ? 'active' : ''}" onclick="maSetTab('overview')"><md-icon slot="icon">checklist</md-icon>Übersicht</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="ma-tab ${_maTab === 'analytics' ? 'active' : ''}" onclick="maSetTab('analytics')"><md-icon slot="icon">bar_chart</md-icon>Analytics</md-secondary-tab>
+                </md-tabs>
                 ${_maMode === 'kunde' ? '' : `
                 <div class="ma-toolbar-actions">
                     <md-outlined-button onclick="maOpenExportDialog('xlsx')"><md-icon slot="icon">csv</md-icon>Excel Export</md-outlined-button>
@@ -486,14 +486,14 @@ function maBuildToolbar() {
                     <md-filter-chip label="NU" data-filter="nu" ${_maFilter === 'nu' ? 'selected' : ''} onclick="maSetFilter('nu')"></md-filter-chip>
                     <md-filter-chip label="Hinweise" data-filter="anomaly" ${_maFilter === 'anomaly' ? 'selected' : ''} onclick="maSetFilter('anomaly')"></md-filter-chip>
                 </md-chip-set>
-                <select class="ma-scope-select${_maFilterKunde ? ' active' : ''}" id="maScopeKunde" onchange="maScopeChange('kunde', this.value)" title="Nach Kunde filtern">
-                    <option value="">Alle Kunden</option>
+                <md-outlined-select class="ma-scope-select${_maFilterKunde ? ' active' : ''}" id="maScopeKunde" onchange="maScopeChange('kunde', this.value)" title="Nach Kunde filtern">
+                    <md-select-option value=""><div slot="headline">Alle Kunden</div></md-select-option>
                     ${scopeOpts(scope.kunden, _maFilterKunde)}
-                </select>
-                <select class="ma-scope-select${_maFilterObjekt ? ' active' : ''}" id="maScopeObjekt" onchange="maScopeChange('objekt', this.value)" title="Nach Objekt filtern">
-                    <option value="">Alle Objekte</option>
+                </md-outlined-select>
+                <md-outlined-select class="ma-scope-select${_maFilterObjekt ? ' active' : ''}" id="maScopeObjekt" onchange="maScopeChange('objekt', this.value)" title="Nach Objekt filtern">
+                    <md-select-option value=""><div slot="headline">Alle Objekte</div></md-select-option>
                     ${scopeOpts(scope.objekte, _maFilterObjekt)}
-                </select>
+                </md-outlined-select>
             </div>
         </div>`;
 }
@@ -503,7 +503,7 @@ function maBuildToolbar() {
 function maBuildModeTabs() {
     const tab = (mode, icon, label, title) => {
         const on = _maMode === mode;
-        return `<button type="button" class="ma-tab ${mode}${on ? ' active' : ''}" role="tab" aria-selected="${on}" onclick="maSetMode('${mode}')" title="${title}">${maIcon(icon, 'font-size:14px')} ${label}</button>`;
+        return `<md-filter-chip data-seg class="ma-tab ${mode}${on ? ' active' : ''}" label="${label}" onclick="maSetMode('${mode}')" title="${title}"><md-icon slot="icon">${icon}</md-icon></md-filter-chip>`;
     };
     return tab('ma', 'badge', 'Mitarbeiter', 'Zeiten der Mitarbeiter — Freigabe geht in die Mitarbeiter-App')
         + tab('kunde', 'apartment', 'Kunde', 'Werte für den Kunden — Freigabe geht in den Leistungsnachweis (Bestellungen)');

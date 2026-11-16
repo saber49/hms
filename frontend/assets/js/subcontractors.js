@@ -689,13 +689,13 @@ function _nuMarkError(input, msg) {
 }
 
 function validateNuEmail(input) {
-    const v = (input.value || '').trim();
+    const v = String(input.value ?? '').trim();
     const ok = !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     _nuMarkError(input, ok ? '' : 'Ungültige E-Mail-Adresse');
 }
 
 function validateNuPlz(input) {
-    const v = (input.value || '').trim();
+    const v = String(input.value ?? '').trim();
     const ok = !v || /^\d{4,5}$/.test(v);
     _nuMarkError(input, ok ? '' : '4–5 Ziffern erwartet');
 }
@@ -719,7 +719,7 @@ async function saveSub(id) {
     const anschriftRadio = [...document.querySelectorAll('md-radio[name="f_anschrift_typ"]')].find(r => r.checked);
 
     const data = {
-        firmenname: (document.getElementById('f_firmenname').value || '').trim(),
+        firmenname: String(document.getElementById('f_firmenname').value ?? '').trim(),
         ansprechpartner: document.getElementById('f_ansprechpartner').value || null,
         telefon_email: null,
         bereich: (typeof mselPrimary === 'function') ? mselPrimary('f_nu_bereiche') : null,
@@ -920,8 +920,8 @@ async function loadNuDocs(nuId) {
                     ${statusBadge}
                 </div>
                 <div class="doc-actions">
-                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}')" title="Anzeigen">${custIcon('visibility', 'font-size:14px')}</md-outlined-button>
-                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}', true)" title="Herunterladen">${custIcon('download', 'font-size:14px')}</md-outlined-button>
+                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}')" title="Anzeigen"><md-icon slot="icon">visibility</md-icon></md-outlined-button>
+                    <md-outlined-button class="md-btn-sm" onclick="hmsOpenFile('${hmsFileArg(d.dateipfad)}', true)" title="Herunterladen"><md-icon slot="icon">download</md-icon></md-outlined-button>
                     <md-icon-button class="danger" onclick="deleteNuDoc(${d.id},'${d.nu_id}')" title="Löschen"><md-icon>delete</md-icon></md-icon-button>
                 </div>
             </div>

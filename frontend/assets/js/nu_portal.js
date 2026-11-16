@@ -161,10 +161,10 @@ async function nuLoadShifts() {
     const content = document.getElementById('nuContent');
     content.innerHTML = `
         <div class="nu-week-nav">
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(-1)"><i class="material-symbols-outlined">chevron_left</i></button>
+            <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(-1)"><md-icon slot="icon">chevron_left</md-icon></md-outlined-button>
             <span class="nu-week-label">${nuFormatWeekLabel(nuWeekStart)}</span>
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(1)"><i class="material-symbols-outlined">chevron_right</i></button>
-            <button class="nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentWeek()">Diese Woche</button>
+            <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeWeek(1)"><md-icon slot="icon">chevron_right</md-icon></md-outlined-button>
+            <md-filled-button class="md-btn-sm nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentWeek()">Diese Woche</md-filled-button>
         </div>
         <div id="nuShiftsList"><div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade Einsätze...</p></div></div>
     `;
@@ -228,8 +228,8 @@ async function nuLoadShifts() {
             <div class="nu-shift-accept-bar">
                 <div class="nu-shift-accept-msg"><i class="material-symbols-outlined">notifications</i> Neue Schichtanfrage — bitte bestätigen oder ablehnen</div>
                 <div class="nu-shift-accept-actions">
-                    <button class="nu-btn nu-btn-success" onclick="nuAcceptShift('${task.einsatz_id}')"><i class="material-symbols-outlined">check</i> Annehmen</button>
-                    <button class="nu-btn nu-btn-danger" onclick="nuRejectShift('${task.einsatz_id}')"><i class="material-symbols-outlined">close</i> Ablehnen</button>
+                    <md-filled-button class="md-btn-success nu-btn nu-btn-success" onclick="nuAcceptShift('${task.einsatz_id}')"><md-icon slot="icon">check</md-icon>Annehmen</md-filled-button>
+                    <md-filled-button class="md-btn-danger nu-btn nu-btn-danger" onclick="nuRejectShift('${task.einsatz_id}')"><md-icon slot="icon">close</md-icon>Ablehnen</md-filled-button>
                 </div>
             </div>` : ''}`;
 
@@ -260,8 +260,8 @@ async function nuLoadShifts() {
                     <td>${nuEscape(pos.bemerkung || '–')}</td>
                     <td>
                         ${isPending ? '<span style="color:var(--nu-gray-400);font-size:0.75rem">Erst annehmen</span>' : (task.hms_bestaetigt !== 'ja' ? `
-                        <button class="nu-btn-icon success" onclick="nuOpenAssign(${pos.id}, '${nuEscape(pos.position_name)}', ${pos.anzahl}, ${pos.zugewiesen || 0})" title="Mitarbeiter zuweisen"><i class="material-symbols-outlined">person_add</i></button>
-                        ${zuweisungen.length > 0 ? `<button class="nu-btn-icon danger" onclick="nuManageAssigned(${pos.id}, '${nuEscape(pos.position_name)}')" title="Zuweisungen verwalten"><i class="material-symbols-outlined">manage_accounts</i></button>` : ''}
+                        <md-icon-button class="md-icon-success nu-btn-icon success" onclick="nuOpenAssign(${pos.id}, '${nuEscape(pos.position_name)}', ${pos.anzahl}, ${pos.zugewiesen || 0})" title="Mitarbeiter zuweisen"><md-icon>person_add</md-icon></md-icon-button>
+                        ${zuweisungen.length > 0 ? `<md-icon-button class="md-icon-danger nu-btn-icon danger" onclick="nuManageAssigned(${pos.id}, '${nuEscape(pos.position_name)}')" title="Zuweisungen verwalten"><md-icon>manage_accounts</md-icon></md-icon-button>` : ''}
                         ` : '<span style="color:var(--nu-gray-400);font-size:0.75rem">Gesperrt</span>')}
                     </td>
                 </tr>`;
@@ -345,7 +345,7 @@ async function nuOpenPositionManager(positionId) {
                     <div class="nu-worker-name">${nuEscape(name)}</div>
                     <div class="nu-worker-meta">${nuEscape(w.personal_nr || '')}${w.qualifikation ? ' · ' + nuEscape(w.qualifikation) : ''}</div>
                 </div>
-                <button class="nu-btn nu-btn-outline nu-btn-sm" style="color: var(--md-sys-color-error);border-color: var(--md-sys-color-error)" onclick="nuDoUnassign(${positionId}, ${w.nu_mitarbeiter_id})"><i class="material-symbols-outlined">person_remove</i> Entfernen</button>
+                <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" style="color: var(--md-sys-color-error);border-color: var(--md-sys-color-error)" onclick="nuDoUnassign(${positionId}, ${w.nu_mitarbeiter_id})"><md-icon slot="icon">person_remove</md-icon>Entfernen</md-outlined-button>
             </div>`;
         });
     }
@@ -371,14 +371,14 @@ async function nuOpenPositionManager(positionId) {
                         <div class="nu-worker-name">${nuEscape(name)}</div>
                         <div class="nu-worker-meta">${nuEscape(w.personal_nr || '')}${w.qualifikation ? ' · ' + nuEscape(w.qualifikation) : ''}</div>
                     </div>
-                    <button class="nu-btn nu-btn-success nu-btn-sm" onclick="nuDoAssign(${positionId}, ${w.id})"><i class="material-symbols-outlined">add</i> Zuweisen</button>
+                    <md-filled-button class="md-btn-success md-btn-sm nu-btn nu-btn-success nu-btn-sm" onclick="nuDoAssign(${positionId}, ${w.id})"><md-icon slot="icon">add</md-icon>Zuweisen</md-filled-button>
                 </div>`;
             });
         }
         body += '</div>';
     }
 
-    nuOpenModal('Position verwalten', body, `<button class="nu-btn nu-btn-outline" onclick="nuCloseModal()">Schließen</button>`);
+    nuOpenModal('Position verwalten', body, `<md-outlined-button class="nu-btn nu-btn-outline" onclick="nuCloseModal()">Schließen</md-outlined-button>`);
 }
 
 function nuFilterAssignList() {
@@ -420,7 +420,7 @@ async function nuLoadWorkers() {
         <div class="nu-card">
             <div class="nu-card-header">
                 <h3><i class="material-symbols-outlined">group</i> Meine Mitarbeiter</h3>
-                <button class="nu-btn nu-btn-primary" onclick="nuOpenWorkerModal()"><i class="material-symbols-outlined">add</i> Neuer Mitarbeiter</button>
+                <md-filled-button class="nu-btn nu-btn-primary" onclick="nuOpenWorkerModal()"><md-icon slot="icon">add</md-icon>Neuer Mitarbeiter</md-filled-button>
             </div>
             <div class="nu-card-body no-pad" id="nuWorkersList">
                 <div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade...</p></div>
@@ -476,8 +476,8 @@ async function nuLoadWorkers() {
                 </div>
             </div>
             <div class="nu-wcard-actions">
-                <button class="nu-btn-icon" onclick="nuOpenWorkerModal(${w.id})" title="Bearbeiten"><i class="material-symbols-outlined">edit</i></button>
-                <button class="nu-btn-icon danger" onclick="nuDeleteWorker(${w.id}, '${nuEscape(name)}')" title="Löschen"><i class="material-symbols-outlined">delete</i></button>
+                <md-icon-button class="nu-btn-icon" onclick="nuOpenWorkerModal(${w.id})" title="Bearbeiten"><md-icon>edit</md-icon></md-icon-button>
+                <md-icon-button class="md-icon-danger nu-btn-icon danger" onclick="nuDeleteWorker(${w.id}, '${nuEscape(name)}')" title="Löschen"><md-icon>delete</md-icon></md-icon-button>
             </div>
         </div>`;
     });
@@ -523,8 +523,8 @@ async function nuOpenWorkerModal(id = null) {
                     ${id ? `
                     <input type="file" id="nuw_photo_input" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="nuUploadPhoto(${id})">
                     <div class="nu-photo-actions">
-                        <button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="document.getElementById('nuw_photo_input').click()"><i class="material-symbols-outlined">photo_camera</i> Bild ändern</button>
-                        ${w.foto ? `<button class="nu-btn nu-btn-outline nu-btn-sm" type="button" onclick="nuDeletePhoto(${id})"><i class="material-symbols-outlined">delete</i></button>` : ''}
+                        <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="document.getElementById('nuw_photo_input').click()"><md-icon slot="icon">photo_camera</md-icon>Bild ändern</md-outlined-button>
+                        ${w.foto ? `<md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="nuDeletePhoto(${id})"><md-icon slot="icon">delete</md-icon></md-outlined-button>` : ''}
                     </div>` : ''}
                 </div>
                 ${id ? `
@@ -611,13 +611,13 @@ async function nuOpenWorkerModal(id = null) {
                     <div class="nu-form-group"><label>Qualifikation</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_qualifikation" value="${nuEscape(w.qualifikation || '')}" placeholder="z.B. Erste Hilfe, Staplerschein"></md-outlined-text-field></div>
                     <div class="nu-form-group"><label>Skills</label><md-outlined-text-field type="text" class="nu-form-control" id="nuw_skills" value="${nuEscape(w.skills || '')}" placeholder="z.B. Englisch, Brandschutz"></md-outlined-text-field></div>
                 </div>
-                <div class="nu-form-group"><label>Bemerkung</label><textarea class="nu-form-control" id="nuw_bemerkung" rows="2">${nuEscape(w.bemerkung || '')}</textarea></div>
+                <div class="nu-form-group"><label>Bemerkung</label><md-outlined-text-field type="textarea" class="nu-form-control" id="nuw_bemerkung" rows="2" value="${nuEscape(w.bemerkung || '')}"></md-outlined-text-field></div>
             </div>
         </div>
     `;
     const footer = `
-        <button class="nu-btn nu-btn-outline" onclick="nuCloseModal()">Abbrechen</button>
-        <button class="nu-btn nu-btn-primary" onclick="nuSaveWorker(${id || 'null'})">${id ? 'Aktualisieren' : 'Erstellen'}</button>
+        <md-outlined-button class="nu-btn nu-btn-outline" onclick="nuCloseModal()">Abbrechen</md-outlined-button>
+        <md-filled-button class="nu-btn nu-btn-primary" onclick="nuSaveWorker(${id || 'null'})">${id ? 'Aktualisieren' : 'Erstellen'}</md-filled-button>
     `;
     nuOpenModal(id ? 'Mitarbeiter bearbeiten' : 'Neuer Mitarbeiter', body, footer, 'wide');
 }
@@ -760,10 +760,10 @@ async function nuLoadHistory() {
     const content = document.getElementById('nuContent');
     content.innerHTML = `
         <div class="nu-week-nav">
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(-1)"><i class="material-symbols-outlined">chevron_left</i></button>
+            <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(-1)"><md-icon slot="icon">chevron_left</md-icon></md-outlined-button>
             <span class="nu-week-label">${NU_MONTH_NAMES[nuHistoryMonat - 1]} ${nuHistoryJahr}</span>
-            <button class="nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(1)"><i class="material-symbols-outlined">chevron_right</i></button>
-            <button class="nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentMonth()">Aktueller Monat</button>
+            <md-outlined-button class="md-btn-sm nu-btn nu-btn-outline nu-btn-sm" onclick="nuChangeHistoryMonth(1)"><md-icon slot="icon">chevron_right</md-icon></md-outlined-button>
+            <md-filled-button class="md-btn-sm nu-btn nu-btn-primary nu-btn-sm" onclick="nuGoCurrentMonth()">Aktueller Monat</md-filled-button>
         </div>
         <div id="nuHistoryList"><div class="nu-empty"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress><p>Lade Auftragshistorie...</p></div></div>
     `;
@@ -844,7 +844,7 @@ function nuOpenModal(title, body, footer, size) {
         overlay = document.createElement('div');
         overlay.id = 'nuModalOverlay';
         overlay.className = 'nu-modal-overlay';
-        overlay.innerHTML = `<div class="nu-modal"><div class="nu-modal-header"><h3 id="nuModalTitle"></h3><button class="nu-modal-close" onclick="nuCloseModal()">&times;</button></div><div class="nu-modal-body" id="nuModalBody"></div><div class="nu-modal-footer" id="nuModalFooter"></div></div>`;
+        overlay.innerHTML = `<div class="nu-modal"><div class="nu-modal-header"><h3 id="nuModalTitle"></h3><md-icon-button class="nu-modal-close" onclick="nuCloseModal()" title="Schließen" aria-label="Schließen"><md-icon>close</md-icon></md-icon-button></div><div class="nu-modal-body" id="nuModalBody"></div><div class="nu-modal-footer" id="nuModalFooter"></div></div>`;
         document.body.appendChild(overlay);
     }
     document.getElementById('nuModalTitle').textContent = title;

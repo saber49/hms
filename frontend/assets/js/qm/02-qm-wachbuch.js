@@ -287,12 +287,12 @@ function qmEintragDialog(refId = null) {
     openModal(ref ? `Berichtigung zu #${ref.nr}` : 'Eintrag aus dem Büro', `
         <div class="crm-form">
             ${ref ? `<div class="crm-banner">${qmIcon('info')} Der ursprüngliche Eintrag bleibt durchgestrichen sichtbar: „${qmE((ref.text || ref.art_label).slice(0, 160))}“</div>`
-                : `<label class="crm-field">Art<select id="qe_art" class="crm-input">${qmSelectOptions(arten, 'notiz')}</select></label>
-                   <label class="crm-field">Datum<input id="qe_datum" type="date" class="crm-input" value="${qmE(qm.wb.tag || qmHeute())}"></label>
-                   <label class="crm-field">Ort<input id="qe_ort" class="crm-input" maxlength="200"></label>`}
-            <label class="crm-field">${ref ? 'Richtigstellung *' : 'Text *'}<textarea id="qe_text" class="crm-input" rows="4" maxlength="4000" data-f="text"></textarea></label>
+                : `<md-outlined-select class="crm-fld" label="Art" id="qe_art">${qmSelectOptions(arten, 'notiz')}</md-outlined-select>
+                   <md-outlined-text-field class="crm-fld" label="Datum" id="qe_datum" type="date" value="${qmE(qm.wb.tag || qmHeute())}"></md-outlined-text-field>
+                   <md-outlined-text-field class="crm-fld" label="Ort" type="text" id="qe_ort" data-max="200"></md-outlined-text-field>`}
+            <md-outlined-text-field class="crm-fld" label="${ref ? 'Richtigstellung *' : 'Text *'}" type="textarea" id="qe_text" rows="4" maxlength="4000" data-f="text"></md-outlined-text-field>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qeSave" onclick="qmEintragSpeichern(${refId || 'null'})">${qmIcon('save')} Speichern</button>`);
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qeSave" onclick="qmEintragSpeichern(${refId || 'null'})"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
 }
 
 async function qmEintragSpeichern(refId) {

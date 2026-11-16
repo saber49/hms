@@ -245,11 +245,11 @@ async function renderLager() {
         <div class="data-bento">${bentoHtml}
         </div>
 
-        <div class="lg-tabs">
-            <button class="lg-tab ${_lgTab === 'artikel' ? 'active' : ''}" onclick="lgSetTab('artikel')">${lgIcon('inventory_2')} Artikel</button>
-            <button class="lg-tab ${_lgTab === 'ausgaben' ? 'active' : ''}" onclick="lgSetTab('ausgaben')">${lgIcon('logout')} Ausgaben <span class="lg-tab-count" id="lgAusgabenCount"></span></button>
-            <button class="lg-tab ${_lgTab === 'verlauf' ? 'active' : ''}" onclick="lgSetTab('verlauf')">${lgIcon('history')} Verlauf</button>
-        </div>
+        <md-tabs class="lg-tabs">
+            <md-secondary-tab data-seg inline-icon class="lg-tab ${_lgTab === 'artikel' ? 'active' : ''}" onclick="lgSetTab('artikel')"><md-icon slot="icon">inventory_2</md-icon>Artikel</md-secondary-tab>
+            <md-secondary-tab data-seg inline-icon class="lg-tab ${_lgTab === 'ausgaben' ? 'active' : ''}" onclick="lgSetTab('ausgaben')"><md-icon slot="icon">logout</md-icon>Ausgaben <span class="lg-tab-count" id="lgAusgabenCount"></span></md-secondary-tab>
+            <md-secondary-tab data-seg inline-icon class="lg-tab ${_lgTab === 'verlauf' ? 'active' : ''}" onclick="lgSetTab('verlauf')"><md-icon slot="icon">history</md-icon>Verlauf</md-secondary-tab>
+        </md-tabs>
 
         <div class="data-toolbar lg-pane-only" data-pane="artikel" ${_lgTab !== 'artikel' ? 'style="display:none"' : ''}>
             <div class="data-toolbar-left">
@@ -368,7 +368,7 @@ function lgSetTab(tab, niedrigOnly) {
 function lgRenderRows() {
     const tbody = document.getElementById('lgArtikelTable');
     if (!tbody) return;
-    const q = (document.getElementById('lgSearch')?.value || '').trim().toLowerCase();
+    const q = String(document.getElementById('lgSearch')?.value ?? '').trim().toLowerCase();
     const kat = lgSelectedKat();
     const nurNiedrig = document.getElementById('lgNiedrig')?.selected;
     const editable = typeof canEdit === 'function' ? canEdit('lager') : false;
@@ -508,7 +508,7 @@ async function lgRefreshAusgaben() {
 
 function lgExportCsv() {
     const kat = lgSelectedKat();
-    const q = (document.getElementById('lgSearch')?.value || '').trim().toLowerCase();
+    const q = String(document.getElementById('lgSearch')?.value ?? '').trim().toLowerCase();
     const nurNiedrig = document.getElementById('lgNiedrig')?.selected;
     const rows = _lgArtikel.filter(a => {
         if (kat && String(a.kategorie_id) !== String(kat)) return false;
@@ -831,7 +831,7 @@ async function openLgAusgabeDialog(artikelId) {
 
 let _lgMaSelected = null;
 function lgRenderMaList(artikelId) {
-    const q = (document.getElementById('f_lg_asearch')?.value || '').trim().toLowerCase();
+    const q = String(document.getElementById('f_lg_asearch')?.value ?? '').trim().toLowerCase();
     const a = _lgArtikel.find(x => x.artikel_id === artikelId);
     const list = document.getElementById('lgMaList');
     if (!list) return;
@@ -973,7 +973,7 @@ function openLgKatForm(id = null, name = '', icon = 'category', farbe = '') {
         `<div class="form-group"><md-outlined-text-field id="f_lg_kname" label="Name *" value="${escapeHtml(name)}"></md-outlined-text-field></div>
          <div class="lg-pick-label">Symbol</div><div class="lg-pick-row" id="lgIconPicks" data-sel="${icon}">${iconBtns}</div>
          <div class="lg-pick-label">Farbe</div><div class="lg-pick-row" id="lgFarbPicks" data-sel="${farbe}">${farbBtns}</div>`,
-        `<md-outlined-button onclick="openLgKategorien()">${lgIcon('arrow_back', 'font-size:16px')} Zurück</md-outlined-button>
+        `<md-outlined-button onclick="openLgKategorien()"><md-icon slot="icon">arrow_back</md-icon>Zurück</md-outlined-button>
          <md-filled-button onclick="saveLgKat(${id || 'null'})"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
 }
 

@@ -44,8 +44,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.ml-account-label strong { font-size: 16px; color: var(--text); }
-.ml-account-label small { font-size: 12px; color: var(--text-muted); }
+.ml-account-label strong { font-size: var(--md-sys-typescale-body-large-size); color: var(--text); }
+.ml-account-label small { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); }
 md-outlined-select.ml-account-select {
     flex: 1;
     min-width: 0;
@@ -74,7 +74,7 @@ md-outlined-select.ml-account-select {
     background: var(--white);
     color: var(--text-muted);
     font: inherit;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     cursor: pointer;
     transition: background .15s, color .15s, border-color .15s;
@@ -91,7 +91,7 @@ md-outlined-select.ml-account-select {
     border-radius: var(--md-sys-shape-corner-full);
     background: var(--accent);
     color: #fff;
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     text-align: center;
 }
@@ -117,7 +117,7 @@ md-outlined-select.ml-account-select {
     outline: 0;
     background: none;
     font: inherit;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text);
 }
 .ml-search input::-webkit-search-cancel-button { display: none; }
@@ -155,7 +155,7 @@ md-outlined-select.ml-account-select {
     background: var(--md-sys-color-primary-container);
     box-shadow: var(--shadow);
 }
-.ml-row .wm-thread-avatar { width: 38px; height: 38px; font-size: 13px; }
+.ml-row .wm-thread-avatar { width: 38px; height: 38px; font-size: var(--md-sys-typescale-body-small-size); }
 .ml-row-body { flex: 1; min-width: 0; }
 .ml-row-top {
     display: flex;
@@ -164,7 +164,7 @@ md-outlined-select.ml-account-select {
     gap: 8px;
 }
 .ml-row-from {
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--text);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -172,13 +172,13 @@ md-outlined-select.ml-account-select {
 }
 .ml-row-unread .ml-row-from,
 .ml-row-unread .ml-row-subject { font-weight: 700; }
-.ml-row-time { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.ml-row-time { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); white-space: nowrap; }
 .ml-row-unread .ml-row-time { color: var(--accent); font-weight: 600; }
 .ml-row-subject {
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text);
     margin-top: 2px;
     min-width: 0;
@@ -186,7 +186,7 @@ md-outlined-select.ml-account-select {
 .ml-row-subject span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ml-row-subject .material-symbols-outlined { color: var(--text-muted); flex-shrink: 0; }
 .ml-row-preview {
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -221,7 +221,7 @@ md-outlined-select.ml-account-select {
 .ml-subject {
     flex: 1;
     margin: 4px 0 0;
-    font-size: 18px;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
     color: var(--text);
     line-height: 1.35;
@@ -233,11 +233,11 @@ md-outlined-select.ml-account-select {
     gap: 12px;
     margin-top: 14px;
 }
-.ml-meta-text { flex: 1; min-width: 0; font-size: 13px; }
+.ml-meta-text { flex: 1; min-width: 0; font-size: var(--md-sys-typescale-body-small-size); }
 .ml-meta-from { color: var(--text); overflow-wrap: anywhere; }
 .ml-meta-from span { color: var(--text-muted); }
 .ml-meta-to { color: var(--text-muted); margin-top: 2px; overflow-wrap: anywhere; }
-.ml-meta-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.ml-meta-date { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); white-space: nowrap; }
 .ml-atts {
     display: flex;
     flex-wrap: wrap;
@@ -256,7 +256,7 @@ md-outlined-select.ml-account-select {
     background: var(--gray-50, var(--white));
     color: var(--text);
     font: inherit;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     cursor: pointer;
     transition: background .15s, border-color .15s;
 }
@@ -283,7 +283,7 @@ md-outlined-select.ml-account-select {
     border-radius: var(--md-sys-shape-corner-medium);
     background: var(--md-sys-color-secondary-container, var(--gray-100));
     color: var(--md-sys-color-on-secondary-container, var(--text));
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
 }
 .ml-banner > span:not(.material-symbols-outlined) { flex: 1; }
 .ml-banner .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
@@ -302,7 +302,7 @@ md-outlined-select.ml-account-select {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
 }
-.ml-empty h3 { margin: 12px 0 8px; font-size: 18px; color: var(--text); }
+.ml-empty h3 { margin: 12px 0 8px; font-size: var(--md-sys-typescale-body-large-size); color: var(--text); }
 .ml-empty p { margin: 0 0 20px; color: var(--text-muted); line-height: 1.5; }
 .ml-empty-icon {
     width: 64px;
@@ -341,7 +341,7 @@ md-dialog.ml-acc-dialog {
     --md-outlined-text-field-focus-outline-color: var(--accent);
     --md-outlined-select-text-field-container-shape: 10px;
 }
-.ml-compose-from { font-size: 13px; color: var(--text-muted); }
+.ml-compose-from { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); }
 .ml-compose-from strong { color: var(--text); }
 .ml-ccrow {
     display: grid;
@@ -353,7 +353,7 @@ md-dialog.ml-acc-dialog {
 #mlCcToggle md-text-button { --md-text-button-label-text-size: 13px; }
 .ml-hint,
 .ml-muted {
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     line-height: 1.5;
 }
@@ -387,11 +387,11 @@ md-dialog.ml-acc-dialog {
 }
 .ml-acc-row .wm-thread-avatar { width: 38px; height: 38px; }
 .ml-acc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.ml-acc-info strong { font-size: 14px; color: var(--text); overflow: hidden; text-overflow: ellipsis; }
-.ml-acc-info small { font-size: 12px; color: var(--text-muted); }
+.ml-acc-info strong { font-size: var(--md-sys-typescale-body-medium-size); color: var(--text); overflow: hidden; text-overflow: ellipsis; }
+.ml-acc-info small { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); }
 .ml-acc-info .ml-acc-error { color: var(--md-sys-color-error, var(--md-sys-color-error)); }
 .ml-connect { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
-.ml-connect h4 { margin: 0; font-size: 15px; color: var(--text); }
+.ml-connect h4 { margin: 0; font-size: var(--md-sys-typescale-body-medium-size); color: var(--text); }
 .ml-connect p { margin: 0; }
 .ml-connect-row { display: flex; align-items: center; gap: 8px; }
 .ml-connect-row md-outlined-text-field { flex: 1; }
@@ -399,7 +399,7 @@ md-dialog.ml-acc-dialog {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--text);
 }
 .ml-connect-email strong { flex: 1; overflow: hidden; text-overflow: ellipsis; }
@@ -420,7 +420,7 @@ md-dialog.ml-acc-dialog {
     height: 46px;
     border-radius: var(--md-sys-shape-corner-medium);
     font: inherit;
-    font-size: 15px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     cursor: pointer;
     transition: box-shadow .15s, background .15s;

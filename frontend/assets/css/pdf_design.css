@@ -54,7 +54,7 @@ to { opacity: 1; transform: translateY(0); }
     border-bottom: 1px solid var(--gray-200);
 }
 .pdfd-preview-bar h3 {
-    font-size: 0.92rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--primary);
     margin: 0;
@@ -86,7 +86,7 @@ to { opacity: 1; transform: translateY(0); }
     padding: 60px 20px;
     text-align: center;
     color: var(--gray-500);
-    font-size: 0.9rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
 }
 .pdfd-preview-loading i { margin-right: 8px; color: var(--accent); }
 /* ── Order picker (Bestellungen card → modal) ────────────────────── */
@@ -112,7 +112,7 @@ to { opacity: 1; transform: translateY(0); }
     padding: 10px 12px 10px 34px;
     border: 1px solid var(--gray-300);
     border-radius: var(--radius-sm);
-    font-size: 0.875rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     background: var(--white);
     transition: var(--transition);
 }
@@ -133,7 +133,7 @@ to { opacity: 1; transform: translateY(0); }
 .pdfd-picker-empty {
     text-align: center;
     color: var(--gray-500);
-    font-size: 0.9rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     padding: 40px 16px;
 }
 .pdfd-picker-loading i { margin-right: 8px; color: var(--accent); }
@@ -162,7 +162,7 @@ to { opacity: 1; transform: translateY(0); }
 .pdfd-picker-item-id {
     flex: 0 0 auto;
     font-weight: 700;
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--primary);
     white-space: nowrap;
 }
@@ -176,14 +176,14 @@ to { opacity: 1; transform: translateY(0); }
 }
 .pdfd-picker-item-kunde {
     font-weight: 600;
-    font-size: 0.88rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--gray-800);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 .pdfd-picker-item-obj {
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--gray-500);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -196,14 +196,14 @@ to { opacity: 1; transform: translateY(0); }
     gap: 8px;
 }
 .pdfd-picker-period {
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--gray-600);
     white-space: nowrap;
 }
 .pdfd-picker-item-arrow {
     flex: 0 0 auto;
     color: var(--gray-300);
-    font-size: 0.8rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     transition: var(--transition);
 }
 .pdfd-picker-item:hover .pdfd-picker-item-arrow {
@@ -211,7 +211,7 @@ to { opacity: 1; transform: translateY(0); }
     transform: translateX(3px);
 }
 .pdfd-ord-status {
-    font-size: 0.68rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -251,13 +251,13 @@ to { opacity: 1; transform: translateY(0); }
     display: block;
 }
 .pdfd-up-title {
-    font-size: 0.92rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--gray-800);
     margin-bottom: 4px;
 }
 .pdfd-up-hint {
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--gray-500);
 }
 .pdfd-up-file {
@@ -290,13 +290,13 @@ to { opacity: 1; transform: translateY(0); }
     gap: 2px;
 }
 .pdfd-up-info strong {
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--gray-800);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.pdfd-up-info span { font-size: 0.75rem; color: var(--gray-500); }
+.pdfd-up-info span { font-size: var(--md-sys-typescale-body-small-size); color: var(--gray-500); }
 .pdfd-up-remove {
     flex: 0 0 auto;
     width: 30px;
@@ -310,7 +310,7 @@ to { opacity: 1; transform: translateY(0); }
 }
 .pdfd-up-remove:hover { background: var(--md-sys-color-error-container); color: var(--md-sys-color-error); }
 .pdfd-up-status {
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     min-height: 1.1em;
 }
 .pdfd-up-status.is-busy { color: var(--purple, var(--md-sys-color-primary)); }
@@ -320,7 +320,7 @@ to { opacity: 1; transform: translateY(0); }
     align-items: flex-start;
     gap: 8px;
     margin: 0;
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     line-height: 1.5;
     color: var(--gray-500);
 }
@@ -353,7 +353,7 @@ md-dialog.pdfd-context {
     }
 }
 md-dialog.pdfd-context [slot="headline"] {
-    font-size: 1.05rem;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
 }
 /* --- Picker search: MD3 text field --- */
@@ -424,19 +424,19 @@ md-dialog.pdfd-context [slot="headline"] {
    with where it is used, its current look and a single "Bearbeiten". */
 .pdfx-lead {
     margin: 4px 0 14px;
-    font-size: 0.95rem;
+    font-size: var(--md-sys-typescale-body-large-size);
     color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary)));
 }
 .pdfx-steps {
     list-style: none; margin: 0 0 20px; padding: 0;
     display: flex; flex-wrap: wrap; gap: 8px 20px;
-    font-size: 0.85rem; color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary)));
+    font-size: var(--md-sys-typescale-body-medium-size); color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary)));
 }
 .pdfx-steps li { display: flex; align-items: center; gap: 8px; }
 .pdfx-steps span {
     width: 22px; height: 22px; border-radius: 50%; flex: none;
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 700;
+    font-size: var(--md-sys-typescale-body-small-size); font-weight: 700;
     background: var(--md-sys-color-secondary-container, var(--md-sys-color-secondary-container));
     color: var(--md-sys-color-on-secondary-container, var(--md-sys-color-on-primary-container));
 }
@@ -460,16 +460,16 @@ md-dialog.pdfd-context [slot="headline"] {
 }
 .pdfx-icon .material-symbols-outlined { font-size: 24px; }
 .pdfx-main { min-width: 0; }
-.pdfx-title { font-size: 1.05rem; font-weight: 600; color: var(--md-sys-color-on-surface, var(--gray-800, var(--md-sys-color-on-primary-container))); }
-.pdfx-what { font-size: 0.85rem; margin-top: 2px; color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary))); }
+.pdfx-title { font-size: var(--md-sys-typescale-body-large-size); font-weight: 600; color: var(--md-sys-color-on-surface, var(--gray-800, var(--md-sys-color-on-primary-container))); }
+.pdfx-what { font-size: var(--md-sys-typescale-body-medium-size); margin-top: 2px; color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary))); }
 .pdfx-where {
     display: flex; align-items: center; gap: 4px; margin-top: 6px;
-    font-size: 0.78rem; color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary)));
+    font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary)));
 }
 .pdfx-state { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 150px; }
 .pdfx-chip {
     display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-small); font-size: 0.75rem; font-weight: 600;
+    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-small); font-size: var(--md-sys-typescale-body-small-size); font-weight: 600;
     background: var(--md-sys-color-surface-container-high, var(--gray-100, var(--md-sys-color-primary-container)));
     color: var(--md-sys-color-on-surface-variant, var(--gray-600, var(--md-sys-color-primary)));
 }
@@ -478,19 +478,19 @@ md-dialog.pdfd-context [slot="headline"] {
     color: var(--md-ext-color-on-success-container);
 }
 [data-theme="dark"] .pdfx-chip.is-custom { color: var(--md-ext-color-success-container); }
-.pdfx-look { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary))); }
+.pdfx-look { display: inline-flex; align-items: center; gap: 6px; font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary))); }
 .pdfx-look i { width: 12px; height: 12px; border-radius: 50%; background: var(--pdfx-c); display: inline-block; box-shadow: 0 0 0 1px var(--md-sys-color-outline-variant, var(--md-sys-color-primary-container)); }
 /* Dark theme: dark brand colours (e.g. navy) stay visible on the icon tile. */
 [data-theme="dark"] .pdfx-icon { background: color-mix(in srgb, var(--pdfx-c) 30%, var(--md-sys-color-surface-container-lowest) 12%); color: color-mix(in srgb, var(--pdfx-c) 45%, #ffffff); }
 .pdfx-btn {
     display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 18px;
-    border-radius: var(--md-sys-shape-corner-large); font-size: 0.875rem; font-weight: 500; white-space: nowrap;
+    border-radius: var(--md-sys-shape-corner-large); font-size: var(--md-sys-typescale-body-medium-size); font-weight: 500; white-space: nowrap;
     background: var(--md-sys-color-primary, var(--md-sys-color-primary)); color: var(--md-sys-color-on-primary, #fff);
 }
 .pdfx-row:hover .pdfx-btn { box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 25%, transparent); }
 .pdfx-note {
     display: flex; align-items: flex-start; gap: 6px; margin: 18px 2px 0;
-    font-size: 0.8rem; color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary)));
+    font-size: var(--md-sys-typescale-body-small-size); color: var(--md-sys-color-on-surface-variant, var(--gray-500, var(--md-sys-color-primary)));
 }
 @media (max-width: 720px) {
 .pdfx-row { grid-template-columns: auto 1fr; gap: 12px 14px; padding: 16px; }

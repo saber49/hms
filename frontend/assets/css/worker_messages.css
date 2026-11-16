@@ -17,12 +17,12 @@
     padding: 0 0 12px;
 }
 .wm-inbox-header h3 {
-    font-size: 18px;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
     margin: 0;
 }
 .wm-unread-total {
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--accent);
 }
@@ -44,7 +44,7 @@
     border: none;
     background: var(--gray-100, var(--gray-100));
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -84,7 +84,7 @@
     border-radius: 50%;
     background: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-on-primary-container);
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -109,16 +109,16 @@
 }
 .wm-thread-name {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--text);
 }
 .wm-thread-time {
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     white-space: nowrap;
 }
 .wm-thread-preview {
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -128,7 +128,7 @@
 .wm-thread-badge {
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     min-width: 20px;
     height: 20px;
@@ -161,16 +161,16 @@
     background: none;
     border: none;
     color: inherit;
-    font-size: 18px;
+    font-size: var(--md-sys-typescale-body-large-size);
     cursor: pointer;
     padding: 4px;
 }
 .wm-chat-header-info strong {
     display: block;
-    font-size: 15px;
+    font-size: var(--md-sys-typescale-body-medium-size);
 }
 .wm-chat-header-info small {
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     opacity: 0.75;
 }
 .wm-chat-messages {
@@ -186,7 +186,7 @@
     max-width: 70%;
     padding: 10px 14px;
     border-radius: var(--md-sys-shape-corner-large);
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     line-height: 1.45;
     word-break: break-word;
 }
@@ -204,7 +204,7 @@
     box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 8%, transparent);
 }
 .wm-bubble-sender {
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     margin-bottom: 2px;
     opacity: 0.7;
@@ -213,7 +213,7 @@
     white-space: pre-wrap;
 }
 .wm-bubble-time {
-    font-size: 10px;
+    font-size: var(--md-sys-typescale-label-small-size);
     margin-top: 4px;
     opacity: 0.6;
     text-align: right;
@@ -231,7 +231,7 @@
     padding: 10px 16px;
     border: 1.5px solid var(--border);
     border-radius: var(--md-sys-shape-corner-large);
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-family: var(--font);
     color: var(--text);
     background: var(--gray-50);
@@ -249,7 +249,7 @@
     border: none;
     background: var(--accent);
     color: var(--md-sys-color-on-primary);
-    font-size: 16px;
+    font-size: var(--md-sys-typescale-body-large-size);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,14 +327,14 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
 }
 .wm-picker-name {
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--text);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 .wm-picker-meta {
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -344,7 +344,7 @@ md-dialog.wm-new-chat-dialog md-outlined-text-field.wm-picker-search {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 600;
     color: var(--md-sys-color-on-primary-container);
     background: var(--md-sys-color-primary-container);

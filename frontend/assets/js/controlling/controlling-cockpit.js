@@ -26,7 +26,7 @@ function ccLimit(id, rows) {
 function ccMoreBtn(id, total) {
     if (total <= CC_ROWS) return '';
     const open = !!CTRLC.expanded[id];
-    return `<div class="cc-more"><button class="chip" onclick="ccToggleRows('${id}')">${open ? 'Weniger anzeigen' : `Alle ${total} anzeigen`}</button></div>`;
+    return `<div class="cc-more"><md-text-button class="chip" onclick="ccToggleRows('${id}')">${open ? 'Weniger anzeigen' : `Alle ${total} anzeigen`}</md-text-button></div>`;
 }
 function ccToggleRows(id) {
     CTRLC.expanded[id] = !CTRLC.expanded[id];

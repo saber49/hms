@@ -45,17 +45,11 @@ async function renderAbsencesPage() {
     content.innerHTML = `
         <div class="ab-page" data-view="${_abView}">
             <div class="ab-toolbar">
-                <div class="ab-segments" role="tablist">
-                    <button class="ab-segment ${_abView === 'requests' ? 'active' : ''}" onclick="abSwitchView('requests')">
-                        ${abIcon('inbox')} Offene Anträge <span class="ab-segment-count" id="abReqCount"></span>
-                    </button>
-                    <button class="ab-segment ${_abView === 'calendar' ? 'active' : ''}" onclick="abSwitchView('calendar')">
-                        ${abIcon('calendar_month')} Teamkalender
-                    </button>
-                    <button class="ab-segment ${_abView === 'history' ? 'active' : ''}" onclick="abSwitchView('history')">
-                        ${abIcon('history')} Verlauf
-                    </button>
-                </div>
+                <md-tabs class="ab-segments">
+                    <md-secondary-tab data-seg inline-icon class="ab-segment ${_abView === 'requests' ? 'active' : ''}" onclick="abSwitchView('requests')"><md-icon slot="icon">inbox</md-icon>Offene Anträge <span class="ab-segment-count" id="abReqCount"></span></md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="ab-segment ${_abView === 'calendar' ? 'active' : ''}" onclick="abSwitchView('calendar')"><md-icon slot="icon">calendar_month</md-icon>Teamkalender</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="ab-segment ${_abView === 'history' ? 'active' : ''}" onclick="abSwitchView('history')"><md-icon slot="icon">history</md-icon>Verlauf</md-secondary-tab>
+                </md-tabs>
             </div>
             <div id="abBody"><div class="ph-loading" style="padding:60px;text-align:center">${abIcon('progress_activity')}</div></div>
         </div>
@@ -200,7 +194,7 @@ function abReject(id) {
 }
 
 async function abRejectConfirm(id) {
-    const grund = (document.getElementById('abRejectGrund' + id)?.value || '').trim();
+    const grund = String(document.getElementById('abRejectGrund' + id)?.value ?? '').trim();
     const r = await apiPost(AB_API + '/' + id + '/reject', { grund });
     if (r && r.success) {
         showToast('Antrag abgelehnt');
@@ -377,10 +371,10 @@ function abCalCardHtml(monthLabel, inner) {
                 <md-icon-button onclick="abCalNav(-1)" title="Vorheriger Monat"><md-icon>chevron_left</md-icon></md-icon-button>
                 <span class="ab-cal-month">${monthLabel}</span>
                 <md-icon-button onclick="abCalNav(1)" title="Nächster Monat"><md-icon>chevron_right</md-icon></md-icon-button>
-                <button type="button" class="ab-cal-todaybtn" onclick="abCalToday()">Heute</button>
+                <md-outlined-button class="ab-cal-todaybtn" onclick="abCalToday()">Heute</md-outlined-button>
                 <div class="ab-cal-mode" role="tablist">
-                    <button type="button" class="${_abCalMode === 'month' ? 'active' : ''}" onclick="abCalSetMode('month')">${abIcon('calendar_view_month')} Monat</button>
-                    <button type="button" class="${_abCalMode === 'rows' ? 'active' : ''}" onclick="abCalSetMode('rows')">${abIcon('view_timeline')} Mitarbeiter</button>
+                    <md-filter-chip data-seg label="Monat" class="${_abCalMode === 'month' ? 'active' : ''}" onclick="abCalSetMode('month')"><md-icon slot="icon">calendar_view_month</md-icon></md-filter-chip>
+                    <md-filter-chip data-seg label="Mitarbeiter" class="${_abCalMode === 'rows' ? 'active' : ''}" onclick="abCalSetMode('rows')"><md-icon slot="icon">view_timeline</md-icon></md-filter-chip>
                 </div>
                 <div class="ab-cal-legend">
                     ${Object.values(AB_KATEGORIEN).map(k => `<span class="ab-legend-item"><span class="ab-legend-dot" style="--kat-color:${k.color}"></span>${k.label}</span>`).join('')}

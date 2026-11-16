@@ -82,11 +82,11 @@ async function qmObjDetail(objId) {
             <div>
                 <div class="crm-card"><div class="crm-card-title">${qmIcon('tune')} QM-Einstellung des Objekts</div>
                     <div class="crm-form crm-pad">
-                        <label class="crm-switch-row"><input type="checkbox" id="qo_wb" ${cfg.wachbuch_aktiv ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}> ${qmE(qmLabel())} aktiv</label>
-                        <label class="crm-switch-row"><input type="checkbox" id="qo_foto" ${cfg.fotopflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}> Fotopflicht bei Vorkommnissen</label>
-                        <label class="crm-field">Zuständiger Objektleiter<select id="qo_ol" class="crm-input" ${darfCfg ? '' : 'disabled'}>${qmUserOptions(cfg.objektleiter_id, '— keiner —')}</select></label>
-                        <label class="crm-field">Empfänger der Tagesberichte (E-Mail, mehrere mit Komma)<input id="qo_mail" class="crm-input" data-f="bericht_empfaenger" value="${qmE(cfg.bericht_empfaenger || '')}" ${darfCfg ? '' : 'disabled'}></label>
-                        <label class="crm-field">Notfallkontakte<textarea id="qo_notfall" class="crm-input" rows="3" ${darfCfg ? '' : 'disabled'}>${qmE(cfg.notfallkontakte || '')}</textarea></label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_wb" ${cfg.wachbuch_aktiv ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> ${qmE(qmLabel())} aktiv</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_foto" ${cfg.fotopflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Fotopflicht bei Vorkommnissen</label>
+                        <md-outlined-select class="crm-fld" label="Zuständiger Objektleiter" id="qo_ol" ${darfCfg ? '' : 'disabled'}>${qmUserOptions(cfg.objektleiter_id, '— keiner —')}</md-outlined-select>
+                        <md-outlined-text-field class="crm-fld" label="Empfänger der Tagesberichte (E-Mail, mehrere mit Komma)" type="text" id="qo_mail" data-f="bericht_empfaenger" value="${qmE(cfg.bericht_empfaenger || '')}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
+                        <md-outlined-text-field class="crm-fld" label="Notfallkontakte" type="textarea" id="qo_notfall" rows="3" ${darfCfg ? '' : 'disabled'} value="${qmE(cfg.notfallkontakte || '')}"></md-outlined-text-field>
                         ${darfCfg ? `<div class="crm-form-actions"><md-filled-button onclick="qmObjCfgSpeichern('${qmE(objId)}')"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button></div>` : '<div class="crm-muted">Nur der QMB ändert diese Einstellung.</div>'}
                     </div></div>
             </div>
@@ -105,20 +105,20 @@ async function qmObjCfgSpeichern(objId) {
 
 // ---------- upload (spec §4: PDF ≤ 20 MB, 1–8 points à 140 chars) ----------
 function qmDaDialog(objId) {
-    const punkt = (v = '') => `<div class="qm-kurz-row"><input class="crm-input qm-kurz-in" maxlength="140" value="${qmE(v)}" placeholder="z. B. Ausweis jeder Person am Tor prüfen"><button type="button" class="crm-mini" onclick="this.parentElement.remove()">${qmIcon('close')}</button></div>`;
+    const punkt = (v = '') => `<div class="qm-kurz-row"><md-outlined-text-field class="crm-fld qm-kurz-in" type="text" data-max="140" value="${qmE(v)}" placeholder="z. B. Ausweis jeder Person am Tor prüfen"></md-outlined-text-field>${uiIconButton('close', { cls: 'crm-mini', title: 'Punkt entfernen', onclick: 'this.parentElement.remove()' })}</div>`;
     window._qmKurzPunkt = punkt;
     const freigabe = qm.opt.einstellungen?.da_freigabe_pflicht === '1' && !qmCan('da_freigeben');
     openModal('Neue Dienstanweisung', `
         <div class="crm-form">
-            <label class="crm-field">PDF (alle Seiten, max. 20 MB) *<input id="qd_pdf" type="file" accept="application/pdf" class="crm-input" data-f="pdf"></label>
-            <label class="crm-field">Gültig ab *<input id="qd_ab" type="date" class="crm-input" data-f="gueltig_ab" value="${qmHeute()}"></label>
+            ${uiFilePicker({ id: 'qd_pdf', label: 'PDF (alle Seiten, max. 20 MB) *', accept: 'application/pdf', attrs: 'data-f="pdf"' })}
+            <md-outlined-text-field class="crm-fld" label="Gültig ab *" id="qd_ab" type="date" data-f="gueltig_ab" value="${qmHeute()}"></md-outlined-text-field>
             <div class="crm-sec">Das Wichtigste (1–8 Punkte, je max. 140 Zeichen) — erscheint in der Mitarbeiter-App</div>
             <div id="qd_kurz" data-f="kurz">${punkt()}${punkt()}${punkt()}</div>
-            <button type="button" class="btn btn-outline" onclick="if(document.querySelectorAll('.qm-kurz-in').length<8)document.getElementById('qd_kurz').insertAdjacentHTML('beforeend', window._qmKurzPunkt())">${qmIcon('add')} Punkt</button>
+            <md-outlined-button onclick="if(document.querySelectorAll('.qm-kurz-in').length<8)document.getElementById('qd_kurz').insertAdjacentHTML('beforeend', window._qmKurzPunkt())"><md-icon slot="icon">add</md-icon>Punkt</md-outlined-button>
             <div class="crm-banner">${qmIcon('info')} ${freigabe ? 'Der Entwurf geht zur Freigabe an den QMB. Erst danach sehen ihn Mitarbeiter und Kunde.'
                 : 'Wird sofort veröffentlicht: neue Version, die alte kommt ins Archiv. Mitarbeiter (eingeplant oder in 90 Tagen dort tätig) bekommen eine Push-Nachricht, der Kunde eine E-Mail.'}</div>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qdSave" onclick="qmDaSpeichern('${qmE(objId)}')">${qmIcon('upload')} ${freigabe ? 'Zur Freigabe senden' : 'Veröffentlichen'}</button>`);
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qdSave" onclick="qmDaSpeichern('${qmE(objId)}')"><md-icon slot="icon">upload</md-icon>${freigabe ? 'Zur Freigabe senden' : 'Veröffentlichen'}</md-filled-button>`);
 }
 
 async function qmDaSpeichern(objId) {
@@ -142,10 +142,10 @@ function qmDaFreigabe(id, objId) {
     openModal('Dienstanweisung freigeben', `
         <div class="crm-form">
             <p>Bitte prüfen Sie die PDF vor der Freigabe. <a href="#" onclick="qmOpenPdf('${QM_API}/dienstanweisungen/${id}/pdf');return false">PDF öffnen</a></p>
-            <label class="crm-field">Begründung (nur bei Zurückweisen)<textarea id="qf_grund" class="crm-input" rows="3" data-f="grund"></textarea></label>
+            <md-outlined-text-field class="crm-fld" label="Begründung (nur bei Zurückweisen)" type="textarea" id="qf_grund" rows="3" data-f="grund"></md-outlined-text-field>
         </div>`,
-        `<button class="btn btn-outline" onclick="qmDaEntscheid(${id},'${qmE(objId)}','zurueckweisen')">${qmIcon('undo')} Zurückweisen</button>
-         <button class="btn btn-primary" onclick="qmDaEntscheid(${id},'${qmE(objId)}','freigeben')">${qmIcon('verified')} Freigeben &amp; veröffentlichen</button>`);
+        `<md-outlined-button onclick="qmDaEntscheid(${id},'${qmE(objId)}','zurueckweisen')"><md-icon slot="icon">undo</md-icon>Zurückweisen</md-outlined-button>
+         <md-filled-button onclick="qmDaEntscheid(${id},'${qmE(objId)}','freigeben')"><md-icon slot="icon">verified</md-icon>Freigeben &amp; veröffentlichen</md-filled-button>`);
 }
 
 async function qmDaEntscheid(id, objId, aktion) {

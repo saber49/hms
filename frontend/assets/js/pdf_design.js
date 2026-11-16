@@ -415,9 +415,7 @@ function pdfdRenderUploadPreview() {
                 <strong>${esc(_pdfdUpload.name)}</strong>
                 <span>${kb} KB</span>
             </div>
-            <button type="button" class="pdfd-up-remove" title="Entfernen" onclick="pdfdClearUpload()">
-                ${pdfdIcon('close', 'font-size:14px')}
-            </button>
+            <md-icon-button class="pdfd-up-remove" title="Entfernen" onclick="pdfdClearUpload()"><md-icon slot="icon">close</md-icon></md-icon-button>
         </div>`;
     const btn = document.getElementById('pdfdAnalyzeBtn');
     if (btn) btn.disabled = false;

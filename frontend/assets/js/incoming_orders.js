@@ -507,17 +507,17 @@ function beRenderPager() {
     if (!s.total) { el.innerHTML = ''; return; }
     const from = (s.page - 1) * s.perPage + 1;
     const to = Math.min(s.total, s.page * s.perPage);
-    const btn = (p, label, title, dis) => `<button type="button" class="be-pg-btn" ${dis ? 'disabled' : ''} onclick="beGoPage(${p})" title="${title}" aria-label="${title}">${label}</button>`;
+    const btn = (p, icon, title, dis) => uiIconButton(icon, { cls: 'be-pg-btn', title, disabled: dis, onclick: `beGoPage(${p})` });
     el.innerHTML = `
         <div class="be-pg-info"><strong>${from}–${to}</strong> von <strong>${s.total}</strong> Bestellungen · ${s.perPage} pro Seite</div>
         ${s.lastPage > 1 ? `<div class="be-pg-nav">
-            ${btn(1, beIcon('first_page', 'font-size:18px'), 'Erste Seite', s.page <= 1)}
-            ${btn(s.page - 1, beIcon('chevron_left', 'font-size:18px'), 'Vorherige Seite', s.page <= 1)}
+            ${btn(1, 'first_page', 'Erste Seite', s.page <= 1)}
+            ${btn(s.page - 1, 'chevron_left', 'Vorherige Seite', s.page <= 1)}
             ${bePageList(s.page, s.lastPage).map(p => p === '…'
                 ? '<span class="be-pg-gap">…</span>'
-                : `<button type="button" class="be-pg-btn be-pg-num${p === s.page ? ' is-on' : ''}" onclick="beGoPage(${p})" ${p === s.page ? 'aria-current="page"' : ''}>${p}</button>`).join('')}
-            ${btn(s.page + 1, beIcon('chevron_right', 'font-size:18px'), 'Nächste Seite', s.page >= s.lastPage)}
-            ${btn(s.lastPage, beIcon('last_page', 'font-size:18px'), 'Letzte Seite', s.page >= s.lastPage)}
+                : (p === s.page ? `<md-filled-tonal-button class="be-pg-num is-on" aria-current="page" onclick="beGoPage(${p})">${p}</md-filled-tonal-button>` : `<md-text-button class="be-pg-num" onclick="beGoPage(${p})">${p}</md-text-button>`)).join('')}
+            ${btn(s.page + 1, 'chevron_right', 'Nächste Seite', s.page >= s.lastPage)}
+            ${btn(s.lastPage, 'last_page', 'Letzte Seite', s.page >= s.lastPage)}
         </div>` : ''}`;
 }
 
@@ -531,11 +531,8 @@ function _beListEnsureStyle() {
         .be-pg-info{font-size:.82rem;color:var(--be-text-muted)}
         .be-pg-info strong{color:var(--be-text,inherit)}
         .be-pg-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-        .be-pg-btn{min-width:34px;height:34px;padding:0 8px;border-radius:17px;border:1px solid var(--be-border,rgba(0,0,0,.14));background:transparent;color:inherit;font:600 .82rem/1 inherit;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-        .be-pg-btn:hover:not([disabled]){background:color-mix(in srgb,var(--be-accent,#2563eb) 10%,transparent)}
-        .be-pg-btn[disabled]{opacity:.35;cursor:default}
-        .be-pg-btn.is-on{background:var(--be-accent,#2563eb);border-color:var(--be-accent,#2563eb);color:#fff}
         .be-pg-gap{padding:0 4px;color:var(--be-text-muted)}
+        .be-pg-num{min-width:40px;--md-text-button-container-height:36px;--md-filled-tonal-button-container-height:36px;--md-text-button-leading-space:8px;--md-text-button-trailing-space:8px;--md-filled-tonal-button-leading-space:8px;--md-filled-tonal-button-trailing-space:8px}
         .be-table-card.is-loading tbody{opacity:.45;transition:opacity .15s}
         .be-kpi.be-kpi-on{outline:2px solid var(--be-accent,#2563eb);outline-offset:-2px}
         @media (max-width:640px){.be-pager{justify-content:center}.be-pg-info{width:100%;text-align:center}}
@@ -585,7 +582,7 @@ function beRowHtml(i) {
 
     const dispoStorno = parseInt(i.dispo_storno_count) || 0;
     const stornoBadge = dispoStorno > 0
-        ? `<button type="button" class="be-dispo-storno" onclick="event.stopPropagation();beShowDispoStorno('${escapeHtml(i.eingang_id)}')" title="Klicken, um die gelöschten Schichten anzuzeigen">${beIcon('warning', 'font-size:12px')} Aus Dispo gelöscht${dispoStorno > 1 ? ' (' + dispoStorno + ')' : ''}</button>`
+        ? `<md-text-button onclick="event.stopPropagation();beShowDispoStorno('${escapeHtml(i.eingang_id)}')" title="Klicken, um die gelöschten Schichten anzuzeigen"><md-icon slot="icon">warning</md-icon>Aus Dispo gelöscht${dispoStorno > 1 ? ' (' + dispoStorno + ')' : ''}</md-text-button>`
         : '';
 
     return `<tr class="${dispoStorno > 0 ? 'be-row-storno' : ''}">
@@ -808,7 +805,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-form-section-title">${beIcon('notes', 'font-size:14px')} Bemerkung <span class="be-anf-hint">— gilt für die gesamte Bestellung</span></div>
                 <div class="form-group" style="margin-bottom:0">
                     <label>Bemerkung</label>
-                    <textarea class="form-control" id="wiz_bemerkung" rows="2" placeholder="Optional — Hinweise zu dieser spezifischen Bestellung">${escapeHtml(prefill.bemerkung || '')}</textarea>
+                    <md-outlined-text-field type="textarea" class="form-control" id="wiz_bemerkung" rows="2" placeholder="Optional — Hinweise zu dieser spezifischen Bestellung" value="${escapeHtml(prefill.bemerkung || '')}"></md-outlined-text-field>
                 </div>
             </div>
         </div>
@@ -827,7 +824,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <header class="be-vl-head">
                     <span class="be-vl-num">1</span>
                     <div class="be-vl-head-text"><strong>Schicht-Vorlage</strong><small>Gilt für jede neu erzeugte Schicht — einzelne Schichten ändern Sie später im Kalender.</small></div>
-                    <button type="button" class="be-vl-apply" onclick="wizApplyTemplateToRows()" title="Zeiten, Pause, Menge, Ort, Beschreibung und Anforderungen auf alle offenen Schichten übernehmen (eingeplante bleiben unverändert)">${beIcon('sync', 'font-size:15px')} Auf alle Tage übernehmen</button>
+                    <md-text-button onclick="wizApplyTemplateToRows()" title="Zeiten, Pause, Menge, Ort, Beschreibung und Anforderungen auf alle offenen Schichten übernehmen (eingeplante bleiben unverändert)"><md-icon slot="icon">sync</md-icon>Auf alle Tage übernehmen</md-text-button>
                 </header>
 
                 <div class="be-vl-group">
@@ -922,7 +919,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-anf-positions be-vl-pos">
                     <div class="be-anf-positions-head">
                         <span>${beIcon('format_list_numbered', 'font-size:15px;vertical-align:-3px')} Positionen <small>optional — Personen nach Funktion aufteilen</small> <span class="be-vl-pos-sum" id="wizPosSum"></span></span>
-                        <button type="button" class="be-anf-add-btn" onclick="wizAddPosition(); wizVorlageCheck()">${beIcon('add', 'font-size:12px')} Position</button>
+                        <md-text-button onclick="wizAddPosition(); wizVorlageCheck()"><md-icon slot="icon">add</md-icon>Position</md-text-button>
                     </div>
                     <div class="be-anf-pos-head-row">
                         <span>Anzahl</span><span>Funktion</span><span>Geschlecht</span><span>Qualifikation</span><span>Kleidung</span><span></span>
@@ -949,27 +946,25 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                         <md-outlined-text-field type="number" class="form-control" id="wiz_jahr" min="2020" max="2100" value="${prefill.jahr || now.getFullYear()}"></md-outlined-text-field>
                     </div>
                 </div>
-                <div class="be-vl-seg" role="tablist">
-                    <button type="button" class="active" data-mode="monat" onclick="wizGenMode('monat')">${beIcon('event_repeat', 'font-size:16px')} Ganzer Monat</button>
-                    <button type="button" data-mode="zeitraum" onclick="wizGenMode('zeitraum')">${beIcon('date_range', 'font-size:16px')} Zeitraum</button>
-                    <button type="button" data-mode="einzel" onclick="wizGenMode('einzel')">${beIcon('event', 'font-size:16px')} Einzeltag</button>
-                </div>
+                ${uiChips(uiChip('Ganzer Monat', { kind: 'filter', icon: 'event_repeat', selected: true, cls: 'active', attrs: 'data-mode="monat"', onclick: "wizGenMode('monat')" })
+                    + uiChip('Zeitraum', { kind: 'filter', icon: 'date_range', attrs: 'data-mode="zeitraum"', onclick: "wizGenMode('zeitraum')" })
+                    + uiChip('Einzeltag', { kind: 'filter', icon: 'event', attrs: 'data-mode="einzel"', onclick: "wizGenMode('einzel')" }), { cls: 'be-vl-seg' })}
                 <div class="be-vl-wd">
                     <div class="be-vl-label">${beIcon('repeat', 'font-size:16px')} Wochentage</div>
                     <div class="be-weekday-pills" id="wizWeekdayToggles">
-                        <button type="button" class="be-weekday-pill" data-day="1" onclick="wizToggleDay(this)">Mo</button>
-                        <button type="button" class="be-weekday-pill" data-day="2" onclick="wizToggleDay(this)">Di</button>
-                        <button type="button" class="be-weekday-pill" data-day="3" onclick="wizToggleDay(this)">Mi</button>
-                        <button type="button" class="be-weekday-pill" data-day="4" onclick="wizToggleDay(this)">Do</button>
-                        <button type="button" class="be-weekday-pill" data-day="5" onclick="wizToggleDay(this)">Fr</button>
-                        <button type="button" class="be-weekday-pill weekend" data-day="6" onclick="wizToggleDay(this)">Sa</button>
-                        <button type="button" class="be-weekday-pill weekend" data-day="0" onclick="wizToggleDay(this)">So</button>
+                        <md-filter-chip class="be-weekday-pill" label="Mo" data-day="1" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill" label="Di" data-day="2" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill" label="Mi" data-day="3" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill" label="Do" data-day="4" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill" label="Fr" data-day="5" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill weekend" label="Sa" data-day="6" onclick="wizToggleDay(this)"></md-filter-chip>
+                        <md-filter-chip class="be-weekday-pill weekend" label="So" data-day="0" onclick="wizToggleDay(this)"></md-filter-chip>
                     </div>
                     <div class="be-day-presets">
-                        <button type="button" class="be-day-preset" onclick="wizPreset('werktage')">${beIcon('work', 'font-size:11px')} Werktage Mo–Fr</button>
-                        <button type="button" class="be-day-preset" onclick="wizPreset('alle')">${beIcon('date_range', 'font-size:11px')} Ganze Woche</button>
-                        <button type="button" class="be-day-preset" onclick="wizPreset('wochenende')">${beIcon('beach_access', 'font-size:11px')} Wochenende</button>
-                        <button type="button" class="be-day-preset" onclick="wizPreset('clear')">${beIcon('ink_eraser', 'font-size:11px')} Leeren</button>
+                        <md-assist-chip class="be-day-preset" label="Werktage Mo–Fr" onclick="wizPreset('werktage')"><md-icon slot="icon">work</md-icon></md-assist-chip>
+                        <md-assist-chip class="be-day-preset" label="Ganze Woche" onclick="wizPreset('alle')"><md-icon slot="icon">date_range</md-icon></md-assist-chip>
+                        <md-assist-chip class="be-day-preset" label="Wochenende" onclick="wizPreset('wochenende')"><md-icon slot="icon">beach_access</md-icon></md-assist-chip>
+                        <md-assist-chip class="be-day-preset" label="Leeren" onclick="wizPreset('clear')"><md-icon slot="icon">ink_eraser</md-icon></md-assist-chip>
                     </div>
                 </div>
                 <div class="be-vl-panel" data-panel="monat">
@@ -1003,19 +998,18 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                     <span class="be-vl-num">4</span>
                     <div class="be-vl-head-text"><strong>Kalender</strong><small>Jede Schicht wird ein Einsatz in der Planung · Schicht anklicken für Details</small></div>
                     <span class="be-days-search" title="Blendet nur aus — gespeichert werden weiterhin alle Tage">
-                        ${beIcon('search', 'font-size:16px;color:var(--be-text-soft)')}
-                        <input type="text" id="wizDaysSearch" autocomplete="off" placeholder="Schicht suchen" oninput="wizFilterDays(this.value)">
+                        ${uiTextField({ id: 'wizDaysSearch', type: 'search', icon: 'search', placeholder: 'Schicht suchen', attrs: 'autocomplete="off" oninput="wizFilterDays(this.value)"' })}
                         <span id="wizDaysSearchCount" style="display:none"></span>
                     </span>
                 </header>
                 <div id="wizDaysLockLegend" class="be-days-lock-legend" style="display:none"></div>
-                <div id="wizArtTabs" class="be-art-tabs"></div>
+                <md-tabs id="wizArtTabs" class="be-art-tabs"></md-tabs>
                 <div id="wizPauseNote" class="be-cal-note" style="display:none"></div>
                 <div id="wizDaysCal" class="be-cal"></div>
             <div class="be-days-table-wrap" style="display:none">
                 <div id="wizDaysTopScroll" style="display:none;overflow-x:auto;overflow-y:hidden;height:14px;margin-bottom:2px" onscroll="wizTopScrollSync('top')"><div id="wizDaysTopScrollInner" style="height:1px"></div></div>
-                <button type="button" class="be-days-nav be-days-nav-left is-hidden" id="wizDaysNavL" onclick="wizDaysScrollStep(-1)" title="Nach links scrollen" aria-label="Nach links scrollen">${beIcon('chevron_left', 'font-size:22px')}</button>
-                <button type="button" class="be-days-nav be-days-nav-right is-hidden" id="wizDaysNavR" onclick="wizDaysScrollStep(1)" title="Nach rechts scrollen" aria-label="Nach rechts scrollen">${beIcon('chevron_right', 'font-size:22px')}</button>
+                <md-icon-button class="be-days-nav-left is-hidden" id="wizDaysNavL" onclick="wizDaysScrollStep(-1)" title="Nach links scrollen" aria-label="Nach links scrollen"><md-icon slot="icon">chevron_left</md-icon></md-icon-button>
+                <md-icon-button class="be-days-nav-right is-hidden" id="wizDaysNavR" onclick="wizDaysScrollStep(1)" title="Nach rechts scrollen" aria-label="Nach rechts scrollen"><md-icon slot="icon">chevron_right</md-icon></md-icon-button>
                 <div class="table-container" id="wizDaysScroll" onscroll="wizTopScrollSync('body')">
                     <table>
                         <thead>
@@ -1502,7 +1496,7 @@ function wizUpdateObjBeschreibungHint() {
     const objBeschr = wizObjBestellbeschreibung();
     if (!objBeschr || el.value.trim() === objBeschr) { box.style.display = 'none'; box.innerHTML = ''; return; }
     box.innerHTML = `${beIcon('description', 'font-size:14px;vertical-align:-3px')} Bestellbeschreibung des Objekts: <span class="be-obj-beschr-text" title="${escapeHtml(objBeschr)}">${escapeHtml(objBeschr)}</span>`
-        + ` <button type="button" class="be-obj-beschr-btn" onclick="wizTakeObjBeschreibung()">Übernehmen</button>`;
+        + ` <md-text-button onclick="wizTakeObjBeschreibung()">Übernehmen</md-text-button>`;
     box.style.display = '';
 }
 
@@ -1554,7 +1548,7 @@ function wizRenderPreisPanels() {
                 <div class="form-group" style="margin-bottom:0">
                     <label>Abrechnungsmodell</label>
                     <div class="be-modell-chips">
-                        ${_WIZ_MODELLE.map(m => `<button type="button" class="be-modell-chip-btn ${modell === m ? 'active' : ''}" data-val="${m}" data-art="${escapeHtml(String(a.artikel_id))}"${ro}>${m}</button>`).join('')}
+                        ${_WIZ_MODELLE.map(m => `<md-filter-chip class="be-modell-chip-btn ${modell === m ? 'active' : ''}" label="${m}" ${modell === m ? 'selected' : ''} data-val="${m}" data-art="${escapeHtml(String(a.artikel_id))}"${ro}></md-filter-chip>`).join('')}
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom:0">
@@ -1604,9 +1598,9 @@ function wizRenderArtTabs() {
         const id = String(a.artikel_id);
         const cnt = [...document.querySelectorAll('#wizDaysBody tr')]
             .filter(r => (r.dataset.artikel || String(arts[0].artikel_id)) === id).length;
-        return `<button type="button" class="be-art-tab ${id === String(_beState.activeArtTab) ? 'active' : ''}" onclick="wizSwitchArtTab('${escapeHtml(id)}')">
-            ${beIcon('sell', 'font-size:13px')} ${escapeHtml(a.artikel_name || id)} <span class="be-art-tab-count">${cnt}</span>
-        </button>`;
+        return `<md-secondary-tab inline-icon class="be-art-tab ${id === String(_beState.activeArtTab) ? 'active' : ''}"${id === String(_beState.activeArtTab) ? ' active' : ''} onclick="wizSwitchArtTab('${escapeHtml(id)}')">
+            <md-icon slot="icon">sell</md-icon>${escapeHtml(a.artikel_name || id)} <span class="be-art-tab-count">${cnt}</span>
+        </md-secondary-tab>`;
     }).join('');
     wizApplyArtTabFilter();
 }
@@ -1640,8 +1634,7 @@ document.addEventListener('click', (e) => {
     const scope = art
         ? `.be-modell-chip-btn[data-art="${CSS.escape(art)}"]`
         : '.be-modell-chip-btn:not([data-art])';
-    document.querySelectorAll(scope).forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll(scope).forEach(b => { b.classList.toggle('active', b === btn); b.selected = b === btn; });
     if (art) {
         (_beState.artikelPreise[art] = _beState.artikelPreise[art] || {}).modell = btn.dataset.val;
     } else {
@@ -1693,7 +1686,7 @@ function wizGenMode(mode) {
     const card = document.getElementById('wizGen');
     if (!card) return;
     card.dataset.mode = mode;
-    card.querySelectorAll('.be-vl-seg button').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+    card.querySelectorAll('.be-vl-seg md-filter-chip').forEach(b => { const on = b.dataset.mode === mode; b.classList.toggle('active', on); b.selected = on; });
     const focus = { zeitraum: 'wiz_range_von', einzel: 'wiz_single_date' }[mode];
     if (focus) document.getElementById(focus)?.focus();
 }
@@ -1702,7 +1695,7 @@ function wizVorlageCheck() {
     const box = document.getElementById('wizVorlageCheck');
     if (!box) return [];
     const el = id => document.getElementById(id);
-    const val = id => (el(id)?.value || '').trim();
+    const val = id => String(el(id)?.value ?? '').trim();
     const timeOk = t => /^([01]\d|2[0-3]):[0-5]\d$/.test(t);
     const von = val('wiz_shift_von');
     const bis = val('wiz_shift_bis');
@@ -1786,18 +1779,20 @@ if (!window._wizVorlageBound) {
 }
 
 function wizToggleDay(btn) {
-    btn.classList.toggle('active');
+    // md-filter-chip has already toggled `selected` itself
+    btn.classList.toggle('active', !!btn.selected);
 }
+function wizSetDay(b, on) { b.classList.toggle('active', on); b.selected = on; }
 
 function wizPreset(kind) {
     const btns = document.querySelectorAll('.be-weekday-pill');
-    btns.forEach(b => b.classList.remove('active'));
+    btns.forEach(b => wizSetDay(b, false));
     if (kind === 'werktage') {
-        btns.forEach(b => { if (['1','2','3','4','5'].includes(b.dataset.day)) b.classList.add('active'); });
+        btns.forEach(b => { if (['1','2','3','4','5'].includes(b.dataset.day)) wizSetDay(b, true); });
     } else if (kind === 'alle') {
-        btns.forEach(b => b.classList.add('active'));
+        btns.forEach(b => wizSetDay(b, true));
     } else if (kind === 'wochenende') {
-        btns.forEach(b => { if (['6','0'].includes(b.dataset.day)) b.classList.add('active'); });
+        btns.forEach(b => { if (['6','0'].includes(b.dataset.day)) wizSetDay(b, true); });
     }
     // 'clear' = leave all off
 }
@@ -2032,7 +2027,7 @@ function wizRedrawDayRow(tr, idx) {
     const anfChip = hasAnf ? ` <span class="be-anf-chip" title="Anforderungen für Dispo hinterlegt">${beIcon('assignment', 'font-size:11px')}${anfPersons > 0 ? ' ' + anfPersons : ''}</span>` : '';
     // Ort line = what reaches Dispo: Tag-Ort first, else the header Ort
     // (shown greyed as inherited), else nothing.
-    const headerOrtNow = (document.getElementById('wiz_shift_ort')?.value || '').trim();
+    const headerOrtNow = String(document.getElementById('wiz_shift_ort')?.value ?? '').trim();
     const ortLine = ort
         ? `<div style="font-size:.72rem;color:var(--gray-500);margin-top:2px">${beIcon('location_on', 'color:#3b82f6;font-size:11px;vertical-align:-2px;margin-right:3px')}${escapeHtml(ort)} <span style="color: var(--md-ext-color-warning);font-size:.68rem;font-weight:600" title="Eigener Einsatzort für diesen Tag — hat Vorrang vor Ort / Treffpunkt">· Tag-Ort</span></div>`
         : (headerOrtNow
@@ -2076,9 +2071,9 @@ function wizRedrawDayRow(tr, idx) {
         <td><div style="display:flex;gap:6px;justify-content:flex-end">
             ${scopeLocked
                 ? `<span style="color: var(--md-sys-color-primary)" title="Außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:14px')}</span>`
-                : `<button class="be-day-row-action" onclick="wizEditDay(this)" title="Tag bearbeiten">${beIcon('edit', 'font-size:13px')}</button>
-            <button class="be-day-row-action" onclick="wizDuplicateDay(this)" title="2. Schicht am selben Tag hinzufügen">${beIcon('content_copy', 'font-size:13px')}</button>
-            <button class="be-day-row-action" onclick="wizRemoveDay(this)" title="Entfernen">${beIcon('close', 'font-size:13px')}</button>`}
+                : `<md-icon-button onclick="wizEditDay(this)" title="Tag bearbeiten"><md-icon slot="icon">edit</md-icon></md-icon-button>
+            <md-icon-button onclick="wizDuplicateDay(this)" title="2. Schicht am selben Tag hinzufügen"><md-icon slot="icon">content_copy</md-icon></md-icon-button>
+            <md-icon-button onclick="wizRemoveDay(this)" title="Entfernen"><md-icon slot="icon">close</md-icon></md-icon-button>`}
         </div></td>
     `;
 }
@@ -2144,7 +2139,7 @@ async function wizEditDay(btn) {
     row.dataset.editSnapshot = JSON.stringify({ ...row.dataset });
     row.classList.add('be-day-editing');
     const cells = row.querySelectorAll('td');
-    const inp = (type, value, extra) => `<input type="${type}" class="form-control" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;${extra || ''}">`;
+    const inp = (type, value, extra) => `<md-outlined-text-field type="${type}" class="form-control" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;${extra || ''}"></md-outlined-text-field>`;
     const tInp = (value) => `<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;width:86px"></md-outlined-text-field>`;
     cells[1].innerHTML = inp('date', row.dataset.datum || '', 'width:130px');
     cells[3].innerHTML = tInp(row.dataset.von || '');
@@ -2187,8 +2182,8 @@ async function wizEditDay(btn) {
             <div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div>
         </div>`;
     cells[10].innerHTML = `<div style="display:flex;gap:6px;justify-content:flex-end">
-        <button type="button" class="be-day-row-action" onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color: var(--md-ext-color-success)">${beIcon('check', 'font-size:13px')}</button>
-        <button type="button" class="be-day-row-action" onclick="wizCancelDayEdit(this)" title="Abbrechen">${beIcon('undo', 'font-size:13px')}</button>
+        <md-icon-button onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color: var(--md-ext-color-success)"><md-icon slot="icon">check</md-icon></md-icon-button>
+        <md-icon-button onclick="wizCancelDayEdit(this)" title="Abbrechen"><md-icon slot="icon">undo</md-icon></md-icon-button>
     </div>`;
 }
 
@@ -2258,8 +2253,8 @@ function wizSaveDayEdit(btnOrRow) {
     // header Ort and wizCollectDays() from falling back to it on save.
     const ortInput = cells[9] ? cells[9].querySelector('.be-day-ort-edit') : null;
     if (ortInput) {
-        const newOrt = (ortInput.value || '').trim();
-        const headerOrt = (document.getElementById('wiz_shift_ort')?.value || '').trim();
+        const newOrt = String(ortInput.value ?? '').trim();
+        const headerOrt = String(document.getElementById('wiz_shift_ort')?.value ?? '').trim();
         row.dataset.ort = newOrt;
         if (newOrt !== headerOrt) row.dataset.ortOverride = '1';
         else delete row.dataset.ortOverride;
@@ -2852,9 +2847,9 @@ function wizRenderDaysCal() {
 
     cal.innerHTML = `
         <div class="be-cal-head">
-            <button type="button" class="be-cal-nav" onclick="wizCalGo(-1)" title="Vorheriger Monat" aria-label="Vorheriger Monat">${beIcon('chevron_left')}</button>
+            <md-icon-button onclick="wizCalGo(-1)" title="Vorheriger Monat" aria-label="Vorheriger Monat"><md-icon slot="icon">chevron_left</md-icon></md-icon-button>
             <div class="be-cal-title">${MONTHS_DE[m + 1]} ${y}</div>
-            <button type="button" class="be-cal-nav" onclick="wizCalGo(1)" title="Nächster Monat" aria-label="Nächster Monat">${beIcon('chevron_right')}</button>
+            <md-icon-button onclick="wizCalGo(1)" title="Nächster Monat" aria-label="Nächster Monat"><md-icon slot="icon">chevron_right</md-icon></md-icon-button>
             <div class="be-cal-sum">
                 <span>${beIcon('event_available', 'font-size:15px')}<strong>${monthRows.length}</strong> ${monthRows.length === 1 ? 'Schicht' : 'Schichten'}</span>
                 <span title="Summe Std × Menge">${beIcon('schedule', 'font-size:15px')}<strong>${_beCalFmtStd(sumStd(monthRows))}</strong> Std</span>
@@ -2943,7 +2938,7 @@ function _beCalCardHtml(r, n) {
     const pause = parseInt(r.dataset.pauseMinuten) || 0;
     const gp = parseInt(r.dataset.gesetzlPause) || 0;
     const std = parseFloat(r.dataset.std);
-    const headerOrt = (document.getElementById('wiz_shift_ort')?.value || '').trim();
+    const headerOrt = String(document.getElementById('wiz_shift_ort')?.value ?? '').trim();
     const ort = (r.dataset.ort || '').trim();
     const arts = _beState.selArts || [];
     const art = arts.length > 1 ? arts.find(a => String(a.artikel_id) === String(r.dataset.artikel || arts[0].artikel_id)) : null;
@@ -2975,17 +2970,17 @@ function _beCalCardHtml(r, n) {
     let actions;
     if (_beCalReadOnly) {
         const planBtn = (r.dataset.einsatzId && beCanPlanung())
-            ? `<button type="button" class="be-cal-btn" data-act="planung" data-n="${n}">${beIcon('calendar_month', 'font-size:15px')} In der Planung öffnen</button>` : '';
+            ? `<md-outlined-button data-act="planung" data-n="${n}"><md-icon slot="icon">calendar_month</md-icon>In der Planung öffnen</md-outlined-button>` : '';
         actions = planBtn + (st === 'open' ? ''
             : `<span class="be-cal-lockinfo">${beIcon('lock', 'font-size:15px')} ${st === 'confirmed' ? 'Einsatz bestätigt — nicht änderbar' : (st === 'scope' ? 'Leistung außerhalb Ihres Bereichs — schreibgeschützt' : 'In der Planung eingeplant')}</span>`);
     } else if (st === 'open') {
-        actions = `<button type="button" class="be-cal-btn primary" data-act="edit" data-n="${n}">${beIcon('edit', 'font-size:15px')} Bearbeiten</button>
-            <button type="button" class="be-cal-btn" data-act="dup" data-n="${n}">${beIcon('content_copy', 'font-size:15px')} 2. Schicht</button>
-            <button type="button" class="be-cal-btn danger" data-act="del" data-n="${n}">${beIcon('delete', 'font-size:15px')} Entfernen</button>`;
+        actions = `<md-filled-button data-act="edit" data-n="${n}"><md-icon slot="icon">edit</md-icon>Bearbeiten</md-filled-button>
+            <md-outlined-button data-act="dup" data-n="${n}"><md-icon slot="icon">content_copy</md-icon>2. Schicht</md-outlined-button>
+            <md-text-button class="md-btn-danger" data-act="del" data-n="${n}"><md-icon slot="icon">delete</md-icon>Entfernen</md-text-button>`;
     } else if (st === 'scope') {
         actions = `<span class="be-cal-lockinfo">${beIcon('lock', 'font-size:15px')} Leistung außerhalb Ihres Bereichs — schreibgeschützt</span>`;
     } else {
-        actions = `<button type="button" class="be-cal-btn" data-act="dup" data-n="${n}">${beIcon('content_copy', 'font-size:15px')} 2. Schicht</button>
+        actions = `<md-outlined-button data-act="dup" data-n="${n}"><md-icon slot="icon">content_copy</md-icon>2. Schicht</md-outlined-button>
             <span class="be-cal-lockinfo">${beIcon('lock', 'font-size:15px')} ${st === 'confirmed' ? 'Einsatz bestätigt — nicht änderbar' : 'In der Planung eingeplant — erst „Plan aufheben“, dann änderbar'}</span>`;
     }
     return `<div class="be-cal-card st-${st}${r === _beCalPopFocus ? ' is-focus' : ''}" data-n="${n}">
@@ -3023,8 +3018,8 @@ function _beCalEditHtml(r, n) {
             ${pos.length ? `<div class="be-cal-edit-pos">${beIcon('format_list_numbered', 'font-size:13px;vertical-align:-2px')} Positionen (${pos.length}) kommen aus der Vorlage: ${posTxt}</div>` : ''}
         </div>
         <div class="be-cal-actions">
-            <button type="button" class="be-cal-btn primary" data-act="save" data-n="${n}">${beIcon('check', 'font-size:15px')} Übernehmen</button>
-            <button type="button" class="be-cal-btn" data-act="cancel" data-n="${n}">Abbrechen</button>
+            <md-filled-button data-act="save" data-n="${n}"><md-icon slot="icon">check</md-icon>Übernehmen</md-filled-button>
+            <md-outlined-button data-act="cancel" data-n="${n}">Abbrechen</md-outlined-button>
         </div>
     </div>`;
 }
@@ -3050,17 +3045,17 @@ function _beCalRenderPop() {
             <div>
                 <div class="be-cal-sheet-title">${escapeHtml(title)}</div>
                 <div class="be-cal-sheet-sub">${_beCalPopOnly
-                    ? `Schicht ${onlyN} von ${allRows.length} · jede Schicht ist ein Einsatz in der Planung · <button type="button" class="be-cal-all" data-act="all">alle ${allRows.length} anzeigen</button>`
+                    ? `Schicht ${onlyN} von ${allRows.length} · jede Schicht ist ein Einsatz in der Planung · <md-text-button data-act="all">alle ${allRows.length} anzeigen</md-text-button>`
                     : (rows.length ? `${rows.length} ${rows.length === 1 ? 'Schicht' : 'Schichten'} · jede Schicht ist ein Einsatz in der Planung` : 'Noch keine Schicht an diesem Tag')}</div>
             </div>
-            <button type="button" class="be-cal-x" data-act="close" title="Schließen" aria-label="Schließen">${beIcon('close')}</button>
+            <md-icon-button data-act="close" title="Schließen" aria-label="Schließen"><md-icon slot="icon">close</md-icon></md-icon-button>
         </div>
         <div class="be-cal-sheet-body">${rows.length
             ? rows.map((r, n) => _beCalCardHtml(r, n)).join('')
             : `<div class="be-cal-empty">${beIcon('event_busy', 'font-size:28px')}${_beCalReadOnly ? 'Keine Schicht an diesem Tag.' : 'Fügen Sie eine Schicht mit den Werten der Schicht-Vorlage hinzu.'}</div>`}</div>
         ${_beCalReadOnly ? '' : `<div class="be-cal-sheet-foot">
             ${wizDateInOrder(iso)
-                ? `<button type="button" class="be-cal-btn primary" data-act="add">${beIcon('add', 'font-size:16px')} Schicht hinzufügen</button>
+                ? `<md-filled-button data-act="add"><md-icon slot="icon">add</md-icon>Schicht hinzufügen</md-filled-button>
             <span>Vorlage: ${escapeHtml(tVon)}–${escapeHtml(tBis)} · Pause ${tPause} Min</span>`
                 : `<span>${beIcon('block', 'font-size:15px;vertical-align:-3px')} Außerhalb des Bestellmonats ${escapeHtml(wizOrderMonthLabel())} — hier können keine neuen Schichten angelegt werden.</span>`}
         </div>`}
@@ -3379,7 +3374,7 @@ function wizParseAnf(raw) {
 // object, or null when nothing is filled. This is the template applied to all
 // generated days and the per-row fallback in wizCollectDays.
 function wizCollectAnforderungen() {
-    const val = (id) => (document.getElementById(id)?.value || '').trim();
+    const val = (id) => String(document.getElementById(id)?.value ?? '').trim();
     const q = val('wiz_anf_qualifikation');
     const k = val('wiz_anf_kleidung');
     const s = val('wiz_anf_skill');
@@ -3388,10 +3383,10 @@ function wizCollectAnforderungen() {
     const positionen = [];
     document.querySelectorAll('#wizPositionsBody .be-anf-pos-row').forEach(r => {
         const anzahl = parseInt(r.querySelector('.anf-anzahl')?.value) || 0;
-        const funktion = (r.querySelector('.anf-funktion')?.value || '').trim();
-        const geschlecht = (r.querySelector('.anf-geschlecht')?.value || '').trim();
-        const qual = (r.querySelector('.anf-qual')?.value || '').trim();
-        const kleidung = (r.querySelector('.anf-kleidung')?.value || '').trim();
+        const funktion = String(r.querySelector('.anf-funktion')?.value ?? '').trim();
+        const geschlecht = String(r.querySelector('.anf-geschlecht')?.value ?? '').trim();
+        const qual = String(r.querySelector('.anf-qual')?.value ?? '').trim();
+        const kleidung = String(r.querySelector('.anf-kleidung')?.value ?? '').trim();
         if (anzahl > 0 || funktion || geschlecht || qual || kleidung) {
             positionen.push({ anzahl: anzahl || null, funktion, geschlecht: geschlecht || null, qualifikation: qual, kleidung });
         }
@@ -3423,7 +3418,7 @@ function wizAddPosition(values) {
         </md-outlined-select>
         <md-outlined-text-field type="text" class="form-control anf-qual" placeholder="z.B. Erste Hilfe, Staplerschein" value="${escapeHtml(v.qualifikation || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
         <md-outlined-text-field type="text" class="form-control anf-kleidung" placeholder="z.B. schwarze Hose" value="${escapeHtml(v.kleidung || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
-        <button type="button" class="be-anf-pos-remove" onclick="wizRemovePosition(this)" title="Entfernen">${beIcon('close', 'font-size:13px')}</button>
+        <md-icon-button onclick="wizRemovePosition(this)" title="Entfernen"><md-icon slot="icon">close</md-icon></md-icon-button>
     `;
     body.appendChild(row);
 }
@@ -3780,15 +3775,15 @@ function beOrtSyncRowFlag(input) {
     if (!input || !input.classList || !input.classList.contains('be-day-ort-edit')) return;
     const row = input.closest('tr');
     if (!row) return;
-    const v = (input.value || '').trim();
-    const hOrt = (document.getElementById('wiz_shift_ort')?.value || '').trim();
+    const v = String(input.value ?? '').trim();
+    const hOrt = String(document.getElementById('wiz_shift_ort')?.value ?? '').trim();
     row.dataset.ort = v;
     if (v && v !== hOrt) row.dataset.ortOverride = '1';
     else delete row.dataset.ortOverride;
 }
 
 function beOrtInput(e) {
-    const q = (e.target.value || '').trim();
+    const q = String(e.target.value ?? '').trim();
     _beOrtTarget = e.target;
     beOrtSyncRowFlag(e.target);
     const box = beOrtBoxFor(e.target);
@@ -3987,7 +3982,7 @@ async function wizSaveIncoming() {
         jahr: parseInt(document.getElementById('wiz_jahr').value),
         zeit_von: document.getElementById('wiz_shift_von').value || null,
         zeit_bis: document.getElementById('wiz_shift_bis').value || null,
-        ort: (document.getElementById('wiz_shift_ort')?.value || '').trim() || null,
+        ort: String(document.getElementById('wiz_shift_ort')?.value ?? '').trim() || null,
         modell: primaryPreis.modell || null,
         kundenpreis: primaryPreis.kundenpreis ?? null,
         bemerkung: document.getElementById('wiz_bemerkung').value || null,
@@ -4031,7 +4026,7 @@ async function wizSaveEditIncoming(eingangId, originalStatus) {
         jahr: parseInt(document.getElementById('wiz_jahr').value),
         zeit_von: document.getElementById('wiz_shift_von').value || null,
         zeit_bis: document.getElementById('wiz_shift_bis').value || null,
-        ort: (document.getElementById('wiz_shift_ort')?.value || '').trim() || null,
+        ort: String(document.getElementById('wiz_shift_ort')?.value ?? '').trim() || null,
         modell: primaryPreis.modell || null,
         kundenpreis: primaryPreis.kundenpreis ?? null,
         bemerkung: document.getElementById('wiz_bemerkung').value || null,
@@ -4183,7 +4178,7 @@ function beShowHistory() {
         <div class="be-cal-sheet-head">
             <div><div class="be-cal-sheet-title">Änderungshistorie</div>
             <div class="be-cal-sheet-sub">${rows.length} ${rows.length === 1 ? 'Eintrag' : 'Einträge'}</div></div>
-            <button type="button" class="be-cal-x" onclick="beCloseHistory()" aria-label="Schließen">${beIcon('close', 'font-size:18px')}</button>
+            <md-icon-button onclick="beCloseHistory()" aria-label="Schließen"><md-icon slot="icon">close</md-icon></md-icon-button>
         </div>
         <div class="be-cal-sheet-body">${beHistoryViewHtml(rows)}</div>
     </div>`;
@@ -4525,7 +4520,7 @@ async function editIncomingOrder(id) {
         // Days whose stored Ort differs from the header default already carry
         // a per-day location — flag them so a later header-Ort change does
         // not silently reset them (wizApplyMetaToRows respects the flag).
-        const headerOrt = (document.getElementById('wiz_shift_ort')?.value || '').trim();
+        const headerOrt = String(document.getElementById('wiz_shift_ort')?.value ?? '').trim();
         const headerPauseV = String(parseInt(document.getElementById('wiz_shift_pause')?.value) || 0);
         const headerAnfHydr = wizParseAnf(firstDay.anforderungen) || null;
         tbody.querySelectorAll('tr').forEach(r => {

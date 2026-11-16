@@ -730,7 +730,7 @@ async function plannerToggleWorkerAssignment(item) {
         taskInput.placeholder = 'Aufgabe für diese/n Mitarbeiter/in (an App)…';
         taskInput.oninput = function() { plannerAutoGrow(this); };
         // Inherit the current team task so newly added workers match the rest.
-        const bulkVal = (document.getElementById('plannerBulkTask')?.value || '').trim();
+        const bulkVal = String(document.getElementById('plannerBulkTask')?.value ?? '').trim();
         if (bulkVal) taskInput.value = bulkVal;
         taskWrap.appendChild(taskInput);
         item.appendChild(taskWrap);
@@ -1023,7 +1023,7 @@ function collectWorkerTasks() {
     const tasks = {};
     document.querySelectorAll('#plannerAssignedList .planner-worker-task').forEach(input => {
         const wid = input.dataset.workerId;
-        if (wid) tasks[wid] = (input.value || '').trim();
+        if (wid) tasks[wid] = String(input.value ?? '').trim();
     });
     return tasks;
 }
@@ -1033,7 +1033,7 @@ function collectWorkerTasks() {
 function plannerApplyTaskToAll() {
     const src = document.getElementById('plannerBulkTask');
     if (!src) return;
-    const val = (src.value || '').trim();
+    const val = String(src.value ?? '').trim();
     const inputs = document.querySelectorAll('#plannerAssignedList .planner-worker-task');
     if (inputs.length === 0) {
         showToast('Noch keine Mitarbeiter zugewiesen', 'error');

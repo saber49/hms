@@ -10,8 +10,8 @@
     background: var(--gray-100); color: var(--gray-700); }
 .est-nav-item.is-on .est-nav-icon { background: var(--accent); color: #fff; }
 .est-nav-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.est-nav-text strong { font-size: .95rem; }
-.est-nav-text small { font-size: .78rem; color: var(--gray-500); line-height: 1.35; }
+.est-nav-text strong { font-size: var(--md-sys-typescale-body-large-size); }
+.est-nav-text small { font-size: var(--md-sys-typescale-body-small-size); color: var(--gray-500); line-height: 1.35; }
 .est-body { min-height: 200px; }
 @media (max-width: 640px) {
 .est-nav { grid-template-columns: 1fr; gap: 8px; }

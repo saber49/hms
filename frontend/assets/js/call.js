@@ -70,14 +70,11 @@
             .ccall-sub{font-size:14px;color:rgba(255,255,255,.65);min-height:20px;}
             .ccall-timer{font-size:15px;color:#7ee2a8;font-variant-numeric:tabular-nums;margin-top:6px;min-height:20px;}
             .ccall-controls{display:flex;justify-content:center;gap:18px;margin-top:26px;}
-            .ccall-btn{width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;font-size:20px;
-                display:flex;align-items:center;justify-content:center;transition:transform .12s,filter .12s;color:#fff;}
-            .ccall-btn:hover{transform:scale(1.08)}
-            .ccall-btn:active{transform:scale(.95)}
-            .ccall-btn-end{background:#ef4444;}
-            .ccall-btn-mute{background:rgba(255,255,255,.16);}
-            .ccall-btn-mute.ccall-on{background:#f59e0b;}
-            .ccall-btn:disabled{opacity:.4;cursor:default;transform:none}
+            .ccall-btn{--md-filled-icon-button-container-width:58px;--md-filled-icon-button-container-height:58px;--md-filled-icon-button-icon-size:24px;
+                --md-filled-tonal-icon-button-container-width:58px;--md-filled-tonal-icon-button-container-height:58px;--md-filled-tonal-icon-button-icon-size:24px;}
+            .ccall-btn-end{--md-filled-icon-button-container-color:var(--md-sys-color-error);--md-filled-icon-button-icon-color:var(--md-sys-color-on-error);}
+            .ccall-btn-mute{--md-filled-tonal-icon-button-container-color:color-mix(in srgb,var(--md-sys-color-on-primary) 16%,transparent);--md-filled-tonal-icon-button-icon-color:var(--md-sys-color-on-primary);}
+            .ccall-btn-mute.ccall-on{--md-filled-tonal-icon-button-container-color:var(--md-ext-color-warning);}
         `;
         document.head.appendChild(style);
 
@@ -90,12 +87,12 @@
                 <div class="ccall-sub" id="ccallSub">Verbinde…</div>
                 <div class="ccall-timer" id="ccallTimer"></div>
                 <div class="ccall-controls">
-                    <button class="ccall-btn ccall-btn-mute" id="ccallMute" title="Mikrofon stumm" disabled>
-                        <i class="material-symbols-outlined">mic</i>
-                    </button>
-                    <button class="ccall-btn ccall-btn-end" id="ccallEnd" title="Auflegen">
-                        <i class="material-symbols-outlined">phone_disabled</i>
-                    </button>
+                    <md-filled-tonal-icon-button class="ccall-btn ccall-btn-mute" id="ccallMute" title="Mikrofon stumm" disabled>
+                        <md-icon>mic</md-icon>
+                    </md-filled-tonal-icon-button>
+                    <md-filled-icon-button class="ccall-btn ccall-btn-end" id="ccallEnd" title="Auflegen">
+                        <md-icon>phone_disabled</md-icon>
+                    </md-filled-icon-button>
                 </div>
             </div>`;
         overlay.style.display = 'none';
@@ -363,7 +360,7 @@
         state.localStream.getAudioTracks().forEach(t => { t.enabled = !state.muted; });
         const btn = document.getElementById('ccallMute');
         btn.classList.toggle('ccall-on', state.muted);
-        btn.innerHTML = '<i class="material-symbols-outlined">' + (state.muted ? 'mic_off' : 'mic') + '</i>';
+        btn.innerHTML = '<md-icon>' + (state.muted ? 'mic_off' : 'mic') + '</md-icon>';
     }
 
     async function hangup() {

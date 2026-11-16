@@ -35,7 +35,7 @@ function orDescBoxHtml(text, dayCount) {
     return `<div class="or-desc-box${long ? ' collapsed' : ''}">
         <div class="or-desc-head">${orIcon('assignment', 'font-size:15px')} Aufgabenbeschreibung <span class="or-desc-hint">gilt für alle ${dayCount} Tage</span></div>
         <div class="or-desc-body">${body}</div>
-        ${long ? `<button type="button" class="or-desc-toggle" onclick="const b=this.closest('.or-desc-box');b.classList.toggle('collapsed');this.textContent=b.classList.contains('collapsed')?'Mehr anzeigen':'Weniger anzeigen'">Mehr anzeigen</button>` : ''}
+        ${long ? `<md-text-button class="or-desc-toggle" onclick="const b=this.closest('.or-desc-box');b.classList.toggle('collapsed');this.textContent=b.classList.contains('collapsed')?'Mehr anzeigen':'Weniger anzeigen'">Mehr anzeigen</md-text-button>` : ''}
     </div>`;
 }
 function openOrDialog(title, bodyHtml, footerHtml = '', wide = false) {
@@ -263,7 +263,7 @@ function orRenderAlert() {
                 <div class="or-alert-title">${lateOrders.length} überfällige Bestellung${lateOrders.length > 1 ? 'en' : ''}</div>
                 <div class="or-alert-sub">datum_bis bereits überschritten — Status noch "offen". Bitte abschließen oder verlängern.</div>
             </div>
-            <button class="or-alert-action" onclick="orSetFilter('ueberfaellig')">${orIcon('visibility', 'font-size:13px;vertical-align:-2px')} Anzeigen</button>
+            <md-text-button class="or-alert-action" onclick="orSetFilter('ueberfaellig')"><md-icon slot="icon">visibility</md-icon>Anzeigen</md-text-button>
         </div>
     `;
 }
@@ -288,10 +288,10 @@ function orBuildToolbar() {
 
     return `
         <div class="or-toolbar">
-            <div class="or-tabs">
-                <button class="or-tab ${_orState.tab === 'overview' ? 'active' : ''}" onclick="orSetTab('overview')">${orIcon('checklist', 'font-size:14px')} &Uuml;bersicht</button>
-                <button class="or-tab ${_orState.tab === 'analytics' ? 'active' : ''}" onclick="orSetTab('analytics')">${orIcon('bar_chart', 'font-size:14px')} Analytics</button>
-            </div>
+            <md-tabs class="or-tabs">
+                <md-secondary-tab data-seg inline-icon class="or-tab ${_orState.tab === 'overview' ? 'active' : ''}" onclick="orSetTab('overview')"><md-icon slot="icon">checklist</md-icon>&Uuml;bersicht</md-secondary-tab>
+                <md-secondary-tab data-seg inline-icon class="or-tab ${_orState.tab === 'analytics' ? 'active' : ''}" onclick="orSetTab('analytics')"><md-icon slot="icon">bar_chart</md-icon>Analytics</md-secondary-tab>
+            </md-tabs>
             <div class="or-toolbar-row">
                 <md-outlined-text-field class="or-search" id="orSearch" placeholder="Bestell-ID, Kunde, Objekt..." value="${escapeHtml(_orState.search)}">
                     <md-icon slot="leading-icon">search</md-icon>
@@ -511,13 +511,13 @@ function orBuildRow(o) {
 
     const actions = `
         <div class="or-row-actions">
-            <button class="view" onclick="viewOrderDetails('${o.bestell_id}')" title="Details">${orIcon('visibility', 'font-size:14px')}</button>
-            <button class="pdf" onclick="openOrderForm('${o.bestell_id}')" title="Auftragsblatt ansehen">${orIcon('picture_as_pdf', 'font-size:14px')}</button>
-            <button class="pdfs" onclick="openSavedPdfsList('${o.bestell_id}')" title="Gespeicherte PDFs anzeigen">${orIcon('folder_open', 'font-size:14px')}</button>
-            ${o.status === 'offen' ? `<button class="close" onclick="closeOrder('${o.bestell_id}')" title="Abschließen">${orIcon('check', 'font-size:14px')}</button>` : ''}
-            ${o.status !== 'storniert' && o.status !== 'abgeschlossen' ? `<button class="cancel" onclick="cancelOrder('${o.bestell_id}')" title="Stornieren">${orIcon('block', 'font-size:14px')}</button>` : ''}
-            ${o.status === 'storniert' || o.status === 'abgeschlossen' ? `<button class="close" onclick="reopenOrder('${o.bestell_id}')" title="Wieder öffnen">${orIcon('undo', 'font-size:14px')}</button>` : ''}
-            <button class="delete" onclick="deleteOrder('${o.bestell_id}')" title="Endgültig löschen">${orIcon('delete', 'font-size:14px')}</button>
+            <md-icon-button class="view" onclick="viewOrderDetails('${o.bestell_id}')" title="Details"><md-icon slot="icon">visibility</md-icon></md-icon-button>
+            <md-icon-button class="pdf" onclick="openOrderForm('${o.bestell_id}')" title="Auftragsblatt ansehen"><md-icon slot="icon">picture_as_pdf</md-icon></md-icon-button>
+            <md-icon-button class="pdfs" onclick="openSavedPdfsList('${o.bestell_id}')" title="Gespeicherte PDFs anzeigen"><md-icon slot="icon">folder_open</md-icon></md-icon-button>
+            ${o.status === 'offen' ? `<md-icon-button class="close" onclick="closeOrder('${o.bestell_id}')" title="Abschließen"><md-icon slot="icon">check</md-icon></md-icon-button>` : ''}
+            ${o.status !== 'storniert' && o.status !== 'abgeschlossen' ? `<md-icon-button class="md-icon-danger cancel" onclick="cancelOrder('${o.bestell_id}')" title="Stornieren"><md-icon slot="icon">block</md-icon></md-icon-button>` : ''}
+            ${o.status === 'storniert' || o.status === 'abgeschlossen' ? `<md-icon-button class="close" onclick="reopenOrder('${o.bestell_id}')" title="Wieder öffnen"><md-icon slot="icon">undo</md-icon></md-icon-button>` : ''}
+            <md-icon-button class="md-icon-danger delete" onclick="deleteOrder('${o.bestell_id}')" title="Endgültig löschen"><md-icon slot="icon">delete</md-icon></md-icon-button>
         </div>`;
 
     return `<tr data-mk="${escapeHtml(o.bestell_id)}" class="${rowClass}">
@@ -806,39 +806,39 @@ async function editOrder(id) {
         <div class="or-form-grid">
             <div class="or-form-group">
                 <label>Kunde *</label>
-                <select id="f_ord_kunde" onchange="orderEditLoadObjects()">
-                    <option value="">— Kunde wählen —</option>
+                <md-outlined-select class="crm-fld" id="f_ord_kunde" onchange="orderEditLoadObjects()">
+                    <md-select-option value=""><div slot="headline">— Kunde wählen —</div></md-select-option>
                     ${customerOpts}
-                </select>
+                </md-outlined-select>
             </div>
             <div class="or-form-group">
                 <label>Objekt *</label>
-                <select id="f_ord_objekt">
-                    <option value="">— Objekt wählen —</option>
+                <md-outlined-select class="crm-fld" id="f_ord_objekt">
+                    <md-select-option value=""><div slot="headline">— Objekt wählen —</div></md-select-option>
                     ${objOpts}
-                </select>
+                </md-outlined-select>
             </div>
             <div class="or-form-group">
                 <label>Monat</label>
-                <select id="f_ord_monat">
-                    ${MONTHS_DE.map((m, i) => i > 0 ? `<option value="${i}" ${i == order.monat ? 'selected' : ''}>${m}</option>` : '').join('')}
-                </select>
+                <md-outlined-select class="crm-fld" id="f_ord_monat">
+                    ${MONTHS_DE.map((m, i) => i > 0 ? `<md-select-option value="${i}" ${i == order.monat ? 'selected' : ''}><div slot="headline">${m}</div></md-select-option>` : '').join('')}
+                </md-outlined-select>
             </div>
             <div class="or-form-group">
                 <label>Jahr</label>
-                <input type="number" id="f_ord_jahr" value="${order.jahr || new Date().getFullYear()}">
+                <md-outlined-text-field class="crm-fld" type="number" id="f_ord_jahr" value="${order.jahr || new Date().getFullYear()}"></md-outlined-text-field>
             </div>
             <div class="or-form-group">
                 <label>Zeit von</label>
-                <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="t24" id="f_ord_zeit_von" value="${order.zeit_von ? order.zeit_von.substring(0, 5) : ''}">
+                <md-outlined-text-field class="crm-fld t24" type="text" lang="de-DE" inputmode="numeric" data-max="5" placeholder="HH:MM" id="f_ord_zeit_von" value="${order.zeit_von ? order.zeit_von.substring(0, 5) : ''}"></md-outlined-text-field>
             </div>
             <div class="or-form-group">
                 <label>Zeit bis</label>
-                <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="t24" id="f_ord_zeit_bis" value="${order.zeit_bis ? order.zeit_bis.substring(0, 5) : ''}">
+                <md-outlined-text-field class="crm-fld t24" type="text" lang="de-DE" inputmode="numeric" data-max="5" placeholder="HH:MM" id="f_ord_zeit_bis" value="${order.zeit_bis ? order.zeit_bis.substring(0, 5) : ''}"></md-outlined-text-field>
             </div>
             <div class="or-form-group">
                 <label>Soll-Std / Betrag</label>
-                <input type="number" step="0.01" id="f_ord_soll" value="${order.soll_std_betrag || ''}">
+                <md-outlined-text-field class="crm-fld" type="number" step="0.01" id="f_ord_soll" value="${order.soll_std_betrag || ''}"></md-outlined-text-field>
             </div>
         </div>
     `;
@@ -854,7 +854,7 @@ async function editOrder(id) {
 async function orderEditLoadObjects() {
     const kundenId = document.getElementById('f_ord_kunde').value;
     const opts = await getObjectOptions(kundenId);
-    document.getElementById('f_ord_objekt').innerHTML = '<option value="">— Objekt wählen —</option>' + opts;
+    document.getElementById('f_ord_objekt').innerHTML = '<md-select-option value=""><div slot="headline">— Objekt wählen —</div></md-select-option>' + opts;
 }
 
 async function saveOrderEdit(bestellId) {
@@ -1060,9 +1060,9 @@ async function openSavedPdfsList(bestellId) {
                         </div>
                     </div>
                     <div class="or-pdf-actions">
-                        <button class="or-pdf-btn primary" title="Anzeigen / Herunterladen" onclick="downloadSavedPdfFromList(${p.id}, ${JSON.stringify(p.name).replace(/"/g,'&quot;')})">${orIcon('download', 'font-size:15px')}</button>
-                        <button class="or-pdf-btn" title="Teilen" onclick="shareSavedPdfFromList(${p.id})">${orIcon('share', 'font-size:15px')}</button>
-                        <button class="or-pdf-btn danger" title="Löschen" onclick="deleteSavedPdfFromList(${p.id}, '${bestellId}')">${orIcon('delete', 'font-size:15px')}</button>
+                        <md-filled-button class="or-pdf-btn primary" title="Anzeigen / Herunterladen" onclick="downloadSavedPdfFromList(${p.id}, ${JSON.stringify(p.name).replace(/"/g,'&quot;')})"><md-icon slot="icon">download</md-icon></md-filled-button>
+                        <md-outlined-button class="or-pdf-btn" title="Teilen" onclick="shareSavedPdfFromList(${p.id})"><md-icon slot="icon">share</md-icon></md-outlined-button>
+                        <md-text-button class="md-btn-danger or-pdf-btn danger" title="Löschen" onclick="deleteSavedPdfFromList(${p.id}, '${bestellId}')"><md-icon slot="icon">delete</md-icon></md-text-button>
                     </div>
                 </div>`;
         }).join('');
@@ -1085,7 +1085,7 @@ function ensureSavedPdfsModal() {
                     <div id="savedPdfsTitle" style="font-size:1.05rem;font-weight:700;color:var(--gray-800)">Gespeicherte PDFs</div>
                     <div style="font-size:0.78rem;color:var(--gray-500);margin-top:2px">Verlauf aller PDFs für diese Bestellung</div>
                 </div>
-                <button onclick="closeSavedPdfsModal()" style="background:none;border:none;color:var(--gray-500);cursor:pointer;font-size:1.2rem">&times;</button>
+                <md-icon-button onclick="closeSavedPdfsModal()" title="Schließen" aria-label="Schließen"><md-icon>close</md-icon></md-icon-button>
             </div>
             <div id="savedPdfsBody" style="padding:18px 22px;overflow-y:auto;flex:1"></div>
         </div>`;

@@ -101,20 +101,18 @@
                     <strong>KI-Assistent <span class="ai-badge-pro">Pro</span></strong>
                     <small><i class="material-symbols-outlined ai-status-dot">circle</i> Multimodal • sieht Bilder &amp; PDFs</small>
                 </div>
-                <button class="ai-expand" id="aiExpand" title="Vergrößern/Verkleinern"><i class="material-symbols-outlined">open_in_full</i></button>
-                <button class="ai-clear" id="aiClear" title="Verlauf löschen"><i class="material-symbols-outlined">delete</i></button>
-                <button class="ai-close" id="aiClose" title="Schließen"><i class="material-symbols-outlined">close</i></button>
+                <md-icon-button class="ai-expand" id="aiExpand" title="Vergrößern/Verkleinern"><md-icon>open_in_full</md-icon></md-icon-button>
+                <md-icon-button class="ai-clear" id="aiClear" title="Verlauf löschen"><md-icon>delete</md-icon></md-icon-button>
+                <md-icon-button class="ai-close" id="aiClose" title="Schließen"><md-icon>close</md-icon></md-icon-button>
             </div>
             <div class="ai-messages" id="aiMessages"></div>
             <div class="ai-attachments" id="aiAttachments"></div>
             <div class="ai-input-row">
-                <button class="ai-attach" id="aiAttach" title="PDF / Bild anhängen">
-                    <i class="material-symbols-outlined">attach_file</i>
-                </button>
+                <md-icon-button class="ai-attach" id="aiAttach" title="PDF / Bild anhängen"><md-icon>attach_file</md-icon></md-icon-button>
                 <textarea class="ai-input" id="aiInput" rows="1"
                     placeholder=""
                     maxlength="2000"></textarea>
-                <button class="ai-send" id="aiSend" title="Senden"><i class="material-symbols-outlined">send</i></button>
+                <md-icon-button class="ai-send" id="aiSend" title="Senden"><md-icon>send</md-icon></md-icon-button>
                 <input type="file" id="aiFileInput" accept="application/pdf,image/jpeg,image/png,image/webp" style="display:none">
             </div>
             <div class="ai-footnote">KI-generierte Antworten — kritische Aktionen erfordern Bestätigung.</div>
@@ -350,9 +348,7 @@
                         <strong>${escapeHtml(a.name)}</strong>
                         <span>${sizeKB} KB</span>
                     </div>
-                    <button type="button" class="ai-att-remove" data-idx="${i}" title="Entfernen">
-                        <i class="material-symbols-outlined">close</i>
-                    </button>
+                    <md-icon-button class="ai-att-remove" data-idx="${i}" title="Entfernen"><md-icon>close</md-icon></md-icon-button>
                 </div>
             `;
         }).join('');
@@ -512,9 +508,9 @@
     // ----------------------------------------------------------
     function renderQuickPrompts() {
         const chips = QUICK_PROMPTS.map((q, i) =>
-            `<button type="button" class="ai-quick-chip" data-qi="${i}">
+            `<md-outlined-button class="ai-quick-chip" data-qi="${i}">
                 <i class="material-symbols-outlined">${q.icon}</i> ${escapeHtml(q.label)}
-            </button>`
+            </md-outlined-button>`
         ).join('');
         return `
             <div class="ai-welcome">
@@ -547,8 +543,8 @@
         }
         return `
             <div class="ai-feedback">
-                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="up" title="Hilfreich"><i class="material-symbols-outlined">thumb_up</i></button>
-                <button type="button" class="ai-fb-btn" data-idx="${idx}" data-rating="down" title="Nicht hilfreich"><i class="material-symbols-outlined">thumb_down</i></button>
+                <md-icon-button class="ai-fb-btn" data-idx="${idx}" data-rating="up" title="Hilfreich"><md-icon>thumb_up</md-icon></md-icon-button>
+                <md-icon-button class="ai-fb-btn" data-idx="${idx}" data-rating="down" title="Nicht hilfreich"><md-icon>thumb_down</md-icon></md-icon-button>
             </div>
         `;
     }
@@ -630,12 +626,10 @@
                 ${tableHtml}
                 ${hint}
                 <div class="ai-action-card-buttons">
-                    <button type="button" class="ai-action-cancel" data-action-id="${escapeHtml(action.action_id)}">
-                        <i class="material-symbols-outlined">close</i> Abbrechen
-                    </button>
-                    <button type="button" class="ai-action-confirm" data-action-id="${escapeHtml(action.action_id)}">
-                        <i class="material-symbols-outlined">check</i> Bestätigen
-                    </button>
+                    <md-outlined-button class="ai-action-cancel" data-action-id="${escapeHtml(action.action_id)}"><md-icon slot="icon">close</md-icon>Abbrechen
+                    </md-outlined-button>
+                    <md-filled-button class="ai-action-confirm" data-action-id="${escapeHtml(action.action_id)}"><md-icon slot="icon">check</md-icon>Bestätigen
+                    </md-filled-button>
                 </div>
             </div>
         `;

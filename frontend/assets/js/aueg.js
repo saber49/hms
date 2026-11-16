@@ -37,12 +37,12 @@ async function renderAueg() {
             </div>
             <div class="ag-toolbar">
                 <div class="ag-seg" id="agSeg">
-                    <button data-f="alle" onclick="agSetFilter('alle')">Alle</button>
-                    <button data-f="handeln" onclick="agSetFilter('handeln')">${agIcon('priority_high')} Handlungsbedarf</button>
-                    <button data-f="equal_pay" onclick="agSetFilter('equal_pay')">${agIcon('payments')} Equal Pay</button>
+                    <md-filter-chip data-seg label="Alle" data-f="alle" onclick="agSetFilter('alle')"></md-filter-chip>
+                    <md-filter-chip data-seg label="Handlungsbedarf" data-f="handeln" onclick="agSetFilter('handeln')"><md-icon slot="icon">priority_high</md-icon></md-filter-chip>
+                    <md-filter-chip data-seg label="Equal Pay" data-f="equal_pay" onclick="agSetFilter('equal_pay')"><md-icon slot="icon">payments</md-icon></md-filter-chip>
                 </div>
-                <div class="ag-search">${agIcon('search')}<input id="agSearch" placeholder="Mitarbeiter oder Entleiher suchen…" value="${escapeHtml(_ag.q)}"></div>
-                <button class="ag-btn" onclick="agExportCsv()">${agIcon('download')} CSV</button>
+                ${uiTextField({ id: 'agSearch', type: 'search', icon: 'search', cls: 'ag-search', placeholder: 'Mitarbeiter oder Entleiher suchen…', value: _ag.q })}
+                <md-outlined-button class="ag-btn" onclick="agExportCsv()"><md-icon slot="icon">download</md-icon>CSV</md-outlined-button>
             </div>
             <div id="agTable" class="ag-card"><div class="ag-empty">${agIcon('hourglass_top')} Lade…</div></div>
             <h3 class="ag-h">${agIcon('domain')} Entleiher</h3>
@@ -82,7 +82,7 @@ function agRows() {
 }
 
 function agRenderTable() {
-    document.querySelectorAll('#agSeg button').forEach(b => b.classList.toggle('active', b.dataset.f === _ag.filter));
+    document.querySelectorAll('#agSeg [data-seg]').forEach(b => b.classList.toggle('active', b.dataset.f === _ag.filter));
     const box = document.getElementById('agTable');
     if (!box || !_ag.data) return;
     if (!(_ag.data.entleiher || []).some(e => e.aktiv)) {
@@ -128,16 +128,16 @@ function agRenderEntleiher() {
             <thead><tr><th>Kunde</th><th class="ag-num">Höchstdauer (Monate)</th><th class="ag-num">Equal Pay nach (Monaten)</th><th>Bemerkung (z.B. Tarifvertrag)</th><th>Aktiv</th><th></th></tr></thead>
             <tbody>${ent.map(e => `<tr data-k="${escapeHtml(e.kunde_id)}">
                 <td><b>${escapeHtml(e.kundenname)}</b><div class="ag-sub">${escapeHtml(e.kunde_id)}</div></td>
-                <td class="ag-num"><input type="number" class="ag-in ag-max" min="1" max="120" value="${e.hoechstdauer_monate}" ${edit ? '' : 'disabled'}></td>
-                <td class="ag-num"><input type="number" class="ag-in ag-ep" min="1" max="120" value="${e.equal_pay_monate}" ${edit ? '' : 'disabled'}></td>
-                <td><input type="text" class="ag-in ag-bem" maxlength="255" value="${escapeHtml(e.bemerkung || '')}" placeholder="z.B. TV LeiZ Metall: 48 Monate" ${edit ? '' : 'disabled'}></td>
+                <td class="ag-num"><md-outlined-text-field class="crm-fld ag-in ag-max" type="number" min="1" max="120" value="${e.hoechstdauer_monate}" ${edit ? '' : 'disabled'}></md-outlined-text-field></td>
+                <td class="ag-num"><md-outlined-text-field class="crm-fld ag-in ag-ep" type="number" min="1" max="120" value="${e.equal_pay_monate}" ${edit ? '' : 'disabled'}></md-outlined-text-field></td>
+                <td><md-outlined-text-field class="crm-fld ag-in ag-bem" type="text" data-max="255" value="${escapeHtml(e.bemerkung || '')}" placeholder="z.B. TV LeiZ Metall: 48 Monate" ${edit ? '' : 'disabled'}></md-outlined-text-field></td>
                 <td><md-checkbox class="ag-akt" ${e.aktiv ? 'checked' : ''} ${edit ? '' : 'disabled'}></md-checkbox></td>
-                <td class="ag-actions">${edit ? `<button class="ag-btn ag-btn-sm" onclick="agSaveEntleiher('${escapeHtml(e.kunde_id)}')">${agIcon('save')}</button><button class="ag-btn ag-btn-sm ag-danger" onclick="agRemoveEntleiher('${escapeHtml(e.kunde_id)}')" title="Nicht mehr prüfen">${agIcon('delete')}</button>` : ''}</td>
+                <td class="ag-actions">${edit ? `<md-icon-button class="ag-btn ag-btn-sm" onclick="agSaveEntleiher('${escapeHtml(e.kunde_id)}')"><md-icon slot="icon">save</md-icon></md-icon-button><md-icon-button class="md-icon-danger ag-btn ag-btn-sm ag-danger" onclick="agRemoveEntleiher('${escapeHtml(e.kunde_id)}')" title="Nicht mehr prüfen"><md-icon slot="icon">delete</md-icon></md-icon-button>` : ''}</td>
             </tr>`).join('')}</tbody>
         </table></div>` : `<div class="ag-empty" style="padding:16px">Noch keine Entleiher.</div>`}
         ${edit ? `<div class="ag-add">
-            <select id="agAddKunde"><option value="">Kunde als Entleiher hinzufügen…</option>${free.map(k => `<option value="${escapeHtml(k.kunde_id)}">${escapeHtml(k.kundenname)} (${escapeHtml(k.kunde_id)})</option>`).join('')}</select>
-            <button class="ag-btn ag-btn-primary" onclick="agAddEntleiher()">${agIcon('add')} Hinzufügen</button>
+            <md-outlined-select class="crm-fld" id="agAddKunde"><md-select-option value=""><div slot="headline">Kunde als Entleiher hinzufügen…</div></md-select-option>${free.map(k => `<md-select-option value="${escapeHtml(k.kunde_id)}"><div slot="headline">${escapeHtml(k.kundenname)} (${escapeHtml(k.kunde_id)})</div></md-select-option>`).join('')}</md-outlined-select>
+            <md-filled-button class="ag-btn ag-btn-primary" onclick="agAddEntleiher()"><md-icon slot="icon">add</md-icon>Hinzufügen</md-filled-button>
             <span class="ag-sub">Abweichende Höchstdauer nur bei Tarifvertrag der Einsatzbranche (§ 1 Abs. 1b Satz 3 AÜG).</span>
         </div>` : ''}`;
 }

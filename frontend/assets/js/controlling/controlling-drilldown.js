@@ -146,9 +146,9 @@ function renderDrillCrumbs() {
         const lbl = `${escapeHtml(DRILL_DIM_LABEL[s.dim] || s.dim)}: ${escapeHtml(s.name)}`;
         return last
             ? `<span class="crumb current">${lbl}</span>`
-            : `<button class="crumb" data-i="${i}">${lbl}</button><span class="sep">›</span>`;
+            : `<md-text-button class="crumb" data-i="${i}">${lbl}</md-text-button><span class="sep">›</span>`;
     }).join('');
-    el.querySelectorAll('button.crumb').forEach(b => b.addEventListener('click', () => drillBack(parseInt(b.dataset.i, 10))));
+    el.querySelectorAll('md-text-button.crumb').forEach(b => b.addEventListener('click', () => drillBack(parseInt(b.dataset.i, 10))));
 }
 
 // ---------- Apply entity as dashboard filter ----------
@@ -197,7 +197,7 @@ function renderDrill(d) {
         (e.aktiv === false ? ' <span class="ctrl-status-pill s-nein">inaktiv</span>' : '');
 
     const parent = e.parent && e.parent.id
-        ? `<button class="ctrl-drill-chip link" data-dim="${escapeHtml(e.parent.dim)}" data-id="${escapeHtml(e.parent.id)}" title="Übergeordnet öffnen">${ctrlIcon('arrow_upward', 'font-size:12px')} ${escapeHtml(DRILL_DIM_LABEL[e.parent.dim])}: ${escapeHtml(e.parent.name || e.parent.id)}</button>`
+        ? `<md-text-button class="ctrl-drill-chip link" data-dim="${escapeHtml(e.parent.dim)}" data-id="${escapeHtml(e.parent.id)}" title="Übergeordnet öffnen"><md-icon slot="icon">arrow_upward</md-icon>${escapeHtml(DRILL_DIM_LABEL[e.parent.dim])}: ${escapeHtml(e.parent.name || e.parent.id)}</md-text-button>`
         : '';
     document.getElementById('ctrlDrillMeta').innerHTML = `
         <span class="ctrl-drill-chip">${ctrlIcon('date_range', 'font-size:12px')} ${escapeHtml(d.period?.label || '')}</span>
@@ -268,7 +268,7 @@ function renderDrill(d) {
       ${subs.length ? `
       <div class="ctrl-drill-box">
         <div class="ctrl-drill-tabs" id="ctrlDrillTabs">
-          ${subs.map(s => `<button class="chip ${s === DRILL.tab ? 'active' : ''}" data-s="${s}">${ctrlIcon(DRILL_SUB_ICON[s] || 'label', 'font-size:13px')} ${DRILL_SUB_LABEL[s] || s} <small>(${d.breakdowns[s].length})</small></button>`).join('')}
+          ${subs.map(s => `<md-filter-chip data-seg label="${ctrlIcon(DRILL_SUB_ICON[s] || 'label', 'font-size:13px')} ${DRILL_SUB_LABEL[s] || s} <small>(${d.breakdowns[s].length})</small>" class="chip ${s === DRILL.tab ? 'active' : ''}" data-s="${s}"></md-filter-chip>`).join('')}
         </div>
         <div id="ctrlDrillSub">${renderDrillSub(d.breakdowns[DRILL.tab], DRILL.tab)}</div>
         <div class="ctrl-drill-hint">${ctrlIcon('touch_app', 'font-size:12px')} Zeile anklicken, um weiter in die Tiefe zu gehen.</div>

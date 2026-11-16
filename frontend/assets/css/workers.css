@@ -137,14 +137,14 @@
     flex-shrink: 0;
 }
 .wk-kpi-label {
-    font-size: 0.65rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.6px;
     color: var(--wk-text-muted);
 }
 .wk-kpi-value {
-    font-size: 1.7rem;
+    font-size: var(--md-sys-typescale-headline-medium-size);
     font-weight: 800;
     color: var(--wk-text);
     line-height: 1;
@@ -152,13 +152,13 @@
     font-variant-numeric: tabular-nums;
 }
 .wk-kpi-value small {
-    font-size: 0.8rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--wk-text-soft);
     margin-left: 3px;
 }
 .wk-kpi-sub {
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-soft);
     margin-top: auto;
     padding-top: 4px;
@@ -182,7 +182,7 @@
     border-left: 4px solid var(--wk-warn);
     border-radius: var(--md-sys-shape-corner-medium);
     margin-bottom: 14px;
-    font-size: 0.86rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--md-ext-color-on-warning-container);
     cursor: pointer;
     transition: box-shadow .15s ease;
@@ -208,7 +208,7 @@
     color: var(--wk-text);
     padding: 6px 12px;
     border-radius: var(--md-sys-shape-corner-small);
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
@@ -314,7 +314,7 @@
     border-radius: var(--md-sys-shape-corner-small);
     background: var(--wk-surface);
     color: var(--wk-text);
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     transition: border-color .15s ease, box-shadow .15s ease;
 }
 .wk-search input::placeholder { color: var(--wk-text-soft); }
@@ -345,7 +345,7 @@
     border: none;
     padding: 0 13px;
     height: 100%;
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--wk-text-muted);
     cursor: pointer;
@@ -380,7 +380,7 @@
     border-radius: var(--md-sys-shape-corner-small);
     background: var(--wk-surface);
     color: var(--wk-text);
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     min-width: 130px;
 }
 .wk-extra-filter select:focus {
@@ -398,7 +398,7 @@
     color: #fff;
     border: 1px solid var(--wk-accent);
     border-radius: var(--md-sys-shape-corner-small);
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     cursor: pointer;
     transition: background .15s ease;
@@ -432,14 +432,14 @@
     flex-shrink: 0;
 }
 .wk-app-link-label {
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     color: var(--wk-text-muted);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 .wk-app-link-url {
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--wk-text);
     font-family: ui-monospace, 'SF Mono', monospace;
     word-break: break-all;
@@ -485,7 +485,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     transition: all .12s ease;
 }
 .wk-card-menu:hover {
@@ -518,7 +518,7 @@
     width: 100%;
     text-align: left;
     cursor: pointer;
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     transition: background .12s ease;
 }
 .wk-card-dropdown button:hover { background: var(--wk-bg-soft); }
@@ -533,7 +533,7 @@
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 1.4rem;
+    font-size: var(--md-sys-typescale-title-large-size);
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
@@ -552,14 +552,14 @@
 .wk-avatar-status.active { background: var(--wk-ok); }
 .wk-avatar-status.inactive { background: var(--wk-text-soft); }
 .wk-card-name {
-    font-size: 0.95rem;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
     color: var(--wk-text);
     line-height: 1.2;
     margin-top: 2px;
 }
 .wk-card-role {
-    font-size: 0.74rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
     margin-bottom: 4px;
 }
@@ -575,20 +575,20 @@
     color: var(--wk-accent-hover);
     padding: 2px 8px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.66rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     border: 1px solid var(--wk-accent-line);
 }
 .wk-card-email {
     color: var(--wk-accent);
-    font-size: 0.75rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     text-decoration: none;
     word-break: break-all;
     margin-top: 4px;
 }
 .wk-card-email:hover { text-decoration: underline; }
 .wk-card-phone {
-    font-size: 0.74rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
     display: inline-flex;
     align-items: center;
@@ -613,7 +613,7 @@
     gap: 3px;
     padding: 2px 7px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.64rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     background: var(--wk-bg-strip);
     color: var(--wk-text-muted);
@@ -671,7 +671,7 @@
     justify-content: center;
     color: white;
     font-weight: 700;
-    font-size: 2.4rem;
+    font-size: var(--md-sys-typescale-display-small-size);
     overflow: hidden;
     cursor: pointer;
     position: relative;
@@ -696,14 +696,14 @@
 }
 .wk-profile-avatar:hover::after { opacity: 1; }
 .wk-profile-name {
-    font-size: 1.1rem;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
     color: var(--wk-text);
     text-align: center;
     margin-top: 4px;
 }
 .wk-profile-role {
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
     text-align: center;
 }
@@ -712,12 +712,12 @@
     color: var(--wk-text-muted);
     padding: 3px 10px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     font-family: ui-monospace, 'SF Mono', monospace;
 }
 .wk-profile-eintritt {
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
     margin-top: 2px;
 }
@@ -739,7 +739,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     transition: all .12s ease;
 }
 .wk-profile-action-btn:hover {
@@ -758,7 +758,7 @@
     padding: 9px 12px;
     border-radius: var(--md-sys-shape-corner-small);
     cursor: pointer;
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     transition: all .12s ease;
     display: inline-flex;
@@ -789,7 +789,7 @@
     background: none;
     border: none;
     padding: 13px 14px;
-    font-size: 0.84rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     color: var(--wk-text-muted);
     cursor: pointer;
@@ -818,7 +818,7 @@
     background: var(--wk-border);
     color: var(--wk-text-muted);
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.65rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
 }
 .wk-tab.active .wk-tab-count {
@@ -848,7 +848,7 @@
 }
 .wk-data-section-title {
     grid-column: 1 / -1;
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.6px;
@@ -891,7 +891,7 @@
     }
 }
 .wk-data-label {
-    font-size: 0.66rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -903,7 +903,7 @@
     line-height: 1.25;
 }
 .wk-data-value {
-    font-size: 0.88rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     color: var(--wk-text);
     word-break: break-word;
     line-height: 1.35;
@@ -962,7 +962,7 @@
 .wk-sd-title {
     flex: 1;
     margin: 0;
-    font-size: 0.92rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--wk-text);
     letter-spacing: -0.1px;
@@ -973,7 +973,7 @@
     gap: 3px;
     padding: 2px 8px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     background: var(--wk-warn-soft);
@@ -999,13 +999,13 @@
 }
 .wk-sd-field.is-wide { grid-column: 1 / -1; }
 .wk-sd-label {
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 500;
     line-height: 1.3;
     color: var(--wk-text-muted);
 }
 .wk-sd-value {
-    font-size: 0.9rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     line-height: 1.35;
     color: var(--wk-text);
@@ -1021,7 +1021,7 @@
     border: 1px dashed var(--wk-border);
 }
 .wk-sd-field.is-empty .wk-sd-value {
-    font-size: 0.8rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 400;
     font-style: italic;
     color: var(--wk-text-muted);
@@ -1031,7 +1031,7 @@
     margin: 2px 4px 2px 0;
     padding: 2px 9px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.75rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     background: var(--wk-accent-soft);
     color: var(--wk-accent-hover);
@@ -1077,7 +1077,7 @@
 /* Native file input is greedy with width; cap it to the column. */
 .wk-docs-upload-grid input[type="file"] { max-width: 100%; }
 .wk-docs-upload-grid label {
-    font-size: 0.66rem !important;
+    font-size: var(--md-sys-typescale-label-small-size) !important;
     font-weight: 700 !important;
     color: var(--wk-text-muted) !important;
     text-transform: uppercase;
@@ -1106,7 +1106,7 @@
     height: 110px;
     background: var(--md-sys-color-error-container);
     color: var(--md-sys-color-error);
-    font-size: 2.3rem;
+    font-size: var(--md-sys-typescale-display-small-size);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1116,7 +1116,7 @@
     border-bottom: 1px solid var(--wk-border);
 }
 .wk-doc-thumb span {
-    font-size: 0.65rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     color: var(--md-sys-color-error);
     margin-top: 4px;
@@ -1132,7 +1132,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     box-shadow: 0 2px 6px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
 }
 .wk-doc-expiry-badge.expired { color: var(--wk-danger); }
@@ -1144,7 +1144,7 @@
     min-width: 0;
 }
 .wk-doc-title {
-    font-size: 0.84rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--wk-text);
     white-space: nowrap;
@@ -1152,7 +1152,7 @@
     text-overflow: ellipsis;
 }
 .wk-doc-meta {
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     color: var(--wk-text-muted);
     display: flex;
     flex-direction: column;
@@ -1200,14 +1200,14 @@
     transition: border-color .15s ease;
 }
 .wk-absence-stat-value {
-    font-size: 1.5rem;
+    font-size: var(--md-sys-typescale-headline-small-size);
     font-weight: 800;
     color: var(--wk-text);
     line-height: 1;
     font-variant-numeric: tabular-nums;
 }
 .wk-absence-stat-label {
-    font-size: 0.65rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     color: var(--wk-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1236,7 +1236,7 @@
     border: 1px solid var(--wk-border);
     border-radius: var(--md-sys-shape-corner-small);
     background: var(--wk-surface);
-    font-size: 0.82rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
 }
 .wk-absence-form {
     background: var(--wk-bg-soft);
@@ -1256,7 +1256,7 @@
     gap: 5px;
     padding: 3px 9px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     background: color-mix(in srgb, var(--badge-color, var(--wk-accent)) 15%, white);
     color: var(--badge-color, var(--wk-accent));
@@ -1287,17 +1287,17 @@
     min-width: 0;
 }
 .absence-date {
-    font-size: 0.86rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     color: var(--wk-text);
 }
 .absence-date i { color: var(--wk-text-soft); margin-right: 4px; font-size: 0.72rem; }
 .absence-days {
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
 }
 .absence-note {
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-soft);
     font-style: italic;
 }
@@ -1318,7 +1318,7 @@
     gap: 5px;
     padding: 4px 10px;
     border-radius: var(--md-sys-shape-corner-full);
-    font-size: 0.74rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     border: 1px solid transparent;
 }
@@ -1354,12 +1354,12 @@
 .wk-cl-icon.missing { color: var(--wk-text-soft); }
 .wk-cl-body { flex: 1; min-width: 0; }
 .wk-cl-title {
-    font-size: 0.88rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--wk-text);
 }
 .wk-cl-meta {
-    font-size: 0.72rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-text-muted);
     margin-top: 2px;
 }
@@ -1406,7 +1406,7 @@
     background: none;
     border: none;
     padding: 8px 12px;
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--wk-text-muted);
     cursor: pointer;
@@ -1460,7 +1460,7 @@ to { opacity: 1; transform: translateY(0); }
     margin-bottom: 14px;
 }
 .wk-pw-show-label {
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     color: var(--wk-accent-hover);
     text-transform: uppercase;
@@ -1469,7 +1469,7 @@ to { opacity: 1; transform: translateY(0); }
 }
 .wk-pw-show-value {
     font-family: ui-monospace, 'SF Mono', monospace;
-    font-size: 1.4rem;
+    font-size: var(--md-sys-typescale-title-large-size);
     font-weight: 800;
     color: var(--wk-text);
     letter-spacing: 2px;
@@ -1481,7 +1481,7 @@ to { opacity: 1; transform: translateY(0); }
     cursor: copy;
 }
 .wk-pw-show-hint {
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--wk-accent-hover);
     margin-top: 8px;
 }
@@ -1497,7 +1497,7 @@ to { opacity: 1; transform: translateY(0); }
     margin-bottom: 10px;
     display: block;
 }
-.wk-empty p { font-size: 0.9rem; }
+.wk-empty p { font-size: var(--md-sys-typescale-body-medium-size); }
 /* ============================================
    Absence approval workflow ï¿½ status badges
    ============================================ */
@@ -1507,7 +1507,7 @@ to { opacity: 1; transform: translateY(0); }
     gap: 4px;
     padding: 3px 8px;
     border-radius: var(--md-sys-shape-corner-medium);
-    font-size: 0.7rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -1572,7 +1572,7 @@ md-dialog.workers-dialog-xl {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.85rem;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     color: var(--wk-text);
     border-bottom: 1px solid var(--wk-border);
@@ -1644,7 +1644,7 @@ md-outlined-select.wk-extra-filter {
 .wk-docs-upload-grid md-outlined-select { width: 100%; min-width: 0; }
 .wk-docs-upload-grid .cust-file-label {
     display: block;
-    font-size: 0.78rem;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--wk-text-muted);
     margin-bottom: 4px;
@@ -1689,7 +1689,7 @@ to { opacity: 1; transform: translateY(0); }
     background: var(--md-sys-color-error);
     color: #fff;
     border-radius: var(--md-sys-shape-corner-medium);
-    font-size: 0.65rem;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     line-height: 1;
     box-shadow: 0 2px 4px color-mix(in srgb, var(--md-sys-color-error) 35%, transparent);

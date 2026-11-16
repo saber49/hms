@@ -66,16 +66,16 @@ function qmRekApply() {
 function qmRekNeu(preset = {}) {
     openModal('Neue Reklamation', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field crm-span2">Objekt *<select id="qr_obj" class="crm-input" data-f="obj_id"><option value="">— wählen —</option>${qmObjOptions(preset.obj_id)}</select></label>
-            <label class="crm-field">Eingangsweg<select id="qr_kanal" class="crm-input">${qmSelectOptions(qmListe('rek_kanal'), preset.kanal || 'telefon')}</select></label>
-            <label class="crm-field">Eingang am<input id="qr_eingang" type="datetime-local" class="crm-input" value="${new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}"></label>
-            <label class="crm-field">Gemeldet von<input id="qr_melder" class="crm-input" maxlength="200" placeholder="Name beim Kunden"></label>
-            <label class="crm-field">Schwere *<select id="qr_schwere" class="crm-input">${qmSelectOptions(qmListe('rek_schwere'), 'mittel')}</select></label>
-            <label class="crm-field">Kategorie<select id="qr_kat" class="crm-input">${qmSelectOptions(qmListe('rek_kategorien'), '', '—')}</select></label>
-            <label class="crm-field">Zuständig<select id="qr_zust" class="crm-input">${qmUserOptions('', 'Objektleiter des Objekts')}</select></label>
-            <label class="crm-field crm-span2">Sachverhalt *<textarea id="qr_text" class="crm-input" rows="5" maxlength="5000" data-f="text"></textarea></label>
+            <md-outlined-select class="crm-fld crm-span2" label="Objekt *" id="qr_obj" data-f="obj_id"><md-select-option value=""><div slot="headline">— wählen —</div></md-select-option>${qmObjOptions(preset.obj_id)}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Eingangsweg" id="qr_kanal">${qmSelectOptions(qmListe('rek_kanal'), preset.kanal || 'telefon')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld" label="Eingang am" id="qr_eingang" type="datetime-local" value="${new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Gemeldet von" type="text" id="qr_melder" data-max="200" placeholder="Name beim Kunden"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Schwere *" id="qr_schwere">${qmSelectOptions(qmListe('rek_schwere'), 'mittel')}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Kategorie" id="qr_kat">${qmSelectOptions(qmListe('rek_kategorien'), '', '—')}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Zuständig" id="qr_zust">${qmUserOptions('', 'Objektleiter des Objekts')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Sachverhalt *" type="textarea" id="qr_text" rows="5" maxlength="5000" data-f="text"></md-outlined-text-field>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qrSave" onclick="qmRekSpeichern()">${qmIcon('save')} Anlegen</button>`, 'modal-lg');
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qrSave" onclick="qmRekSpeichern()"><md-icon slot="icon">save</md-icon>Anlegen</md-filled-button>`, 'modal-lg');
 }
 
 async function qmRekSpeichern() {
@@ -156,23 +156,23 @@ function qmRekAktionDialog(id, aktion) {
     const x = qm.cache.rekDetail || {};
     const titel = { bestaetigen: 'Eingangsbestätigung an den Kunden', sofortmassnahme: 'Sofortmaßnahme', ursache: 'Ursache',
         antworten: 'Antwort an den Kunden', zustaendig: 'Zuständigkeit ändern', abschliessen: 'Reklamation abschließen', notiz: 'Notiz' }[aktion];
-    const text = (label, val = '', ph = '') => `<label class="crm-field">${label}<textarea id="qa_text" class="crm-input" rows="5" maxlength="5000" placeholder="${qmE(ph)}">${qmE(val)}</textarea></label>`;
+    const text = (label, val = '', ph = '') => `<md-outlined-text-field class="crm-fld" label="${label}" type="textarea" id="qa_text" rows="5" maxlength="5000" placeholder="${qmE(ph)}" value="${qmE(val)}"></md-outlined-text-field>`;
     const felder = {
         bestaetigen: text('Text der Bestätigung (leer = Standardtext)', '', 'Vielen Dank für Ihre Meldung …') + `<div class="crm-muted">Geht per E-Mail an den Kunden und erscheint im Kundenportal.</div>`,
         sofortmassnahme: text('Was wurde sofort getan? *', x.sofortmassnahme || ''),
-        ursache: text('Ursache (intern, nie im Kundenportal) *', x.ursache || '') + `<div class="crm-radio-row"><label><input type="radio" name="qa_ber" value="1" ${x.berechtigt === true ? 'checked' : ''}> berechtigt</label><label><input type="radio" name="qa_ber" value="0" ${x.berechtigt === false ? 'checked' : ''}> nicht berechtigt</label></div>`,
+        ursache: text('Ursache (intern, nie im Kundenportal) *', x.ursache || '') + `<div class="crm-radio-row"><label><md-radio name="qa_ber" value="1" ${x.berechtigt === true ? 'checked' : ''}></md-radio> berechtigt</label><label><md-radio name="qa_ber" value="0" ${x.berechtigt === false ? 'checked' : ''}></md-radio> nicht berechtigt</label></div>`,
         antworten: text('Antwort *', x.antwort || '') + `<div class="crm-muted">Geht per E-Mail an den Kunden und erscheint im Kundenportal. Keine internen Ursachen oder Namen nennen.</div>`,
-        zustaendig: `<label class="crm-field">Neu zuständig *<select id="qa_user" class="crm-input">${qmUserOptions(x.zustaendig_id)}</select></label>` + text('Bemerkung'),
-        abschliessen: `<label class="crm-field">Kosten in € (optional)<input id="qa_kosten" type="number" min="0" step="0.01" class="crm-input"></label>` + text('Abschlussvermerk'),
+        zustaendig: `<md-outlined-select class="crm-fld" label="Neu zuständig *" id="qa_user">${qmUserOptions(x.zustaendig_id)}</md-outlined-select>` + text('Bemerkung'),
+        abschliessen: `<md-outlined-text-field class="crm-fld" label="Kosten in € (optional)" id="qa_kosten" type="number" min="0" step="0.01"></md-outlined-text-field>` + text('Abschlussvermerk'),
         notiz: text('Notiz (intern) *'),
     }[aktion];
     openModal(titel, `<div class="crm-form">${felder}</div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qaSave" onclick="qmRekAktion(${id},'${aktion}')">${qmIcon('save')} Speichern</button>`);
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qaSave" onclick="qmRekAktion(${id},'${aktion}')"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
 }
 
 async function qmRekAktion(id, aktion) {
     const body = { text: qmV('qa_text') || '' };
-    if (aktion === 'ursache') { const b = document.querySelector('input[name="qa_ber"]:checked'); body.berechtigt = b ? b.value === '1' : null; }
+    if (aktion === 'ursache') { const b = [...document.querySelectorAll('md-radio[name="qa_ber"]')].find(r => r.checked); body.berechtigt = b ? b.value === '1' : null; }
     if (aktion === 'zustaendig') body.zustaendig_id = +qmV('qa_user');
     if (aktion === 'abschliessen') body.kosten_eur = qmV('qa_kosten');
     const btn = document.getElementById('qaSave'); if (btn) btn.disabled = true;

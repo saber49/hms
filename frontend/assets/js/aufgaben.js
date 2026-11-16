@@ -250,14 +250,14 @@ function auRenderSel() {
 }
 
 async function auSave() {
-    const titel = (document.getElementById('auTitel')?.value || '').trim();
+    const titel = String(document.getElementById('auTitel')?.value ?? '').trim();
     if (!titel) return showToast('Bitte eintragen, was zu tun ist', 'error');
     if (!_au.sel.size) return showToast('Bitte mindestens einen Empfänger auswählen', 'error');
     const btn = document.getElementById('auSendBtn');
     if (btn) btn.disabled = true;
     const body = {
         titel,
-        beschreibung: (document.getElementById('auBeschreibung')?.value || '').trim() || null,
+        beschreibung: String(document.getElementById('auBeschreibung')?.value ?? '').trim() || null,
         bereich: document.getElementById('auBereich')?.value || null,
         prioritaet: document.getElementById('auPrio')?.value || 'normal',
         faellig_am: document.getElementById('auFaellig')?.value || null,

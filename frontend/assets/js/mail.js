@@ -138,15 +138,15 @@ async function renderMail() {
                         ${mlCanManage() ? `<md-icon-button title="Postfächer verwalten" onclick="mlOpenAccounts()"><md-icon>manage_accounts</md-icon></md-icon-button>` : ''}
                     </div>
                 </div>
-                <div class="ml-tabs">
-                    <button class="ml-tab ml-tab-active" id="mlTabInbox" onclick="mlSetFolder('inbox')">${mlIcon('inbox', 'font-size:17px')}Posteingang<span class="wm-unread-total" id="mlUnread"></span></button>
-                    <button class="ml-tab" id="mlTabSent" onclick="mlSetFolder('sent')">${mlIcon('send', 'font-size:17px')}Gesendet</button>
-                </div>
+                <md-tabs class="ml-tabs">
+                    <md-secondary-tab data-seg inline-icon class="ml-tab ml-tab-active" id="mlTabInbox" onclick="mlSetFolder('inbox')"><md-icon slot="icon">inbox</md-icon>Posteingang<span class="wm-unread-total" id="mlUnread"></span></md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="ml-tab" id="mlTabSent" onclick="mlSetFolder('sent')"><md-icon slot="icon">send</md-icon>Gesendet</md-secondary-tab>
+                </md-tabs>
                 <div class="ml-search">
                     ${mlIcon('search', 'font-size:18px')}
                     <input id="mlSearch" type="search" placeholder="Betreff, Absender suchen…" autocomplete="off"
                         onkeydown="if(event.key==='Enter')event.preventDefault()" oninput="mlSearchInput()">
-                    <button id="mlSearchClear" onclick="mlClearSearch()" title="Suche löschen" hidden>${mlIcon('close', 'font-size:17px')}</button>
+                    <md-icon-button id="mlSearchClear" onclick="mlClearSearch()" title="Suche löschen" aria-label="Suche löschen" hidden><md-icon>close</md-icon></md-icon-button>
                 </div>
                 ${acc.last_error ? mlErrorBanner(acc.last_error) : ''}
                 <div class="ml-list" id="mlList"><div class="empty-state" style="padding:40px 20px">${mlIcon('progress_activity', 'animation:ml-spin 1s linear infinite')}<p>Lade Nachrichten…</p></div></div>
@@ -348,7 +348,7 @@ function mlRenderReader() {
     reader.innerHTML = `
         <div class="ml-reader-head">
             <div class="ml-reader-top">
-                <button class="wm-back-btn ml-back" onclick="mlCloseReader()" title="Zurück">${mlIcon('arrow_back')}</button>
+                <md-icon-button class="wm-back-btn ml-back" onclick="mlCloseReader()" title="Zurück"><md-icon slot="icon">arrow_back</md-icon></md-icon-button>
                 <h3 class="ml-subject">${mlEsc(m.subject || '(kein Betreff)')}</h3>
                 ${canEdit('mail') ? `<div class="ml-reader-act">
                     <md-filled-tonal-button onclick="mlCompose('reply')"><md-icon slot="icon">reply</md-icon>Antworten</md-filled-tonal-button>
@@ -368,9 +368,8 @@ function mlRenderReader() {
                 <div class="ml-meta-date">${mlTime(m.date, true)}</div>
             </div>
             ${m.attachments.length ? `<div class="ml-atts">${m.attachments.map((a, i) => `
-                <button class="ml-att" onclick="mlDownload(${i})" title="Herunterladen">
-                    ${mlIcon('description', 'font-size:18px')}<span class="ml-att-name">${mlEsc(a.name)}</span><small>${mlSize(a.size)}</small>
-                </button>`).join('')}</div>` : ''}
+                <md-outlined-button class="ml-att" onclick="mlDownload(${i})" title="Herunterladen"><md-icon slot="icon">description</md-icon><span class="ml-att-name">${mlEsc(a.name)}</span><small>${mlSize(a.size)}</small>
+                </md-outlined-button>`).join('')}</div>` : ''}
             ${hasRemote ? `<div class="ml-banner" id="mlRemoteBanner">${mlIcon('image_not_supported')}<span>Externe Bilder wurden zum Schutz Ihrer Privatsphäre blockiert.</span><md-text-button onclick="mlShowRemote()">Bilder anzeigen</md-text-button></div>` : ''}
         </div>
         <iframe class="ml-body" id="mlBody" title="Nachricht" sandbox="allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer"></iframe>`;
@@ -539,7 +538,7 @@ function mlRenderFiles() {
     const el = document.getElementById('mlFiles');
     if (el) el.innerHTML = _ml.files.map((f, i) => `
         <span class="ml-file">${mlIcon('attach_file', 'font-size:15px')}<span class="ml-att-name">${mlEsc(f.name)}</span><small>${mlSize(f.size)}</small>
-            <button onclick="mlRemoveFile(${i})" title="Entfernen">${mlIcon('close', 'font-size:15px')}</button></span>`).join('');
+            <md-icon-button onclick="mlRemoveFile(${i})" title="Entfernen" aria-label="Entfernen"><md-icon>close</md-icon></md-icon-button></span>`).join('');
 }
 
 async function mlSend() {
@@ -646,7 +645,7 @@ function mlConnectStep2(d, forcePassword = false) {
     if (d.provider === 'microsoft' && !forcePassword) {
         el.innerHTML = head + (d.oauth
             ? `<p class="ml-muted">Dieses Postfach gehört zu Microsoft 365 / Outlook. Melden Sie sich bei Microsoft an und erlauben Sie den Zugriff.</p>
-               <button class="ml-oauth-btn ml-oauth-ms" onclick="mlOAuth('microsoft')">${mlMsLogo()}<span>Mit Microsoft anmelden</span></button>
+               <md-outlined-button class="ml-oauth-btn ml-oauth-ms" onclick="mlOAuth('microsoft')">${mlMsLogo()}<span>Mit Microsoft anmelden</span></md-outlined-button>
                <div id="mlConnectMsg"></div>`
             : `<div id="mlConnectMsg"></div>`);
         if (!d.oauth) mlConnectMsg('Die Microsoft-Anmeldung ist auf diesem Server noch nicht eingerichtet.');
@@ -655,7 +654,7 @@ function mlConnectStep2(d, forcePassword = false) {
     if (d.provider === 'google' && d.oauth && !forcePassword) {
         el.innerHTML = head + `
             <p class="ml-muted">Dieses Postfach gehört zu Google. Melden Sie sich bei Google an und erlauben Sie den Zugriff.</p>
-            <button class="ml-oauth-btn ml-oauth-google" onclick="mlOAuth('google')">${mlGoogleLogo()}<span>Mit Google anmelden</span></button>
+            <md-outlined-button class="ml-oauth-btn ml-oauth-google" onclick="mlOAuth('google')">${mlGoogleLogo()}<span>Mit Google anmelden</span></md-outlined-button>
             <md-text-button class="ml-alt" onclick="mlConnectStep2(_ml.discovered, true)">Stattdessen mit App-Passwort verbinden</md-text-button>
             <div id="mlConnectMsg"></div>`;
         return;

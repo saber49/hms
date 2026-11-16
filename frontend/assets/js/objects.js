@@ -548,7 +548,7 @@ async function saveObject(id, opts = {}) {
     ];
     const missing = requiredFields.filter(([fid]) => {
         const el = document.getElementById(fid);
-        const empty = !el || !String(el.value || '').trim();
+        const empty = !el || !StringString(el.value ?? '').trim();
         if (el) { try { el.error = empty; } catch (_) {} }
         return empty;
     }).map(([, label]) => label);

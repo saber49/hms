@@ -100,7 +100,7 @@ document.addEventListener('input', function (e) {
 document.addEventListener('focusout', function (e) {
     const el = e.target;
     if (!(el instanceof HTMLElement) || !el.classList || !el.classList.contains('t24')) return;
-    const v = String(el.value || '').trim();
+    const v = StringString(el.value ?? '').trim();
     if (!v) return;
     const m = v.match(/^(\d{1,2}):?(\d{0,2})$/);
     if (!m) { el.value = ''; return; }
@@ -571,7 +571,7 @@ function renderNavFavorites() {
         const icon = orig.querySelector('i');
         const label = orig.querySelector('span:not(.badge)');
         a.innerHTML = `${icon ? icon.outerHTML : ''}<span>${label ? label.innerHTML : page}</span>`
-            + `<button type="button" class="nav-fav-star" title="Aus Favoriten entfernen"><i class="material-symbols-outlined">star</i></button>`;
+            + `<md-icon-button class="nav-fav-star" title="Aus Favoriten entfernen" aria-label="Aus Favoriten entfernen"><md-icon>star</md-icon></md-icon-button>`;
         a.addEventListener('click', (e) => { e.preventDefault(); orig.click(); });
         a.querySelector('.nav-fav-star').addEventListener('click', (e) => {
             e.preventDefault(); e.stopPropagation(); toggleNavFavorite(page);
@@ -604,49 +604,49 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261114md3h');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261117md3k');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
 const QM_MODULE_SCRIPTS = [
     '01-qm-core', '02-qm-wachbuch', '03-qm-uebersicht', '04-qm-objekte',
     '05-qm-reklamationen', '06-qm-massnahmen', '07-qm-einstellungen', '99-qm-live',
-].map(f => 'assets/js/qm/' + f + '.js?v=20261114md3g');
+].map(f => 'assets/js/qm/' + f + '.js?v=20261117md3k');
 
 const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
     qm: QM_MODULE_SCRIPTS,
-    einstellungen: ['assets/js/einstellungen.js?v=20261114md3g'],
-    interessenten: ['assets/js/crm.js?v=20261114md3g'],
-    customers: ['assets/js/customers.js?v=20261114md3g'],
-    objects: ['assets/js/objects.js?v=20261114md3g'],
-    subcontractors: ['assets/js/subcontractors.js?v=20261114md3g'],
-    price_history: ['assets/js/price_history.js?v=20261116ui1'],
-    lager: ['assets/js/lager.js?v=20261114md3g'],
-    orders: ['assets/js/orders.js?v=20261114md3g'],
-    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261116ui1'],
+    einstellungen: ['assets/js/einstellungen.js?v=20261117md3k'],
+    interessenten: ['assets/js/crm.js?v=20261117md3k'],
+    customers: ['assets/js/customers.js?v=20261117md3k'],
+    objects: ['assets/js/objects.js?v=20261117md3k'],
+    subcontractors: ['assets/js/subcontractors.js?v=20261117md3k'],
+    price_history: ['assets/js/price_history.js?v=20261117md3k'],
+    lager: ['assets/js/lager.js?v=20261117md3k'],
+    orders: ['assets/js/orders.js?v=20261117md3k'],
+    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261117md3k'],
     tasks: TASKS_MODULE_SCRIPTS,
     disposition: TASKS_MODULE_SCRIPTS,
     monatsabschluss: TASKS_MODULE_SCRIPTS,
     reports: [
-        'assets/js/reports.js?v=20261114md3g',
-        'assets/js/controlling/controlling-core.js?v=20261114md3g',
-        'assets/js/controlling/controlling-charts.js?v=20261114md3g',
-        'assets/js/controlling/controlling-widgets.js?v=20261114md3g',
-        'assets/js/controlling/controlling-api.js?v=20261114md3g',
-        'assets/js/controlling/controlling-worker.js?v=20261114md3g',
-        'assets/js/controlling/controlling-drilldown.js?v=20261114md3g',
-        'assets/js/controlling/controlling-snapshots.js?v=20261114md3g',
-        'assets/js/controlling/controlling-cockpit.js?v=20261114md3g',
-        'assets/js/controlling.js?v=20261114md3g'
+        'assets/js/reports.js?v=20261117md3k',
+        'assets/js/controlling/controlling-core.js?v=20261117md3k',
+        'assets/js/controlling/controlling-charts.js?v=20261117md3k',
+        'assets/js/controlling/controlling-widgets.js?v=20261117md3k',
+        'assets/js/controlling/controlling-api.js?v=20261117md3k',
+        'assets/js/controlling/controlling-worker.js?v=20261117md3k',
+        'assets/js/controlling/controlling-drilldown.js?v=20261117md3k',
+        'assets/js/controlling/controlling-snapshots.js?v=20261117md3k',
+        'assets/js/controlling/controlling-cockpit.js?v=20261117md3k',
+        'assets/js/controlling.js?v=20261117md3k'
     ],
-    workers: ['assets/js/workers.js?v=20261114md3h'],
-    absences: ['assets/js/absences.js?v=20261114md3g'],
-    users: ['assets/js/users.js?v=20261114md3g'],
-    pdf_design: ['assets/js/pdf_design.js?v=20261114md3g'],
-    company_documents: ['assets/js/company_documents.js?v=20261114md3g'],
-    aufgaben: ['assets/js/aufgaben.js?v=20261116ui1'],
-    aueg: ['assets/js/aueg.js?v=20261114md3g']
+    workers: ['assets/js/workers.js?v=20261117md3k'],
+    absences: ['assets/js/absences.js?v=20261117md3k'],
+    users: ['assets/js/users.js?v=20261117md3k'],
+    pdf_design: ['assets/js/pdf_design.js?v=20261117md3k'],
+    company_documents: ['assets/js/company_documents.js?v=20261117md3k'],
+    aufgaben: ['assets/js/aufgaben.js?v=20261117md3k'],
+    aueg: ['assets/js/aueg.js?v=20261117md3k']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app
 // <dialog> + iframe. Same element contract as orders.js
@@ -1245,14 +1245,12 @@ async function openAccountModal(activeTab) {
     }
 
     const tabsHtml = tabs.map(tab => `
-        <button class="acc-tab ${tab.id === activeTab ? 'active' : ''}" data-tab="${tab.id}" onclick="switchAccountTab('${tab.id}')">
-            <i class="material-symbols-outlined">${tab.icon}</i> ${tab.label}
-        </button>
+        <md-secondary-tab data-seg inline-icon class="acc-tab ${tab.id === activeTab ? 'active' : ''}" data-tab="${tab.id}" onclick="switchAccountTab('${tab.id}')"><md-icon slot="icon">${tab.icon}</md-icon>${tab.label}</md-secondary-tab>
     `).join('');
 
     const body = `
         <div class="acc-modal">
-            <div class="acc-tabs">${tabsHtml}</div>
+            <md-tabs class="acc-tabs">${tabsHtml}</md-tabs>
             <div class="acc-tab-content" id="accTabContent">
                 <div class="acc-loading"><md-circular-progress indeterminate class="ms-progress-sm"></md-circular-progress> Laden...</div>
             </div>
@@ -1431,12 +1429,9 @@ function renderDocAssetsSection(c, ctx) {
             <div class="doc-asset-status ${cls}" id="${kind}Status">${status}</div>
             <div class="logo-buttons" style="justify-content:center">
                 <input type="file" id="${kind}File" accept="image/png,image/webp,image/svg+xml,image/jpeg" style="display:none" onchange="uploadDocAsset(this,'${kind}')">
-                <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('${kind}File').click()">
-                    <i class="material-symbols-outlined">upload</i> ${own ? 'Ersetzen' : 'Hochladen'}
+                <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('${kind}File').click()"><md-icon slot="icon">upload</md-icon>${own ? 'Ersetzen' : 'Hochladen'}
                 </button>
-                <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}>
-                    <i class="material-symbols-outlined">delete</i>
-                </button>
+                <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}><md-icon slot="icon">delete</md-icon></button>
             </div>
             ${isAdmin ? `<label class="doc-asset-scope" title="Für alle Benutzer der Firma als Standard speichern">
                 <md-checkbox id="${kind}Scope"></md-checkbox> Firmen-Standard
@@ -1601,11 +1596,9 @@ function renderLogoUploader(c) {
                 <div class="logo-actions">
                     <div class="logo-buttons">
                         <input type="file" id="companyLogoFile" accept="image/png,image/jpeg,image/svg+xml" style="display:none" onchange="uploadCompanyLogo(this)">
-                        <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('companyLogoFile').click()">
-                            <i class="material-symbols-outlined">upload</i> Logo hochladen
+                        <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('companyLogoFile').click()"><md-icon slot="icon">upload</md-icon>Logo hochladen
                         </button>
-                        <md-outlined-button type="button"  class="md-btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}>
-                            <i class="material-symbols-outlined">delete</i> Entfernen
+                        <md-outlined-button type="button"  class="md-btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}><md-icon slot="icon">delete</md-icon>Entfernen
                         </button>
                     </div>
                     <div class="hint">PNG, JPG oder SVG · max. 2 MB · empfohlen quadratisch (z.B. 512×512 px)</div>
@@ -1757,8 +1750,7 @@ function renderCompanyTab(c) {
                 <span></span>
             </div>
             <div id="cfPauseRules"></div>
-            <md-outlined-button type="button"  class="md-btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px">
-                <i class="material-symbols-outlined">add</i> Regel hinzufügen
+            <md-outlined-button type="button"  class="md-btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px"><md-icon slot="icon">add</md-icon>Regel hinzufügen
             </button>
         </div>
 
@@ -1872,9 +1864,7 @@ function cfPauseRuleRowHtml(von, bis, min) {
         <md-outlined-text-field type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01"></md-outlined-text-field>
         <md-outlined-text-field type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00"></md-outlined-text-field>
         <md-outlined-text-field type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30"></md-outlined-text-field>
-        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))">
-            <i class="material-symbols-outlined">delete</i>
-        </button>
+        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))"><md-icon slot="icon">delete</md-icon></button>
     </div>`;
 }
 
@@ -2029,8 +2019,7 @@ function renderDocumentsTabHtml(items, categories) {
                     </div>
                 </div>
                 <div class="docs-uploader-actions">
-                    <md-filled-button type="button"  id="docUploadBtn">
-                        <i class="material-symbols-outlined">upload</i> Hochladen
+                    <md-filled-button type="button"  id="docUploadBtn"><md-icon slot="icon">upload</md-icon>Hochladen
                     </button>
                 </div>
             </div>
@@ -2291,8 +2280,8 @@ function _readCompanyForm() {
     if (document.getElementById('cfPauseRules')) {
         const rules = [];
         document.querySelectorAll('#cfPauseRules .cf-pause-rule').forEach(row => {
-            const von = (row.querySelector('.cf-pause-von')?.value || '').trim();
-            const bis = (row.querySelector('.cf-pause-bis')?.value || '').trim();
+            const von = String(row.querySelector('.cf-pause-von')?.value ?? '').trim();
+            const bis = String(row.querySelector('.cf-pause-bis')?.value ?? '').trim();
             const min = parseInt(row.querySelector('.cf-pause-min')?.value);
             // Empty rows are dropped; half-filled ones go to the server, which
             // answers with a clear message (format / overlap).
@@ -2495,8 +2484,7 @@ function openModal(title, bodyHtml, footerHtml = '', sizeClass = '') {
 function ensureLegacyModalMaxBtn(header) {
     let btn = header.querySelector('.modal-max-btn');
     if (!btn) {
-        btn = document.createElement('button');
-        btn.type = 'button';
+        btn = document.createElement('md-icon-button');
         btn.className = 'modal-close modal-max-btn';
         btn.setAttribute('aria-label', 'Vollbild umschalten');
         btn.addEventListener('click', (e) => {
@@ -2504,13 +2492,13 @@ function ensureLegacyModalMaxBtn(header) {
             const modal = document.getElementById('modal');
             if (!modal) return;
             const max = modal.classList.toggle('modal-max');
-            btn.innerHTML = `<span class="material-symbols-outlined">${max ? 'fullscreen_exit' : 'fullscreen'}</span>`;
+            btn.innerHTML = `<md-icon>${max ? 'fullscreen_exit' : 'fullscreen'}</md-icon>`;
             btn.title = max ? 'Verkleinern' : 'Vollbild';
         });
         const closeBtn = header.querySelector('#modalClose');
         header.insertBefore(btn, closeBtn || null);
     }
-    btn.innerHTML = '<span class="material-symbols-outlined">fullscreen</span>';
+    btn.innerHTML = '<md-icon>fullscreen</md-icon>';
     btn.title = 'Vollbild';
 }
 
@@ -2667,26 +2655,24 @@ document.addEventListener('wheel', _swallowOutsideScroll, { passive: false });
         const headline = dlg.querySelector('[slot="headline"]');
         if (!headline) return;
         dlg.dataset.maxBtn = '1';
-        const btn = document.createElement('button');
-        btn.type = 'button';
+        const btn = document.createElement('md-icon-button');
         btn.className = 'dlg-max-btn';
         btn.title = 'Vollbild';
         btn.setAttribute('aria-label', 'Vollbild umschalten');
-        btn.innerHTML = '<span class="material-symbols-outlined">fullscreen</span>';
+        btn.innerHTML = '<md-icon>fullscreen</md-icon>';
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const max = dlg.classList.toggle('dlg-max');
-            btn.innerHTML = `<span class="material-symbols-outlined">${max ? 'fullscreen_exit' : 'fullscreen'}</span>`;
+            btn.innerHTML = `<md-icon>${max ? 'fullscreen_exit' : 'fullscreen'}</md-icon>`;
             btn.title = max ? 'Verkleinern' : 'Vollbild';
         });
         headline.appendChild(btn);
 
-        const closeBtn = document.createElement('button');
-        closeBtn.type = 'button';
+        const closeBtn = document.createElement('md-icon-button');
         closeBtn.className = 'dlg-max-btn dlg-close-btn';
         closeBtn.title = 'Schließen';
         closeBtn.setAttribute('aria-label', 'Dialog schließen');
-        closeBtn.innerHTML = '<span class="material-symbols-outlined">close</span>';
+        closeBtn.innerHTML = '<md-icon>close</md-icon>';
         closeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             dlg.close('close-button');
@@ -3528,8 +3514,8 @@ function copyPortalLink(type) {
         const nav = document.createElement('div');
         nav.className = 'hscroll-nav';
         nav.innerHTML = `
-            <button type="button" class="hscroll-btn hscroll-left" aria-label="Nach links scrollen" title="Nach links scrollen"><span class="material-symbols-outlined">chevron_left</span></button>
-            <button type="button" class="hscroll-btn hscroll-right" aria-label="Nach rechts scrollen" title="Nach rechts scrollen"><span class="material-symbols-outlined">chevron_right</span></button>`;
+            <md-icon-button class="hscroll-btn hscroll-left" aria-label="Nach links scrollen" title="Nach links scrollen"><md-icon>chevron_left</md-icon></md-icon-button>
+            <md-icon-button class="hscroll-btn hscroll-right" aria-label="Nach rechts scrollen" title="Nach rechts scrollen"><md-icon>chevron_right</md-icon></md-icon-button>`;
         document.body.appendChild(nav);
 
         const btnL = nav.querySelector('.hscroll-left');

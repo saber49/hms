@@ -385,7 +385,7 @@ button.delete {
     }
     /* Readability: raise fonts below 11px */
 th {
-        font-size: 0.72rem !important;
+        font-size: var(--md-sys-typescale-body-small-size) !important;
     }
     .ph-tl-typ,
     .ph-price-label,
@@ -393,7 +393,7 @@ th {
     .owner-ribbon,
     .ma-today-btn,
 .ma-range-btn {
-        font-size: 0.7rem !important;
+        font-size: var(--md-sys-typescale-label-small-size) !important;
     }
     .bento-tile-head,
     .bento-tile-label,
@@ -404,6 +404,6 @@ th {
     .wk-tag,
     .wk-card-badge,
 .ai-badge-pro {
-        font-size: 0.7rem !important;
+        font-size: var(--md-sys-typescale-label-small-size) !important;
     }
 }

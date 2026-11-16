@@ -51,10 +51,10 @@ async function renderControlling() {
         <div class="ctrl-card-header">
           <h3 class="ctrl-card-title">${ctrlIcon('location_on')} Objektcontrolling</h3>
           <div class="ctrl-card-toolbar" id="ccObjFilter">
-            <button class="chip active" data-a="all">Alle</button>
-            <button class="chip" data-a="rot">Rot</button>
-            <button class="chip" data-a="gelb">Gelb</button>
-            <button class="chip" data-a="gruen">Grün</button>
+            <md-filter-chip data-seg label="Alle" class="chip active" data-a="all"></md-filter-chip>
+            <md-filter-chip data-seg label="Rot" class="chip" data-a="rot"></md-filter-chip>
+            <md-filter-chip data-seg label="Gelb" class="chip" data-a="gelb"></md-filter-chip>
+            <md-filter-chip data-seg label="Grün" class="chip" data-a="gruen"></md-filter-chip>
           </div>
         </div>
         <small class="cc-muted cc-pad">Schlechteste Marge zuerst · Ampel auf DB II · Soll/Ist-Stunden bis heute · ABC nach Deckungsbeitrag</small>
@@ -71,10 +71,10 @@ async function renderControlling() {
         <div class="ctrl-card-header">
           <h3 class="ctrl-card-title">${ctrlIcon('table_chart')} Auswertung nach</h3>
           <div class="ctrl-card-toolbar" id="ccTabs">
-            <button class="chip active" data-t="kunden">Kunden</button>
-            <button class="chip" data-t="mitarbeiter">Mitarbeiter</button>
-            <button class="chip" data-t="nu">Nachunternehmer</button>
-            <button class="chip" data-t="bereiche">Bereiche</button>
+            <md-filter-chip data-seg label="Kunden" class="chip active" data-t="kunden"></md-filter-chip>
+            <md-filter-chip data-seg label="Mitarbeiter" class="chip" data-t="mitarbeiter"></md-filter-chip>
+            <md-filter-chip data-seg label="Nachunternehmer" class="chip" data-t="nu"></md-filter-chip>
+            <md-filter-chip data-seg label="Bereiche" class="chip" data-t="bereiche"></md-filter-chip>
           </div>
         </div>
         <div id="ccTabBody" class="cc-scroll">${ctrlBdSkeleton()}</div>
@@ -114,7 +114,7 @@ async function renderControlling() {
 // ============================================================
 function ctrlTopbarHtml() {
     const p = CTRL.state.period;
-    const btn = (k, label) => `<button data-p="${k}" class="${p === k ? 'active' : ''}">${label}</button>`;
+    const btn = (k, label) => `<md-filter-chip data-seg label="${label}" data-p="${k}" class="${p === k ? 'active' : ''}"></md-filter-chip>`;
     return `
       <div class="ctrl-topbar">
         <div class="ctrl-title">
@@ -123,11 +123,11 @@ function ctrlTopbarHtml() {
         </div>
         <div class="ctrl-period" id="ctrlPeriodSwitcher">
           ${btn('month', 'Monat')}${btn('last_month', 'Vormonat')}${btn('quarter', 'Quartal')}${btn('ytd', 'Lfd. Jahr')}${btn('year', 'Jahr')}
-          <button data-p="custom" class="${p === 'custom' ? 'active' : ''}" title="Eigener Zeitraum">${ctrlIcon('calendar_month', 'font-size:14px')}</button>
+          <md-filter-chip data-seg label="Eigener" data-p="custom" class="${p === 'custom' ? 'active' : ''}" title="Eigener Zeitraum"><md-icon slot="icon">calendar_month</md-icon></md-filter-chip>
         </div>
         <div class="ctrl-period cc-basis" id="ccBasis" title="Welche Einsätze zählen?">
-          <button data-b="operativ" class="${CTRLC.basis === 'operativ' ? 'active' : ''}" title="Alle geleisteten Stunden — freigegeben oder noch nicht">Operativ</button>
-          <button data-b="abrechnung" class="${CTRLC.basis === 'abrechnung' ? 'active' : ''}" title="Nur Stunden, die in der Zeiterfassung für den Kunden freigegeben sind (= Leistungsnachweis)">Abrechnung</button>
+          <md-filter-chip data-seg label="Operativ" data-b="operativ" class="${CTRLC.basis === 'operativ' ? 'active' : ''}" title="Alle geleisteten Stunden — freigegeben oder noch nicht"></md-filter-chip>
+          <md-filter-chip data-seg label="Abrechnung" data-b="abrechnung" class="${CTRLC.basis === 'abrechnung' ? 'active' : ''}" title="Nur Stunden, die in der Zeiterfassung für den Kunden freigegeben sind (= Leistungsnachweis)"></md-filter-chip>
         </div>
         <div class="ctrl-topbar-actions">
           <md-outlined-button id="ctrlBtnCompare" title="Vergleichsmodus umschalten">
@@ -215,10 +215,10 @@ async function ccBereichOptions() {
 // BINDINGS
 // ============================================================
 function bindCtrlTopbar() {
-    document.querySelectorAll('#ctrlPeriodSwitcher button').forEach(b => {
+    document.querySelectorAll('#ctrlPeriodSwitcher [data-seg]').forEach(b => {
         b.addEventListener('click', () => {
             const p = b.dataset.p;
-            document.querySelectorAll('#ctrlPeriodSwitcher button').forEach(x => x.classList.toggle('active', x === b));
+            document.querySelectorAll('#ctrlPeriodSwitcher [data-seg]').forEach(x => x.classList.toggle('active', x === b));
             CTRL.state.period = p;
             const customRange = document.querySelector('.ctrl-custom-range');
             if (p === 'custom') {
@@ -240,10 +240,10 @@ function bindCtrlTopbar() {
         });
     });
 
-    document.querySelectorAll('#ccBasis button').forEach(b => {
+    document.querySelectorAll('#ccBasis [data-seg]').forEach(b => {
         b.addEventListener('click', () => {
             CTRLC.basis = b.dataset.b;
-            document.querySelectorAll('#ccBasis button').forEach(x => x.classList.toggle('active', x === b));
+            document.querySelectorAll('#ccBasis [data-seg]').forEach(x => x.classList.toggle('active', x === b));
             ctrlLoadAll(false);
         });
     });

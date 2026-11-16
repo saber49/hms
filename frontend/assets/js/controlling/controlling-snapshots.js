@@ -11,7 +11,7 @@ function ctrlSnapDrawerHtml() {
       <aside class="ctrl-snap-drawer" id="ctrlSnapDrawer">
         <div class="ctrl-snap-head">
           <h3>${ctrlIcon('bookmark', 'font-size:15px;vertical-align:-2px')} Gespeicherte Snapshots</h3>
-          <button id="ctrlSnapClose">&times;</button>
+          <md-icon-button id="ctrlSnapClose" title="Schließen" aria-label="Schließen"><md-icon>close</md-icon></md-icon-button>
         </div>
         <div class="ctrl-snap-list" id="ctrlSnapList">
           <div class="ctrl-empty">${ctrlSpinner(28)}<div>Laden…</div></div>
@@ -48,7 +48,7 @@ async function openSnapDrawer() {
         <div class="t">${escapeHtml(s.title)}</div>
         <div class="m">
           <span>${formatDate(s.date_from)} – ${formatDate(s.date_bis)}</span>
-          <button class="del" data-id="${s.id}" title="Löschen">${ctrlIcon('delete', 'font-size:13px')}</button>
+          <md-icon-button class="del md-icon-danger" data-id="${s.id}" title="Löschen" aria-label="Löschen"><md-icon>delete</md-icon></md-icon-button>
         </div>
         <div style="font-size:0.7rem;color:var(--gray-400);margin-top:4px">
           ${escapeHtml(s.period_type || '')} · ${escapeHtml(s.created_by || '–')}

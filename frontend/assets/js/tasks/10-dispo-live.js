@@ -193,7 +193,7 @@ function closeNuRemoveModal() {
 
 async function confirmNuWorkerRemoval() {
     if (!_nuRemovePending) return;
-    const reason = (document.getElementById('nuRemoveReason')?.value || '').trim();
+    const reason = String(document.getElementById('nuRemoveReason')?.value ?? '').trim();
     if (!reason) {
         const ta = document.getElementById('nuRemoveReason');
         if (ta) { ta.style.borderColor = '#dc2626'; ta.focus(); }

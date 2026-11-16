@@ -58,12 +58,12 @@ async function qmStAllgemein() {
             <div class="crm-card crm-settings-card"><div class="crm-card-title">${qmIcon(gruppe === 'Wachbuch' ? 'menu_book' : 'verified')} ${qmE(gruppe)}</div>
                 ${fragen.map(([k, frage, hilfe, wahl]) => `<div class="qm-frage">
                     <div><strong>${qmE(frage)}</strong>${hilfe ? `<div class="crm-sub">${qmE(hilfe)}</div>` : ''}</div>
-                    <select class="crm-input crm-input-sm" ${darf ? '' : 'disabled'} onchange="qmStSetzen('${k}', this.value)">${Object.entries(wahl).map(([v, l]) => `<option value="${v}" ${String(w[k]) === String(v) ? 'selected' : ''}>${qmE(l)}</option>`).join('')}</select>
+                    <md-outlined-select class="crm-fld is-sm" ${darf ? '' : 'disabled'} onchange="qmStSetzen('${k}', this.value)">${Object.entries(wahl).map(([v, l]) => `<md-select-option value="${v}" ${String(w[k]) === String(v) ? 'selected' : ''}><div slot="headline">${qmE(l)}</div></md-select-option>`).join('')}</md-outlined-select>
                 </div>`).join('')}
             </div>`).join('')}
             <div class="crm-card crm-settings-card"><div class="crm-card-title">${qmIcon('mail')} System</div>
                 <div class="qm-frage"><div><strong>An welche Adresse sollen Kunden auf QM-E-Mails antworten?</strong><div class="crm-sub">Leer = Standard-Absender des Systems.</div></div>
-                    <input class="crm-input crm-input-sm" type="email" value="${qmE(w.absender_email || '')}" ${darf ? '' : 'disabled'} onchange="qmStSetzen('absender_email', this.value)"></div>
+                    <md-outlined-text-field class="crm-fld is-sm" type="email" value="${qmE(w.absender_email || '')}" ${darf ? '' : 'disabled'} onchange="qmStSetzen('absender_email', this.value)"></md-outlined-text-field></div>
             </div>
         </div>
         <details class="crm-card qm-mt"><summary class="crm-card-title">${qmIcon('receipt_long')} Verlauf der Einstellungen</summary>
@@ -89,13 +89,13 @@ async function qmStRechte() {
         <div class="data-table-card"><div class="crm-settings-tablewrap"><table class="crm-table crm-settings-table">
             <thead><tr><th>Recht</th>${Object.values(rollen).map(l => `<th class="crm-num">${qmE(l)}</th>`).join('')}</tr></thead>
             <tbody>${Object.entries(r.data.rechte).map(([k, v]) => `<tr><td>${qmE(v.label)}</td>${Object.keys(rollen).map(rl => `
-                <td class="crm-num"><input type="checkbox" data-recht="${k}" data-rolle="${rl}" ${v.rollen.includes(rl) ? 'checked' : ''} ${darf && k !== 'einstellungen' ? '' : 'disabled'}></td>`).join('')}</tr>`).join('')}</tbody>
+                <td class="crm-num"><md-checkbox data-recht="${k}" data-rolle="${rl}" ${v.rollen.includes(rl) ? 'checked' : ''} ${darf && k !== 'einstellungen' ? '' : 'disabled'}></md-checkbox></td>`).join('')}</tr>`).join('')}</tbody>
         </table></div></div>
         ${darf ? `<div class="crm-form-actions qm-mt"><md-filled-button onclick="qmRechteSpeichern()"><md-icon slot="icon">save</md-icon>Rechte speichern</md-filled-button></div>` : ''}`;
 }
 async function qmRechteSpeichern() {
     const body = {};
-    document.querySelectorAll('input[data-recht]').forEach(i => { (body[i.dataset.recht] ||= []); if (i.checked) body[i.dataset.recht].push(i.dataset.rolle); });
+    document.querySelectorAll('md-checkbox[data-recht]').forEach(i => { (body[i.dataset.recht] ||= []); if (i.checked) body[i.dataset.recht].push(i.dataset.rolle); });
     const r = await qmReq('PUT', QM_API + '/einstellungen/rechte', body);
     if (qmFehler(r)) return;
     qm.cache.st = r.data;
@@ -217,28 +217,28 @@ async function qmKzDialog(id = null) {
     const kunden = qm.cache.kzKunden;
     const objHtml = (kid, sel) => {
         const objs = (kunden.find(k => k.kunde_id === kid)?.objekte) || [];
-        return `<label class="crm-switch-row"><input type="checkbox" id="qk_alle" ${sel === null ? 'checked' : ''} onchange="document.querySelectorAll('.qk-obj').forEach(c=>c.disabled=this.checked)"> alle Objekte des Kunden (auch künftige)</label>
-            ${objs.map(o => `<label class="crm-switch-row"><input type="checkbox" class="qk-obj" value="${qmE(o.obj_id)}" ${sel === null ? 'disabled' : ''} ${sel && sel.includes(o.obj_id) ? 'checked' : ''}> ${qmE(o.objektname)}</label>`).join('') || '<div class="crm-muted">Kunde hat keine aktiven Objekte</div>'}`;
+        return `<label class="crm-switch-row"><md-checkbox id="qk_alle" ${sel === null ? 'checked' : ''} onchange="document.querySelectorAll('.qk-obj').forEach(c=>c.disabled=this.checked)"></md-checkbox> alle Objekte des Kunden (auch künftige)</label>
+            ${objs.map(o => `<label class="crm-switch-row"><md-checkbox class="qk-obj" value="${qmE(o.obj_id)}" ${sel === null ? 'disabled' : ''} ${sel && sel.includes(o.obj_id) ? 'checked' : ''}></md-checkbox> ${qmE(o.objektname)}</label>`).join('') || '<div class="crm-muted">Kunde hat keine aktiven Objekte</div>'}`;
     };
     window._qmKzObj = objHtml;
     openModal(z ? 'Kundenzugang bearbeiten' : 'Neuer Kundenzugang', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field crm-span2">Kunde *<select id="qk_kunde" class="crm-input" data-f="kunde_id" ${z ? 'disabled' : ''} onchange="document.getElementById('qk_objekte').innerHTML=window._qmKzObj(this.value, null)">
-                <option value="">— wählen —</option>${kunden.map(k => `<option value="${qmE(k.kunde_id)}" ${z?.kunde_id === k.kunde_id ? 'selected' : ''}>${qmE(k.kundenname)}</option>`).join('')}</select></label>
-            <label class="crm-field">Ansprechpartner *<input id="qk_name" class="crm-input" data-f="name" maxlength="200" value="${qmE(z?.name || '')}"></label>
-            <label class="crm-field">E-Mail (für Benachrichtigungen)<input id="qk_mail" type="email" class="crm-input" data-f="email" maxlength="200" value="${qmE(z?.email || '')}"></label>
-            <label class="crm-field">Benutzername *<input id="qk_user" class="crm-input" data-f="username" maxlength="50" value="${qmE(z?.username || '')}" placeholder="z. B. mueller.lager"></label>
-            ${z ? `<label class="crm-switch-row"><input type="checkbox" id="qk_aktiv" ${z.aktiv ? 'checked' : ''}> Zugang aktiv</label>` : '<div></div>'}
+            <md-outlined-select class="crm-fld crm-span2" label="Kunde *" id="qk_kunde" data-f="kunde_id" ${z ? 'disabled' : ''} onchange="document.getElementById('qk_objekte').innerHTML=window._qmKzObj(this.value, null)">
+                <md-select-option value=""><div slot="headline">— wählen —</div></md-select-option>${kunden.map(k => `<md-select-option value="${qmE(k.kunde_id)}" ${z?.kunde_id === k.kunde_id ? 'selected' : ''}><div slot="headline">${qmE(k.kundenname)}</div></md-select-option>`).join('')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld" label="Ansprechpartner *" type="text" id="qk_name" data-f="name" data-max="200" value="${qmE(z?.name || '')}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="E-Mail (für Benachrichtigungen)" id="qk_mail" type="email" data-f="email" data-max="200" value="${qmE(z?.email || '')}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Benutzername *" type="text" id="qk_user" data-f="username" data-max="50" value="${qmE(z?.username || '')}" placeholder="z. B. mueller.lager"></md-outlined-text-field>
+            ${z ? `<label class="crm-switch-row"><md-checkbox id="qk_aktiv" ${z.aktiv ? 'checked' : ''}></md-checkbox> Zugang aktiv</label>` : '<div></div>'}
             <div class="crm-span2"><div class="crm-sec">Sichtbare Objekte</div><div id="qk_objekte" data-f="objekte">${z ? objHtml(z.kunde_id, z.objekte) : '<div class="crm-muted">Bitte zuerst den Kunden wählen</div>'}</div></div>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qkSave" onclick="qmKzSpeichern(${id || 'null'})">${qmIcon('save')} ${z ? 'Speichern' : 'Anlegen & Start-Passwort erzeugen'}</button>`, 'modal-lg');
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qkSave" onclick="qmKzSpeichern(${id || 'null'})"><md-icon slot="icon">save</md-icon>${z ? 'Speichern' : 'Anlegen & Start-Passwort erzeugen'}</md-filled-button>`, 'modal-lg');
 }
 
 async function qmKzSpeichern(id) {
     const alle = document.getElementById('qk_alle')?.checked;
     const body = {
         kunde_id: qmV('qk_kunde'), name: qmV('qk_name'), email: qmV('qk_mail') || null, username: qmV('qk_user'),
-        objekte: alle ? null : [...document.querySelectorAll('.qk-obj:checked')].map(c => c.value),
+        objekte: alle ? null : [...document.querySelectorAll('md-checkbox.qk-obj')].filter(c => c.checked).map(c => c.value),
     };
     if (id) body.aktiv = qmV('qk_aktiv');
     const btn = document.getElementById('qkSave'); if (btn) btn.disabled = true;

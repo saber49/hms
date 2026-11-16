@@ -373,7 +373,7 @@ function wkWarningBannerHtml(s) {
         <div class="wk-warn-banner ${cls}" onclick="wkOpenExpiringDocs()">
             ${wkIcon(icon)}
             <div class="wk-warn-banner-text">${text}</div>
-            <button class="wk-warn-banner-action">Ansehen ${wkIcon('arrow_forward', 'font-size:14px')}</button>
+            <md-text-button class="wk-warn-banner-action">Ansehen ${wkIcon('arrow_forward', 'font-size:14px')}</md-text-button>
         </div>
     `;
 }
@@ -556,18 +556,16 @@ function wkCardHtml(w) {
     return `
         <div data-mk="${escapeHtml(w.dienst_nr)}" class="wk-card ${isActive ? '' : 'inactive'}" onclick="wkOpenProfile('${w.dienst_nr}')">
             ${pendingBadgeHtml}
-            <button class="wk-card-menu" onclick="event.stopPropagation();wkToggleDropdown(this)" title="Menü">
-                ${wkIcon('more_horiz')}
-            </button>
+            <md-icon-button class="wk-card-menu" onclick="event.stopPropagation();wkToggleDropdown(this)" title="Menü"><md-icon slot="icon">more_horiz</md-icon></md-icon-button>
             <div class="wk-card-dropdown">
-                <button onclick="event.stopPropagation();openWorkerModal('${w.dienst_nr}')">${wkIcon('edit')} Bearbeiten</button>
-                <button onclick="event.stopPropagation();openWorkerDocs('${w.dienst_nr}')">${wkIcon('folder_open')} Dokumente</button>
-                <button onclick="event.stopPropagation();openWorkerAbsences('${w.dienst_nr}')">${wkIcon('event_busy')} Abwesenheiten</button>
-                <button onclick="event.stopPropagation();wkResetPasswordModal('${w.dienst_nr}')">${wkIcon('key')} Passwort ändern</button>
+                <md-text-button onclick="event.stopPropagation();openWorkerModal('${w.dienst_nr}')"><md-icon slot="icon">edit</md-icon>Bearbeiten</md-text-button>
+                <md-text-button onclick="event.stopPropagation();openWorkerDocs('${w.dienst_nr}')"><md-icon slot="icon">folder_open</md-icon>Dokumente</md-text-button>
+                <md-text-button onclick="event.stopPropagation();openWorkerAbsences('${w.dienst_nr}')"><md-icon slot="icon">event_busy</md-icon>Abwesenheiten</md-text-button>
+                <md-text-button onclick="event.stopPropagation();wkResetPasswordModal('${w.dienst_nr}')"><md-icon slot="icon">key</md-icon>Passwort ändern</md-text-button>
                 ${isActive
-                    ? `<button class="text-danger" onclick="event.stopPropagation();deactivateWorker('${w.dienst_nr}')">${wkIcon('block')} Deaktivieren</button>`
-                    : `<button onclick="event.stopPropagation();reactivateWorker('${w.dienst_nr}')">${wkIcon('undo')} Reaktivieren</button>`}
-                <button class="text-danger" onclick="event.stopPropagation();deleteWorker('${w.dienst_nr}')" style="border-top: 1px solid var(--md-sys-color-error-container)">${wkIcon('delete')} Endgültig löschen</button>
+                    ? `<md-text-button class="md-btn-danger text-danger" onclick="event.stopPropagation();deactivateWorker('${w.dienst_nr}')"><md-icon slot="icon">block</md-icon>Deaktivieren</md-text-button>`
+                    : `<md-text-button onclick="event.stopPropagation();reactivateWorker('${w.dienst_nr}')"><md-icon slot="icon">undo</md-icon>Reaktivieren</md-text-button>`}
+                <md-text-button class="md-btn-danger text-danger" onclick="event.stopPropagation();deleteWorker('${w.dienst_nr}')" style="border-top: 1px solid var(--md-sys-color-error-container)"><md-icon slot="icon">delete</md-icon>Endgültig löschen</md-text-button>
             </div>
             <div class="wk-avatar" style="background:${color}">
                 ${w.foto ? `<img src="${w.foto}" alt="">` : escapeHtml(initials)}
@@ -1082,23 +1080,23 @@ async function wkOpenProfile(dienstNr) {
                 ${w.stadion_gesperrt == 1 ? `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 4px;padding:8px 10px;border-radius:10px;font-size:0.8rem;font-weight:700;color: var(--md-sys-color-error);background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 35%, transparent)">${wkIcon('block')} Gesperrt — keine Stadion-/DFB-Einsätze</div>` : ''}
                 ${w.eintritt ? `<div class="wk-profile-eintritt">${wkIcon('work', 'font-size:13px')} Eintritt: ${formatDate(w.eintritt)}</div>` : ''}
                 <div class="wk-profile-actions">
-                    <button class="wk-profile-action-btn btn-edit" onclick="openWorkerModal('${w.dienst_nr}')" title="Bearbeiten">${wkIcon('edit')}</button>
-                    <button class="wk-profile-action-btn" onclick="document.getElementById('wkPhotoInput').click()" title="Foto hochladen">${wkIcon('photo_camera')}</button>
-                    <button class="wk-profile-action-btn" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" style="background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning)">${wkIcon('key')}</button>
-                    <button class="wk-profile-action-btn btn-deactivate" onclick="${w.aktiv == 1 ? `deactivateWorker('${w.dienst_nr}')` : `reactivateWorker('${w.dienst_nr}')`}" title="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}">${wkIcon(w.aktiv == 1 ? 'block' : 'undo')}</button>
-                    <button class="wk-profile-action-btn btn-deactivate" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)">${wkIcon('delete')}</button>
+                    <md-filled-button class="wk-profile-action-btn btn-edit" onclick="openWorkerModal('${w.dienst_nr}')" title="Bearbeiten"><md-icon slot="icon">edit</md-icon></md-filled-button>
+                    <md-outlined-button class="wk-profile-action-btn" onclick="document.getElementById('wkPhotoInput').click()" title="Foto hochladen"><md-icon slot="icon">photo_camera</md-icon></md-outlined-button>
+                    <md-outlined-button class="wk-profile-action-btn" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" style="background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning)"><md-icon slot="icon">key</md-icon></md-outlined-button>
+                    <md-text-button class="md-btn-danger wk-profile-action-btn btn-deactivate" onclick="${w.aktiv == 1 ? `deactivateWorker('${w.dienst_nr}')` : `reactivateWorker('${w.dienst_nr}')`}" title="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}">${wkIcon(w.aktiv == 1 ? 'block' : 'undo')}</md-text-button>
+                    <md-text-button class="md-btn-danger wk-profile-action-btn btn-deactivate" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)"><md-icon slot="icon">delete</md-icon></md-text-button>
                 </div>
-                <button class="wk-profile-back" onclick="renderWorkers()">${wkIcon('arrow_back', 'font-size:14px')} Zurück zur Übersicht</button>
+                <md-icon-button class="wk-profile-back" onclick="renderWorkers()"><md-icon slot="icon">arrow_back</md-icon>Zurück zur Übersicht</md-icon-button>
             </div>
             <div class="wk-profile-main">
-                <div class="wk-tabs">
-                    <button class="wk-tab active"  data-tab="stammdaten"   onclick="wkSwitchTab(this)">${wkIcon('person')} Stammdaten</button>
-                    <button class="wk-tab"         data-tab="analyse"      onclick="wkSwitchTab(this)">${wkIcon('monitoring')} Analyse</button>
-                    <button class="wk-tab"         data-tab="dokumente"    onclick="wkSwitchTab(this)">${wkIcon('folder_open')} Dokumente <span class="wk-tab-count" id="wkTabCountDocs">${(w.dokumente || []).length}</span></button>
-                    <button class="wk-tab"         data-tab="compliance"   onclick="wkSwitchTab(this)">${wkIcon('fact_check')} Compliance</button>
-                    <button class="wk-tab"         data-tab="abwesenheiten" onclick="wkSwitchTab(this)">${wkIcon('event_busy')} Abwesenheiten</button>
-                    <button class="wk-tab"         data-tab="urlaub"        onclick="wkSwitchTab(this)">${wkIcon('beach_access')} Urlaub</button>
-                </div>
+                <md-tabs class="wk-tabs">
+                    <md-secondary-tab data-seg inline-icon class="wk-tab active"  data-tab="stammdaten"   onclick="wkSwitchTab(this)"><md-icon slot="icon">person</md-icon>Stammdaten</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="wk-tab"         data-tab="analyse"      onclick="wkSwitchTab(this)"><md-icon slot="icon">monitoring</md-icon>Analyse</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="wk-tab"         data-tab="dokumente"    onclick="wkSwitchTab(this)"><md-icon slot="icon">folder_open</md-icon>Dokumente <span class="wk-tab-count" id="wkTabCountDocs">${(w.dokumente || []).length}</span></md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="wk-tab"         data-tab="compliance"   onclick="wkSwitchTab(this)"><md-icon slot="icon">fact_check</md-icon>Compliance</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="wk-tab"         data-tab="abwesenheiten" onclick="wkSwitchTab(this)"><md-icon slot="icon">event_busy</md-icon>Abwesenheiten</md-secondary-tab>
+                    <md-secondary-tab data-seg inline-icon class="wk-tab"         data-tab="urlaub"        onclick="wkSwitchTab(this)"><md-icon slot="icon">beach_access</md-icon>Urlaub</md-secondary-tab>
+                </md-tabs>
                 <div class="wk-tab-content active" id="tab-stammdaten">${wkStammdatenTabHtml(w)}</div>
                 <div class="wk-tab-content" id="tab-analyse"><div class="ph-loading" style="padding:40px;text-align:center">${wkSpinner()}</div></div>
                 <div class="wk-tab-content" id="tab-dokumente"><div class="ph-loading" style="padding:40px;text-align:center">${wkSpinner()}</div></div>
@@ -2553,7 +2551,7 @@ async function saveWorker(id) {
     const v = (elId) => {
         const el = document.getElementById(elId);
         if (!el) return null;
-        const val = (el.value || '').trim();
+        const val = String(el.value ?? '').trim();
         return val === '' ? null : val;
     };
 

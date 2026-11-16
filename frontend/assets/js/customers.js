@@ -701,13 +701,13 @@ function _custMarkError(input, msg) {
 }
 
 function validateEmail(input) {
-    const v = (input.value || '').trim();
+    const v = String(input.value ?? '').trim();
     const ok = !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     _custMarkError(input, ok ? '' : 'Ungültige E-Mail-Adresse');
 }
 
 function validatePlz(input) {
-    const v = (input.value || '').trim();
+    const v = String(input.value ?? '').trim();
     const ok = !v || /^\d{4,5}$/.test(v);
     _custMarkError(input, ok ? '' : '4–5 Ziffern erwartet');
 }
@@ -737,7 +737,7 @@ async function saveCustomer(id) {
     const anschriftTyp = [...document.querySelectorAll('md-radio[name="anschrift_typ"]')].find(r => r.checked);
 
     const data = {
-        kundenname: (document.getElementById('f_kundenname').value || '').trim(),
+        kundenname: String(document.getElementById('f_kundenname').value ?? '').trim(),
         kunden_nr_kunde: document.getElementById('f_kunden_nr').value || null,
         abrechnungstyp: document.getElementById('f_abrechnungstyp').value,
         anschrift_typ: anschriftTyp ? anschriftTyp.value : 'Firma',

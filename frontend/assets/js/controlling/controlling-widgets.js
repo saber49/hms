@@ -451,14 +451,14 @@ function renderDetails(d) {
     pager.innerHTML = `
       <span>${d.total.toLocaleString('de-DE')} Einsätze · Seite ${p} / ${totalPages}</span>
       <div class="pages">
-        <button ${p <= 1 ? 'disabled' : ''} data-page="1" title="Erste Seite">«</button>
-        <button ${p <= 1 ? 'disabled' : ''} data-page="${p - 1}" title="Zurück">‹</button>
+        <md-icon-button ${p <= 1 ? 'disabled' : ''} data-page="1" title="Erste Seite" aria-label="Erste Seite"><md-icon>first_page</md-icon></md-icon-button>
+        <md-icon-button ${p <= 1 ? 'disabled' : ''} data-page="${p - 1}" title="Zurück" aria-label="Zurück"><md-icon>chevron_left</md-icon></md-icon-button>
         ${pageBtns}
-        <button ${p >= totalPages ? 'disabled' : ''} data-page="${p + 1}" title="Weiter">›</button>
-        <button ${p >= totalPages ? 'disabled' : ''} data-page="${totalPages}" title="Letzte Seite">»</button>
+        <md-icon-button ${p >= totalPages ? 'disabled' : ''} data-page="${p + 1}" title="Weiter" aria-label="Weiter"><md-icon>chevron_right</md-icon></md-icon-button>
+        <md-icon-button ${p >= totalPages ? 'disabled' : ''} data-page="${totalPages}" title="Letzte Seite" aria-label="Letzte Seite"><md-icon>last_page</md-icon></md-icon-button>
       </div>
     `;
-    pager.querySelectorAll('button[data-page]').forEach(b => {
+    pager.querySelectorAll('[data-page]').forEach(b => {
         b.addEventListener('click', () => {
             const np = parseInt(b.dataset.page, 10);
             if (!isNaN(np) && np !== CTRL.state.page) {
@@ -477,11 +477,11 @@ function renderDetailsError() {
 function paginatorButtons(current, total) {
     if (total <= 7) {
         return Array.from({ length: total }, (_, i) =>
-            `<button data-page="${i + 1}" class="${i + 1 === current ? 'active' : ''}">${i + 1}</button>`
+            (i + 1 === current ? `<md-filled-tonal-button data-page="${i + 1}" class="active">${i + 1}</md-filled-tonal-button>` : `<md-text-button data-page="${i + 1}">${i + 1}</md-text-button>`)
         ).join('');
     }
     const out = [];
-    const push = i => out.push(`<button data-page="${i}" class="${i === current ? 'active' : ''}">${i}</button>`);
+    const push = i => out.push(i === current ? `<md-filled-tonal-button data-page="${i}" class="active">${i}</md-filled-tonal-button>` : `<md-text-button data-page="${i}">${i}</md-text-button>`);
     push(1);
     if (current > 4) out.push('<span style="padding:0 4px;color:var(--gray-400)">…</span>');
     for (let i = Math.max(2, current - 2); i <= Math.min(total - 1, current + 2); i++) push(i);

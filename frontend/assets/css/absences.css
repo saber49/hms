@@ -30,7 +30,7 @@
     border: none;
     background: transparent;
     font-family: var(--font);
-    font-size: 14px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
@@ -44,7 +44,7 @@
 .ab-segment-count {
     background: var(--md-sys-color-error, var(--md-sys-color-error));
     color: var(--md-sys-color-on-error, #fff);
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 700;
     min-width: 18px;
     height: 18px;
@@ -83,7 +83,7 @@
     border-radius: 50%;
     background: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-on-primary-container);
-    font-size: 15px;
+    font-size: var(--md-sys-typescale-body-medium-size);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -100,12 +100,12 @@
     flex-wrap: wrap;
     margin-bottom: 6px;
 }
-.ab-req-name { font-weight: 700; font-size: 15px; color: var(--text); }
+.ab-req-name { font-weight: 700; font-size: var(--md-sys-typescale-body-medium-size); color: var(--text); }
 .ab-kat-chip {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     color: var(--kat-color);
     background: color-mix(in srgb, var(--kat-color) 12%, transparent);
@@ -113,19 +113,19 @@
     border-radius: var(--md-sys-shape-corner-small);
     padding: 3px 9px;
 }
-.ab-req-bereich { font-size: 12px; color: var(--text-muted); }
+.ab-req-bereich { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); }
 .ab-req-details {
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text);
 }
 .ab-req-details .material-symbols-outlined { vertical-align: -2px; color: var(--text-muted); }
 .ab-req-created { color: var(--text-muted); }
 .ab-req-note {
     margin-top: 6px;
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     background: var(--gray-50);
     border-radius: var(--md-sys-shape-corner-small);
@@ -139,7 +139,7 @@
     gap: 14px;
     flex-wrap: wrap;
     margin-top: 8px;
-    font-size: 12.5px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--text);
 }
@@ -167,7 +167,7 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     border-radius: var(--md-sys-shape-corner-small);
     padding: 3px 9px;
@@ -184,7 +184,7 @@
 }
 .ab-hist-decision {
     margin-top: 8px;
-    font-size: 12.5px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
     display: inline-flex;
     align-items: center;
@@ -207,7 +207,7 @@
     flex-wrap: wrap;
 }
 .ab-cal-month {
-    font-size: 16px;
+    font-size: var(--md-sys-typescale-body-large-size);
     font-weight: 700;
     color: var(--text);
     min-width: 150px;
@@ -218,7 +218,7 @@
     gap: 14px;
     flex-wrap: wrap;
     margin-left: auto;
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     color: var(--text-muted);
 }
 .ab-legend-item { display: inline-flex; align-items: center; gap: 5px; }
@@ -251,7 +251,7 @@
     border-radius: 50%;
     background: var(--md-sys-color-primary-container);
     color: var(--md-sys-color-on-primary-container);
-    font-size: 12px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -262,14 +262,14 @@
 .ab-cal-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .ab-cal-worker-info { display: flex; flex-direction: column; min-width: 0; }
 .ab-cal-worker-name {
-    font-size: 13px;
+    font-size: var(--md-sys-typescale-body-small-size);
     font-weight: 600;
     color: var(--text);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.ab-cal-worker-meta { font-size: 11px; color: var(--text-muted); }
+.ab-cal-worker-meta { font-size: var(--md-sys-typescale-label-small-size); color: var(--text-muted); }
 .ab-cal-days {
     display: flex;
     flex: 1;
@@ -282,7 +282,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: var(--md-sys-typescale-label-small-size);
     color: var(--text-muted);
     font-weight: 600;
 }
@@ -324,7 +324,7 @@
         justify-content: center;
         gap: 4px;
         padding: 10px 6px;
-        font-size: 13px;
+        font-size: var(--md-sys-typescale-body-small-size);
         line-height: 1.2;
         text-align: center;
     }
@@ -334,7 +334,7 @@
 .ab-cal-todaybtn {
     height: 32px; padding: 0 12px; margin-left: 4px;
     border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-full);
-    background: transparent; color: var(--text); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+    background: transparent; color: var(--text); font: inherit; font-size: var(--md-sys-typescale-body-small-size); font-weight: 600; cursor: pointer;
 }
 .ab-cal-todaybtn:hover { background: var(--gray-50); }
 .ab-cal-mode {
@@ -344,7 +344,7 @@
 .ab-cal-mode button {
     display: inline-flex; align-items: center; gap: 5px;
     height: 28px; padding: 0 12px; border: 0; border-radius: var(--md-sys-shape-corner-full);
-    background: transparent; color: var(--text-muted); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
+    background: transparent; color: var(--text-muted); font: inherit; font-size: var(--md-sys-typescale-body-small-size); font-weight: 600; cursor: pointer;
 }
 .ab-cal-mode button .material-symbols-outlined { font-size: 16px; }
 .ab-cal-mode button.active {
@@ -355,7 +355,7 @@
 .ab-month-wd,
 .ab-month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .ab-month-wd > div {
-    padding: 6px 8px; font-size: 11px; font-weight: 700; letter-spacing: .4px;
+    padding: 6px 8px; font-size: var(--md-sys-typescale-label-small-size); font-weight: 700; letter-spacing: .4px;
     text-transform: uppercase; color: var(--text-muted);
 }
 .ab-month-grid {
@@ -377,12 +377,12 @@
 .ab-day-num {
     min-width: 24px; height: 24px; padding: 0 6px; border-radius: var(--md-sys-shape-corner-full);
     display: inline-flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; color: var(--text);
+    font-size: var(--md-sys-typescale-body-small-size); font-weight: 700; color: var(--text);
 }
 .ab-day-today .ab-day-num { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
 .ab-day-today { box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
 .ab-day-count {
-    font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: var(--md-sys-shape-corner-full);
+    font-size: var(--md-sys-typescale-label-small-size); font-weight: 700; padding: 1px 7px; border-radius: var(--md-sys-shape-corner-full);
     background: var(--md-sys-color-surface-container-high, var(--gray-100)); color: var(--text-muted);
 }
 .ab-day-list { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
@@ -391,7 +391,7 @@
     padding: 2px 6px 2px 2px; border-radius: var(--md-sys-shape-corner-small);
     border-left: 3px solid var(--kat-color);
     background: color-mix(in srgb, var(--kat-color) 14%, transparent);
-    font-size: 11.5px; font-weight: 600; color: var(--text); line-height: 1.2;
+    font-size: var(--md-sys-typescale-label-small-size); font-weight: 600; color: var(--text); line-height: 1.2;
 }
 .ab-day-chip.is-pending {
     border-left-style: dashed;
@@ -407,11 +407,11 @@
 }
 .ab-day-av img { width: 100%; height: 100%; object-fit: cover; }
 .ab-day-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ab-day-kat { font-size: 13px !important; color: var(--kat-color); flex-shrink: 0; }
-.ab-day-more { font-size: 11px; font-weight: 700; color: var(--md-sys-color-primary); padding: 1px 4px; }
+.ab-day-kat { font-size: var(--md-sys-typescale-body-small-size) !important; color: var(--kat-color); flex-shrink: 0; }
+.ab-day-more { font-size: var(--md-sys-typescale-label-small-size); font-weight: 700; color: var(--md-sys-color-primary); padding: 1px 4px; }
 /* Day details dialog */
 .ab-dd-count {
-    margin-left: 8px; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: var(--md-sys-shape-corner-full); vertical-align: 3px;
+    margin-left: 8px; font-size: var(--md-sys-typescale-body-small-size); font-weight: 600; padding: 2px 9px; border-radius: var(--md-sys-shape-corner-full); vertical-align: 3px;
     background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container);
 }
 .ab-dd-list { display: flex; flex-direction: column; gap: 8px; min-width: min(520px, 80vw); }
@@ -420,12 +420,12 @@
     border-left: 4px solid var(--kat-color); background: color-mix(in srgb, var(--kat-color) 9%, transparent);
 }
 .ab-dd-main { flex: 1; min-width: 0; }
-.ab-dd-name { font-weight: 700; font-size: 14px; color: var(--text); }
-.ab-dd-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.ab-dd-desc { font-size: 12px; color: var(--text); margin-top: 4px; font-style: italic; }
+.ab-dd-name { font-weight: 700; font-size: var(--md-sys-typescale-body-medium-size); color: var(--text); }
+.ab-dd-meta { font-size: var(--md-sys-typescale-body-small-size); color: var(--text-muted); margin-top: 2px; }
+.ab-dd-desc { font-size: var(--md-sys-typescale-body-small-size); color: var(--text); margin-top: 4px; font-style: italic; }
 .ab-dd-kat {
     display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
-    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-full); font-size: 12px; font-weight: 700;
+    padding: 3px 10px; border-radius: var(--md-sys-shape-corner-full); font-size: var(--md-sys-typescale-body-small-size); font-weight: 700;
     color: var(--kat-color); background: color-mix(in srgb, var(--kat-color) 16%, transparent);
 }
 .ab-dd-kat.is-pending { outline: 1px dashed var(--kat-color); }
@@ -440,7 +440,7 @@
 .ab-agenda-day.ab-day-today { box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); }
 .ab-agenda-date {
         display: flex; align-items: center; justify-content: space-between;
-        font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px;
+        font-size: var(--md-sys-typescale-body-small-size); font-weight: 700; color: var(--text); margin-bottom: 6px;
     }
 .ab-agenda-list { display: flex; flex-wrap: wrap; gap: 5px; }
 .ab-agenda-list .ab-day-chip { flex: 0 1 auto; max-width: 100%; }

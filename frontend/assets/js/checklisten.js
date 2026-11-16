@@ -48,10 +48,10 @@ async function renderChecklisten() {
     if (!_cl.filter.von) { _cl.filter.von = clIsoDay(-30); _cl.filter.bis = clIsoDay(0); }
     document.getElementById('content').innerHTML = `
         <div class="cl-page">
-            <div class="cl-tabs">
-                <button data-t="protokolle" onclick="clTab('protokolle')">${clIcon('fact_check')} Protokolle</button>
-                <button data-t="vorlagen" onclick="clTab('vorlagen')">${clIcon('checklist')} Vorlagen</button>
-            </div>
+            <md-tabs class="cl-tabs">
+                <md-secondary-tab data-seg inline-icon data-t="protokolle" onclick="clTab('protokolle')"><md-icon slot="icon">fact_check</md-icon>Protokolle</md-secondary-tab>
+                <md-secondary-tab data-seg inline-icon data-t="vorlagen" onclick="clTab('vorlagen')"><md-icon slot="icon">checklist</md-icon>Vorlagen</md-secondary-tab>
+            </md-tabs>
             <div id="clBody"></div>
         </div>
         ${clStyles()}`;
@@ -61,7 +61,7 @@ async function renderChecklisten() {
 
 async function clTab(t, quiet) {
     _cl.tab = t;
-    document.querySelectorAll('.cl-tabs button').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+    document.querySelectorAll('.cl-tabs [data-seg]').forEach(b => b.classList.toggle('active', b.dataset.t === t));
     const body = document.getElementById('clBody');
     if (!body) return;
     if (t === 'protokolle') { if (!quiet) clRenderProtokolleShell(); await clLoadProtokolle(); }
@@ -75,11 +75,11 @@ function clRenderProtokolleShell() {
     const kat = (_cl.vorlagen && _cl.vorlagen.kategorien) || {};
     document.getElementById('clBody').innerHTML = `
         <div class="cl-toolbar">
-            <label class="cl-fld"><span>Von</span><input type="date" id="clVon" value="${escapeHtml(f.von)}"></label>
-            <label class="cl-fld"><span>Bis</span><input type="date" id="clBis" value="${escapeHtml(f.bis)}"></label>
-            <label class="cl-fld"><span>Kategorie</span><select id="clKat"><option value="">Alle</option>${Object.entries(kat).map(([k, l]) => `<option value="${k}" ${f.kategorie === k ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label>
+            <md-outlined-text-field class="crm-fld" label="Von" type="date" id="clVon" value="${escapeHtml(f.von)}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Bis" type="date" id="clBis" value="${escapeHtml(f.bis)}"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Kategorie" id="clKat"><md-select-option value=""><div slot="headline">Alle</div></md-select-option>${Object.entries(kat).map(([k, l]) => `<md-select-option value="${k}" ${f.kategorie === k ? 'selected' : ''}><div slot="headline">${escapeHtml(l)}</div></md-select-option>`).join('')}</md-outlined-select>
             <label class="cl-chk"><md-checkbox id="clMaengel" ${f.maengel ? 'checked' : ''}></md-checkbox> Nur mit Mängeln</label>
-            <div class="cl-search">${clIcon('search')}<input id="clQ" placeholder="${escapeHtml(clTerm('objekt'))}, ${escapeHtml(clTerm('kunde'))}, Mitarbeiter, Vorlage…" value="${escapeHtml(f.q)}"></div>
+            <div class="cl-search"><md-outlined-text-field class="crm-fld" type="text" id="clQ" placeholder="${escapeHtml(clTerm('objekt'))}, ${escapeHtml(clTerm('kunde'))}, Mitarbeiter, Vorlage…" value="${escapeHtml(f.q)}"></md-outlined-text-field></div>
         </div>
         <div class="cl-kpis" id="clKpis"></div>
         <div class="cl-card" id="clList"><div class="cl-empty">${clIcon('hourglass_top')} Lade…</div></div>`;
@@ -132,7 +132,7 @@ async function clLoadProtokolle() {
                 <td data-l="Ergebnis">${clScoreHtml(p.ergebnis_prozent)}</td>
                 <td data-l="Mängel">${p.maengel ? `<span class="cl-badge-bad">${p.maengel}</span>` : '<span class="cl-sub">0</span>'}</td>
                 <td class="cl-icons">${p.fotos ? `<span title="${p.fotos} Foto(s)">${clIcon('photo_camera')}${p.fotos}</span>` : ''}${p.unterschrift ? `<span title="Unterschrieben">${clIcon('draw')}</span>` : ''}${p.gps ? `<span title="Mit GPS">${clIcon('location_on')}</span>` : ''}</td>
-                <td class="cl-actions"><button class="cl-ibtn" title="PDF" onclick="event.stopPropagation();clPdf(${p.id})">${clIcon('picture_as_pdf')}</button></td>
+                <td class="cl-actions"><md-icon-button class="cl-ibtn" title="PDF" onclick="event.stopPropagation();clPdf(${p.id})"><md-icon slot="icon">picture_as_pdf</md-icon></md-icon-button></td>
             </tr>`).join('')}</tbody></table></div>`;
 }
 
@@ -266,7 +266,7 @@ async function clLoadVorlagen() {
             <div class="cl-info">${clIcon('info')}<div>Vorlagen erscheinen beim Mitarbeiter in der App an jeder Schicht, deren ${escapeHtml(clTerm('objekt'))} zur Vorlage passt
                 (alle ${escapeHtml(clTerm('objekte'))} des Bereichs oder gezielt zugeordnete). <b>Pflicht</b>-Zuordnungen werden in der App hervorgehoben.
                 Änderungen an Feldern gelten für neue Protokolle — bestehende behalten ihren Stand.</div></div>
-            ${edit ? `<md-filled-button  onclick="clEditVorlage(null)">${clIcon('add')} Neue Vorlage</md-filled-button>` : ''}
+            ${edit ? `<md-filled-button  onclick="clEditVorlage(null)"><md-icon slot="icon">add</md-icon>Neue Vorlage</md-filled-button>` : ''}
         </div>
         ${edit && pakete.length ? `<div class="cl-pakete">${pakete.map(x => `
             <div class="cl-paket">${clIcon('library_add')}<div><b>Branchen-Vorlagen für „${escapeHtml(x.b.name)}“</b><span>${escapeHtml(x.pk.label)}: ${x.pk.vorlagen.map(escapeHtml).join(' · ')}</span></div>
@@ -287,11 +287,11 @@ async function clLoadVorlagen() {
                         <span class="cl-pill">${clIcon('fact_check')}${v.protokolle_anzahl} Protokolle</span>
                     </div>
                     <div class="cl-vactions">
-                        ${v.protokolle_anzahl ? `<button class="cl-tbtn" onclick="clShowProtokolleOf(${v.id})">${clIcon('visibility')} Protokolle</button>` : ''}
-                        ${edit ? `<button class="cl-tbtn" onclick="clEditVorlage(${v.id})">${clIcon('edit')} Bearbeiten</button>
-                        <button class="cl-tbtn" onclick="clOpenObjekte(${v.id})">${clIcon('location_city')} ${escapeHtml(clTerm('objekte'))}</button>
-                        <button class="cl-tbtn" onclick="clEditVorlage(${v.id}, true)">${clIcon('content_copy')} Kopie</button>
-                        ${!v.protokolle_anzahl ? `<button class="cl-tbtn cl-del" onclick="clDeleteVorlage(${v.id})">${clIcon('delete')}</button>` : ''}` : ''}
+                        ${v.protokolle_anzahl ? `<md-text-button class="cl-tbtn" onclick="clShowProtokolleOf(${v.id})"><md-icon slot="icon">visibility</md-icon>Protokolle</md-text-button>` : ''}
+                        ${edit ? `<md-text-button class="cl-tbtn" onclick="clEditVorlage(${v.id})"><md-icon slot="icon">edit</md-icon>Bearbeiten</md-text-button>
+                        <md-text-button class="cl-tbtn" onclick="clOpenObjekte(${v.id})"><md-icon slot="icon">location_city</md-icon>${escapeHtml(clTerm('objekte'))}</md-text-button>
+                        <md-text-button class="cl-tbtn" onclick="clEditVorlage(${v.id}, true)"><md-icon slot="icon">content_copy</md-icon>Kopie</md-text-button>
+                        ${!v.protokolle_anzahl ? `<md-icon-button class="md-icon-danger cl-tbtn cl-del" onclick="clDeleteVorlage(${v.id})"><md-icon slot="icon">delete</md-icon></md-icon-button>` : ''}` : ''}
                     </div>
                 </div>`).join('')}</div>`).join('') : `<div class="cl-card"><div class="cl-empty">${clIcon('checklist')} Noch keine Vorlagen.<br><small>Legen Sie eine neue Vorlage an${edit && pakete.length ? ' oder übernehmen Sie die Branchen-Vorlagen oben' : ' — oder wählen Sie unter Konto & Firma → Bereiche eine Branche, dann stehen fertige Vorlagen bereit'}.</small></div></div>`}`;
 }
@@ -343,33 +343,33 @@ function clRenderBuilder() {
         const isSec = f.typ === 'abschnitt';
         return `<div class="cl-b-row ${isSec ? 'cl-b-sec' : ''}" data-i="${i}">
             <div class="cl-b-move">
-                <button class="cl-ibtn" title="Nach oben" ${i === 0 ? 'disabled' : ''} onclick="clMoveField(${i}, -1)">${clIcon('arrow_upward')}</button>
-                <button class="cl-ibtn" title="Nach unten" ${i === v.felder.length - 1 ? 'disabled' : ''} onclick="clMoveField(${i}, 1)">${clIcon('arrow_downward')}</button>
+                <md-icon-button class="cl-ibtn" title="Nach oben" ${i === 0 ? 'disabled' : ''} onclick="clMoveField(${i}, -1)"><md-icon slot="icon">arrow_upward</md-icon></md-icon-button>
+                <md-icon-button class="cl-ibtn" title="Nach unten" ${i === v.felder.length - 1 ? 'disabled' : ''} onclick="clMoveField(${i}, 1)"><md-icon slot="icon">arrow_downward</md-icon></md-icon-button>
             </div>
             <div class="cl-b-main">
                 <div class="cl-b-line">
-                    <select onchange="clSetField(${i}, 'typ', this.value)" title="Feldtyp">${Object.entries(CL_TYPEN).map(([k, x]) => `<option value="${k}" ${k === f.typ ? 'selected' : ''}>${x.label}</option>`).join('')}</select>
-                    <input class="cl-b-label" value="${escapeHtml(f.label || '')}" placeholder="${isSec ? 'Überschrift, z.B. Sanitärbereiche' : 'Prüfpunkt / Frage'}" oninput="clSetField(${i}, 'label', this.value, true)">
+                    <md-outlined-select class="crm-fld" onchange="clSetField(${i}, 'typ', this.value)" title="Feldtyp">${Object.entries(CL_TYPEN).map(([k, x]) => `<md-select-option value="${k}" ${k === f.typ ? 'selected' : ''}><div slot="headline">${x.label}</div></md-select-option>`).join('')}</md-outlined-select>
+                    <md-outlined-text-field class="crm-fld cl-b-label" type="text" value="${escapeHtml(f.label || '')}" placeholder="${isSec ? 'Überschrift, z.B. Sanitärbereiche' : 'Prüfpunkt / Frage'}" oninput="clSetField(${i}, 'label', this.value, true)"></md-outlined-text-field>
                 </div>
                 ${isSec ? '' : `<div class="cl-b-line cl-b-opts">
                     <label class="cl-chk"><md-checkbox ${f.pflicht ? 'checked' : ''} onchange="clSetField(${i}, 'pflicht', this.checked, true)"></md-checkbox> Pflicht</label>
-                    <select onchange="clSetField(${i}, 'foto', this.value, true)" title="Foto">${Object.entries(CL_FOTO).filter(([k]) => (k !== 'bei_mangel' || ['ok_nok', 'bewertung'].includes(f.typ)) && (k !== 'nie' || f.typ !== 'foto')).map(([k, l]) => `<option value="${k}" ${k === (f.foto || 'nie') ? 'selected' : ''}>${l}</option>`).join('')}</select>
-                    ${f.typ === 'zahl' ? `<input class="cl-b-small" value="${escapeHtml(f.einheit || '')}" placeholder="Einheit (°C, kg …)" oninput="clSetField(${i}, 'einheit', this.value, true)">` : ''}
-                    <input class="cl-b-hint" value="${escapeHtml(f.hinweis || '')}" placeholder="Hinweis für den Mitarbeiter (optional)" oninput="clSetField(${i}, 'hinweis', this.value, true)">
+                    <md-outlined-select class="crm-fld" onchange="clSetField(${i}, 'foto', this.value, true)" title="Foto">${Object.entries(CL_FOTO).filter(([k]) => (k !== 'bei_mangel' || ['ok_nok', 'bewertung'].includes(f.typ)) && (k !== 'nie' || f.typ !== 'foto')).map(([k, l]) => `<md-select-option value="${k}" ${k === (f.foto || 'nie') ? 'selected' : ''}><div slot="headline">${l}</div></md-select-option>`).join('')}</md-outlined-select>
+                    ${f.typ === 'zahl' ? `<md-outlined-text-field class="crm-fld cl-b-small" type="text" value="${escapeHtml(f.einheit || '')}" placeholder="Einheit (°C, kg …)" oninput="clSetField(${i}, 'einheit', this.value, true)"></md-outlined-text-field>` : ''}
+                    <md-outlined-text-field class="crm-fld cl-b-hint" type="text" value="${escapeHtml(f.hinweis || '')}" placeholder="Hinweis für den Mitarbeiter (optional)" oninput="clSetField(${i}, 'hinweis', this.value, true)"></md-outlined-text-field>
                 </div>
-                ${f.typ === 'auswahl' ? `<div class="cl-b-line"><input class="cl-b-full" value="${escapeHtml((f.optionen || []).join('; '))}" placeholder="Optionen, getrennt mit ; (z.B. Splitt; Salz; Granulat)" oninput="clSetField(${i}, 'optionen', this.value.split(';').map(s => s.trim()).filter(Boolean), true)"></div>` : ''}`}
+                ${f.typ === 'auswahl' ? `<div class="cl-b-line"><md-outlined-text-field class="crm-fld cl-b-full" type="text" value="${escapeHtml((f.optionen || []).join('; '))}" placeholder="Optionen, getrennt mit ; (z.B. Splitt; Salz; Granulat)" oninput="clSetField(${i}, 'optionen', this.value.split(';').map(s => s.trim()).filter(Boolean), true)"></md-outlined-text-field></div>` : ''}`}
             </div>
-            <button class="cl-ibtn cl-del" title="Feld entfernen" onclick="clRemoveField(${i})">${clIcon('delete')}</button>
+            <md-icon-button class="md-icon-danger cl-ibtn cl-del" title="Feld entfernen" onclick="clRemoveField(${i})"><md-icon slot="icon">delete</md-icon></md-icon-button>
         </div>`;
     }).join('');
     const body = `
         <div class="cl-b">
             <div class="cl-b-grid">
-                <label class="cl-fld cl-span2"><span>Name *</span><input id="clbName" value="${escapeHtml(v.name)}" maxlength="190" placeholder="z.B. Qualitätskontrolle Büroreinigung"></label>
-                <label class="cl-fld"><span>Kategorie</span><select id="clbKat">${Object.entries(d.kategorien).map(([k, l]) => `<option value="${k}" ${k === v.kategorie ? 'selected' : ''}>${escapeHtml(l)}</option>`).join('')}</select></label>
-                <label class="cl-fld"><span>Bereich</span><select id="clbBereich"><option value="">Alle Bereiche</option>${(d.bereiche || []).map(b => `<option value="${b.id}" ${b.id === v.bereich_id ? 'selected' : ''}>${escapeHtml(b.name)}</option>`).join('')}</select></label>
-                <label class="cl-fld cl-span2"><span>Beschreibung</span><input id="clbDesc" value="${escapeHtml(v.beschreibung || '')}" maxlength="2000" placeholder="Wofür ist die Checkliste? (sieht auch der Mitarbeiter)"></label>
-                <label class="cl-fld"><span>Unterschrift</span><select id="clbSig">${Object.keys(CL_SIG).map(k => `<option value="${k}" ${k === v.unterschrift ? 'selected' : ''}>${escapeHtml(clSigLabel(k))}</option>`).join('')}</select></label>
+                <md-outlined-text-field class="crm-fld cl-span2" label="Name *" type="text" id="clbName" value="${escapeHtml(v.name)}" data-max="190" placeholder="z.B. Qualitätskontrolle Büroreinigung"></md-outlined-text-field>
+                <md-outlined-select class="crm-fld" label="Kategorie" id="clbKat">${Object.entries(d.kategorien).map(([k, l]) => `<md-select-option value="${k}" ${k === v.kategorie ? 'selected' : ''}><div slot="headline">${escapeHtml(l)}</div></md-select-option>`).join('')}</md-outlined-select>
+                <md-outlined-select class="crm-fld" label="Bereich" id="clbBereich"><md-select-option value=""><div slot="headline">Alle Bereiche</div></md-select-option>${(d.bereiche || []).map(b => `<md-select-option value="${b.id}" ${b.id === v.bereich_id ? 'selected' : ''}><div slot="headline">${escapeHtml(b.name)}</div></md-select-option>`).join('')}</md-outlined-select>
+                <md-outlined-text-field class="crm-fld cl-span2" label="Beschreibung" type="text" id="clbDesc" value="${escapeHtml(v.beschreibung || '')}" data-max="2000" placeholder="Wofür ist die Checkliste? (sieht auch der Mitarbeiter)"></md-outlined-text-field>
+                <md-outlined-select class="crm-fld" label="Unterschrift" id="clbSig">${Object.keys(CL_SIG).map(k => `<md-select-option value="${k}" ${k === v.unterschrift ? 'selected' : ''}><div slot="headline">${escapeHtml(clSigLabel(k))}</div></md-select-option>`).join('')}</md-outlined-select>
                 <div class="cl-fld"><span>Optionen</span>
                     <label class="cl-chk"><md-checkbox id="clbAlle" ${v.alle_objekte ? 'checked' : ''}></md-checkbox> Für alle ${escapeHtml(clTerm('objekte'))} des Bereichs</label>
                     <label class="cl-chk"><md-checkbox id="clbGps" ${v.gps ? 'checked' : ''}></md-checkbox> GPS-Standort speichern</label>
@@ -377,7 +377,7 @@ function clRenderBuilder() {
             </div>
             <div class="cl-b-fhead"><b>Felder</b><span class="cl-sub">„i. O. / n. i. O.“ und „Bewertung“ ergeben das Ergebnis in Prozent; n. i. O. verlangt eine Mangelbeschreibung.</span></div>
             <div id="clbRows">${rows}</div>
-            <div class="cl-b-add">${['ok_nok', 'check', 'bewertung', 'text', 'zahl', 'auswahl', 'zeit', 'foto', 'abschnitt'].map(k => `<button class="cl-tbtn" onclick="clAddField('${k}')">${clIcon(CL_TYPEN[k].icon)} ${CL_TYPEN[k].label}</button>`).join('')}</div>
+            <div class="cl-b-add">${['ok_nok', 'check', 'bewertung', 'text', 'zahl', 'auswahl', 'zeit', 'foto', 'abschnitt'].map(k => `<md-text-button class="cl-tbtn" onclick="clAddField('${k}')">${clIcon(CL_TYPEN[k].icon)} ${CL_TYPEN[k].label}</md-text-button>`).join('')}</div>
         </div>`;
     const footer = `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="clSaveVorlage()">Speichern</md-filled-button>`;
     const keep = document.getElementById('modalBody') && document.querySelector('.cl-b') ? document.getElementById('modalBody').scrollTop : 0;
@@ -442,8 +442,8 @@ async function clOpenObjekte(id) {
         <div class="cl-o">
             <div class="cl-info">${clIcon('info')}<div>${v && v.alle_objekte ? `Die Vorlage gilt bereits für <b>alle ${escapeHtml(clTerm('objekte'))}${v.bereich_name ? ' im Bereich „' + escapeHtml(v.bereich_name) + '“' : ''}</b>. Hier zugeordnete ${escapeHtml(clTerm('objekte'))} können zusätzlich als <b>Pflicht</b> markiert werden.` : `Die Vorlage erscheint nur bei den hier ausgewählten ${escapeHtml(clTerm('objekte'))}.`}
                 Pflicht = der Mitarbeiter sieht die Checkliste in der App als „offen“, bis sie ausgefüllt ist.</div></div>
-            <div class="cl-search">${clIcon('search')}<input id="clOq" placeholder="Suchen…" oninput="_cl.objekte.q=this.value.toLowerCase();clRenderObjekte()"></div>
-            <div class="cl-o-tools"><button class="cl-tbtn" onclick="clObjAll(true)">Alle sichtbaren wählen</button><button class="cl-tbtn" onclick="clObjAll(false)">Keine</button></div>
+            <div class="cl-search"><md-outlined-text-field class="crm-fld" type="text" id="clOq" placeholder="Suchen…" oninput="_cl.objekte.q=this.value.toLowerCase();clRenderObjekte()"></md-outlined-text-field></div>
+            <div class="cl-o-tools"><md-text-button class="cl-tbtn" onclick="clObjAll(true)">Alle sichtbaren wählen</md-text-button><md-text-button class="cl-tbtn" onclick="clObjAll(false)">Keine</md-text-button></div>
             <div id="clOList" class="cl-o-list"></div>
         </div>`;
     openModal((v ? v.name + ' — ' : '') + clTerm('objekte'), body + clStyles(), `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="clSaveObjekte()">Speichern</md-filled-button>`, 'modal-xl');

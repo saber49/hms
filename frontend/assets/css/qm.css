@@ -10,7 +10,7 @@
 .qm-obj-select { min-width: 280px; }
 
 /* badges (same pill shape as crm-chip, own tones) */
-.qm-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: var(--md-sys-shape-corner-full); font-size: .72rem; font-weight: 600;
+.qm-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: var(--md-sys-shape-corner-full); font-size: var(--md-sys-typescale-body-small-size); font-weight: 600;
     background: var(--gray-100); color: var(--gray-700); white-space: nowrap; vertical-align: middle; }
 .qm-ok { background: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent); color: var(--md-ext-color-on-success-container); }
 .qm-info { background: color-mix(in srgb, var(--md-ext-color-info) 16%, transparent); color: var(--md-sys-color-primary); }
@@ -20,7 +20,7 @@
 /* Steckbrief */
 .qm-steckbrief { margin-bottom: 12px; }
 .qm-kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; padding: 14px 16px; }
-.qm-kv-grid > div > span { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); margin-bottom: 2px; }
+.qm-kv-grid > div > span { display: block; font-size: var(--md-sys-typescale-body-small-size); text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); margin-bottom: 2px; }
 
 /* month → day → log */
 .qm-monat > summary { cursor: pointer; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
@@ -28,13 +28,13 @@
 .qm-tag-body { padding: 12px 14px; }
 .qm-blaetter { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
 .qm-blatt { flex: 1 1 260px; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--md-sys-shape-corner-medium); padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
-.qm-hinweis { font-size: .84rem; color: var(--gray-700); background: color-mix(in srgb, var(--md-ext-color-info) 8%, transparent); border-radius: var(--md-sys-shape-corner-small); padding: 6px 8px; }
+.qm-hinweis { font-size: var(--md-sys-typescale-body-medium-size); color: var(--gray-700); background: color-mix(in srgb, var(--md-ext-color-info) 8%, transparent); border-radius: var(--md-sys-shape-corner-small); padding: 6px 8px; }
 
 .qm-eintraege { display: flex; flex-direction: column; gap: 6px; }
 .qm-eintrag { display: grid; grid-template-columns: 58px 30px 1fr auto; gap: 8px; align-items: start; background: var(--white);
     border: 1px solid var(--gray-200); border-left: 3px solid var(--gray-300); border-radius: var(--md-sys-shape-corner-small); padding: 8px 10px; }
-.qm-eintrag-zeit { font-weight: 700; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; font-size: .88rem; }
-.qm-eintrag-zeit .crm-muted { font-weight: 400; font-size: .72rem; }
+.qm-eintrag-zeit { font-weight: 700; font-variant-numeric: tabular-nums; display: flex; flex-direction: column; font-size: var(--md-sys-typescale-body-medium-size); }
+.qm-eintrag-zeit .crm-muted { font-weight: 400; font-size: var(--md-sys-typescale-body-small-size); }
 .qm-eintrag-icon .material-symbols-outlined { font-size: 20px; color: var(--gray-500); }
 .qm-eintrag-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .qm-eintrag-text { white-space: pre-line; margin: 2px 0; }
@@ -63,9 +63,9 @@
 .qm-todo-warn > .material-symbols-outlined:first-child { color: var(--md-ext-color-warning); }
 
 /* Dienstanweisung */
-.qm-kurz { margin: 4px 0 0 18px; padding: 0; font-size: .84rem; color: var(--gray-700); }
+.qm-kurz { margin: 4px 0 0 18px; padding: 0; font-size: var(--md-sys-typescale-body-medium-size); color: var(--gray-700); }
 .qm-kurz-row { display: flex; gap: 6px; margin-bottom: 6px; }
-.qm-kurz-row .crm-input { flex: 1; }
+.qm-kurz-row .qm-kurz-in { flex: 1; }
 
 /* settings */
 .qm-frage { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--gray-100); }
@@ -73,7 +73,7 @@
 .qm-frage select, .qm-frage input { max-width: 200px; }
 .qm-geheim { display: flex; flex-direction: column; gap: 10px; }
 .qm-geheim-row { display: flex; align-items: center; gap: 10px; justify-content: space-between; border: 1px solid var(--gray-200); border-radius: var(--md-sys-shape-corner-medium); padding: 8px 12px; }
-.qm-geheim-row strong { font-size: 1.25rem; letter-spacing: .08em; font-family: ui-monospace, monospace; }
+.qm-geheim-row strong { font-size: var(--md-sys-typescale-title-large-size); letter-spacing: .08em; font-family: ui-monospace, monospace; }
 
 @media (max-width: 640px) {
     .qm-eintrag { grid-template-columns: 48px 1fr; }
@@ -87,7 +87,7 @@
 /* Einstellungen › Qualität › Allgemein: wide question cards (2 columns, 1 on phones) */
 .qm-fragen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 14px; align-items: start; }
 .qm-fragen-grid .crm-settings-card { margin: 0; }
-.qm-frage strong { font-size: .92rem; }
+.qm-frage strong { font-size: var(--md-sys-typescale-body-medium-size); }
 .qm-name { font-weight: 600; }
 @media (max-width: 640px) { .qm-fragen-grid { grid-template-columns: 1fr; } }
 

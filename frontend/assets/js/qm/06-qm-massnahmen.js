@@ -67,16 +67,16 @@ function qmMnNeu(preset = {}) {
     openModal('Neue Maßnahme', `
         <div class="crm-form crm-form-grid">
             ${preset.quelle_typ && preset.quelle_typ !== 'manuell' ? `<div class="crm-banner crm-span2">${qmIcon('link')} Quelle: ${qmE(qmListe('mn_quellen')[preset.quelle_typ] || preset.quelle_typ)}</div>` : ''}
-            <label class="crm-field crm-span2">Titel *<input id="qm_titel" class="crm-input" maxlength="200" data-f="titel" value="${qmE(preset.titel || '')}"></label>
-            <label class="crm-field">Art<select id="qm_art" class="crm-input">${qmSelectOptions(qmListe('mn_arten'), 'korrektur')}</select></label>
-            <label class="crm-field">Objekt${qm.opt.ich.alle_objekte ? '' : ' *'}<select id="qm_obj" class="crm-input" data-f="obj_id"><option value="">${qm.opt.ich.alle_objekte ? '— übergreifend —' : '— wählen —'}</option>${qmObjOptions(preset.obj_id)}</select></label>
-            <label class="crm-field">Verantwortlich *<select id="qm_ver" class="crm-input" data-f="verantwortlich_id">${qmUserOptions(qm.opt.ich.id)}</select></label>
-            <label class="crm-field">Frist *<input id="qm_frist" type="date" class="crm-input" data-f="frist" min="${qmHeute()}" value="${qmAddDays(14)}"></label>
-            <label class="crm-field crm-span2">Ursache<textarea id="qm_urs" class="crm-input" rows="2" maxlength="4000">${qmE(preset.ursache || '')}</textarea></label>
-            <label class="crm-field crm-span2">Beschreibung<textarea id="qm_text" class="crm-input" rows="3" maxlength="4000"></textarea></label>
-            <label class="crm-switch-row crm-span2"><input type="checkbox" id="qm_portal"> Im Kundenportal anzeigen (ohne Ursache und Namen)</label>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Titel *" type="text" id="qm_titel" data-max="200" data-f="titel" value="${qmE(preset.titel || '')}"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Art" id="qm_art">${qmSelectOptions(qmListe('mn_arten'), 'korrektur')}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Objekt${qm.opt.ich.alle_objekte ? '' : ' *'}" id="qm_obj" data-f="obj_id"><md-select-option value=""><div slot="headline">${qm.opt.ich.alle_objekte ? '— übergreifend —' : '— wählen —'}</div></md-select-option>${qmObjOptions(preset.obj_id)}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Verantwortlich *" id="qm_ver" data-f="verantwortlich_id">${qmUserOptions(qm.opt.ich.id)}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld" label="Frist *" id="qm_frist" type="date" data-f="frist" min="${qmHeute()}" value="${qmAddDays(14)}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Ursache" type="textarea" id="qm_urs" rows="2" maxlength="4000" value="${qmE(preset.ursache || '')}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Beschreibung" type="textarea" id="qm_text" rows="3" maxlength="4000"></md-outlined-text-field>
+            <label class="crm-switch-row crm-span2"><md-checkbox id="qm_portal"></md-checkbox> Im Kundenportal anzeigen (ohne Ursache und Namen)</label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" id="qmSave" onclick='qmMnSpeichern(${JSON.stringify({ quelle_typ: preset.quelle_typ || "manuell", quelle_id: preset.quelle_id || null })})'>${qmIcon('save')} Anlegen</button>`, 'modal-lg');
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qmSave" onclick='qmMnSpeichern(${JSON.stringify({ quelle_typ: preset.quelle_typ || "manuell", quelle_id: preset.quelle_id || null })})'><md-icon slot="icon">save</md-icon>Anlegen</md-filled-button>`, 'modal-lg');
 }
 
 async function qmMnSpeichern(quelle) {
@@ -145,14 +145,14 @@ function qmMnBearbeitenDialog(id) {
     const m = qm.cache.mnDetail;
     openModal('Maßnahme bearbeiten', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field crm-span2">Titel *<input id="qm_titel" class="crm-input" maxlength="200" data-f="titel" value="${qmE(m.titel)}"></label>
-            <label class="crm-field">Art<select id="qm_art" class="crm-input">${qmSelectOptions(qmListe('mn_arten'), m.art)}</select></label>
-            <label class="crm-field">Verantwortlich<select id="qm_ver" class="crm-input">${qmUserOptions(m.verantwortlich_id)}</select></label>
-            <label class="crm-field crm-span2">Ursache<textarea id="qm_urs" class="crm-input" rows="2">${qmE(m.ursache || '')}</textarea></label>
-            <label class="crm-field crm-span2">Beschreibung<textarea id="qm_text" class="crm-input" rows="3">${qmE(m.text || '')}</textarea></label>
-            <label class="crm-switch-row crm-span2"><input type="checkbox" id="qm_portal" ${m.im_kundenportal ? 'checked' : ''}> Im Kundenportal anzeigen</label>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Titel *" type="text" id="qm_titel" data-max="200" data-f="titel" value="${qmE(m.titel)}"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Art" id="qm_art">${qmSelectOptions(qmListe('mn_arten'), m.art)}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Verantwortlich" id="qm_ver">${qmUserOptions(m.verantwortlich_id)}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Ursache" type="textarea" id="qm_urs" rows="2" value="${qmE(m.ursache || '')}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Beschreibung" type="textarea" id="qm_text" rows="3" value="${qmE(m.text || '')}"></md-outlined-text-field>
+            <label class="crm-switch-row crm-span2"><md-checkbox id="qm_portal" ${m.im_kundenportal ? 'checked' : ''}></md-checkbox> Im Kundenportal anzeigen</label>
         </div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="qmMnPatch(${id})">${qmIcon('save')} Speichern</button>`, 'modal-lg');
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button onclick="qmMnPatch(${id})"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`, 'modal-lg');
 }
 async function qmMnPatch(id) {
     const r = await qmReq('PUT', QM_API + '/massnahmen/' + id, { titel: qmV('qm_titel'), art: qmV('qm_art'), verantwortlich_id: +qmV('qm_ver'),
@@ -165,31 +165,31 @@ function qmMnVerlaengernDialog(id) {
     const m = qm.cache.mnDetail;
     openModal('Frist verlängern', `<div class="crm-form">
         <div class="crm-muted">Bisher ${qmE(qmDate(m.frist))}${m.frist_verlaengert ? ` · bereits ${m.frist_verlaengert}× verlängert (max. ${qmE(qm.opt.einstellungen?.mn_max_verlaengerung || 2)})` : ''}</div>
-        <label class="crm-field">Neue Frist *<input id="qv_frist" type="date" class="crm-input" data-f="frist" min="${qmAddDays(1, m.frist)}" value="${qmAddDays(14, m.frist)}"></label>
-        <label class="crm-field">Begründung *<textarea id="qv_grund" class="crm-input" rows="3" data-f="grund"></textarea></label></div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="qmMnAktion(${id},'verlaengern',{frist:qmV('qv_frist'),grund:qmV('qv_grund')})">${qmIcon('update')} Verlängern</button>`);
+        <md-outlined-text-field class="crm-fld" label="Neue Frist *" id="qv_frist" type="date" data-f="frist" min="${qmAddDays(1, m.frist)}" value="${qmAddDays(14, m.frist)}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Begründung *" type="textarea" id="qv_grund" rows="3" data-f="grund"></md-outlined-text-field></div>`,
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button onclick="qmMnAktion(${id},'verlaengern',{frist:qmV('qv_frist'),grund:qmV('qv_grund')})"><md-icon slot="icon">update</md-icon>Verlängern</md-filled-button>`);
 }
 function qmMnErledigenDialog(id) {
     openModal('Maßnahme erledigt', `<div class="crm-form">
-        <label class="crm-field">Nachweis (was wurde getan, wo ist es dokumentiert?) *<textarea id="qe_nachweis" class="crm-input" rows="4" data-f="nachweis"></textarea></label>
+        <md-outlined-text-field class="crm-fld" label="Nachweis (was wurde getan, wo ist es dokumentiert?) *" type="textarea" id="qe_nachweis" rows="4" data-f="nachweis"></md-outlined-text-field>
         <div class="crm-muted">Die Wirksamkeit wird nach ${qmE(qm.opt.einstellungen?.mn_wirksam_tage || 30)} Tagen vom QMB geprüft.</div></div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="qmMnAktion(${id},'erledigen',{nachweis:qmV('qe_nachweis')})">${qmIcon('done_all')} Erledigt</button>`);
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button onclick="qmMnAktion(${id},'erledigen',{nachweis:qmV('qe_nachweis')})"><md-icon slot="icon">done_all</md-icon>Erledigt</md-filled-button>`);
 }
 function qmMnWirksamDialog(id) {
     openModal('Wirksamkeit bewerten', `<div class="crm-form">
-        <div class="crm-radio-row"><label><input type="radio" name="qw_erg" value="wirksam" checked onchange="document.getElementById('qwFolge').hidden=true"> wirksam</label>
-            <label><input type="radio" name="qw_erg" value="unwirksam" onchange="document.getElementById('qwFolge').hidden=false"> nicht wirksam</label></div>
-        <label class="crm-field">Begründung *<textarea id="qw_text" class="crm-input" rows="3" data-f="text"></textarea></label>
+        <div class="crm-radio-row"><label><md-radio name="qw_erg" value="wirksam" checked onchange="document.getElementById('qwFolge').hidden=true"></md-radio> wirksam</label>
+            <label><md-radio name="qw_erg" value="unwirksam" onchange="document.getElementById('qwFolge').hidden=false"></md-radio> nicht wirksam</label></div>
+        <md-outlined-text-field class="crm-fld" label="Begründung *" type="textarea" id="qw_text" rows="3" data-f="text"></md-outlined-text-field>
         <div id="qwFolge" hidden class="crm-form">
             <div class="crm-sec">Folgemaßnahme</div>
-            <label class="crm-field">Titel *<input id="qw_ftitel" class="crm-input" maxlength="200"></label>
-            <label class="crm-field">Frist *<input id="qw_ffrist" type="date" class="crm-input" min="${qmHeute()}" value="${qmAddDays(30)}"></label>
-            <label class="crm-field">Verantwortlich<select id="qw_fver" class="crm-input">${qmUserOptions(qm.cache.mnDetail?.verantwortlich_id)}</select></label>
+            <md-outlined-text-field class="crm-fld" label="Titel *" type="text" id="qw_ftitel" data-max="200"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Frist *" id="qw_ffrist" type="date" min="${qmHeute()}" value="${qmAddDays(30)}"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Verantwortlich" id="qw_fver">${qmUserOptions(qm.cache.mnDetail?.verantwortlich_id)}</md-outlined-select>
         </div></div>`,
-        `<button class="btn btn-outline" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="qmMnWirksam(${id})">${qmIcon('fact_check')} Speichern</button>`);
+        `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button onclick="qmMnWirksam(${id})"><md-icon slot="icon">fact_check</md-icon>Speichern</md-filled-button>`);
 }
 function qmMnWirksam(id) {
-    const ergebnis = document.querySelector('input[name="qw_erg"]:checked').value;
+    const ergebnis = [...document.querySelectorAll('md-radio[name="qw_erg"]')].find(r => r.checked).value;
     const body = { ergebnis, text: qmV('qw_text') };
     if (ergebnis === 'unwirksam' && qmV('qw_ftitel')) body.folge = { titel: qmV('qw_ftitel'), frist: qmV('qw_ffrist'), verantwortlich_id: +qmV('qw_fver') || null };
     return qmMnAktion(id, 'wirksamkeit', body);

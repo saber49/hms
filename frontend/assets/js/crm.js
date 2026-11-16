@@ -44,11 +44,11 @@ function crmName(typ, key) {
 }
 function crmList(typ, nurAktiv = true) { return (crm.opt?.listen?.[typ] || []).filter(x => !nurAktiv || x.aktiv); }
 function crmOptions(list, cur, placeholder) {
-    return (placeholder !== undefined ? `<option value="">${crmE(placeholder)}</option>` : '') +
+    return (placeholder !== undefined ? `<md-select-option value=""><div slot="headline">${crmE(placeholder)}</div></md-select-option>` : '') +
         list.map(o => {
             const v = typeof o === 'string' ? o : (o.key ?? o.id);
             const n = typeof o === 'string' ? o : o.name;
-            return `<option value="${crmE(v)}" ${String(cur ?? '') === String(v) ? 'selected' : ''}>${crmE(n)}</option>`;
+            return `<md-select-option value="${crmE(v)}" ${String(cur ?? '') === String(v) ? 'selected' : ''}><div slot="headline">${crmE(n)}</div></md-select-option>`;
         }).join('');
 }
 function crmDate(d) { return d ? formatDate(String(d).slice(0, 10)) : '–'; }
@@ -61,7 +61,7 @@ function crmNowLocal() { const d = new Date(); d.setMinutes(d.getMinutes() - d.g
 function crmSparte(s) { return s ? (typeof bereichBadgeHtml === 'function' ? bereichBadgeHtml(s) : `<span class="crm-chip">${crmE(s)}</span>`) : '<span class="crm-muted">Sparte fehlt</span>'; }
 function crmStageBadge(key) { return `<span class="crm-stage crm-stage-${crmE(key)}">${crmE(crmName('lead_stage', key))}</span>`; }
 function crmPhaseBadge(key) { return `<span class="crm-phase crm-phase-${crmE(key)}">${crmE(crmName('deal_phase', key))}</span>`; }
-function crmV(id) { const el = document.getElementById(id); if (!el) return undefined; return el.type === 'checkbox' ? el.checked : String(el.value ?? '').trim(); }
+function crmV(id) { const el = document.getElementById(id); if (!el) return undefined; if (el.tagName === 'MD-SWITCH') return !!el.selected; return el.type === 'checkbox' || el.tagName === 'MD-CHECKBOX' ? !!el.checked : String(el.value ?? '').trim(); }
 function crmCan(r) {
     if (r === 'deals_any') return crmCan('deals') || crmCan('uebergabe');
     return !!crm.opt?.ich?.[r];
@@ -92,12 +92,16 @@ function crmFehler(r, fallback = 'Speichern fehlgeschlagen') {
     if (r.ok) return false;
     document.querySelectorAll('.crm-invalid').forEach(el => el.classList.remove('crm-invalid'));
     document.querySelectorAll('.crm-err').forEach(el => el.remove());
+    document.querySelectorAll('md-outlined-text-field[error], md-outlined-select[error]').forEach(el => { el.error = false; el.errorText = ''; });
     const errs = r.data?.errors || {};
     Object.entries(errs).forEach(([k, m]) => {
         const el = document.querySelector(`[data-f="${CSS.escape(k)}"]`);
         if (!el) return;
+        const text = [].concat(m).join(' ');
+        // md fields carry the message themselves (MD3 error state + supporting text)
+        if (/^MD-OUTLINED-(TEXT-FIELD|SELECT)$/.test(el.tagName)) { el.error = true; el.errorText = text; return; }
         el.classList.add('crm-invalid');
-        el.insertAdjacentHTML('afterend', `<div class="crm-err">${crmE([].concat(m).join(' '))}</div>`);
+        el.insertAdjacentHTML('afterend', `<div class="crm-err">${crmE(text)}</div>`);
     });
     const msg = r.data?.error || Object.values(errs).flat()[0] || fallback;
     showToast(msg, 'error');
@@ -467,7 +471,7 @@ function crmAufgaben(list, canEdit) {
     return list.map(t => `
         <div data-mk="t${crmE(t.empfaenger_id ?? t.id)}" class="crm-task ${t.status === 'erledigt' ? 'done' : ''} ${t.ueberfaellig ? 'over' : ''} ${t.heute ? 'today' : ''}">
             ${t.status !== 'erledigt' && (canEdit || t.user_id === crm.opt.ich.id)
-                ? `<button class="crm-task-check" title="Erledigt" onclick="crmTaskDone(${t.empfaenger_id})">${crmIcon('radio_button_unchecked')}</button>`
+                ? uiIconButton('radio_button_unchecked', { cls: 'crm-task-check', title: 'Erledigt', onclick: `crmTaskDone(${t.empfaenger_id})` })
                 : `<span class="crm-task-check">${crmIcon(t.status === 'erledigt' ? 'check_circle' : 'radio_button_unchecked')}</span>`}
             <div class="crm-task-main">
                 <div><strong>${crmE(t.titel)}</strong> <span class="crm-chip">${crmE(crmName('aufgabe_typ', t.typ))}</span></div>
@@ -566,7 +570,7 @@ function crmLeadDetail(l) {
             <div class="crm-head-side">
                 ${crmSparte(l.sparte)}
                 <div class="crm-sub">Owner: <strong>${crmE(l.owner_name)}</strong>${crmCan('all') && offen ? ` <a class="crm-link" href="#" onclick="crmOwnerDialog('leads','${l.id}',${l.owner_id});return false">ändern</a>` : ''}</div>
-                ${ed && offen ? `<label class="crm-prio-sel"><span>Priorität</span><select class="crm-input crm-input-sm" onchange="crmLeadPatch({prioritaet:this.value})">${crmOptions(crmList('prioritaet'), l.prioritaet || 'normal')}</select></label>` : `<div class="crm-sub">Priorität: ${crmE(crmName('prioritaet', l.prioritaet))}</div>`}
+                ${ed && offen ? `<label class="crm-prio-sel"><span>Priorität</span><md-outlined-select class="crm-fld is-sm" onchange="crmLeadPatch({prioritaet:this.value})">${crmOptions(crmList('prioritaet'), l.prioritaet || 'normal')}</md-outlined-select></label>` : `<div class="crm-sub">Priorität: ${crmE(crmName('prioritaet', l.prioritaet))}</div>`}
             </div>
         </div>
 
@@ -582,13 +586,13 @@ function crmLeadDetail(l) {
                 <div class="crm-card">
                     <div class="crm-card-title">${crmIcon('checklist')} Qualifizierungs-Checkliste</div>
                     ${checks.map(([key, label]) => `<label class="crm-check"><md-checkbox ${c[key] ? 'checked' : ''} ${ed && offen ? `onchange="crmLeadPatch({checkliste:{${key}:this.checked}})"` : 'disabled'}></md-checkbox> ${label}</label>`).join('')}
-                    <div class="crm-check-date">Termin am <input type="date" class="crm-input crm-input-sm" value="${crmE(c.termin_am || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_am:this.value||null}})"` : 'disabled'}>
-                        <input type="time" class="crm-input crm-input-sm" value="${crmE(c.termin_zeit || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_zeit:this.value||null}})"` : 'disabled'}></div>
+                    <div class="crm-check-date">Termin am <md-outlined-text-field class="crm-fld is-sm" type="date" value="${crmE(c.termin_am || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_am:this.value||null}})"` : 'disabled'}></md-outlined-text-field>
+                        <md-outlined-text-field class="crm-fld is-sm" type="time" value="${crmE(c.termin_zeit || '')}" ${ed && offen ? `onchange="crmLeadPatch({checkliste:{termin_zeit:this.value||null}})"` : 'disabled'}></md-outlined-text-field></div>
                 </div>
                 <div class="crm-card"><div class="crm-card-title">${crmIcon('history')} Zeitstrahl <span class="crm-muted">(${l.aktivitaeten.length})</span></div>${crmTimeline(l.aktivitaeten)}</div>
             </div>
             <div class="crm-side">
-                <div class="crm-card"><div class="crm-card-title">${crmIcon('task_alt')} Aufgaben ${ed ? `<button class="crm-mini" onclick="crmAufgabeDialog('lead','${l.id}')">${crmIcon('add')}</button>` : ''}</div>${crmAufgaben(l.aufgaben, ed)}</div>
+                <div class="crm-card"><div class="crm-card-title">${crmIcon('task_alt')} Aufgaben ${ed ? uiIconButton('add', { cls: 'crm-mini', title: 'Aufgabe anlegen', onclick: `crmAufgabeDialog('lead','${l.id}')` }) : ''}</div>${crmAufgaben(l.aufgaben, ed)}</div>
                 <div class="crm-card"><div class="crm-card-title">${crmIcon('insights')} Kennzahlen</div>
                     <div class="crm-kv"><span>Stage seit</span><strong>${l.tage_in_stage} Tagen</strong></div>
                     <div class="crm-kv"><span>Kontaktversuche</span><strong>${l.anzahl_kontaktversuche}</strong></div>
@@ -625,10 +629,10 @@ function crmFolgeFelder(defTitel) {
             <label><md-radio name="crm_folge" value="disqualifizieren" onchange="crmFolgeToggle()"></md-radio> Danach disqualifizieren</label>
         </div>
         <div id="crmFolgeAufgabe" class="crm-form-grid">
-            <label class="crm-field">Typ<select id="cf_a_typ" class="crm-input">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</select></label>
-            <label class="crm-field crm-span2">Titel<input id="cf_a_titel" class="crm-input" data-f="aufgabe.titel" maxlength="200" value="${crmE(defTitel)}"></label>
-            <label class="crm-field">Fällig am<input id="cf_a_datum" type="date" class="crm-input" data-f="aufgabe.faellig_am" value="${crmAddDays(2)}"></label>
-            <label class="crm-field">Uhrzeit<input id="cf_a_zeit" type="time" class="crm-input"></label>
+            <md-outlined-select class="crm-fld" label="Typ" id="cf_a_typ">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Titel" type="text" id="cf_a_titel" data-f="aufgabe.titel" data-max="200" value="${crmE(defTitel)}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Fällig am" id="cf_a_datum" type="date" data-f="aufgabe.faellig_am" value="${crmAddDays(2)}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Uhrzeit" id="cf_a_zeit" type="time"></md-outlined-text-field>
         </div>`;
 }
 function crmFolgeToggle() {
@@ -651,11 +655,11 @@ function crmAnrufDialog(vorErg = '') {
             <div class="crm-radio-row"><label><md-radio name="crm_richtung" value="ausgehend" checked></md-radio> ↗ ausgehend</label><label><md-radio name="crm_richtung" value="eingehend"></md-radio> ↙ eingehend</label></div>
             <div class="crm-sec">Ergebnis *</div>
             <div class="crm-erg-row" data-f="ergebnis">${erg.map(e => `<label class="crm-erg-pill"><md-radio name="crm_erg" value="${crmE(e.key)}" ${e.key === vorErg ? 'checked' : ''}></md-radio> ${crmE(e.name)}</label>`).join('')}</div>
-            <label class="crm-field">Notiz<textarea id="cf_notiz" class="crm-input" rows="3" maxlength="5000"></textarea></label>
-            <label class="crm-field">Zeitpunkt<input id="cf_zeit" type="datetime-local" class="crm-input" value="${crmNowLocal()}"></label>
+            <md-outlined-text-field class="crm-fld" label="Notiz" type="textarea" id="cf_notiz" rows="3" maxlength="5000"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Zeitpunkt" id="cf_zeit" type="datetime-local" value="${crmNowLocal()}"></md-outlined-text-field>
             ${crmFolgeFelder('Nachfassen: ' + [k.vorname, k.nachname].filter(Boolean).join(' '))}
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAnrufSpeichern()">${crmIcon('save')} Speichern</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAnrufSpeichern()"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
 }
 
 async function crmAnrufSpeichern() {
@@ -688,23 +692,23 @@ function crmAktivitaetDialog(bezugTyp, bezugId, typ = 'notiz') {
     openModal('Aktivität erfassen', `
         <div class="crm-form">
             <div class="crm-form-grid">
-                <label class="crm-field">Typ<select id="cf_typ" class="crm-input" onchange="document.getElementById('cfRichtung').style.display=this.value==='email'?'':'none'">
-                    ${crmOptions([{ key: 'email', name: 'E-Mail' }, { key: 'termin', name: 'Termin' }, { key: 'besichtigung', name: 'Besichtigung' }, { key: 'notiz', name: 'Notiz' }], typ)}</select></label>
-                <label class="crm-field">Zeitpunkt<input id="cf_zeit" type="datetime-local" class="crm-input" value="${crmNowLocal()}" data-f="zeitpunkt"></label>
+                <md-outlined-select class="crm-fld" label="Typ" id="cf_typ" onchange="document.getElementById('cfRichtung').style.display=this.value==='email'?'':'none'">
+                    ${crmOptions([{ key: 'email', name: 'E-Mail' }, { key: 'termin', name: 'Termin' }, { key: 'besichtigung', name: 'Besichtigung' }, { key: 'notiz', name: 'Notiz' }], typ)}</md-outlined-select>
+                <md-outlined-text-field class="crm-fld" label="Zeitpunkt" id="cf_zeit" type="datetime-local" value="${crmNowLocal()}" data-f="zeitpunkt"></md-outlined-text-field>
             </div>
             <div class="crm-radio-row" id="cfRichtung" style="${typ === 'email' ? '' : 'display:none'}" data-f="richtung"><label><md-radio name="crm_richtung" value="ausgehend" checked></md-radio> ↗ ausgehend</label><label><md-radio name="crm_richtung" value="eingehend"></md-radio> ↙ eingehend (Antwort)</label></div>
-            <label class="crm-field">Notiz<textarea id="cf_notiz" class="crm-input" rows="4" maxlength="5000" data-f="notiz"></textarea></label>
-            <label class="crm-field">Anhang (optional, max. 10 MB)<input id="cf_datei" type="file" class="crm-input" data-f="datei" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx"></label>
+            <md-outlined-text-field class="crm-fld" label="Notiz" type="textarea" id="cf_notiz" rows="4" maxlength="5000" data-f="notiz"></md-outlined-text-field>
+            ${uiFilePicker({ id: 'cf_datei', label: 'Anhang (optional, max. 10 MB)', accept: '.pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx', attrs: 'data-f="datei"' })}
             <label class="crm-check"><md-checkbox id="cf_mit_aufgabe" onchange="document.getElementById('crmFolgeAufgabe').style.display=this.checked?'':'none'"></md-checkbox> Folgeaufgabe anlegen</label>
             <div id="crmFolgeAufgabe" class="crm-form-grid" style="display:none">
-                <label class="crm-field">Typ<select id="cf_a_typ" class="crm-input">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</select></label>
-                <label class="crm-field crm-span2">Titel<input id="cf_a_titel" class="crm-input" data-f="aufgabe.titel" maxlength="200" value="Nachfassen"></label>
-                <label class="crm-field">Fällig am<input id="cf_a_datum" type="date" class="crm-input" data-f="aufgabe.faellig_am" value="${crmAddDays(2)}"></label>
-                <label class="crm-field">Uhrzeit<input id="cf_a_zeit" type="time" class="crm-input"></label>
+                <md-outlined-select class="crm-fld" label="Typ" id="cf_a_typ">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</md-outlined-select>
+                <md-outlined-text-field class="crm-fld crm-span2" label="Titel" type="text" id="cf_a_titel" data-f="aufgabe.titel" data-max="200" value="Nachfassen"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld" label="Fällig am" id="cf_a_datum" type="date" data-f="aufgabe.faellig_am" value="${crmAddDays(2)}"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld" label="Uhrzeit" id="cf_a_zeit" type="time"></md-outlined-text-field>
             </div>
             ${istLead ? '<div class="crm-muted">Ausgehende E-Mails zählen als Kontaktversuch (A4), eingehende setzen den Lead auf „Verbunden“ (A5).</div>' : ''}
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAktivitaetSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Speichern</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmAktivitaetSpeichern('${bezugTyp}','${bezugId}')"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
 }
 
 async function crmAktivitaetSpeichern(bezugTyp, bezugId) {
@@ -732,14 +736,14 @@ function crmAufgabeDialog(bezugTyp, bezugId) {
     const d = crm.detail?.data || {};
     openModal('Aufgabe anlegen', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field">Typ<select id="cf_a_typ" class="crm-input" data-f="typ">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</select></label>
-            <label class="crm-field crm-span2">Titel *<input id="cf_a_titel" class="crm-input" data-f="titel" maxlength="200"></label>
-            <label class="crm-field">Fällig am *<input id="cf_a_datum" type="date" class="crm-input" data-f="faellig_am" value="${crmToday()}"></label>
-            <label class="crm-field">Uhrzeit<input id="cf_a_zeit" type="time" class="crm-input" data-f="faellig_zeit"></label>
-            <label class="crm-field">Zugewiesen an<select id="cf_a_an" class="crm-input" data-f="zugewiesen_an">${crmOptions(crm.opt.owners || [], d.owner_id || crm.opt.ich.id)}</select></label>
-            <label class="crm-field crm-span3">Beschreibung<textarea id="cf_a_text" class="crm-input" rows="3" maxlength="5000"></textarea></label>
+            <md-outlined-select class="crm-fld" label="Typ" id="cf_a_typ" data-f="typ">${crmOptions(crmList('aufgabe_typ'), 'anruf')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Titel *" type="text" id="cf_a_titel" data-f="titel" data-max="200"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Fällig am *" id="cf_a_datum" type="date" data-f="faellig_am" value="${crmToday()}"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Uhrzeit" id="cf_a_zeit" type="time" data-f="faellig_zeit"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Zugewiesen an" id="cf_a_an" data-f="zugewiesen_an">${crmOptions(crm.opt.owners || [], d.owner_id || crm.opt.ich.id)}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span3" label="Beschreibung" type="textarea" id="cf_a_text" rows="3" maxlength="5000"></md-outlined-text-field>
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmAufgabeSpeichern('${bezugTyp}','${bezugId}')">${crmIcon('save')} Anlegen</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmAufgabeSpeichern('${bezugTyp}','${bezugId}')"><md-icon slot="icon">save</md-icon>Anlegen</md-filled-button>`);
 }
 async function crmAufgabeSpeichern(bezugTyp, bezugId) {
     const r = await crmReq('POST', CRM_API + '/aufgaben', {
@@ -763,19 +767,19 @@ function crmQualifizierenDialog() {
             <div class="crm-sec">Checkliste (alle Pflicht)</div>
             ${checks.map(([k2, lab]) => `<label class="crm-check" data-f="checkliste.${k2}"><md-checkbox id="cq_${k2}" ${c[k2] ? 'checked' : ''}></md-checkbox> ${lab}</label>`).join('')}
             <div class="crm-form-grid">
-                <label class="crm-field">Termin am *<input id="cq_termin_am" type="date" class="crm-input" data-f="checkliste.termin_am" value="${crmE(c.termin_am || '')}" onchange="crmQSync()"></label>
-                <label class="crm-field">Uhrzeit<input id="cq_termin_zeit" type="time" class="crm-input" value="${crmE(c.termin_zeit || '')}" onchange="crmQSync()"></label>
+                <md-outlined-text-field class="crm-fld" label="Termin am *" id="cq_termin_am" type="date" data-f="checkliste.termin_am" value="${crmE(c.termin_am || '')}" onchange="crmQSync()"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld" label="Uhrzeit" id="cq_termin_zeit" type="time" value="${crmE(c.termin_zeit || '')}" onchange="crmQSync()"></md-outlined-text-field>
             </div>
             <div class="crm-sec">Deal (Phase „Besichtigung geplant“)</div>
             <div class="crm-form-grid">
-                <label class="crm-field crm-span3">Titel *<input id="cq_titel" class="crm-input" data-f="deal.titel" maxlength="250" value="${crmE([f.name || [l.vorname, l.nachname].filter(Boolean).join(' '), l.sparte, f.ort].filter(Boolean).join(' – '))}"></label>
-                <label class="crm-field crm-span3">Objektadresse *<input id="cq_adresse" class="crm-input" data-f="deal.objektadresse" maxlength="300" value="${crmE(adr)}"></label>
-                <label class="crm-field">Besichtigung am *<input id="cq_besichtigung" type="datetime-local" class="crm-input" data-f="deal.besichtigung_am" value="${crmE(termin)}"></label>
-                <label class="crm-field">Erwarteter Abschluss *<input id="cq_abschluss" type="date" class="crm-input" data-f="deal.erwarteter_abschluss" value="${crmAddDays(30)}"></label>
+                <md-outlined-text-field class="crm-fld crm-span3" label="Titel *" type="text" id="cq_titel" data-f="deal.titel" data-max="250" value="${crmE([f.name || [l.vorname, l.nachname].filter(Boolean).join(' '), l.sparte, f.ort].filter(Boolean).join(' – '))}"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld crm-span3" label="Objektadresse *" type="text" id="cq_adresse" data-f="deal.objektadresse" data-max="300" value="${crmE(adr)}"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld" label="Besichtigung am *" id="cq_besichtigung" type="datetime-local" data-f="deal.besichtigung_am" value="${crmE(termin)}"></md-outlined-text-field>
+                <md-outlined-text-field class="crm-fld" label="Erwarteter Abschluss *" id="cq_abschluss" type="date" data-f="deal.erwarteter_abschluss" value="${crmAddDays(30)}"></md-outlined-text-field>
             </div>
             <div class="crm-muted">Lead → Qualifiziert, Lifecycle → Opportunity, der Termin wird als Aufgabe angelegt. In der Lead-Phase keine Preise/Angebote.</div>
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-success" id="crmSaveBtn" onclick="crmQualifizieren()">${crmIcon('verified')} Qualifizieren</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-success" id="crmSaveBtn" onclick="crmQualifizieren()"><md-icon slot="icon">verified</md-icon>Qualifizieren</md-filled-button>`);
 }
 function crmQSync() {
     const d = crmV('cq_termin_am'), t = crmV('cq_termin_zeit') || '10:00';
@@ -802,21 +806,21 @@ function crmDisqualifizierenDialog() {
     const n = crm.opt.einstellungen?.a9_versuche || 6;
     openModal('Disqualifizieren', `
         <div class="crm-form">
-            <label class="crm-field">Grund *<select id="cd_grund" class="crm-input" data-f="grund" onchange="crmDisqToggle()">
-                <option value="">— wählen —</option>
+            <md-outlined-select class="crm-fld" label="Grund *" id="cd_grund" data-f="grund" onchange="crmDisqToggle()">
+                <md-select-option value=""><div slot="headline">— wählen —</div></md-select-option>
                 ${gruende.map(g => {
                     const gesperrt = g.zusatz?.pflicht === 'min_versuche' && !l.nicht_erreichbar_erlaubt;
-                    return `<option value="${crmE(g.key)}" data-pflicht="${crmE(g.zusatz?.pflicht || '')}" ${gesperrt ? 'disabled' : ''}>${crmE(g.name)}${gesperrt ? ` (erst ab ${n} Versuchen)` : ''}</option>`;
-                }).join('')}</select></label>
-            <label class="crm-field" id="cdWv" style="display:none">Wiedervorlage (Vertragsende) *<input id="cd_wv" type="date" class="crm-input" data-f="wiedervorlage_am" min="${crmAddDays(1)}">
-                <span class="crm-muted">Aufgabe „Wiedervorlage“ wird ${crmE(crm.opt.einstellungen?.a7_vorlauf_tage || 90)} Tage vorher fällig (A7).</span></label>
+                    return `<md-select-option value="${crmE(g.key)}" data-pflicht="${crmE(g.zusatz?.pflicht || '')}" ${gesperrt ? 'disabled' : ''}><div slot="headline">${crmE(g.name)}${gesperrt ? ` (erst ab ${n} Versuchen)` : ''}</div></md-select-option>`;
+                }).join('')}</md-outlined-select>
+            <div class="crm-field-box" id="cdWv" style="display:none"><md-outlined-text-field class="crm-fld" label="Wiedervorlage (Vertragsende) *" id="cd_wv" type="date" data-f="wiedervorlage_am" min="${crmAddDays(1)}"></md-outlined-text-field>
+                <span class="crm-muted">Aufgabe „Wiedervorlage“ wird ${crmE(crm.opt.einstellungen?.a7_vorlauf_tage || 90)} Tage vorher fällig (A7).</span></div>
             <div id="cdDup" style="display:none">
-                <label class="crm-field">Original-Lead suchen *<input class="crm-input" placeholder="Firma oder Name…" oninput="crmDupSuche(this.value)"></label>
-                <select id="cd_dup" class="crm-input" data-f="duplikat_von" size="5">${(l.weitere_leads || []).map(x => `<option value="${x.id}">${crmE((x.firma_name || '') + ' · ' + x.kontakt_name + ' · ' + (x.sparte || ''))}</option>`).join('')}</select>
+                <md-outlined-text-field class="crm-fld" label="Original-Lead suchen *" type="text" placeholder="Firma oder Name…" oninput="crmDupSuche(this.value)"></md-outlined-text-field>
+                ${uiPickList('cd_dup', (l.weitere_leads || []).map(x => uiPickItem(x.id, (x.firma_name || '') + ' · ' + x.kontakt_name + ' · ' + (x.sparte || ''))).join(''), { attrs: 'data-f="duplikat_von"' })}
             </div>
-            <label class="crm-field">Notiz <span id="cdNotizPflicht" class="crm-muted"></span><textarea id="cd_notiz" class="crm-input" rows="3" maxlength="5000" data-f="notiz"></textarea></label>
+            <div class="crm-field-box"><md-outlined-text-field class="crm-fld" label="Notiz" type="textarea" id="cd_notiz" rows="3" maxlength="5000" data-f="notiz"></md-outlined-text-field> <span id="cdNotizPflicht" class="crm-muted"></span></div>
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-danger" id="crmSaveBtn" onclick="crmDisqualifizieren()">${crmIcon('block')} Disqualifizieren</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  class="md-btn-danger" id="crmSaveBtn" onclick="crmDisqualifizieren()"><md-icon slot="icon">block</md-icon>Disqualifizieren</md-filled-button>`);
 }
 function crmDisqToggle() {
     const p = document.getElementById('cd_grund')?.selectedOptions?.[0]?.dataset?.pflicht || '';
@@ -830,9 +834,8 @@ function crmDupSuche(q) {
     _crmDupT = setTimeout(async () => {
         if (q.trim().length < 2) return;
         const r = await crmGet(CRM_API + '/leads' + crmQs({ tab: 'alle', stage: 'alle', q }));
-        const sel = document.getElementById('cd_dup');
-        if (!r.ok || !sel) return;
-        sel.innerHTML = (r.data.data || []).filter(x => x.id !== crmC().id).map(x => `<option value="${x.id}">${crmE((x.firma_name || '') + ' · ' + x.kontakt_name + ' · ' + (x.sparte || '') + ' · ' + crmName('lead_stage', x.stage))}</option>`).join('');
+        if (!r.ok) return;
+        uiPickFill('cd_dup', (r.data.data || []).filter(x => x.id !== crmC().id).map(x => uiPickItem(x.id, (x.firma_name || '') + ' · ' + x.kontakt_name + ' · ' + (x.sparte || '') + ' · ' + crmName('lead_stage', x.stage))).join(''));
     }, 300);
 }
 async function crmDisqualifizieren() {
@@ -847,7 +850,7 @@ async function crmDisqualifizieren() {
 
 // ---------- Owner umverteilen (Vertriebsleitung) ----------
 function crmOwnerDialog(art, id, cur) {
-    openModal('Owner umverteilen', `<label class="crm-field">Neuer Owner<select id="co_owner" class="crm-input" data-f="owner_id">${crmOptions(crm.opt.owners || [], cur)}</select></label>`,
+    openModal('Owner umverteilen', `<md-outlined-select class="crm-fld" label="Neuer Owner" id="co_owner" data-f="owner_id">${crmOptions(crm.opt.owners || [], cur)}</md-outlined-select>`,
         `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmOwnerSpeichern('${art}','${id}')">Speichern</md-filled-button>`);
 }
 async function crmOwnerSpeichern(art, id) {
@@ -929,7 +932,7 @@ function crmDealDetail(d) {
     const idx = phasen.findIndex(p => p.key === d.phase);
     const k = d.kontakt || {}, f = d.firma;
     const kannPhase = ed && (offen || d.darf_wiedereroeffnen);
-    const fe = (id, label, val, type = 'text', extra = '') => `<label class="crm-field">${label}<input id="${id}" type="${type}" class="crm-input" data-f="${id.replace('dd_', '')}" value="${crmE(val ?? '')}" ${ed && offen ? 'oninput="crm.dirty=true"' : 'disabled'} ${extra}></label>`;
+    const fe = (id, label, val, type = 'text', extra = '') => `<md-outlined-text-field class="crm-fld" label="${label}" id="${id}" type="${type}" data-f="${id.replace('dd_', '')}" value="${crmE(val ?? '')}" ${ed && offen ? 'oninput="crm.dirty=true"' : 'disabled'} ${extra}></md-outlined-text-field>`;
     return `
         ${crmDetailTop('Zur Liste', (ed ? `<md-outlined-button onclick="crmAktivitaetDialog('deal','${d.id}','notiz')"><md-icon slot="icon">edit_note</md-icon>Aktivität</md-outlined-button>
             <md-outlined-button onclick="crmAufgabeDialog('deal','${d.id}')"><md-icon slot="icon">add_task</md-icon>Aufgabe</md-outlined-button>` : '') +
@@ -959,7 +962,7 @@ function crmDealDetail(d) {
                         ${fe('dd_wert_monatlich_eur', 'Wert monatlich (€)', d.wert_monatlich_eur, 'number', 'min="0" step="0.01"')}
                         ${fe('dd_laufzeit_monate', 'Laufzeit (Monate)', d.laufzeit_monate, 'number', 'min="1" step="1"')}
                         ${fe('dd_vertragsbeginn', 'Vertragsbeginn', d.vertragsbeginn, 'date')}
-                        <label class="crm-field crm-span3">Besichtigungsnotiz<textarea id="dd_besichtigung_notiz" class="crm-input" rows="3" data-f="besichtigung_notiz" ${ed && offen ? 'oninput="crm.dirty=true"' : 'disabled'}>${crmE(d.besichtigung_notiz || '')}</textarea></label>
+                        <md-outlined-text-field class="crm-fld crm-span3" label="Besichtigungsnotiz" type="textarea" id="dd_besichtigung_notiz" rows="3" data-f="besichtigung_notiz" ${ed && offen ? 'oninput="crm.dirty=true"' : 'disabled'} value="${crmE(d.besichtigung_notiz || '')}"></md-outlined-text-field>
                     </div>
                     <div class="crm-angebot">${crmIcon('request_quote')} Angebot:
                         ${d.hat_angebot ? `<a href="#" onclick="crmDownload('${CRM_API}/deals/${d.id}/angebot');return false">${crmE(d.angebot_datei_name || 'Dokument')}</a>` : '<span class="crm-muted">kein Dokument</span>'}
@@ -970,7 +973,7 @@ function crmDealDetail(d) {
                 <div class="crm-card"><div class="crm-card-title">${crmIcon('history')} Zeitstrahl</div>${crmTimeline(d.aktivitaeten)}</div>
             </div>
             <div class="crm-side">
-                <div class="crm-card"><div class="crm-card-title">${crmIcon('task_alt')} Aufgaben ${ed ? `<button class="crm-mini" onclick="crmAufgabeDialog('deal','${d.id}')">${crmIcon('add')}</button>` : ''}</div>${crmAufgaben(d.aufgaben, ed)}</div>
+                <div class="crm-card"><div class="crm-card-title">${crmIcon('task_alt')} Aufgaben ${ed ? uiIconButton('add', { cls: 'crm-mini', title: 'Aufgabe anlegen', onclick: `crmAufgabeDialog('deal','${d.id}')` }) : ''}</div>${crmAufgaben(d.aufgaben, ed)}</div>
                 <div class="crm-card"><div class="crm-card-title">${crmIcon('contact_phone')} Kontakt</div>
                     <div class="crm-kv"><span>Name</span><strong>${crmE([k.anrede, k.vorname, k.nachname].filter(Boolean).join(' '))}</strong></div>
                     ${k.telefon ? `<div class="crm-kv"><span>Telefon</span><a href="tel:${crmE(k.telefon)}">${crmE(k.telefon)}</a></div>` : ''}
@@ -1009,16 +1012,16 @@ function crmPhaseDialog(ziel) {
     const cur = { ...d, ...crmDealFelder(), angebot_datei_pfad: d.hat_angebot ? 'x' : null };
     const need = [...new Set(phasen.flatMap(p => pf[p] || []))].filter(f => cur[f] == null || cur[f] === '' || (f === 'wert_monatlich_eur' && !(parseFloat(cur[f]) > 0)));
     const inp = {
-        objektadresse: () => `<label class="crm-field crm-span3">Objektadresse *<input id="cp_objektadresse" class="crm-input" data-f="objektadresse" maxlength="300"></label>`,
-        besichtigung_am: () => `<label class="crm-field">Besichtigung am *<input id="cp_besichtigung_am" type="datetime-local" class="crm-input" data-f="besichtigung_am"></label>`,
-        besichtigung_notiz: () => `<label class="crm-field crm-span3">Besichtigungsnotiz *<textarea id="cp_besichtigung_notiz" class="crm-input" rows="3" data-f="besichtigung_notiz"></textarea></label>`,
-        wert_monatlich_eur: () => `<label class="crm-field">Wert monatlich (€) *<input id="cp_wert_monatlich_eur" type="number" min="0" step="0.01" class="crm-input" data-f="wert_monatlich_eur"></label>`,
-        laufzeit_monate: () => `<label class="crm-field">Laufzeit (Monate) *<input id="cp_laufzeit_monate" type="number" min="1" step="1" class="crm-input" data-f="laufzeit_monate"></label>`,
-        angebot_datei_pfad: () => `<label class="crm-field crm-span3">Angebotsdokument *<input id="cp_angebot" type="file" class="crm-input" data-f="angebot_datei_pfad" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"></label>`,
-        vertragsbeginn: () => `<label class="crm-field">Vertragsbeginn *<input id="cp_vertragsbeginn" type="date" class="crm-input" data-f="vertragsbeginn"></label>`,
-        verlust_grund: () => `<label class="crm-field">Verlustgrund *<select id="cp_verlust_grund" class="crm-input" data-f="verlust_grund">${crmOptions(crmList('verlust_grund'), '', '— wählen —')}</select></label>
-            <label class="crm-field crm-span2">Notiz (bei „Sonstiges“ Pflicht)<textarea id="cp_verlust_notiz" class="crm-input" rows="2" data-f="verlust_notiz"></textarea></label>
-            <label class="crm-field">Wiedervorlage (optional)<input id="cp_wv" type="date" class="crm-input" min="${crmAddDays(1)}"></label>`,
+        objektadresse: () => `<md-outlined-text-field class="crm-fld crm-span3" label="Objektadresse *" type="text" id="cp_objektadresse" data-f="objektadresse" data-max="300"></md-outlined-text-field>`,
+        besichtigung_am: () => `<md-outlined-text-field class="crm-fld" label="Besichtigung am *" id="cp_besichtigung_am" type="datetime-local" data-f="besichtigung_am"></md-outlined-text-field>`,
+        besichtigung_notiz: () => `<md-outlined-text-field class="crm-fld crm-span3" label="Besichtigungsnotiz *" type="textarea" id="cp_besichtigung_notiz" rows="3" data-f="besichtigung_notiz"></md-outlined-text-field>`,
+        wert_monatlich_eur: () => `<md-outlined-text-field class="crm-fld" label="Wert monatlich (€) *" id="cp_wert_monatlich_eur" type="number" min="0" step="0.01" data-f="wert_monatlich_eur"></md-outlined-text-field>`,
+        laufzeit_monate: () => `<md-outlined-text-field class="crm-fld" label="Laufzeit (Monate) *" id="cp_laufzeit_monate" type="number" min="1" step="1" data-f="laufzeit_monate"></md-outlined-text-field>`,
+        angebot_datei_pfad: () => `${uiFilePicker({ id: 'cp_angebot', label: 'Angebotsdokument *', accept: '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png', attrs: 'data-f="angebot_datei_pfad"', cls: 'crm-span3' })}`,
+        vertragsbeginn: () => `<md-outlined-text-field class="crm-fld" label="Vertragsbeginn *" id="cp_vertragsbeginn" type="date" data-f="vertragsbeginn"></md-outlined-text-field>`,
+        verlust_grund: () => `<md-outlined-select class="crm-fld" label="Verlustgrund *" id="cp_verlust_grund" data-f="verlust_grund">${crmOptions(crmList('verlust_grund'), '', '— wählen —')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Notiz (bei „Sonstiges“ Pflicht)" type="textarea" id="cp_verlust_notiz" rows="2" data-f="verlust_notiz"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Wiedervorlage (optional)" id="cp_wv" type="date" min="${crmAddDays(1)}"></md-outlined-text-field>`,
     };
     const firmaKunde = d.firma?.kunde_id;
     const extra = ziel === 'gewonnen' && crmCan('kunden_edit')
@@ -1225,7 +1228,7 @@ function crmStammDetail(typ, x) {
                 <span>${crmIcon(x.dsgvo_einwilligung ? 'mark_email_read' : 'unsubscribe')} ${x.dsgvo_einwilligung ? 'Werbe-Einwilligung seit ' + crmDate(x.dsgvo_datum) : 'keine Werbe-Einwilligung'}</span></div></div>
             <div class="crm-head-side">
                 <div class="crm-sub">Lifecycle Stage</div>
-                ${ed || crmCan('all') ? `<select class="crm-input crm-input-sm" onchange="crmLifecycle(this.value, this)">${lifeOpts.map(s => `<option value="${s.key}" ${s.key === x.lifecycle_stage ? 'selected' : ''}>${crmE(s.name)}</option>`).join('')}${!lifeOpts.some(s => s.key === x.lifecycle_stage) ? `<option selected disabled>${crmE(crmName('lifecycle', x.lifecycle_stage))}</option>` : ''}</select>`
+                ${ed || crmCan('all') ? `<md-outlined-select class="crm-fld is-sm" onchange="crmLifecycle(this.value, this)">${lifeOpts.map(s => `<md-select-option value="${s.key}" ${s.key === x.lifecycle_stage ? 'selected' : ''}><div slot="headline">${crmE(s.name)}</div></md-select-option>`).join('')}${!lifeOpts.some(s => s.key === x.lifecycle_stage) ? `<md-select-option selected disabled><div slot="headline">${crmE(crmName('lifecycle', x.lifecycle_stage))}</div></md-select-option>` : ''}</md-outlined-select>`
                     : `<span class="crm-life crm-life-${crmE(x.lifecycle_stage)}">${crmE(crmName('lifecycle', x.lifecycle_stage))}</span>`}
                 <div class="crm-sub">seit ${crmUtcDT(x.lifecycle_changed_at)} · Owner: <strong>${crmE(x.owner_name || '')}</strong>${crmCan('all') ? ` <a class="crm-link" href="#" onclick="crmOwnerDialog('kontakte','${x.id}',${x.owner_id});return false">ändern</a>` : ''}</div>
             </div></div>
@@ -1253,7 +1256,7 @@ async function crmLifecycle(stage, sel) {
 
 function crmSparteWahl(text) {
     return new Promise(resolve => {
-        openModal('Sparte', `<p>${crmE(text)}</p><select id="cs_sparte" class="crm-input">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select>`,
+        openModal('Sparte', `<p>${crmE(text)}</p><md-outlined-select class="crm-fld" id="cs_sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</md-outlined-select>`,
             `<md-outlined-button  id="csCancel">Abbrechen</md-outlined-button><md-filled-button  id="csOk">OK</md-filled-button>`);
         document.getElementById('csCancel').onclick = () => { closeModal(); resolve(null); };
         document.getElementById('csOk').onclick = () => { const v = crmV('cs_sparte'); if (!v) return showToast('Sparte wählen', 'error'); closeModal(); resolve(v); };
@@ -1263,9 +1266,9 @@ function crmSparteWahl(text) {
 function crmLeadDialog(kontaktId) {
     openModal('Lead anlegen', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field">Sparte *<select id="cl_sparte" class="crm-input" data-f="sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
-            <label class="crm-field">Priorität<select id="cl_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>
-            ${crmCan('all') ? `<label class="crm-field">Owner<select id="cl_owner" class="crm-input" data-f="owner_id"><option value="auto" selected>Automatisch (Zuweisungsregel)</option>${crmOptions(crm.opt.owners || [], '')}</select></label>` : ''}
+            <md-outlined-select class="crm-fld" label="Sparte *" id="cl_sparte" data-f="sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</md-outlined-select>
+            <md-outlined-select class="crm-fld" label="Priorität" id="cl_prio">${crmOptions(crmList('prioritaet'), 'normal')}</md-outlined-select>
+            ${crmCan('all') ? `<md-outlined-select class="crm-fld" label="Owner" id="cl_owner" data-f="owner_id"><md-select-option value="auto" selected><div slot="headline">Automatisch (Zuweisungsregel)</div></md-select-option>${crmOptions(crm.opt.owners || [], '')}</md-outlined-select>` : ''}
             <div class="crm-muted crm-span3">Pro Sparte gibt es höchstens einen offenen Lead je Kontakt (A3). Aufgabe „Erstkontakt“ wird heute fällig.</div>
         </div>`,
         `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmLeadSpeichern('${kontaktId}')">Anlegen</md-filled-button>`);
@@ -1280,11 +1283,11 @@ async function crmLeadSpeichern(kontaktId) {
 function crmZusatzDealDialog(kontaktId) {
     openModal('Zusatzauftrag (Deal für Bestandskunde)', `
         <div class="crm-form crm-form-grid">
-            <label class="crm-field crm-span3">Titel *<input id="cz_titel" class="crm-input" data-f="titel" maxlength="250"></label>
-            <label class="crm-field">Sparte *<select id="cz_sparte" class="crm-input" data-f="sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
-            <label class="crm-field crm-span2">Objektadresse *<input id="cz_adresse" class="crm-input" data-f="objektadresse" maxlength="300"></label>
-            <label class="crm-field">Besichtigung am *<input id="cz_besichtigung" type="datetime-local" class="crm-input" data-f="besichtigung_am"></label>
-            <label class="crm-field">Erwarteter Abschluss *<input id="cz_abschluss" type="date" class="crm-input" data-f="erwarteter_abschluss" value="${crmAddDays(30)}"></label>
+            <md-outlined-text-field class="crm-fld crm-span3" label="Titel *" type="text" id="cz_titel" data-f="titel" data-max="250"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" label="Sparte *" id="cz_sparte" data-f="sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</md-outlined-select>
+            <md-outlined-text-field class="crm-fld crm-span2" label="Objektadresse *" type="text" id="cz_adresse" data-f="objektadresse" data-max="300"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Besichtigung am *" id="cz_besichtigung" type="datetime-local" data-f="besichtigung_am"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" label="Erwarteter Abschluss *" id="cz_abschluss" type="date" data-f="erwarteter_abschluss" value="${crmAddDays(30)}"></md-outlined-text-field>
         </div>`,
         `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  onclick="crmZusatzDealSpeichern('${kontaktId}')">Anlegen</md-filled-button>`);
 }
@@ -1297,15 +1300,15 @@ async function crmZusatzDealSpeichern(kontaktId) {
 // ---------- Firma / Kontakt forms ----------
 function crmFirmaFelder(p, f = {}) {
     return `
-        <label class="crm-field crm-span3">Firmenname *<input id="${p}name" class="crm-input" data-f="${p === 'cn_f_' ? 'firma.' : ''}name" maxlength="200" value="${crmE(f.name || '')}"></label>
-        <label class="crm-field crm-span2">Straße<input id="${p}strasse" class="crm-input" maxlength="200" value="${crmE(f.strasse || '')}"></label>
-        <label class="crm-field">PLZ<input id="${p}plz" class="crm-input" maxlength="10" inputmode="numeric" value="${crmE(f.plz || '')}"></label>
-        <label class="crm-field">Ort<input id="${p}ort" class="crm-input" maxlength="120" value="${crmE(f.ort || '')}"></label>
-        <label class="crm-field">Bundesland<select id="${p}bundesland" class="crm-input">${crmOptions(['Sachsen-Anhalt', 'Sachsen', 'Thüringen', 'Brandenburg', 'Berlin', 'Niedersachsen', 'Bayern', 'Hessen', 'Mecklenburg-Vorpommern', 'Nordrhein-Westfalen', 'Baden-Württemberg', 'Rheinland-Pfalz', 'Saarland', 'Schleswig-Holstein', 'Hamburg', 'Bremen'], f.bundesland || '', '—')}</select></label>
-        <label class="crm-field">Branche<select id="${p}branche" class="crm-input">${crmOptions(crmList('branche'), f.branche || '', '—')}</select></label>
-        <label class="crm-field">Mitarbeiterzahl<input id="${p}mitarbeiterzahl" type="number" min="0" class="crm-input" data-f="${p === 'cn_f_' ? 'firma.' : ''}mitarbeiterzahl" value="${crmE(f.mitarbeiterzahl ?? '')}"></label>
-        <label class="crm-field">Telefon<input id="${p}telefon" class="crm-input" maxlength="60" value="${crmE(f.telefon || '')}"></label>
-        <label class="crm-field">Website<input id="${p}website" class="crm-input" maxlength="200" value="${crmE(f.website || '')}"></label>`;
+        <md-outlined-text-field class="crm-fld crm-span3" label="Firmenname *" type="text" id="${p}name" data-f="${p === 'cn_f_' ? 'firma.' : ''}name" data-max="200" value="${crmE(f.name || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld crm-span2" label="Straße" type="text" id="${p}strasse" data-max="200" value="${crmE(f.strasse || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="PLZ" type="text" id="${p}plz" data-max="10" inputmode="numeric" value="${crmE(f.plz || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Ort" type="text" id="${p}ort" data-max="120" value="${crmE(f.ort || '')}"></md-outlined-text-field>
+        <md-outlined-select class="crm-fld" label="Bundesland" id="${p}bundesland">${crmOptions(['Sachsen-Anhalt', 'Sachsen', 'Thüringen', 'Brandenburg', 'Berlin', 'Niedersachsen', 'Bayern', 'Hessen', 'Mecklenburg-Vorpommern', 'Nordrhein-Westfalen', 'Baden-Württemberg', 'Rheinland-Pfalz', 'Saarland', 'Schleswig-Holstein', 'Hamburg', 'Bremen'], f.bundesland || '', '—')}</md-outlined-select>
+        <md-outlined-select class="crm-fld" label="Branche" id="${p}branche">${crmOptions(crmList('branche'), f.branche || '', '—')}</md-outlined-select>
+        <md-outlined-text-field class="crm-fld" label="Mitarbeiterzahl" id="${p}mitarbeiterzahl" type="number" min="0" data-f="${p === 'cn_f_' ? 'firma.' : ''}mitarbeiterzahl" value="${crmE(f.mitarbeiterzahl ?? '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Telefon" type="text" id="${p}telefon" data-max="60" value="${crmE(f.telefon || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Website" type="text" id="${p}website" data-max="200" value="${crmE(f.website || '')}"></md-outlined-text-field>`;
 }
 function crmFirmaDaten(p) {
     const o = {};
@@ -1327,17 +1330,17 @@ async function crmFirmaSpeichern(id, trotzdem = false) {
 
 function crmKontaktFelder(k = {}) {
     return `
-        <label class="crm-field">Anrede<select id="ck_anrede" class="crm-input">${crmOptions(['Herr', 'Frau', 'Divers'], k.anrede || '', '—')}</select></label>
-        <label class="crm-field">Vorname<input id="ck_vorname" class="crm-input" maxlength="100" value="${crmE(k.vorname || '')}"></label>
-        <label class="crm-field">Nachname *<input id="ck_nachname" class="crm-input" data-f="nachname" maxlength="100" value="${crmE(k.nachname || '')}"></label>
-        <label class="crm-field crm-span2">Position<input id="ck_position" class="crm-input" maxlength="150" placeholder="z. B. Hausverwaltung, Einkauf, Geschäftsführung" value="${crmE(k.position || '')}"></label>
+        <md-outlined-select class="crm-fld" label="Anrede" id="ck_anrede">${crmOptions(['Herr', 'Frau', 'Divers'], k.anrede || '', '—')}</md-outlined-select>
+        <md-outlined-text-field class="crm-fld" label="Vorname" type="text" id="ck_vorname" data-max="100" value="${crmE(k.vorname || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Nachname *" type="text" id="ck_nachname" data-f="nachname" data-max="100" value="${crmE(k.nachname || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld crm-span2" label="Position" type="text" id="ck_position" data-max="150" placeholder="z. B. Hausverwaltung, Einkauf, Geschäftsführung" value="${crmE(k.position || '')}"></md-outlined-text-field>
         <label class="crm-check"><md-checkbox id="ck_entscheider" ${k.entscheider ? 'checked' : ''}></md-checkbox> Entscheider</label>
-        <label class="crm-field">E-Mail<input id="ck_email" type="email" class="crm-input" data-f="email" maxlength="200" value="${crmE(k.email || '')}"></label>
-        <label class="crm-field">Telefon<input id="ck_telefon" class="crm-input" data-f="telefon" maxlength="60" value="${crmE(k.telefon || '')}"></label>
-        <label class="crm-field">Mobil<input id="ck_mobil" class="crm-input" data-f="mobil" maxlength="60" value="${crmE(k.mobil || '')}"></label>
-        <label class="crm-field">Quelle *<select id="ck_quelle" class="crm-input" data-f="quelle">${crmOptions(crmList('quelle'), k.quelle || '', '— wählen —')}</select></label>
+        <md-outlined-text-field class="crm-fld" label="E-Mail" id="ck_email" type="email" data-f="email" data-max="200" value="${crmE(k.email || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Telefon" type="text" id="ck_telefon" data-f="telefon" data-max="60" value="${crmE(k.telefon || '')}"></md-outlined-text-field>
+        <md-outlined-text-field class="crm-fld" label="Mobil" type="text" id="ck_mobil" data-f="mobil" data-max="60" value="${crmE(k.mobil || '')}"></md-outlined-text-field>
+        <md-outlined-select class="crm-fld" label="Quelle *" id="ck_quelle" data-f="quelle">${crmOptions(crmList('quelle'), k.quelle || '', '— wählen —')}</md-outlined-select>
         <label class="crm-check"><md-checkbox id="ck_dsgvo" ${k.dsgvo_einwilligung ? 'checked' : ''}></md-checkbox> Einwilligung Werbe-E-Mails</label>
-        <label class="crm-field">Einwilligung am<input id="ck_dsgvo_datum" type="date" class="crm-input" data-f="dsgvo_datum" value="${crmE(k.dsgvo_datum || '')}"></label>`;
+        <md-outlined-text-field class="crm-fld" label="Einwilligung am" id="ck_dsgvo_datum" type="date" data-f="dsgvo_datum" value="${crmE(k.dsgvo_datum || '')}"></md-outlined-text-field>`;
 }
 function crmKontaktDaten() {
     const o = {};
@@ -1368,8 +1371,8 @@ function crmNeuerKontakt(pre = {}) {
                 <label><md-radio name="cn_fmodus" value="privat" onchange="crmFModus()"></md-radio> Privatkunde (ohne Firma)</label>
             </div>
             <div id="cnFVorhanden" style="${pre.firma_id ? '' : 'display:none'}">
-                <input class="crm-input" placeholder="Firma suchen…" oninput="crmFirmaSuche(this.value)" value="${crmE(pre.firma_name || '')}">
-                <select id="cn_firma_id" class="crm-input" data-f="firma_id" size="4">${pre.firma_id ? `<option value="${pre.firma_id}" selected>${crmE(pre.firma_name || '')}</option>` : ''}</select>
+                ${uiTextField({ type: 'search', icon: 'search', cls: 'crm-fld', placeholder: 'Firma suchen…', value: pre.firma_name || '', attrs: 'oninput="crmFirmaSuche(this.value)"' })}
+                ${uiPickList('cn_firma_id', pre.firma_id ? uiPickItem(pre.firma_id, pre.firma_name || '', true) : '', { value: pre.firma_id || '', attrs: 'data-f="firma_id"', emptyText: 'Firma suchen und auswählen' })}
             </div>
             <div id="cnFNeu" class="crm-form-grid" style="${pre.firma_id ? 'display:none' : ''}">${crmFirmaFelder('cn_f_')}</div>
             <div class="crm-sec">Kontakt</div>
@@ -1377,12 +1380,12 @@ function crmNeuerKontakt(pre = {}) {
             ${crmCan('leads_edit') ? `<div class="crm-sec">Lead</div>
             <label class="crm-check"><md-checkbox id="cn_lead" checked onchange="document.getElementById('cnLead').style.display=this.checked?'':'none'"></md-checkbox> Direkt als SQL übernehmen und Lead anlegen (A3)</label>
             <div id="cnLead" class="crm-form-grid">
-                <label class="crm-field">Sparte *<select id="cn_sparte" class="crm-input" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
-                <label class="crm-field">Priorität<select id="cn_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>
-                ${crmCan('all') ? `<label class="crm-field">Owner<select id="cn_owner" class="crm-input" data-f="owner_id"><option value="auto" selected>Automatisch (Zuweisungsregel)</option>${crmOptions(crm.opt.owners || [], '')}</select></label>` : ''}
+                <md-outlined-select class="crm-fld" label="Sparte *" id="cn_sparte" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</md-outlined-select>
+                <md-outlined-select class="crm-fld" label="Priorität" id="cn_prio">${crmOptions(crmList('prioritaet'), 'normal')}</md-outlined-select>
+                ${crmCan('all') ? `<md-outlined-select class="crm-fld" label="Owner" id="cn_owner" data-f="owner_id"><md-select-option value="auto" selected><div slot="headline">Automatisch (Zuweisungsregel)</div></md-select-option>${crmOptions(crm.opt.owners || [], '')}</md-outlined-select>` : ''}
             </div>` : ''}
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmKontaktAnlegen()">${crmIcon('save')} Anlegen</md-filled-button>`, 'modal-xl');
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmKontaktAnlegen()"><md-icon slot="icon">save</md-icon>Anlegen</md-filled-button>`, 'modal-xl');
 }
 function crmFModus() {
     const m = document.querySelector('md-radio[name="cn_fmodus"][checked], input[name="cn_fmodus"]:checked')?.value;
@@ -1394,8 +1397,7 @@ function crmFirmaSuche(q) {
     clearTimeout(_crmFirmaT);
     _crmFirmaT = setTimeout(async () => {
         const r = await crmGet(CRM_API + '/firmen' + crmQs({ q }));
-        const sel = document.getElementById('cn_firma_id');
-        if (r.ok && sel) sel.innerHTML = (r.data || []).slice(0, 50).map(f => `<option value="${f.id}">${crmE(f.name + (f.ort ? ' · ' + [f.plz, f.ort].filter(Boolean).join(' ') : ''))}</option>`).join('');
+        if (r.ok) uiPickFill('cn_firma_id', (r.data || []).slice(0, 50).map(f => uiPickItem(f.id, f.name + (f.ort ? ' · ' + [f.plz, f.ort].filter(Boolean).join(' ') : ''))).join(''));
     }, 300);
 }
 async function crmKontaktAnlegen(trotzdem = false) {
@@ -1477,13 +1479,13 @@ async function crmRenderSettings() {
                 <div class="crm-settings-tablewrap"><table class="crm-table crm-settings-table">
                     <thead><tr><th>Bezeichnung</th><th class="crm-num">Reihenfolge</th>${typ === 'deal_phase' ? '<th class="crm-num">%</th>' : ''}<th class="crm-num">Aktiv</th></tr></thead>
                     <tbody>${(groups[typ] || []).map(x => `<tr data-mk="l${x.id}">
-                        <td><div class="crm-cell-name"><input class="crm-cell-input" value="${crmE(x.name)}" maxlength="120" onchange="crmListeUpdate(${x.id},{name:this.value})" title="Schlüssel: ${crmE(x.schluessel)}">
+                        <td><div class="crm-cell-name"><md-outlined-text-field class="crm-fld is-sm crm-cell" type="text" value="${crmE(x.name)}" data-max="120" onchange="crmListeUpdate(${x.id},{name:this.value})" title="Schlüssel: ${crmE(x.schluessel)}"></md-outlined-text-field>
                             ${x.system ? `<span class="crm-chip" title="Wird von den Regeln benötigt — Schlüssel ${crmE(x.schluessel)}">System</span>` : ''}</div></td>
-                        <td class="crm-num"><input type="number" class="crm-cell-input crm-cell-num" value="${x.reihenfolge}" onchange="crmListeUpdate(${x.id},{reihenfolge:+this.value})"></td>
-                        ${typ === 'deal_phase' ? `<td class="crm-num"><input type="number" min="0" max="100" class="crm-cell-input crm-cell-num" value="${x.wahrscheinlichkeit ?? ''}" onchange="crmListeUpdate(${x.id},{wahrscheinlichkeit:this.value===''?null:+this.value})"></td>` : ''}
+                        <td class="crm-num"><md-outlined-text-field class="crm-fld is-sm crm-cell crm-cell-num" type="number" value="${x.reihenfolge}" onchange="crmListeUpdate(${x.id},{reihenfolge:+this.value})"></md-outlined-text-field></td>
+                        ${typ === 'deal_phase' ? `<td class="crm-num"><md-outlined-text-field class="crm-fld is-sm crm-cell crm-cell-num" type="number" min="0" max="100" value="${x.wahrscheinlichkeit ?? ''}" onchange="crmListeUpdate(${x.id},{wahrscheinlichkeit:this.value===''?null:+this.value})"></md-outlined-text-field></td>` : ''}
                         <td class="crm-num"><md-switch ${x.aktiv ? 'selected' : ''} ${x.system ? 'disabled' : ''} onchange="crmListeUpdate(${x.id},{aktiv:this.selected})"></md-switch></td></tr>`).join('')}
                     </tbody></table></div>
-                ${(r.data.erweiterbar || []).includes(typ) ? `<div class="crm-add-row"><input class="crm-cell-input" id="cs_neu_${typ}" placeholder="Neuer Eintrag…" maxlength="120" onkeydown="if(event.key==='Enter')crmListeNeu('${typ}')">
+                ${(r.data.erweiterbar || []).includes(typ) ? `<div class="crm-add-row"><md-outlined-text-field class="crm-fld is-sm crm-cell" type="text" id="cs_neu_${typ}" placeholder="Neuer Eintrag…" data-max="120" onkeydown="if(event.key==='Enter')crmListeNeu('${typ}')"></md-outlined-text-field>
                     <md-text-button onclick="crmListeNeu('${typ}')"><md-icon slot="icon">add</md-icon>Hinzufügen</md-text-button></div>` : ''}
             </div>`).join('')}
         </div>`);
@@ -1514,14 +1516,14 @@ function crmZwRow(sp, i) {
     if (z.modus === 'rotation') body = `<div class="crm-zw-pool">${o.map(u => `<label class="crm-check"><md-checkbox ${z.user_ids.includes(u.id) ? 'checked' : ''}
         onchange="crmZwPool(${i},${u.id},this.checked)"></md-checkbox> ${crmE(u.name)}</label>`).join('')}</div>`;
     if (z.modus === 'region') body = `<div class="crm-zw-regionen">${z.plz_regeln.map((r, j) => `<div class="crm-zw-region">
-            PLZ <input class="crm-input crm-input-sm crm-zw-plz" maxlength="5" inputmode="numeric" value="${crmE(r.von)}" onchange="crmZwReg(${i},${j},'von',this.value)">
-            bis <input class="crm-input crm-input-sm crm-zw-plz" maxlength="5" inputmode="numeric" value="${crmE(r.bis)}" onchange="crmZwReg(${i},${j},'bis',this.value)">
-            → <select class="crm-input crm-input-sm" onchange="crmZwReg(${i},${j},'user_id',+this.value)">${crmOptions(o, r.user_id, '— Person —')}</select>
+            PLZ <md-outlined-text-field class="crm-fld is-sm crm-zw-plz" type="text" data-max="5" inputmode="numeric" value="${crmE(r.von)}" onchange="crmZwReg(${i},${j},'von',this.value)"></md-outlined-text-field>
+            bis <md-outlined-text-field class="crm-fld is-sm crm-zw-plz" type="text" data-max="5" inputmode="numeric" value="${crmE(r.bis)}" onchange="crmZwReg(${i},${j},'bis',this.value)"></md-outlined-text-field>
+            → <md-outlined-select class="crm-fld is-sm" onchange="crmZwReg(${i},${j},'user_id',+this.value)">${crmOptions(o, r.user_id, '— Person —')}</md-outlined-select>
             <md-icon-button onclick="crmZwRegDel(${i},${j})" title="Entfernen"><md-icon>close</md-icon></md-icon-button></div>`).join('')}
         <md-text-button onclick="crmZwRegAdd(${i})"><md-icon slot="icon">add</md-icon>PLZ-Bereich</md-text-button></div>`;
-    if (z.modus === 'fest') body = `<select class="crm-input crm-input-sm" onchange="crmZwSet(${i},'fest_user_id',+this.value)">${crmOptions(o, z.fest_user_id, '— Person wählen —')}</select>`;
+    if (z.modus === 'fest') body = `<md-outlined-select class="crm-fld is-sm" onchange="crmZwSet(${i},'fest_user_id',+this.value)">${crmOptions(o, z.fest_user_id, '— Person wählen —')}</md-outlined-select>`;
     return `<div class="crm-zw-head">${crmSparte(sp)}
-            <select class="crm-input crm-input-sm" onchange="crmZwSet(${i},'modus',this.value,true)">${modi.map(([k, l]) => `<option value="${k}" ${z.modus === k ? 'selected' : ''}>${l}</option>`).join('')}</select>
+            <md-outlined-select class="crm-fld is-sm" onchange="crmZwSet(${i},'modus',this.value,true)">${modi.map(([k, l]) => `<md-select-option value="${k}" ${z.modus === k ? 'selected' : ''}><div slot="headline">${l}</div></md-select-option>`).join('')}</md-outlined-select>
             <md-text-button onclick="crmZwSpeichern(${i})"><md-icon slot="icon">save</md-icon>Speichern</md-text-button></div>
         ${body ? `<div class="crm-zw-body">${body}</div>` : ''}`;
 }
@@ -1551,16 +1553,16 @@ function crmWebformCard(w, s) {
                 <md-switch id="cw_aktiv" ${aktiv ? 'selected' : ''}></md-switch></div>
             <div class="crm-form-grid" style="padding:0 16px 4px">
                 <md-outlined-text-field id="cw_name" class="crm-span-2" label="Überschrift auf dem Formular" value="${crmE(s.webform_name || '')}" placeholder="z. B. Firmenname"></md-outlined-text-field>
-                <label class="crm-field">Sparte für neue Leads<select id="cw_sparte" class="crm-input">${crmOptions(crm.opt.sparten || [], s.webform_sparte || '', '— automatisch —')}</select></label>
+                <md-outlined-select class="crm-fld" label="Sparte für neue Leads" id="cw_sparte">${crmOptions(crm.opt.sparten || [], s.webform_sparte || '', '— automatisch —')}</md-outlined-select>
             </div>
             <div class="crm-pad" style="padding:10px 16px 14px">
                 <div class="crm-sub">Formular-URL (geheim — nur an die Webagentur geben):</div>
-                <div class="crm-webform-url"><input class="crm-input" readonly value="${crmE(w.url)}" onclick="this.select()">
+                <div class="crm-webform-url"><md-outlined-text-field class="crm-fld" type="text" readonly value="${crmE(w.url)}" onclick="this.select()"></md-outlined-text-field>
                     <md-outlined-button onclick="crmCopy('${w.url}')"><md-icon slot="icon">content_copy</md-icon>Kopieren</md-outlined-button>
                     <md-outlined-button onclick="window.open('${w.url}','_blank')"><md-icon slot="icon">open_in_new</md-icon>Vorschau</md-outlined-button>
                     <md-outlined-button onclick="crmWebformRotate()"><md-icon slot="icon">autorenew</md-icon>Neuer Schlüssel</md-outlined-button></div>
                 <div class="crm-sub" style="margin-top:8px">iframe-Snippet:</div>
-                <div class="crm-webform-url"><input class="crm-input" readonly value="${crmE(w.iframe)}" onclick="this.select()"></div>
+                <div class="crm-webform-url"><md-outlined-text-field class="crm-fld" type="text" readonly value="${crmE(w.iframe)}" onclick="this.select()"></md-outlined-text-field></div>
                 ${aktiv ? '' : `<div class="crm-banner" style="margin-top:8px">${crmIcon('info')} Das Formular ist deaktiviert — die URL antwortet „nicht verfügbar“, bis der Schalter oben gesetzt und gespeichert wird.</div>`}
             </div>
         </div>`;
@@ -1617,10 +1619,10 @@ function crmMergeDialog(typ, zielId) {
             <div class="crm-banner">${crmIcon('info')} Die gewählte Dublette wird in <strong>diesen</strong> Datensatz übernommen: ${istKontakt
                 ? 'Leads, Deals, Aktivitäten und Aufgaben wandern mit; leere Felder werden ergänzt. Ein zweiter offener Lead derselben Sparte wird als „Dublette“ geschlossen.'
                 : 'Kontakte, Leads und Deals wandern mit; leere Felder werden ergänzt.'} Die Dublette bleibt im Protokoll erhalten.</div>
-            <label class="crm-field">Dublette suchen<input class="crm-input" placeholder="${istKontakt ? 'Name, E-Mail, Telefon…' : 'Firmenname, PLZ, Ort…'}" oninput="crmMergeSuche('${typ}','${zielId}',this.value)"></label>
-            <select id="cm_quelle" class="crm-input" size="7" data-f="quelle_id"></select>
+            <md-outlined-text-field class="crm-fld" label="Dublette suchen" type="text" placeholder="${istKontakt ? 'Name, E-Mail, Telefon…' : 'Firmenname, PLZ, Ort…'}" oninput="crmMergeSuche('${typ}','${zielId}',this.value)"></md-outlined-text-field>
+            ${uiPickList('cm_quelle', '', { attrs: 'data-f="quelle_id"', emptyText: 'Dublette suchen und auswählen' })}
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmMergeAusfuehren('${typ}','${zielId}')">${crmIcon('merge')} Zusammenführen</md-filled-button>`);
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmMergeAusfuehren('${typ}','${zielId}')"><md-icon slot="icon">merge</md-icon>Zusammenführen</md-filled-button>`);
 }
 let _crmMergeT = null;
 function crmMergeSuche(typ, zielId, q) {
@@ -1628,11 +1630,10 @@ function crmMergeSuche(typ, zielId, q) {
     _crmMergeT = setTimeout(async () => {
         if (q.trim().length < 2) return;
         const r = await crmGet(CRM_API + (typ === 'kontakt' ? '/kontakte' : '/firmen') + crmQs({ q }));
-        const sel = document.getElementById('cm_quelle');
-        if (!r.ok || !sel) return;
-        sel.innerHTML = (r.data || []).filter(x => x.id !== zielId).slice(0, 50).map(x => typ === 'kontakt'
-            ? `<option value="${x.id}">${crmE([x.vorname, x.nachname].filter(Boolean).join(' ') + ' · ' + (x.firma_name || 'privat') + ' · ' + (x.email || x.telefon || x.mobil || ''))}</option>`
-            : `<option value="${x.id}">${crmE(x.name + ' · ' + [x.plz, x.ort].filter(Boolean).join(' ') + ' · ' + x.kontakte + ' Kontakte')}</option>`).join('');
+        if (!r.ok) return;
+        uiPickFill('cm_quelle', (r.data || []).filter(x => x.id !== zielId).slice(0, 50).map(x => typ === 'kontakt'
+            ? uiPickItem(x.id, [x.vorname, x.nachname].filter(Boolean).join(' ') + ' · ' + (x.firma_name || 'privat') + ' · ' + (x.email || x.telefon || x.mobil || ''))
+            : uiPickItem(x.id, x.name + ' · ' + [x.plz, x.ort].filter(Boolean).join(' ') + ' · ' + x.kontakte + ' Kontakte')).join(''));
     }, 300);
 }
 async function crmMergeAusfuehren(typ, zielId) {
@@ -1656,9 +1657,9 @@ function crmImportDialog() {
         <div class="crm-form">
             <div class="crm-banner">${crmIcon('info')} Erste Zeile = Spaltenüberschriften. Erlaubt: .csv (Trennzeichen ; oder ,), .xlsx, .xls — max. 10 MB,
                 ${crmE(crm.opt.einstellungen?.import_max_zeilen || 2000)} Zeilen je Import. Jede Zeile wird auf Dubletten geprüft (A1, auch innerhalb der Datei).</div>
-            <label class="crm-field">Datei<input id="ci_datei" type="file" class="crm-input" data-f="datei" accept=".csv,.txt,.xlsx,.xls"></label>
+            ${uiFilePicker({ id: 'ci_datei', label: 'Datei', accept: '.csv,.txt,.xlsx,.xls', attrs: 'data-f="datei"' })}
         </div>`,
-        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportVorschau()">${crmIcon('upload')} Weiter</md-filled-button>`, 'modal-xl');
+        `<md-outlined-button  onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportVorschau()"><md-icon slot="icon">upload</md-icon>Weiter</md-filled-button>`, 'modal-xl');
 }
 async function crmImportVorschau() {
     const f = document.getElementById('ci_datei')?.files?.[0];
@@ -1669,30 +1670,30 @@ async function crmImportVorschau() {
     if (btn) btn.disabled = false;
     if (crmFehler(r, 'Datei konnte nicht gelesen werden')) return;
     _crmImport = r.data;
-    const v = r.data, colOpts = cur => `<option value="">— nicht importieren —</option>` + v.header.map((h, i) => `<option value="${i}" ${String(cur) === String(i) ? 'selected' : ''}>${crmE(h || 'Spalte ' + (i + 1))}</option>`).join('');
+    const v = r.data, colOpts = cur => `<md-select-option value=""><div slot="headline">— nicht importieren —</div></md-select-option>` + v.header.map((h, i) => `<md-select-option value="${i}" ${String(cur) === String(i) ? 'selected' : ''}><div slot="headline">${crmE(h || 'Spalte ' + (i + 1))}</div></md-select-option>`).join('');
     const pflicht = { nachname: true };
     openModal('Import: Spalten zuordnen', `
         <div class="crm-form">
             <div class="crm-muted">${crmE(v.datei_name)} · ${v.zeilen} Datenzeilen${v.zu_viele ? ` — <strong class="crm-red">nur die ersten ${v.max_zeilen} werden importiert</strong>` : ''}</div>
             <div class="crm-import-grid">${Object.entries(v.felder).map(([k, l]) => `
-                <label class="crm-field">${crmE(l)}${pflicht[k] ? ' *' : ''}<select class="crm-input" data-map="${k}" data-f="mapping.${k}">${colOpts(v.vorschlag[k] ?? '')}</select></label>`).join('')}
+                <md-outlined-select class="crm-fld" label="${crmE(l)}${pflicht[k] ? ' *' : ''}" data-map="${k}" data-f="mapping.${k}">${colOpts(v.vorschlag[k] ?? '')}</md-outlined-select>`).join('')}
             </div>
             <div class="crm-sec">Vorschau</div>
             <div class="crm-import-preview"><table class="crm-proto"><thead><tr>${v.header.map(h => `<th>${crmE(h)}</th>`).join('')}</tr></thead>
                 <tbody>${v.beispiel.map(row => `<tr>${v.header.map((_, i) => `<td>${crmE(row[i] ?? '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
             <div class="crm-sec">Optionen</div>
             <div class="crm-form-grid">
-                <label class="crm-field">Dubletten<select id="ci_dub" class="crm-input"><option value="ueberspringen" selected>überspringen (empfohlen)</option><option value="anlegen">trotzdem anlegen</option></select></label>
-                <label class="crm-field">Quelle (wenn Spalte leer)<select id="ci_quelle" class="crm-input">${crmOptions(crmList('quelle'), 'import')}</select></label>
-                <label class="crm-field">Owner<select id="ci_owner" class="crm-input"><option value="auto" selected>Automatisch (Zuweisungsregel)</option><option value="ich">Ich selbst</option>${crmOptions(crm.opt.owners || [], '')}</select></label>
+                <md-outlined-select class="crm-fld" label="Dubletten" id="ci_dub"><md-select-option value="ueberspringen" selected><div slot="headline">überspringen (empfohlen)</div></md-select-option><md-select-option value="anlegen"><div slot="headline">trotzdem anlegen</div></md-select-option></md-outlined-select>
+                <md-outlined-select class="crm-fld" label="Quelle (wenn Spalte leer)" id="ci_quelle">${crmOptions(crmList('quelle'), 'import')}</md-outlined-select>
+                <md-outlined-select class="crm-fld" label="Owner" id="ci_owner"><md-select-option value="auto" selected><div slot="headline">Automatisch (Zuweisungsregel)</div></md-select-option><md-select-option value="ich"><div slot="headline">Ich selbst</div></md-select-option>${crmOptions(crm.opt.owners || [], '')}</md-outlined-select>
             </div>
             <label class="crm-check"><md-checkbox id="ci_lead" onchange="document.getElementById('ciLead').style.display=this.checked?'':'none'"></md-checkbox> Für jeden Kontakt direkt einen Lead anlegen (Lifecycle SQL, Aufgabe „Erstkontakt“ — A3)</label>
             <div id="ciLead" class="crm-form-grid" style="display:none">
-                <label class="crm-field">Sparte *<select id="ci_sparte" class="crm-input" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</select></label>
-                <label class="crm-field">Priorität<select id="ci_prio" class="crm-input">${crmOptions(crmList('prioritaet'), 'normal')}</select></label>
+                <md-outlined-select class="crm-fld" label="Sparte *" id="ci_sparte" data-f="lead.sparte">${crmOptions(crm.opt.sparten || [], '', '— wählen —')}</md-outlined-select>
+                <md-outlined-select class="crm-fld" label="Priorität" id="ci_prio">${crmOptions(crmList('prioritaet'), 'normal')}</md-outlined-select>
             </div>
         </div>`,
-        `<md-outlined-button  onclick="crmImportDialog()">Zurück</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportAusfuehren()">${crmIcon('play_arrow')} Import starten</md-filled-button>`, 'modal-xl');
+        `<md-outlined-button  onclick="crmImportDialog()">Zurück</md-outlined-button><md-filled-button  id="crmSaveBtn" onclick="crmImportAusfuehren()"><md-icon slot="icon">play_arrow</md-icon>Import starten</md-filled-button>`, 'modal-xl');
 }
 async function crmImportAusfuehren() {
     const v = _crmImport; if (!v) return;

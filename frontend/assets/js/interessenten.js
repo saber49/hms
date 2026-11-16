@@ -197,7 +197,7 @@ function intRowVisible(row, q) {
 function renderIntRows() {
     const tbody = document.getElementById('interessentenTable');
     if (!tbody) return;
-    const q = (document.getElementById('searchInteressenten')?.value || '').trim().toLowerCase();
+    const q = String(document.getElementById('searchInteressenten')?.value ?? '').trim().toLowerCase();
 
     const rows = _intRows.filter(r => intRowVisible(r, q));
     const dir = _intSortDir === 'asc' ? 1 : -1;
@@ -375,9 +375,9 @@ async function intDownloadDatei(eintragId) {
 async function addKommEintrag(ev, id) {
     ev.preventDefault();
     const typ = document.getElementById('f_komm_typ')?.value || 'Notiz';
-    const notiz = (document.getElementById('f_komm_notiz')?.value || '').trim();
+    const notiz = String(document.getElementById('f_komm_notiz')?.value ?? '').trim();
     const phase = document.getElementById('f_komm_phase')?.value || '';
-    const schritt = (document.getElementById('f_komm_schritt')?.value || '').trim();
+    const schritt = String(document.getElementById('f_komm_schritt')?.value ?? '').trim();
     const wv = document.getElementById('f_komm_wv')?.value || '';
     const datei = document.getElementById('f_komm_datei')?.files?.[0];
 
@@ -548,7 +548,7 @@ function openInteressentDialog(id = null) { return openInteressentDialogForm(id)
 
 async function saveInteressent(id) {
     intClearErrors();
-    const v = el => (document.getElementById(el)?.value || '').trim();
+    const v = el => String(document.getElementById(el)?.value ?? '').trim();
     const data = {
         firmenname: v('f_int_firmenname'),
         branche: v('f_int_branche'),

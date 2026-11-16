@@ -225,7 +225,7 @@ function _permMatrixHtml(groups, selSet, cbClass, disabled) {
             ? `<tr class="pm-note"><td colspan="4">${_ms('lock', 'font-size:15px')} <strong>Einstellungen</strong> (Listen, Fristen, Zuweisung, Webformular), Löschen und Export bleiben dem Inhaber und den Administratoren vorbehalten.</td></tr>` : '';
         return `<tbody class="pm-group" data-group="${_escape(g.group)}">
             <tr class="pm-ghead"><th colspan="3">${_ms(_PERM_GROUP_ICON[g.group] || 'folder', 'font-size:18px')} ${_escape(g.group)}</th>
-                <th class="pm-gtoggle">${disabled ? '' : `<button type="button" class="pm-all" data-toggle="${_escape(g.group)}">Alle</button>`}</th></tr>
+                <th class="pm-gtoggle">${disabled ? '' : `<md-text-button class="pm-all" data-toggle="${_escape(g.group)}">Alle</md-text-button>`}</th></tr>
             ${rows}${note}
         </tbody>`;
     }).join('');
@@ -960,7 +960,7 @@ function _refreshRolePermCounter() {
 }
 
 async function saveRole(id) {
-    const label = (document.getElementById('f_role_label')?.value || '').trim();
+    const label = String(document.getElementById('f_role_label')?.value ?? '').trim();
     if (!label) { showToast('Rollenname ist erforderlich', 'error'); return; }
     const permissions = _checkedBoxes('.role-perm-cb').map(cb => cb.value);
     if (!permissions.length) { showToast('Bitte mindestens eine Berechtigung wählen', 'error'); return; }

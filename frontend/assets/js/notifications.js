@@ -350,7 +350,7 @@
             dd.innerHTML = `
                 <div class="notif-dropdown-head">
                     <span><i class="material-symbols-outlined">notifications</i> Benachrichtigungen</span>
-                    <button class="notif-mark-all" id="notifMarkAllBtn">Alle gelesen</button>
+                    <md-text-button class="notif-mark-all" id="notifMarkAllBtn">Alle gelesen</md-text-button>
                 </div>
                 <div class="notif-dropdown-body" id="notifDropdownBody">
                     <div class="notif-empty">Laden…</div>

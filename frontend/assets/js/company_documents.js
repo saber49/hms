@@ -551,7 +551,7 @@ function _cdocsBind() {
     const search = document.getElementById('cdocsSearch');
     if (search) {
         search.addEventListener('input', () => {
-            _cdocsSearch = (search.value || '').trim();
+            _cdocsSearch = String(search.value ?? '').trim();
             _cdocsRenderList();
         });
     }
@@ -581,7 +581,7 @@ async function _cdocsUpload() {
     const catEl   = document.getElementById('cdocsCategory');
     const titleEl = document.getElementById('cdocsTitle');
     const category = catEl ? catEl.value : '';
-    const title    = titleEl ? (titleEl.value || '').trim() : '';
+    const title    = titleEl ? String(titleEl.value ?? '').trim() : '';
 
     if (!category)   { showToast('Bitte Kategorie auswählen', 'error'); return; }
     if (!title)      { showToast('Bitte Bezeichnung eingeben', 'error'); return; }
@@ -847,10 +847,10 @@ function _cdocsBereicheHtml() {
         if (!_bcatLeistungen.length) return '';
         const cur = _bcatLeistungen.find(t => t.id === s.leistungsart_id) || null;
         const sel = canEdit
-            ? `<select class="bsec-sel ${cur ? '' : 'bsec-sel-open'}" aria-label="Leistungsart" onchange="bcatSetLeistung(${s.id}, this.value)">
-                <option value="" ${cur ? '' : 'selected'}>— zuordnen —</option>
-                ${_bcatLeistungen.map(t => `<option value="${t.id}" ${cur && cur.id === t.id ? 'selected' : ''}>${escapeHtml(t.name)}</option>`).join('')}
-               </select>`
+            ? `<md-outlined-select class="crm-fld bsec-sel ${cur ? '' : 'bsec-sel-open'}" aria-label="Leistungsart" onchange="bcatSetLeistung(${s.id}, this.value)">
+                <md-select-option value="" ${cur ? '' : 'selected'}><div slot="headline">— zuordnen —</div></md-select-option>
+                ${_bcatLeistungen.map(t => `<md-select-option value="${t.id}" ${cur && cur.id === t.id ? 'selected' : ''}><div slot="headline">${escapeHtml(t.name)}</div></md-select-option>`).join('')}
+               </md-outlined-select>`
             : `<span class="bsec-muted">${cur ? escapeHtml(cur.name) : 'nicht zugeordnet'}</span>`;
         const badge = cur && cur.sachkunde
             ? `<span class="bsec-badge bsec-badge-sk" title="${escapeHtml(cur.hinweis || '')}">Sachkunde</span>`
@@ -859,9 +859,9 @@ function _cdocsBereicheHtml() {
         return ''; // § 34a column removed (user decision)
     };
     const rowActions = (s, rename, toggle, del) => canEdit ? `<div class="bsec-c-act">
-            <button class="bcat-btn" title="Umbenennen" onclick="${rename}">edit</button>
-            <button class="bcat-btn" title="${s.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="${toggle}">${s.aktiv ? 'visibility_off' : 'visibility'}</button>
-            <button class="bcat-btn bcat-del" title="Löschen" onclick="${del}">delete</button>
+            <md-icon-button class="bcat-btn" title="Umbenennen" aria-label="Umbenennen" onclick="${rename}"><md-icon>edit</md-icon></md-icon-button>
+            <md-icon-button class="bcat-btn" title="${s.aktiv ? 'Ausblenden' : 'Einblenden'}" aria-label="${s.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="${toggle}"><md-icon>${s.aktiv ? 'visibility_off' : 'visibility'}</md-icon></md-icon-button>
+            <md-icon-button class="bcat-btn bcat-del md-icon-danger" title="Löschen" aria-label="Löschen" onclick="${del}"><md-icon>delete</md-icon></md-icon-button>
         </div>` : '';
     const einsatzHtml = `
         <section class="bsec-card bsec-card-ea">
@@ -883,7 +883,7 @@ function _cdocsBereicheHtml() {
                 </div>`).join('') || '<div class="bsec-empty">Noch keine Einsatzarten — z.B. Objektschutz, Revierdienst, Empfangsdienst.</div>'}
             </div>
             ${canEdit ? `<div class="bsec-add">
-                <input class="bcat-input" id="bcat_sub_${m.id}" placeholder="Neue Einsatzart, z.B. Objektschutz" maxlength="100" onkeydown="if(event.key==='Enter')bcatAddSub(${m.id})">
+                <md-outlined-text-field class="crm-fld bcat-input" type="text" id="bcat_sub_${m.id}" placeholder="Neue Einsatzart, z.B. Objektschutz" data-max="100" onkeydown="if(event.key==='Enter')bcatAddSub(${m.id})"></md-outlined-text-field>
                 <md-filled-tonal-button onclick="bcatAddSub(${m.id})"><span class="material-symbols-outlined" slot="icon">add</span>Einsatzart</md-filled-tonal-button>
             </div>` : ''}
         </section>`;
@@ -899,9 +899,9 @@ function _cdocsBereicheHtml() {
                 <span class="bsec-list-name">${escapeHtml(l.name)}</span>
                 <span class="bsec-count">${opts.length} ${opts.length === 1 ? 'Eintrag' : 'Einträge'}</span>
                 ${canEdit ? `<span class="bsec-list-act">
-                    <button class="bcat-btn" title="Liste umbenennen" onclick="bqRename(${l.id}, '${q(l.name)}', true)">edit</button>
-                    <button class="bcat-btn" title="${l.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="bqToggle(${l.id}, ${l.aktiv ? 0 : 1})">${l.aktiv ? 'visibility_off' : 'visibility'}</button>
-                    <button class="bcat-btn bcat-del" title="Liste löschen" onclick="bqDelete(${l.id}, '${q(l.name)}')">delete</button>
+                    <md-icon-button class="bcat-btn" title="Liste umbenennen" aria-label="Liste umbenennen" onclick="bqRename(${l.id}, '${q(l.name)}', true)"><md-icon>edit</md-icon></md-icon-button>
+                    <md-icon-button class="bcat-btn" title="${l.aktiv ? 'Ausblenden' : 'Einblenden'}" aria-label="${l.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="bqToggle(${l.id}, ${l.aktiv ? 0 : 1})"><md-icon>${l.aktiv ? 'visibility_off' : 'visibility'}</md-icon></md-icon-button>
+                    <md-icon-button class="bcat-btn bcat-del md-icon-danger" title="Liste löschen" aria-label="Liste löschen" onclick="bqDelete(${l.id}, '${q(l.name)}')"><md-icon>delete</md-icon></md-icon-button>
                 </span>` : ''}
                 <span class="material-symbols-outlined bsec-chev">expand_more</span>
             </div>
@@ -910,13 +910,13 @@ function _cdocsBereicheHtml() {
                 <div class="bsec-opt ${o.aktiv ? '' : 'bcat-off'}">
                     <span class="bsec-opt-name">${escapeHtml(o.name)}</span>
                     ${canEdit ? `<span class="bsec-list-act">
-                        <button class="bcat-btn" title="Umbenennen" onclick="bqRename(${o.id}, '${q(o.name)}', false)">edit</button>
-                        <button class="bcat-btn" title="${o.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="bqToggle(${o.id}, ${o.aktiv ? 0 : 1})">${o.aktiv ? 'visibility_off' : 'visibility'}</button>
-                        <button class="bcat-btn bcat-del" title="Löschen" onclick="bqDelete(${o.id}, '${q(o.name)}')">delete</button>
+                        <md-icon-button class="bcat-btn" title="Umbenennen" aria-label="Umbenennen" onclick="bqRename(${o.id}, '${q(o.name)}', false)"><md-icon>edit</md-icon></md-icon-button>
+                        <md-icon-button class="bcat-btn" title="${o.aktiv ? 'Ausblenden' : 'Einblenden'}" aria-label="${o.aktiv ? 'Ausblenden' : 'Einblenden'}" onclick="bqToggle(${o.id}, ${o.aktiv ? 0 : 1})"><md-icon>${o.aktiv ? 'visibility_off' : 'visibility'}</md-icon></md-icon-button>
+                        <md-icon-button class="bcat-btn bcat-del md-icon-danger" title="Löschen" aria-label="Löschen" onclick="bqDelete(${o.id}, '${q(o.name)}')"><md-icon>delete</md-icon></md-icon-button>
                     </span>` : ''}
                 </div>`).join('') || '<div class="bsec-empty">Noch keine Einträge</div>'}
                 ${canEdit ? `<div class="bsec-add bsec-add-sm">
-                    <input class="bcat-input" id="bq_opt_${l.id}" placeholder="Neuer Eintrag, z.B. ${optPh}" maxlength="100" onkeydown="if(event.key==='Enter')bqAddOption(${l.id})">
+                    <md-outlined-text-field class="crm-fld bcat-input" type="text" id="bq_opt_${l.id}" placeholder="Neuer Eintrag, z.B. ${optPh}" data-max="100" onkeydown="if(event.key==='Enter')bqAddOption(${l.id})"></md-outlined-text-field>
                     <md-text-button onclick="bqAddOption(${l.id})"><span class="material-symbols-outlined" slot="icon">add</span>Eintrag</md-text-button>
                 </div>` : ''}
             </div>` : ''}
@@ -935,7 +935,7 @@ function _cdocsBereicheHtml() {
             ${canEdit ? `<div class="bsec-toolbar"><md-outlined-button onclick="bqStandardLists(${m.id})"><span class="material-symbols-outlined" slot="icon">library_add</span>Branchenvorlagen übernehmen (§ 34a, DFB)</md-outlined-button></div>` : ''}
             <div class="bsec-lists">${listsHtml(quals, 'workspace_premium', 'Sachkundeprüfung', 'Noch keine Listen — z.B. „§ 34a GewO“ mit Unterrichtung, Sachkundeprüfung, GSSK.')}</div>
             ${canEdit ? `<div class="bsec-add">
-                <input class="bcat-input" id="bq_list_${m.id}" placeholder="Neue Liste, z.B. Erste Hilfe" maxlength="100" onkeydown="if(event.key==='Enter')bqAddList(${m.id})">
+                <md-outlined-text-field class="crm-fld bcat-input" type="text" id="bq_list_${m.id}" placeholder="Neue Liste, z.B. Erste Hilfe" data-max="100" onkeydown="if(event.key==='Enter')bqAddList(${m.id})"></md-outlined-text-field>
                 <md-filled-tonal-button onclick="bqAddList(${m.id})"><span class="material-symbols-outlined" slot="icon">add</span>Liste</md-filled-tonal-button>
             </div>` : ''}
         </section>`;
@@ -951,7 +951,7 @@ function _cdocsBereicheHtml() {
             </header>
             <div class="bsec-lists">${listsHtml(kleidung, 'apparel', 'Security-Weste', 'Noch keine Listen — z.B. „Dienstkleidung“ mit Uniform, Security-Weste, schwarze Hose.')}</div>
             ${canEdit ? `<div class="bsec-add">
-                <input class="bcat-input" id="bq_klist_${m.id}" placeholder="Neue Liste, z.B. Dienstkleidung" maxlength="100" onkeydown="if(event.key==='Enter')bqAddList(${m.id}, 'kleidung')">
+                <md-outlined-text-field class="crm-fld bcat-input" type="text" id="bq_klist_${m.id}" placeholder="Neue Liste, z.B. Dienstkleidung" data-max="100" onkeydown="if(event.key==='Enter')bqAddList(${m.id}, 'kleidung')"></md-outlined-text-field>
                 <md-filled-tonal-button onclick="bqAddList(${m.id}, 'kleidung')"><span class="material-symbols-outlined" slot="icon">add</span>Liste</md-filled-tonal-button>
             </div>` : ''}
         </section>`;
@@ -959,8 +959,8 @@ function _cdocsBereicheHtml() {
     // ── Einstellungen ───────────────────────────────────────────────
     const legacy = mains.length > 1;
     const br = _bcatBranche(m.branche);
-    const brOpts = '<option value="">— keine Branche —</option>' + (_bereichBranchen || []).map(b =>
-        `<option value="${escapeHtml(b.key)}" ${b.key === m.branche ? 'selected' : ''}>${escapeHtml(b.label)}</option>`).join('');
+    const brOpts = '<md-select-option value=""><div slot="headline">— keine Branche —</div></md-select-option>' + (_bereichBranchen || []).map(b =>
+        `<md-select-option value="${escapeHtml(b.key)}" ${b.key === m.branche ? 'selected' : ''}><div slot="headline">${escapeHtml(b.label)}</div></md-select-option>`).join('');
     const brCard = !_bereichBrancheOk ? '' : `
         <section class="bsec-card">
             <header class="bsec-head">
@@ -970,7 +970,7 @@ function _cdocsBereicheHtml() {
                 </div>
             </header>
             <div class="bcat-branche-row">
-                <select class="bcat-input bcat-branche-sel" ${canEdit ? '' : 'disabled'} onchange="bcatSetBranche(${m.id}, this.value)">${brOpts}</select>
+                <md-outlined-select class="crm-fld bcat-input bcat-branche-sel" ${canEdit ? '' : 'disabled'} onchange="bcatSetBranche(${m.id}, this.value)">${brOpts}</md-outlined-select>
                 ${br && canEdit && br.key !== 'sonstiges' ? `
                 <md-outlined-button class="bcat-std-btn" onclick="bcatApplyPaket(${m.id})">
                     <span class="material-symbols-outlined" slot="icon">library_add</span>
@@ -1032,13 +1032,11 @@ function _cdocsBereicheHtml() {
                 <p>Stammlisten Ihres Sicherheitsdienstes — bei jeder Liste steht, wo sie verwendet wird.</p>
             </div>
         </div>
-        ${legacy ? `<div class="bsec-mains">${mains.map(x => `<button class="bsec-main-pill ${x.id === m.id ? 'is-on' : ''}" onclick="bcatPickMain(${x.id})">${escapeHtml(x.name)}</button>`).join('')}</div>` : ''}
-        <nav class="bsec-tabs" role="tablist">
-            ${tabs.map(t => `<button role="tab" class="bsec-tab ${t.id === tab ? 'is-on' : ''}" aria-selected="${t.id === tab}" onclick="bcatSetTab('${t.id}')">
-                <span class="material-symbols-outlined">${t.icon}</span><span class="bsec-tab-lbl">${t.label}</span>
-                ${t.n !== undefined ? `<span class="bsec-tab-n">${t.n}</span>` : ''}${t.warn ? '<span class="bsec-tab-dot" title="Zuordnung fehlt"></span>' : ''}
-            </button>`).join('')}
-        </nav>
+        ${legacy ? `<div class="bsec-mains">${mains.map(x => `<md-filter-chip data-seg label="${escapeHtml(x.name)}" class="bsec-main-pill ${x.id === m.id ? 'is-on' : ''}" onclick="bcatPickMain(${x.id})"></md-filter-chip>`).join('')}</div>` : ''}
+        <md-tabs class="bsec-tabs">
+            ${tabs.map(t => `<md-secondary-tab data-seg inline-icon class="bsec-tab ${t.id === tab ? 'is-on' : ''}" onclick="bcatSetTab('${t.id}')"><md-icon slot="icon">${t.icon}</md-icon><span class="bsec-tab-lbl">${t.label}</span>
+                ${t.n !== undefined ? `<span class="bsec-tab-n">${t.n}</span>` : ''}${t.warn ? '<span class="bsec-tab-dot" title="Zuordnung fehlt"></span>' : ''}</md-secondary-tab>`).join('')}
+        </md-tabs>
         ${body}
     </div>
     <style>
@@ -1184,7 +1182,7 @@ window.bcatSetColor = bcatSetColor;
 
 async function bcatAddSub(parentId) {
     const inp = document.getElementById('bcat_sub_' + parentId);
-    const name = (inp.value || '').trim();
+    const name = String(inp.value ?? '').trim();
     if (!name) return;
     const r = await apiPost(API_BASE + '/bereich-catalog', { name, parent_id: parentId });
     if (r && r.error) { showToast(r.error, 'error'); return; }
@@ -1270,7 +1268,7 @@ async function _bqSave(promise, okMsg) {
 
 async function bqAddList(mainId, typ) {
     const inp = document.getElementById((typ === 'kleidung' ? 'bq_klist_' : 'bq_list_') + mainId);
-    const name = (inp?.value || '').trim();
+    const name = String(inp?.value ?? '').trim();
     if (!name) return;
     const body = { bereich_id: mainId, name };
     if (typ) body.typ = typ;
@@ -1280,7 +1278,7 @@ window.bqAddList = bqAddList;
 
 async function bqAddOption(listId) {
     const inp = document.getElementById('bq_opt_' + listId);
-    const name = (inp?.value || '').trim();
+    const name = String(inp?.value ?? '').trim();
     if (!name) return;
     if (await _bqSave(apiPost(API_BASE + '/bereich-qualifikationen', { parent_id: listId, name }), 'Eintrag angelegt')) inp.value = '';
 }
