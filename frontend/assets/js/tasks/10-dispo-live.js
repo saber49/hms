@@ -151,7 +151,7 @@ function openNuWorkerRemoveModal(btn) {
     // Create or reuse overlay
     let overlay = document.getElementById('nuRemoveOverlay');
     if (!overlay) {
-        overlay = document.createElement('div');
+        overlay = document.createElement('dialog');
         overlay.id = 'nuRemoveOverlay';
         document.body.appendChild(overlay);
     }
@@ -165,7 +165,7 @@ function openNuWorkerRemoveModal(btn) {
                     <div class="nu-remove-header-title">NU-Mitarbeiter entfernen</div>
                     <div class="nu-remove-header-sub">${escapeHtml(workerName)}${firma ? ' — ' + escapeHtml(firma) : ''}</div>
                 </div>
-                <button class="nu-remove-close" onclick="closeNuRemoveModal()"><span class="material-symbols-outlined">close</span></button>
+                <md-icon-button class="nu-remove-close" onclick="closeNuRemoveModal()"><md-icon>close</md-icon></md-icon-button>
             </div>
             <div class="nu-remove-body">
                 <label class="nu-remove-label">Grund der Abmeldung <span style="color:#dc2626">*</span></label>
@@ -176,18 +176,19 @@ function openNuWorkerRemoveModal(btn) {
                 </div>
             </div>
             <div class="nu-remove-footer">
-                <button class="btn btn-outline btn-sm" onclick="closeNuRemoveModal()"><span class="material-symbols-outlined">arrow_back</span> Abbrechen</button>
-                <button class="btn btn-sm nu-remove-confirm-btn" id="nuRemoveConfirmBtn" onclick="confirmNuWorkerRemoval()"><span class="material-symbols-outlined">person_remove</span> Entfernen & Benachrichtigen</button>
+                <md-outlined-button onclick="closeNuRemoveModal()"><i slot="icon" class="material-symbols-outlined">arrow_back</i> Abbrechen</md-outlined-button>
+                <md-filled-button class="nu-remove-confirm-btn" id="nuRemoveConfirmBtn" onclick="confirmNuWorkerRemoval()"><i slot="icon" class="material-symbols-outlined">person_remove</i> Entfernen & Benachrichtigen</md-filled-button>
             </div>
         </div>
     `;
-    overlay.classList.add('active');
+    // showModal() → top layer, above the already-open md-dialog planner modal.
+    if (!overlay.open) overlay.showModal();
     setTimeout(() => { const ta = document.getElementById('nuRemoveReason'); if (ta) ta.focus(); }, 150);
 }
 
 function closeNuRemoveModal() {
     const overlay = document.getElementById('nuRemoveOverlay');
-    if (overlay) overlay.classList.remove('active');
+    if (overlay && overlay.open) overlay.close();
     _nuRemovePending = null;
 }
 
@@ -230,7 +231,7 @@ async function confirmNuWorkerRemoval() {
         closeNuRemoveModal();
     } else {
         showToast(result?.error || 'Fehler beim Entfernen', 'error');
-        if (btn) { btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined">person_remove</span> Entfernen & Benachrichtigen'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i slot="icon" class="material-symbols-outlined">person_remove</i> Entfernen & Benachrichtigen'; }
     }
 }
 

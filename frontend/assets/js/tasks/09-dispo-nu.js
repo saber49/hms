@@ -276,10 +276,9 @@ function plannerBuildNuPositionsFromTask() {
 function ensureNuOverlay() {
     let overlay = document.getElementById('plannerNuSelectOverlay');
     if (overlay) return overlay;
-    overlay = document.createElement('div');
+    overlay = document.createElement('dialog');
     overlay.id = 'plannerNuSelectOverlay';
     overlay.className = 'planner-nu-select-overlay';
-    overlay.style.display = 'none';
     overlay.innerHTML = `
         <div class="planner-nu-select-dialog">
             <div class="planner-nu-select-header">
@@ -315,6 +314,12 @@ function ensureNuOverlay() {
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) plannerCloseNuAddOverlay();
     });
+    // Native <dialog>: Esc fires 'close' — same cleanup as the X button.
+    overlay.addEventListener('close', () => {
+        overlay.classList.remove('active');
+        _nuDiscardPristineDraft();
+        plannerUpdateNuAddCard();
+    });
     document.body.appendChild(overlay);
     return overlay;
 }
@@ -338,7 +343,10 @@ function plannerOpenNuAddOverlay(einsatzId, forceSelect) {
     else if (view === 'summary') plannerRenderNuSummary();
     else plannerRenderNuEditMode();
     overlay.classList.add('active');
-    overlay.style.display = 'flex';
+    // showModal() puts the dialog into the top layer — required because
+    // #modalOverlay is an md-dialog; a plain z-index overlay can never
+    // paint above it.
+    if (!overlay.open) overlay.showModal();
 }
 
 // Fill the select view: only the list of available NU partners.
@@ -371,7 +379,7 @@ function plannerCloseNuAddOverlay() {
     _nuDiscardPristineDraft();
     plannerUpdateNuAddCard();
     overlay.classList.remove('active');
-    overlay.style.display = 'none';
+    if (overlay.open) overlay.close();
 }
 
 // If the in-flight NU draft was never touched (positions still equal the
@@ -458,7 +466,7 @@ async function plannerDeleteNuGroup(nuId) {
         window._plannerSelectedNuId = remainingNuId;
         plannerUpdateNuAddCard();
         const overlay = document.getElementById('plannerNuSelectOverlay');
-        const overlayOpen = overlay && overlay.style.display !== 'none';
+        const overlayOpen = overlay && overlay.open;
         if (_nuGroups.length > 0) {
             if (overlayOpen) plannerNuOverlayShow('summary');
             plannerRenderNuSummary();
@@ -596,7 +604,7 @@ function plannerCloseNuPanel() {
     _nuDiscardPristineDraft();
     plannerUpdateNuAddCard();
     const overlay = document.getElementById('plannerNuSelectOverlay');
-    if (!overlay || overlay.style.display === 'none') return;
+    if (!overlay || !overlay.open) return;
     if (_nuGroups.length > 0) {
         _nuEditingNuId = null;
         plannerNuOverlayShow('summary');
