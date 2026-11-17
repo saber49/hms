@@ -749,6 +749,7 @@ function maOpenExportDialog(format) {
         to: _maRangeMode && _maRangeEnd ? _maRangeEnd : maExpIso(new Date(_maPageYear, _maPageMonth, 0)),
         worker: maExportFilterLabel() ? 'view' : 'all',
         objekt: _maFilterObjekt || '',   // '' = alle Objekte; else only the shifts at this Objekt
+        freiOnly: true,                  // Excel: only days with Zeit-Freigabe (NU has no Freigabe)
         cache: {}, data: null, loading: false, req: 0,
     };
     const footer = `
@@ -810,6 +811,11 @@ function maExpRender() {
             <div class="ma-exp-label">Objekt</div>
             <select class="ma-exp-select" id="maExpObjekt" onchange="maExpSet('objekt', this.value)">${maExpObjektOptions()}</select>
         </div>
+        ${s.format === 'xlsx' ? `<div class="ma-exp-section ma-exp-frei">
+            <div><div class="ma-exp-label">Nur freigegebene Tage</div>
+            <small>Einsätze ohne Zeit-Freigabe und beantragte Abwesenheiten werden nicht exportiert</small></div>
+            <md-switch ${s.freiOnly !== false ? 'selected' : ''} onchange="maExpSet('freiOnly', this.selected)" aria-label="Nur freigegebene Tage"></md-switch>
+        </div>` : ''}
         <div class="ma-exp-summary" id="maExpSummary">${maExpSummaryHtml()}</div>`;
     maExpUpdateButton();
 }
@@ -823,12 +829,22 @@ function maExpGroups() {
     return s.data._groups;
 }
 
-/** Worker restricted to the dialog's Objekt (null = no shift there). */
+/**
+ * Worker restricted to the dialog's scope (null = nothing to export):
+ * the Objekt filter and — for Excel with "Nur freigegebene Tage" — the
+ * Zeit-Freigabe. Abwesenheiten are not Objekt-bound and count as
+ * released once the Antrag is genehmigt (beantragt → not exported).
+ */
 function maExpByObjekt(w) {
-    const o = _maExp && _maExp.objekt;
-    if (!o) return w;
-    const entries = w.entries.filter(e => (e.objektname || '').trim() === o);
-    return entries.length ? Object.assign({}, w, { entries }) : null;
+    const s = _maExp, o = s && s.objekt;
+    const only = s && s.format === 'xlsx' && s.freiOnly !== false;
+    const isNu = !w.dienst_nr;
+    let entries = w.entries;
+    if (only && !isNu) entries = entries.filter(e => parseInt(e.zeit_freigabe) === 1);
+    if (o) entries = entries.filter(e => (e.objektname || '').trim() === o);
+    let abw = o ? [] : (w.abw || []);
+    if (only) abw = abw.filter(r => r.status !== 'pending');
+    return (entries.length || abw.length) ? Object.assign({}, w, { entries, abw }) : null;
 }
 
 /** Objekte of the loaded period with their shift count. */
@@ -936,7 +952,7 @@ function maExpSet(key, value) {
     s[key] = value;
     if (key === 'mode' && value === 'view' && s.worker === 'all' && maExportFilterLabel()) s.worker = 'view';
     if (key === 'mode' && value !== 'view' && s.worker === 'view') s.worker = 'all';
-    if (key === 'format' || key === 'worker' || key === 'objekt') { maExpRender(); return; }
+    if (key === 'format' || key === 'worker' || key === 'objekt' || key === 'freiOnly') { maExpRender(); return; }
     maExpRender();
     maExpLoad();
 }
@@ -995,7 +1011,7 @@ function maExpRun() {
         return;
     }
     s.busy = true; maExpUpdateButton();
-    maExportCSV({ workers: sel, periodLabel: p.periodLabel, fileLabel: p.fileLabel, filterLabel, fileSuffix })
+    maExportCSV({ workers: sel, periodLabel: p.periodLabel, fileLabel: p.fileLabel, filterLabel, fileSuffix, freiOnly: s.freiOnly })
         .then(ok => { s.busy = false; if (ok && _maExp === s) closeModal(); else maExpUpdateButton(); });
 }
 
@@ -1055,6 +1071,10 @@ async function maExportCSV(opts) {
     if (!opts && !_maData) { showToast('Keine Daten geladen', 'error'); return false; }
     const workers = opts ? opts.workers : maExportWorkers();
     if (workers.length === 0) { showToast('Keine Einträge für den aktuellen Filter', 'error'); return false; }
+    // Only days the office released (Zeit-Freigabe) leave the system; the
+    // same rule drops still-pending absence requests. NU rows have no
+    // Freigabe mechanism — they always export.
+    const freiOnly = !opts || opts.freiOnly !== false;
 
     const headers = ['Typ', 'Dienst-Nr / Personal-Nr', 'Vorname', 'Name', 'Bereich / Firma',
                'Datum', 'Tag', 'Kunde', 'Objekt', 'Position',
@@ -1127,6 +1147,7 @@ async function maExportCSV(opts) {
         || (isNu ? (w.personal_nr || ('NU-' + w.nu_worker_id)) : (w.dienst_nr || 'Mitarbeiter'));
     const recs = [];
     workers.forEach(({ w, isNu, firma }) => w.entries.forEach(e => {
+        if (freiOnly && !isNu && parseInt(e.zeit_freigabe) !== 1) return;
         rows.push(formatRow(e, isNu));
         const d = e.datum ? new Date(e.datum + 'T00:00:00') : null;
         const soll = maSollStd(e), ist = maIstStd(e);
@@ -1178,7 +1199,8 @@ async function maExportCSV(opts) {
         ['Zeiterfassung — ' + periodLabel],
         ['Filter: ' + (filterLabel || 'keiner (alle Mitarbeiter)')],
         ['Erstellt: ' + now.toLocaleDateString('de-DE') + ' ' + now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
-            + '  ·  Abrechnung Std = Ist, ohne Erfassung Plan-Stunden'],
+            + '  ·  Abrechnung Std = Ist, ohne Erfassung Plan-Stunden'
+            + (freiOnly ? '  ·  nur freigegebene Tage' : '')],
     ];
     const workerGroups = groupBy(recs, r => r.key);   // keeps the page order
     const objektGroups = [...groupBy(recs, r => (r.objekt || 'Ohne Objekt') + '\u0001' + r.kunde).values()]
@@ -1251,6 +1273,7 @@ async function maExportCSV(opts) {
     workers.forEach(({ w, isNu }) => {
         if (isNu) return;
         (w.abw || _maAbw[w.dienst_nr] || []).forEach(r => {
+            if (freiOnly && r.status === 'pending') return;
             abwRows.push([wName(w, false), w.dienst_nr || '', fmtDate(r.startdatum), fmtDate(r.enddatum),
                 +(+r.zeitraum_tage).toFixed(1), r.typ || '', r.kategorie || '',
                 r.status === 'pending' ? 'Beantragt' : 'Genehmigt',
@@ -1283,7 +1306,7 @@ async function maExportCSV(opts) {
             num_cols: [6, 7, 8, 9], int_cols: [4, 5, 10, 12], landscape: true,
             widths: [34, 12, 8, 40, 10, 8, 10, 10, 12, 13, 9, 12, 10],
         });
-        showToast(`Excel exportiert — ${workerGroups.size} Mitarbeiter, ${recs.length} Einsätze${filterLabel ? ' (gefiltert)' : ''}`);
+        showToast(`Excel exportiert — ${workerGroups.size} Mitarbeiter, ${recs.length} Einsätze${freiOnly ? ' (nur freigegebene)' : ''}${filterLabel ? ' (gefiltert)' : ''}`);
         return true;
     } catch (err) {
         showToast(err.message || 'Export fehlgeschlagen', 'error');

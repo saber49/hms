@@ -1577,6 +1577,10 @@ to { opacity: 1; transform: translateY(0); }
     font-size: var(--md-sys-typescale-label-small-size); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
     color: var(--ma-text-muted); margin-bottom: 8px;
 }
+.ma-exp-frei { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.ma-exp-frei .ma-exp-label { margin-bottom: 2px; }
+.ma-exp-frei small { display: block; font-size: var(--md-sys-typescale-body-small-size); color: var(--ma-text-muted); line-height: 1.35; }
+.ma-exp-frei md-switch { flex-shrink: 0; }
 .ma-exp-formats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .ma-exp-format {
     display: flex; align-items: center; gap: 12px; min-width: 0;
