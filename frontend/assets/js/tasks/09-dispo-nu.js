@@ -149,8 +149,8 @@ function plannerRenderNuSummary() {
         html += `
         <div class="nu-summary-card ${cardClass}" onclick="plannerExpandNuGroup('${escapeHtml(group.nu_id)}')">
             <div class="nu-summary-actions">
-                <button class="nu-summary-action-btn" onclick="event.stopPropagation();plannerExpandNuGroup('${escapeHtml(group.nu_id)}')" title="Bearbeiten"><span class="material-symbols-outlined">edit</span></button>
-                <button class="nu-summary-action-btn danger" onclick="event.stopPropagation();plannerDeleteNuGroup('${escapeHtml(group.nu_id)}')" title="Löschen"><span class="material-symbols-outlined">delete</span></button>
+                <md-icon-button class="nu-summary-action-btn" onclick="event.stopPropagation();plannerExpandNuGroup('${escapeHtml(group.nu_id)}')" title="Bearbeiten"><md-icon>edit</md-icon></md-icon-button>
+                <md-icon-button class="nu-summary-action-btn danger" onclick="event.stopPropagation();plannerDeleteNuGroup('${escapeHtml(group.nu_id)}')" title="Löschen"><md-icon>delete</md-icon></md-icon-button>
             </div>
             <div class="nu-summary-location"><span class="material-symbols-outlined">location_on</span> ${escapeHtml(_nuObjektname || _nuKundenname || '—')}</div>
             <div class="nu-summary-firma">${escapeHtml(group.firmenname)}</div>
@@ -287,7 +287,7 @@ function ensureNuOverlay() {
                     <div class="planner-nu-select-title" id="plannerNuOverlayTitle">Nachunternehmer auswählen</div>
                     <div class="planner-nu-select-sub" id="plannerNuOverlaySub">Wählen Sie einen Partner für diese Schicht</div>
                 </div>
-                <button class="planner-nu-select-close" type="button" onclick="plannerCloseNuAddOverlay()" title="Schließen"><span class="material-symbols-outlined">close</span></button>
+                <md-icon-button class="planner-nu-select-close" onclick="plannerCloseNuAddOverlay()" title="Schließen"><md-icon>close</md-icon></md-icon-button>
             </div>
             <div class="planner-nu-select-body" id="plannerNuViewSelect">
                 <div class="planner-nu-select-list" id="plannerNuSelectList"></div>
@@ -301,13 +301,13 @@ function ensureNuOverlay() {
                             <span class="nu-firma-badge" id="plannerNuFirmaLabel"></span>
                         </div>
                         <div class="nu-positions-header-right">
-                            <button class="nu-add-btn" type="button" onclick="plannerAddNuPosition()"><span class="material-symbols-outlined">add</span> Position</button>
-                            <button class="nu-close-btn" id="plannerNuCloseBtn" type="button" onclick="plannerCloseNuPanel()" title="Zurück"><span class="material-symbols-outlined">arrow_back</span></button>
+                            <md-outlined-button class="nu-add-btn" onclick="plannerAddNuPosition()"><i slot="icon" class="material-symbols-outlined">add</i> Position</md-outlined-button>
+                            <md-icon-button class="nu-close-btn" id="plannerNuCloseBtn" onclick="plannerCloseNuPanel()" title="Zurück"><md-icon>arrow_back</md-icon></md-icon-button>
                         </div>
                     </div>
                     <div class="nu-positions-body" id="plannerNuPosList"></div>
                     <div class="nu-positions-footer">
-                        <button class="nu-submit-btn" type="button" onclick="plannerSaveNuPositions(window._plannerEinsatzId || '')"><span class="material-symbols-outlined">send</span> Anfrage absenden</button>
+                        <md-filled-button class="nu-submit-btn" onclick="plannerSaveNuPositions(window._plannerEinsatzId || '')"><i slot="icon" class="material-symbols-outlined">send</i> Anfrage absenden</md-filled-button>
                     </div>
                 </div>
             </div>
@@ -496,14 +496,14 @@ function plannerRenderNuPositions() {
     }
 
     if (_nuPositions.length === 0) {
-        list.innerHTML = '<div class="nu-empty-state"><div class="nu-empty-icon"><span class="material-symbols-outlined">assignment</span></div><div class="nu-empty-title">Keine Positionen definiert</div><div class="nu-empty-text">Definieren Sie Positionen und Anforderungen für den Nachunternehmer.</div><button class="nu-empty-cta" type="button" onclick="plannerAddNuPosition()"><span class="material-symbols-outlined">add</span> Erste Position erstellen</button></div>';
+        list.innerHTML = '<div class="nu-empty-state"><div class="nu-empty-icon"><span class="material-symbols-outlined">assignment</span></div><div class="nu-empty-title">Keine Positionen definiert</div><div class="nu-empty-text">Definieren Sie Positionen und Anforderungen für den Nachunternehmer.</div><md-filled-button class="nu-empty-cta" onclick="plannerAddNuPosition()"><i slot="icon" class="material-symbols-outlined">add</i> Erste Position erstellen</md-filled-button></div>';
         return;
     }
 
     let html = '';
     // Back button if there are other groups
     if (_nuGroups.length > 0) {
-        html += `<div style="margin-bottom:8px"><button class="btn btn-outline btn-sm" type="button" onclick="plannerBackToNuSummary()"><span class="material-symbols-outlined">arrow_back</span> Zurück zur Übersicht</button></div>`;
+        html += `<div style="margin-bottom:8px"><md-outlined-button onclick="plannerBackToNuSummary()"><i slot="icon" class="material-symbols-outlined">arrow_back</i> Zurück zur Übersicht</md-outlined-button></div>`;
     }
 
     _nuPositions.forEach((pos, idx) => {
@@ -540,7 +540,7 @@ function plannerRenderNuPositions() {
                 <span class="nu-position-badge">${idx + 1}</span>
                 <input type="text" class="form-control" value="${escapeHtml(pos.position_name || '')}" placeholder="Position (z.B. Checker, Security)" style="flex:1" onchange="_nuPositions[${idx}].position_name=this.value">
                 <input type="number" class="form-control nu-position-count-input" value="${pos.anzahl || 1}" min="1" title="Anzahl Mitarbeiter" onchange="_nuPositions[${idx}].anzahl=parseInt(this.value)||1">
-                <button class="nu-position-remove-btn" onclick="_nuPositions.splice(${idx},1);plannerRenderNuPositions()" title="Position entfernen"><span class="material-symbols-outlined">close</span></button>
+                <md-icon-button class="nu-position-remove-btn" onclick="_nuPositions.splice(${idx},1);plannerRenderNuPositions()" title="Position entfernen"><md-icon>close</md-icon></md-icon-button>
             </div>
             <div class="nu-position-card-body">
                 <div class="nu-position-fields">
