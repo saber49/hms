@@ -1896,8 +1896,15 @@ body:has(.ma-page[class*="ma-theme-"]) .ma-topbar-stack .ma-month-nav { backgrou
 .ma-topbar-stack .ma-range-btn { font-size: 0 !important; gap: 0; padding: 0 10px !important; }
 .ma-topbar-stack .ma-month-label { min-width: 100px !important; }
 }
-/* md components (05-ma-overview.js): mode switch chips keep the green/blue mode colours */
-.ma-mode-switch md-filter-chip.ma-tab { --md-filter-chip-container-height: 40px; --md-filter-chip-outline-color: transparent; }
+/* The chip paints its own selected surface; legacy .ma-tab styles must not
+   add a second white pill or padding around the Material chip. */
+.ma-topbar-stack .ma-mode-switch md-filter-chip.ma-tab {
+    --md-filter-chip-container-height: 40px;
+    --md-filter-chip-outline-color: transparent;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
 .ma-mode-switch md-filter-chip.ma-tab:not(.kunde) { --md-filter-chip-selected-container-color: var(--md-ext-color-success-container); --md-filter-chip-selected-label-text-color: var(--md-ext-color-on-success-container); --md-filter-chip-selected-icon-color: var(--md-ext-color-on-success-container); }
 .ma-mode-switch md-filter-chip.ma-tab.kunde { --md-filter-chip-selected-container-color: var(--md-sys-color-primary-container); --md-filter-chip-selected-label-text-color: var(--md-sys-color-on-primary-container); --md-filter-chip-selected-icon-color: var(--md-sys-color-on-primary-container); }
 md-outlined-select.ma-scope-select { min-width: 180px; --md-outlined-field-top-space: 8px; --md-outlined-field-bottom-space: 8px; }

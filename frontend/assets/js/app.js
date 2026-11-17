@@ -100,7 +100,7 @@ document.addEventListener('input', function (e) {
 document.addEventListener('focusout', function (e) {
     const el = e.target;
     if (!(el instanceof HTMLElement) || !el.classList || !el.classList.contains('t24')) return;
-    const v = StringString(el.value ?? '').trim();
+    const v = String(el.value ?? '').trim();
     if (!v) return;
     const m = v.match(/^(\d{1,2}):?(\d{0,2})$/);
     if (!m) { el.value = ''; return; }
@@ -609,7 +609,7 @@ const PAGE_MODULE_SCRIPTS = {
     einstellungen: ['assets/js/einstellungen.js?v=20261117md3l'],
     interessenten: ['assets/js/crm.js?v=20261117md3l'],
     customers: ['assets/js/customers.js?v=20261117md3l'],
-    objects: ['assets/js/objects.js?v=20261117md3l'],
+    objects: ['assets/js/objects.js?v=20261117objmode1'],
     subcontractors: ['assets/js/subcontractors.js?v=20261117md3l'],
     price_history: ['assets/js/price_history.js?v=20261117md3l'],
     lager: ['assets/js/lager.js?v=20261117md3l'],
