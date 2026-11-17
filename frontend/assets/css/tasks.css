@@ -740,20 +740,20 @@
     border-color: var(--md-sys-color-primary-container);
     background: repeating-linear-gradient(
         45deg,
-        var(--md-sys-color-primary-container) 0,
-        var(--md-sys-color-primary-container) 9px,
-        var(--md-sys-color-primary-container) 9px,
-        var(--md-sys-color-primary-container) 18px
+        color-mix(in srgb, var(--md-sys-color-primary-container) 72%, var(--md-sys-color-primary) 28%) 0,
+        color-mix(in srgb, var(--md-sys-color-primary-container) 72%, var(--md-sys-color-primary) 28%) 9px,
+        color-mix(in srgb, var(--md-sys-color-primary-container) 40%, var(--md-sys-color-surface) 60%) 9px,
+        color-mix(in srgb, var(--md-sys-color-primary-container) 40%, var(--md-sys-color-surface) 60%) 18px
     );
 }
 .planner-card.planned.partial {
     border-color: var(--md-ext-color-warning);
     background: repeating-linear-gradient(
         45deg,
-        var(--md-ext-color-warning-container) 0,
-        var(--md-ext-color-warning-container) 9px,
-        var(--md-ext-color-warning-container) 9px,
-        var(--md-ext-color-warning-container) 18px
+        color-mix(in srgb, var(--md-ext-color-warning-container) 80%, var(--md-ext-color-warning) 20%) 0,
+        color-mix(in srgb, var(--md-ext-color-warning-container) 80%, var(--md-ext-color-warning) 20%) 9px,
+        color-mix(in srgb, var(--md-ext-color-warning-container) 30%, var(--md-sys-color-surface) 70%) 9px,
+        color-mix(in srgb, var(--md-ext-color-warning-container) 30%, var(--md-sys-color-surface) 70%) 18px
     );
 }
 /* Tombstone: day removed from Bestelleingang → card is locked, grayed-out,
