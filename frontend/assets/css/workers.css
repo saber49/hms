@@ -1016,47 +1016,61 @@ md-outlined-button.wk-profile-back { margin-top: 14px; width: 100%; }
 
 /* ===== 11. Documents Tab ===== */
 .wk-docs-upload {
-    background: var(--wk-bg-soft);
-    border: 1px dashed var(--wk-border-strong);
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
     border-radius: var(--md-sys-shape-corner-medium);
-    padding: 14px;
+    padding: 12px 14px;
     margin-bottom: 16px;
 }
-/* Two-row upload form: fields on row 1, the Hochladen button on
-   row 2 (right-aligned). Native <input type="file"> can take a lot
-   of horizontal space on laptops, which previously pushed the
-   submit button off the visible area. Forcing the button onto its
-   own row makes the form layout-stable from 360 px to 4K. */
+.wk-docs-upload-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: var(--wk-text);
+}
+.wk-docs-upload-icon {
+    width: 32px;
+    height: 32px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: var(--md-sys-shape-corner-small);
+    background: var(--wk-accent-soft);
+    color: var(--wk-accent);
+}
+.wk-docs-upload-icon .material-symbols-outlined { font-size: 19px; }
+.wk-docs-upload-heading strong { display: block; font-size: var(--md-sys-typescale-body-medium-size); }
+.wk-docs-upload-heading div > span { display: block; font-size: var(--md-sys-typescale-label-small-size); color: var(--wk-text-muted); }
 .wk-docs-upload-grid {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
-    grid-auto-rows: auto;
     gap: 10px 12px;
     align-items: end;
 }
+.wk-docs-upload-grid--file {
+    grid-template-columns: minmax(0, 2fr) minmax(170px, 1fr) minmax(180px, 1fr);
+}
+.wk-docs-upload-grid--file > .wk-docs-upload-file { grid-column: 1 / 3; }
+.wk-docs-upload-grid--file > .wk-docs-upload-submit { grid-column: 3; }
 .wk-docs-upload-grid > .wk-docs-upload-submit {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: flex-end;
 }
 @media (max-width: 900px) {
 .wk-docs-upload-grid { grid-template-columns: 1fr 1fr; }
-.wk-docs-upload-grid > .wk-docs-upload-submit { grid-column: 1 / -1; }
+.wk-docs-upload-grid--file { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.wk-docs-upload-grid--file > .form-group:first-child,
+.wk-docs-upload-grid--file > .wk-docs-upload-file,
+.wk-docs-upload-grid--file > .wk-docs-upload-submit { grid-column: 1 / -1; }
 }
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 .wk-docs-upload-grid { grid-template-columns: 1fr; }
+.wk-docs-upload-grid--file { grid-template-columns: minmax(0, 1fr); }
+.wk-docs-upload-grid--file > .wk-docs-upload-file,
+.wk-docs-upload-grid--file > .wk-docs-upload-submit { grid-column: 1; }
 }
 .wk-docs-upload-grid .form-group { margin: 0; min-width: 0; }
-/* Native file input is greedy with width; cap it to the column. */
-.wk-docs-upload-grid input[type="file"] { max-width: 100%; }
-.wk-docs-upload-grid label {
-    font-size: var(--md-sys-typescale-label-small-size) !important;
-    font-weight: 700 !important;
-    color: var(--wk-text-muted) !important;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    margin-bottom: 4px;
-}
 .wk-docs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1611,24 +1625,46 @@ md-outlined-select.wk-extra-filter {
 .absence-note .material-symbols-outlined { font-size: 12px; vertical-align: -2px; }
 .wk-pw-show-hint .material-symbols-outlined { vertical-align: -3px; }
 .wk-quasod-btn .material-symbols-outlined { pointer-events: none; }
-/* ---------- Docs upload grid: MD3 fields fill + bottom-align ---------- */
+/* ---------- Compact document fields and shared file picker ---------- */
 .wk-docs-upload-grid .form-group { margin-bottom: 0; min-width: 0; }
 .wk-docs-upload-grid md-outlined-text-field,
 .wk-docs-upload-grid md-outlined-select { width: 100%; min-width: 0; }
-.wk-docs-upload-grid .cust-file-label {
-    display: block;
-    font-size: var(--md-sys-typescale-body-small-size);
+.wk-docs-upload-grid md-outlined-text-field {
+    --md-outlined-text-field-top-space: 8px;
+    --md-outlined-text-field-bottom-space: 8px;
+    --md-outlined-text-field-container-shape: var(--md-sys-shape-corner-small);
+}
+.wk-docs-upload-grid md-outlined-select {
+    --md-outlined-field-top-space: 8px;
+    --md-outlined-field-bottom-space: 8px;
+    --md-outlined-select-text-field-container-shape: var(--md-sys-shape-corner-small);
+}
+.wk-docs-upload .ui-file.wk-doc-file-picker {
+    flex-direction: row;
+    align-items: center;
+    min-height: 40px;
+    gap: 12px;
+}
+.wk-doc-file-picker .ui-file-label {
+    flex: none;
+    font-size: var(--md-sys-typescale-label-small-size);
     font-weight: 600;
     color: var(--wk-text-muted);
-    margin-bottom: 4px;
 }
-.wk-docs-upload-grid input[type="file"].form-control {
-    width: 100%;
-    height: 56px;
-    padding: 15px 12px;
-    border-radius: var(--md-sys-shape-corner-extra-small);
-    border-color: var(--wk-border-strong);
-    background: var(--wk-surface);
+.wk-doc-file-picker .ui-file-row { flex: 1; }
+.wk-doc-file-picker md-outlined-button { --md-outlined-button-container-height: 40px; flex: none; }
+.wk-docs-upload-submit md-filled-button { --md-filled-button-container-height: 40px; }
+@media (max-width: 600px) {
+    .wk-docs-upload .ui-file.wk-doc-file-picker { flex-direction: column; align-items: stretch; gap: 5px; }
+    .wk-docs-upload-grid md-outlined-text-field {
+        --md-outlined-text-field-top-space: 10px;
+        --md-outlined-text-field-bottom-space: 10px;
+    }
+    .wk-docs-upload-grid md-outlined-select {
+        --md-outlined-field-top-space: 10px;
+        --md-outlined-field-bottom-space: 10px;
+    }
+    .wk-docs-upload-submit md-filled-button { width: 100%; }
 }
 .wk-docs-upload-submit { align-self: flex-end; }
 /* ---------- Absence toolbar: select + button on one line ---------- */
