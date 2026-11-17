@@ -733,6 +733,9 @@ function loadPageScript(src) {
             script.onload = script.onerror = null;
             reject(new Error('Modul-Ladezeit überschritten: ' + src));
         }, _API_SCRIPT_TIMEOUT_MS);
+        // Download in parallel, execute in insertion order: module parts
+        // (tasks/, qm/) share one global scope and depend on their order.
+        script.async = false;
         script.src = _scriptCacheBust
             ? src + (src.indexOf('?') >= 0 ? '&' : '?') + '_r=' + _scriptCacheBust
             : src;
@@ -747,7 +750,7 @@ function loadPageScript(src) {
     return promise;
 }
 async function ensurePageScripts(page) {
-    for (const src of PAGE_MODULE_SCRIPTS[page] || []) await loadPageScript(src);
+    await Promise.all((PAGE_MODULE_SCRIPTS[page] || []).map(loadPageScript));
 }
 
 async function loadPage(page) {
