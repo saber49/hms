@@ -78,6 +78,9 @@ class WorkerController extends Controller
         if (Schema::connection('tenant')->hasColumn('mitarbeiter', 'qualifikationen')) {
             $cols[] = 'qualifikationen';
         }
+        foreach (['nicht_vorhanden', 'steuer_faktor'] as $extraCol) {
+            if (Schema::connection('tenant')->hasColumn('mitarbeiter', $extraCol)) $cols[] = $extraCol;
+        }
 
         // Identity + ID-document + security-guard fields added in
         // 2026_05_19_100000_add_security_guard_fields_to_mitarbeiter.
@@ -1065,7 +1068,7 @@ class WorkerController extends Controller
             // internal MA-Kosten per Einsatz; column added in the 2026_05_18
             // migration. Conditional so this controller stays compatible
             // with older tenants that haven't migrated yet.
-            'stundenlohn', 'lohn_typ',
+            'stundenlohn', 'lohn_typ', 'steuer_faktor',
             // Security-guard / Bewachung extension (2026_05_19 migration).
             // §34a GewO + GewSchV-compliant identity + ID-document fields
             // plus DFB stadium-guard fields. All optional; the controller
@@ -1098,7 +1101,19 @@ class WorkerController extends Controller
                 }
             }
         }
-        foreach (['stundenlohn', 'arbeitsstunden', 'urlaubstage', 'kinderzahl_freibetrag'] as $numericField) {
+        if (array_key_exists('steuerklasse', $row) && (string) $row['steuerklasse'] !== '4'
+            && Schema::connection('tenant')->hasColumn('mitarbeiter', 'steuer_faktor')) {
+            $row['steuer_faktor'] = null;
+        }
+        if (array_key_exists('nicht_vorhanden', $data)
+            && Schema::connection('tenant')->hasColumn('mitarbeiter', 'nicht_vorhanden')) {
+            $allowed = ['geburtsname', 'geburtsort', 'geburtsland', 'telefon', 'mobil',
+                'strasse', 'plz', 'ort', 'personalausweis_nr', 'personalausweis_gueltig_ab',
+                'personalausweis_gueltig_bis', 'bewacherregister_nr', 'funkrufname',
+                'dfb_pin', 'barcode', 'ordnernummer', 'kinderzahl_freibetrag'];
+            $row['nicht_vorhanden'] = json_encode(array_values(array_intersect($allowed, (array) $data['nicht_vorhanden'])));
+        }
+        foreach (['stundenlohn', 'arbeitsstunden', 'urlaubstage', 'kinderzahl_freibetrag', 'steuer_faktor'] as $numericField) {
             if (isset($row[$numericField]) && is_string($row[$numericField])) {
                 $row[$numericField] = str_replace(',', '.', $row[$numericField]);
             }
@@ -1199,6 +1214,18 @@ class WorkerController extends Controller
             if (!is_numeric($data['steuerklasse']) || $data['steuerklasse'] < 1 || $data['steuerklasse'] > 6) {
                 $errors[] = 'Steuerklasse: 1–6';
             }
+        }
+        if (isset($data['steuer_faktor']) && $data['steuer_faktor'] !== '') {
+            $factor = str_replace(',', '.', (string) $data['steuer_faktor']);
+            if (($data['steuerklasse'] ?? null) != 4 || !is_numeric($factor)
+                || (float) $factor <= 0 || (float) $factor > 1) {
+                $errors[] = 'Faktor: nur für Steuerklasse 4, größer 0 bis 1';
+            }
+        }
+        if (isset($data['nicht_vorhanden']) && (!is_array($data['nicht_vorhanden'])
+            || count($data['nicht_vorhanden']) > 20
+            || count(array_filter($data['nicht_vorhanden'], 'is_string')) !== count($data['nicht_vorhanden']))) {
+            $errors[] = 'Ungültige Angaben zu nicht vorhandenen Feldern';
         }
         if (isset($data['urlaubstage']) && $data['urlaubstage'] !== '' && $data['urlaubstage'] !== null) {
             if (!is_numeric($data['urlaubstage']) || (float) $data['urlaubstage'] < 0 || (float) $data['urlaubstage'] > 366) {

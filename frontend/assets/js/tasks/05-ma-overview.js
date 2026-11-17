@@ -904,7 +904,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
         ${worker.entries.length
             ? maBuildWorkerTable(worker.entries, isNu)
             : '<div class="ma-abw-empty">Keine Einsätze in diesem Zeitraum</div>'}
-        ${(!isNu && !kunde) ? maBuildAbsenceSection(abwList) : ''}
+        ${(!isNu && !kunde) ? maBuildAbsenceSection(abwList, worker.dienst_nr) : ''}
     </div>`;
 }
 
@@ -912,32 +912,29 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
 // ABWESENHEITEN (Anträge & Urlaub) — bezahlte Stunden nach dt. Recht.
 // Quelle: AbsenceCreditService über GET /disposition/completed-workers.
 // ============================================================
-function maBuildAbsenceSection(list) {
+function maBuildAbsenceSection(list, dienstNr) {
     if (!list || !list.length) return '';
     const sum = maAbwSumOf(list);
 
     const katIcon = { urlaub: 'beach_access', krank: 'sick', sonstiges: 'event_busy' };
-    const fmtRange = r => wpFormatDate(r.startdatum)
-        + (r.enddatum && r.enddatum !== r.startdatum ? ' – ' + wpFormatDate(r.enddatum) : '');
-
-    const rows = list.map(r => {
+    const canEdit = typeof hasPermission === 'function' && hasPermission('stammdaten.mitarbeiter.edit');
+    const rows = list.flatMap(r => (r.days || []).map(day => {
         const statusPill = r.status === 'pending'
             ? '<span class="ma-status-pill pending">Beantragt</span>'
             : `<span class="ma-status-pill absence">${parseInt(r.bezahlt) ? 'Bezahlt' : 'Unbezahlt'}</span>`;
-        const hints = (r.hinweise || []).map(h => `<div class="ma-ist-early" title="${escapeHtml(h)}">${escapeHtml(h)}</div>`).join('');
-        const daysTitle = (r.days || [])
-            .map(d => `${wpFormatDate(d.d)}: ${d.h > 0 ? maFmtHrs(d.h) + ' h' : '–'}${d.b ? ' (' + d.b + ')' : ''}`)
-            .join('\n');
-        return `<tr title="${escapeHtml(daysTitle)}">
-            <td data-label="Zeitraum">${escapeHtml(fmtRange(r))}</td>
+        const weekday = new Date(day.d + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short' });
+        const basis = day.b ? ({plan: 'Schichtplan', schnitt13: '13-Wochen-Schnitt', vertrag: 'Vertragsarbeitszeit'}[day.b] || day.b) : r.basis_label;
+        return `<tr>
+            <td data-label="Datum">${escapeHtml(wpFormatDate(day.d))}</td>
+            <td data-label="Tag">${escapeHtml(weekday)}</td>
             <td data-label="Typ"><span class="ma-abw-typ">${maIcon(katIcon[r.kategorie] || 'event_busy', 'font-size:14px;vertical-align:-3px')} ${escapeHtml(r.typ)}</span></td>
             <td data-label="Status">${statusPill}</td>
-            <td data-label="Tage" class="ma-text-center">${(+r.zeitraum_tage).toFixed(1).replace('.', ',')}</td>
-            <td data-label="Std" class="ma-text-right"><strong>${r.std > 0 ? maFmtHrs(r.std) : '–'}</strong></td>
-            <td data-label="Grundlage"><span class="ma-soll-sub">${escapeHtml(r.basis_label || '–')}</span></td>
-            <td data-label="Hinweis">${hints || '–'}</td>
+            <td data-label="Std" class="ma-text-right"><strong>${day.h > 0 ? maFmtHrs(day.h) : '–'}</strong></td>
+            <td data-label="Grundlage"><span class="ma-soll-sub">${escapeHtml(basis || '–')}</span></td>
+            <td data-label="Freigabe" class="ma-text-center">${canEdit ? `<button class="ma-freigabe-btn ${+r.zeit_freigabe === 1 ? 'on' : ''}" ${r.status === 'pending' ? 'disabled' : ''} onclick="maToggleAbsenceFreigabe(${r.id}, '${escapeHtml(dienstNr)}')" title="${+r.zeit_freigabe === 1 ? 'Freigabe zurücknehmen' : 'Abwesenheit freigeben'}">${maIcon('check_circle', 'font-size:20px')}</button>` : (+r.zeit_freigabe === 1 ? 'Ja' : '–')}</td>
+            <td data-label="Bearbeiten">${canEdit ? `<button class="ma-row-edit-btn" onclick="maEditAbsence('${escapeHtml(dienstNr)}', ${r.id}, '${escapeHtml(day.d)}')" title="Abwesenheit bearbeiten">${maIcon('edit', 'font-size:17px')}</button>` : '–'}</td>
         </tr>`;
-    }).join('');
+    })).join('');
 
     return `
     <div class="ma-abw">
@@ -947,13 +944,38 @@ function maBuildAbsenceSection(list) {
         </div>
         <div class="ma-table-wrap"><table class="ma-table ma-abw-table">
             <thead><tr>
-                <th>Zeitraum</th><th>Typ</th><th>Status</th>
-                <th class="ma-text-center">Tage</th><th class="ma-text-right">Std</th>
-                <th>Grundlage</th><th>Hinweis</th>
+                <th>Datum</th><th>Tag</th><th>Typ</th><th>Status</th>
+                <th class="ma-text-right">Std</th><th>Grundlage</th>
+                <th class="ma-text-center">Freigabe MA</th><th>Bearbeiten</th>
             </tr></thead>
             <tbody>${rows}</tbody>
         </table></div>
     </div>`;
+}
+
+async function maToggleAbsenceFreigabe(id, dienstNr) {
+    const record = (_maAbw[dienstNr] || []).find(r => r.id === id);
+    if (!record || record.status === 'pending') return;
+    const target = +record.zeit_freigabe !== 1;
+    const res = await apiPost(API_BASE + '/worker-absences/' + id + '/zeit-freigabe', { freigabe: target });
+    if (!res?.success) return showToast(res?.error || 'Freigabe fehlgeschlagen', 'error');
+    record.zeit_freigabe = target ? 1 : 0;
+    maRenderBlocks({ keepEditing: true });
+    showToast(target ? 'Abwesenheit freigegeben' : 'Freigabe zurückgenommen');
+}
+
+async function maEditAbsence(dienstNr, id, datum) {
+    await loadPage('workers');
+    await wkOpenProfile(dienstNr);
+    const tab = document.querySelector('.wk-tab[data-tab="abwesenheiten"]');
+    if (tab) wkSwitchTab(tab);
+    const response = await apiGet(WK_API.absences + '?dienst_nr=' + encodeURIComponent(dienstNr) + '&jahr=' + datum.slice(0, 4));
+    const absence = (response?.abwesenheiten || []).find(a => +a.id === id);
+    if (absence) {
+        await wkLoadAbsences(dienstNr, +datum.slice(0, 4));
+        wkEditAbsence(absence, dienstNr);
+    }
+    else showToast('Abwesenheit nicht gefunden', 'error');
 }
 
 // Soll = original plan from the Bestelleingang day (soll_std, else span − pause).

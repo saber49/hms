@@ -1929,8 +1929,8 @@ tr.has-absence td { background: var(--md-ext-color-info-container, var(--gray-50
 tr.has-absence:hover td { background: var(--md-ext-color-info-container, var(--gray-50)); }
 
 .ma-abw {
-    border-top: 1px dashed var(--md-sys-color-outline-variant, var(--border, #e2e8f0));
-    padding: 10px 14px 14px;
+    border-top: 1px solid var(--md-sys-color-outline-variant, var(--border, #e2e8f0));
+    padding: 12px 0 0;
 }
 .ma-abw-head {
     display: flex;
@@ -1950,6 +1950,7 @@ tr.has-absence:hover td { background: var(--md-ext-color-info-container, var(--g
 .ma-abw-table th,
 .ma-abw-table td { font-size: var(--md-sys-typescale-body-small-size, 0.78rem); }
 .ma-abw-table .ma-abw-typ { font-weight: 600; }
+.ma-abw-table .ma-freigabe-btn:disabled { opacity: .35; cursor: not-allowed; }
 .ma-worker-meta-chip.ma-abw-chip {
     background: var(--md-ext-color-info-container, var(--gray-100));
     color: var(--md-ext-color-on-info-container, var(--gray-600));
