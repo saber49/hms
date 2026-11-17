@@ -308,6 +308,7 @@ async function openObjectModal(id = null) {
         ['NI','Niedersachsen'],['NW','Nordrhein-Westfalen'],['RP','Rheinland-Pfalz'],
         ['SL','Saarland'],['SN','Sachsen'],['ST','Sachsen-Anhalt'],['SH','Schleswig-Holstein'],['TH','Thüringen'],
     ].map(([code, name]) => `<md-select-option value="${code}" ${obj.bundesland === code ? 'selected' : ''}><div slot="headline">${name}</div></md-select-option>`).join('');
+    const requiredOnCreate = id ? '' : 'required';
 
     const body = `
         <div class="customer-form-layout">
@@ -318,7 +319,7 @@ async function openObjectModal(id = null) {
                 </div>
 
                 <div class="form-group">
-                    <md-outlined-select id="f_obj_kunden_id" label="Kunde" required onchange="objKundeChanged()">
+                    <md-outlined-select id="f_obj_kunden_id" label="Kunde" ${requiredOnCreate} onchange="objKundeChanged()">
                         <md-select-option value="" ${obj.kunden_id ? '' : 'selected'}><div slot="headline">— Kunde wählen —</div></md-select-option>
                         ${customerOpts}${extraOpt}
                     </md-outlined-select>
@@ -334,17 +335,17 @@ async function openObjectModal(id = null) {
                 </div>
 
                 <div class="form-group">
-                    <md-outlined-text-field id="f_objektname" label="Objektname" value="${escapeHtml(obj.objektname || '')}" required placeholder="z.B. Bürohaus Berlin Mitte"></md-outlined-text-field>
+                    <md-outlined-text-field id="f_objektname" label="Objektname" value="${escapeHtml(obj.objektname || '')}" ${requiredOnCreate} placeholder="z.B. Bürohaus Berlin Mitte"></md-outlined-text-field>
                 </div>
 
                 <div class="form-group">
-                    <label style="display:block;font-size:0.8rem;color:var(--gray-600);margin-bottom:4px">Einsatzart (Mehrfachauswahl)</label>
+                    <label style="display:block;font-size:0.8rem;color:var(--gray-600);margin-bottom:4px">Einsatzart (Mehrfachauswahl)${id ? '' : '*'}</label>
                     <div id="f_obj_arten" style="padding:4px 0"></div>
                     <small style="display:block;margin-top:2px;font-size:.75rem;color:var(--gray-500)"><span class="material-symbols-outlined" style="font-size:13px;vertical-align:-2px">tune</span> Liste bearbeiten: Konto &amp; Firma → Sicherheitsbereich → Einsatzarten</small>
                 </div>
 
                 <div class="form-group" style="position:relative">
-                    <md-outlined-text-field id="f_adresse" label="Adresse" value="${escapeHtml(obj.adresse || '')}" placeholder="Musterstraße 12" oninput="objAdresseInput(event)" onfocusout="objAdresseHide()"></md-outlined-text-field>
+                    <md-outlined-text-field id="f_adresse" label="Adresse" value="${escapeHtml(obj.adresse || '')}" ${requiredOnCreate} placeholder="Musterstraße 12" oninput="objAdresseInput(event)" onfocusout="objAdresseHide()"></md-outlined-text-field>
                     <div id="f_adresse_suggest" class="obj-adr-suggest" style="display:none"></div>
                     <style>
                       .obj-adr-suggest{position:absolute;left:0;right:0;top:100%;z-index:60;background:var(--white);border:1px solid var(--gray-200);border-radius:8px;box-shadow: 0 10px 28px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);max-height:240px;overflow:auto;margin-top:4px}
@@ -357,14 +358,14 @@ async function openObjectModal(id = null) {
 
                 <div class="customer-form-row">
                     <div class="form-group" style="flex:1">
-                        <md-outlined-text-field id="f_plz" label="PLZ" value="${escapeHtml(obj.plz || '')}" placeholder="10115"></md-outlined-text-field>
+                        <md-outlined-text-field id="f_plz" label="PLZ" value="${escapeHtml(obj.plz || '')}" ${requiredOnCreate} placeholder="10115"></md-outlined-text-field>
                     </div>
                     <div class="form-group" style="flex:2">
-                        <md-outlined-text-field id="f_stadt" label="Stadt" value="${escapeHtml(obj.stadt || '')}" placeholder="Berlin"></md-outlined-text-field>
+                        <md-outlined-text-field id="f_stadt" label="Stadt" value="${escapeHtml(obj.stadt || '')}" ${requiredOnCreate} placeholder="Berlin"></md-outlined-text-field>
                     </div>
                 </div>
                 <div class="form-group">
-                    <md-outlined-select id="f_bundesland" label="Bundesland für Feiertage" required>
+                    <md-outlined-select id="f_bundesland" label="Bundesland für Feiertage" ${requiredOnCreate}>
                         <md-select-option value="" ${obj.bundesland ? '' : 'selected'}><div slot="headline">— Bundesland wählen —</div></md-select-option>
                         ${bundeslandOpts}
                     </md-outlined-select>
@@ -388,7 +389,7 @@ async function openObjectModal(id = null) {
                 </div>
 
                 <div class="form-group" style="position:relative">
-                    <md-outlined-text-field id="f_ansprechpartner" label="Ansprechpartner" value="${escapeHtml(obj.ansprechpartner || '')}" placeholder="Max Mustermann"
+                    <md-outlined-text-field id="f_ansprechpartner" label="Ansprechpartner" value="${escapeHtml(obj.ansprechpartner || '')}" ${requiredOnCreate} placeholder="Max Mustermann"
                         oninput="objKontaktInput(event)" onfocus="objKontaktInput(event)" onblur="objKontaktHide()" onkeydown="objKontaktKeydown(event)">
                         <md-icon slot="trailing-icon" title="Vorschläge aus anderen Objekten">person_search</md-icon>
                     </md-outlined-text-field>
@@ -396,18 +397,18 @@ async function openObjectModal(id = null) {
                 </div>
 
                 <div class="form-group">
-                    <md-outlined-text-field id="f_kontakt_telefon" label="Telefon" value="${escapeHtml(obj.kontakt_telefon || '')}" placeholder="+49 30 1234567"><md-icon slot="trailing-icon">call</md-icon></md-outlined-text-field>
+                    <md-outlined-text-field id="f_kontakt_telefon" label="Telefon" value="${escapeHtml(obj.kontakt_telefon || '')}" ${requiredOnCreate} placeholder="+49 30 1234567"><md-icon slot="trailing-icon">call</md-icon></md-outlined-text-field>
                 </div>
 
                 <div class="form-group">
-                    <md-outlined-text-field type="email" id="f_kontakt_email" label="E-Mail" value="${escapeHtml(obj.kontakt_email || '')}" placeholder="kontakt@objekt.de"><md-icon slot="trailing-icon">alternate_email</md-icon></md-outlined-text-field>
+                    <md-outlined-text-field type="email" id="f_kontakt_email" label="E-Mail" value="${escapeHtml(obj.kontakt_email || '')}" ${requiredOnCreate} placeholder="kontakt@objekt.de"><md-icon slot="trailing-icon">alternate_email</md-icon></md-outlined-text-field>
                 </div>
 
                 <div class="customer-form-section-title" style="margin-top:14px;">
                     ${custIcon('sticky_note_2')} Hinweise
                 </div>
                 <div class="form-group">
-                    <md-outlined-text-field type="textarea" rows="4" id="f_hinweise" label="Bemerkungen" value="${escapeHtml(obj.hinweise || '')}" placeholder="Zugang, Schlüsselübergabe, besondere Anweisungen…"></md-outlined-text-field>
+                    <md-outlined-text-field type="textarea" rows="4" id="f_hinweise" label="Bemerkungen" value="${escapeHtml(obj.hinweise || '')}" ${requiredOnCreate} placeholder="Zugang, Schlüsselübergabe, besondere Anweisungen…"></md-outlined-text-field>
                 </div>
                 <div class="form-group">
                     <md-outlined-text-field type="textarea" rows="4" id="f_bestellbeschreibung" label="Bestellbeschreibung" value="${escapeHtml(obj.bestellbeschreibung || '')}" placeholder="Beschreibung für Bestellungen zu diesem Objekt…"></md-outlined-text-field>
@@ -520,6 +521,7 @@ async function saveObject(id, opts = {}) {
         arten:            (typeof collectArtenChecks === 'function') ? collectArtenChecks('f_obj_arten') : [],
         aktiv:            document.getElementById('f_obj_aktiv').value,
     };
+    data.art = data.art || data.arten[0] || null;
     // Hauptbereich has no UI on objects — it follows the Kunde. Customer
     // tags win; the object's stored tags survive only when the customer
     // carries none (legacy records). Primary prefers the stored value,
@@ -546,24 +548,26 @@ async function saveObject(id, opts = {}) {
         ['f_kontakt_email',   'E-Mail'],
         ['f_hinweise',        'Bemerkungen'],
     ];
-    const missing = requiredFields.filter(([fid]) => {
+    const missingFields = requiredFields.filter(([fid]) => {
         const el = document.getElementById(fid);
-        const empty = !el || !StringString(el.value ?? '').trim();
+        const empty = !el || !String(el.value ?? '').trim();
         if (el) { try { el.error = empty; } catch (_) {} }
         return empty;
-    }).map(([, label]) => label);
-    if (typeof collectArtenChecks === 'function' && !collectArtenChecks('f_obj_arten').length) {
+    });
+    const missing = missingFields.map(([, label]) => label);
+    if (!data.arten.length) {
         missing.push('Objektart');
     }
     if (missing.length) {
         showToast('Pflichtfelder fehlen: ' + missing.join(', '), 'error');
+        if (missingFields.length) document.getElementById(missingFields[0][0])?.focus();
         return;
     }
     }
 
     if (id) data.obj_id = id;
     const result = id ? await apiPut(API.objects + '/' + id, data) : await apiPost(API.objects, data);
-    if (result.success) {
+    if (result?.success) {
         if (id) {
             if (!opts.silent) showToast('Objekt aktualisiert');
         } else {
@@ -578,7 +582,7 @@ async function saveObject(id, opts = {}) {
             renderObjects();
         }
     } else {
-        showToast(result.error || 'Fehler', 'error');
+        showToast(result?.error || 'Fehler', 'error');
     }
 }
 
