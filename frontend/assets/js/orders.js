@@ -511,13 +511,13 @@ function orBuildRow(o) {
 
     const actions = `
         <div class="or-row-actions">
-            <md-icon-button class="view" onclick="viewOrderDetails('${o.bestell_id}')" title="Details"><md-icon slot="icon">visibility</md-icon></md-icon-button>
-            <md-icon-button class="pdf" onclick="openOrderForm('${o.bestell_id}')" title="Auftragsblatt ansehen"><md-icon slot="icon">picture_as_pdf</md-icon></md-icon-button>
-            <md-icon-button class="pdfs" onclick="openSavedPdfsList('${o.bestell_id}')" title="Gespeicherte PDFs anzeigen"><md-icon slot="icon">folder_open</md-icon></md-icon-button>
-            ${o.status === 'offen' ? `<md-icon-button class="close" onclick="closeOrder('${o.bestell_id}')" title="Abschließen"><md-icon slot="icon">check</md-icon></md-icon-button>` : ''}
-            ${o.status !== 'storniert' && o.status !== 'abgeschlossen' ? `<md-icon-button class="md-icon-danger cancel" onclick="cancelOrder('${o.bestell_id}')" title="Stornieren"><md-icon slot="icon">block</md-icon></md-icon-button>` : ''}
-            ${o.status === 'storniert' || o.status === 'abgeschlossen' ? `<md-icon-button class="close" onclick="reopenOrder('${o.bestell_id}')" title="Wieder öffnen"><md-icon slot="icon">undo</md-icon></md-icon-button>` : ''}
-            <md-icon-button class="md-icon-danger delete" onclick="deleteOrder('${o.bestell_id}')" title="Endgültig löschen"><md-icon slot="icon">delete</md-icon></md-icon-button>
+            <md-icon-button class="view" onclick="viewOrderDetails('${o.bestell_id}')" title="Details"><md-icon>visibility</md-icon></md-icon-button>
+            <md-icon-button class="pdf" onclick="openOrderForm('${o.bestell_id}')" title="Auftragsblatt ansehen"><md-icon>picture_as_pdf</md-icon></md-icon-button>
+            <md-icon-button class="pdfs" onclick="openSavedPdfsList('${o.bestell_id}')" title="Gespeicherte PDFs anzeigen"><md-icon>folder_open</md-icon></md-icon-button>
+            ${o.status === 'offen' ? `<md-icon-button class="close" onclick="closeOrder('${o.bestell_id}')" title="Abschließen"><md-icon>check</md-icon></md-icon-button>` : ''}
+            ${o.status !== 'storniert' && o.status !== 'abgeschlossen' ? `<md-icon-button class="md-icon-danger cancel" onclick="cancelOrder('${o.bestell_id}')" title="Stornieren"><md-icon>block</md-icon></md-icon-button>` : ''}
+            ${o.status === 'storniert' || o.status === 'abgeschlossen' ? `<md-icon-button class="close" onclick="reopenOrder('${o.bestell_id}')" title="Wieder öffnen"><md-icon>undo</md-icon></md-icon-button>` : ''}
+            <md-icon-button class="md-icon-danger delete" onclick="deleteOrder('${o.bestell_id}')" title="Endgültig löschen"><md-icon>delete</md-icon></md-icon-button>
         </div>`;
 
     return `<tr data-mk="${escapeHtml(o.bestell_id)}" class="${rowClass}">

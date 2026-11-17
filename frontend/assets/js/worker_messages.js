@@ -43,7 +43,7 @@ async function renderWorkerMessages() {
                         value="${escapeHtml(_wmSearchQuery)}">
                         <md-icon slot="leading-icon">search</md-icon>
                     </md-outlined-text-field>
-                    ${_wmSearchQuery ? `<md-icon-button class="wm-search-clear" onclick="wmClearSearch()" title="Suche zurücksetzen"><md-icon slot="icon">close</md-icon></md-icon-button>` : ''}
+                    ${_wmSearchQuery ? `<md-icon-button class="wm-search-clear" onclick="wmClearSearch()" title="Suche zurücksetzen"><md-icon>close</md-icon></md-icon-button>` : ''}
                 </div>
                 <div class="wm-thread-list" id="wmThreadList">
                     ${wmRenderThreadList(_wmAllThreads, _wmSearchQuery)}
@@ -75,7 +75,7 @@ async function renderWorkerMessages() {
                 <div class="wm-chat-input-bar">
                     <input type="text" class="wm-chat-input" id="wmChatInput" placeholder="Antwort schreiben..." maxlength="2000"
                         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendWmReply()}">
-                    <md-icon-button class="wm-chat-send" onclick="sendWmReply()"><md-icon slot="icon">send</md-icon></md-icon-button>
+                    <md-icon-button class="wm-chat-send" onclick="sendWmReply()"><md-icon>send</md-icon></md-icon-button>
                 </div>
             </div>
         </div>
@@ -254,7 +254,7 @@ async function openWmThread(dienstNr) {
     const canCall = typeof hasPermission === 'function' && hasPermission('auftraege.nachrichten.send')
         && typeof CloodCall !== 'undefined';
     document.getElementById('wmChatHeader').innerHTML = `
-        <md-icon-button class="wm-back-btn" onclick="closeWmThread()"><md-icon slot="icon">arrow_back</md-icon></md-icon-button>
+        <md-icon-button class="wm-back-btn" onclick="closeWmThread()"><md-icon>arrow_back</md-icon></md-icon-button>
         <div class="wm-chat-header-info">
             <strong>${escapeHtml(name)}</strong>
             <small>${escapeHtml(w.dienst_nr || '')}${w.bereich ? ' · ' + escapeHtml(w.bereich) : ''}</small>

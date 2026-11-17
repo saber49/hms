@@ -728,48 +728,21 @@
     width: 100%;
     margin-top: 12px;
 }
-.wk-profile-action-btn {
-    width: 100%;
-    height: 36px;
-    background: var(--wk-bg-soft);
-    border: 1px solid var(--wk-border);
-    color: var(--wk-text-muted);
-    border-radius: var(--md-sys-shape-corner-small);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--md-sys-typescale-body-medium-size);
-    transition: all .12s ease;
+.wk-profile-actions { justify-items: center; }
+md-filled-tonal-icon-button.wk-profile-action-btn {
+    --md-filled-tonal-icon-button-container-width: 42px;
+    --md-filled-tonal-icon-button-container-height: 44px;
+    --md-filled-tonal-icon-button-container-shape: var(--md-sys-shape-corner-medium);
 }
-.wk-profile-action-btn:hover {
-    border-color: var(--wk-accent);
-    color: var(--wk-accent);
-    background: var(--wk-accent-soft);
+md-filled-tonal-icon-button.wk-profile-action-btn.is-warning {
+    --md-filled-tonal-icon-button-container-color: var(--md-ext-color-warning-container);
+    --md-filled-tonal-icon-button-icon-color: var(--md-ext-color-on-warning-container);
 }
-.wk-profile-action-btn.btn-edit:hover { color: var(--wk-accent); border-color: var(--wk-accent); }
-.wk-profile-action-btn.btn-deactivate:hover { color: var(--wk-danger); border-color: var(--wk-danger); background: var(--wk-danger-soft); }
-.wk-profile-back {
-    margin-top: 14px;
-    width: 100%;
-    background: var(--white);
-    border: 1px solid var(--wk-border);
-    color: var(--wk-text-muted);
-    padding: 9px 12px;
-    border-radius: var(--md-sys-shape-corner-small);
-    cursor: pointer;
-    font-size: var(--md-sys-typescale-body-medium-size);
-    font-weight: 600;
-    transition: all .12s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+md-filled-tonal-icon-button.wk-profile-action-btn.is-danger {
+    --md-filled-tonal-icon-button-container-color: var(--md-sys-color-error-container);
+    --md-filled-tonal-icon-button-icon-color: var(--md-sys-color-on-error-container);
 }
-.wk-profile-back:hover {
-    border-color: var(--wk-accent);
-    color: var(--wk-accent);
-}
+md-outlined-button.wk-profile-back { margin-top: 14px; width: 100%; }
 /* ===== 9. Profile Tabs + Content ===== */
 .wk-profile-main {
     background: var(--wk-surface);
@@ -1613,8 +1586,8 @@ md-outlined-select.wk-extra-filter {
 .wk-card-badge .material-symbols-outlined,
     .wk-card-pending-badge .material-symbols-outlined { font-size: 11px; }
 .wk-card-phone .material-symbols-outlined { color: var(--wk-text-soft); }
-.wk-profile-action-btn .material-symbols-outlined { font-size: 18px; }
-.wk-profile-back .material-symbols-outlined { vertical-align: -3px; }
+
+
 .wk-tab .material-symbols-outlined { font-size: 16px; vertical-align: -3px; }
 .wk-data-section-title .material-symbols-outlined { font-size: 16px; color: var(--wk-accent); vertical-align: -3px; }
 .wk-cl-pill .material-symbols-outlined { vertical-align: -2px; }

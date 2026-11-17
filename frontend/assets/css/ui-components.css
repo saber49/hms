@@ -185,6 +185,28 @@ md-list-item.ui-pick-item.is-selected {
     background: var(--md-sys-color-secondary-container);
 }
 
+/* ── Table row actions: ONE look for every list (Kunden, Objekte, NU,
+   Bestellungen, Bestelleingang, AB …) — 36px target, 22px icon, neutral
+   colour; tone classes only colour the glyph. ── */
+#content td md-icon-button,
+md-dialog td md-icon-button {
+    --md-icon-button-state-layer-width: 36px;
+    --md-icon-button-state-layer-height: 36px;
+    --md-icon-button-icon-size: 22px;
+    --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);
+    --md-icon-button-hover-icon-color: var(--md-sys-color-on-surface);
+    width: 36px;
+    height: 36px;
+}
+#content td md-icon-button > .material-symbols-outlined,
+#content td md-icon-button > i.material-symbols-outlined,
+md-dialog td md-icon-button > .material-symbols-outlined { font-size: 22px !important; }
+#content td md-icon-button:is(.md-icon-success, .ok, .success) { --md-icon-button-icon-color: var(--md-ext-color-success); }
+#content td md-icon-button:is(.md-icon-warning, .warn, .warning) { --md-icon-button-icon-color: var(--md-ext-color-warning); }
+#content td md-icon-button:is(.md-icon-danger, .danger, .delete) { --md-icon-button-icon-color: var(--md-sys-color-error); }
+#content td md-icon-button:is(.md-icon-danger, .danger, .delete) > .material-symbols-outlined { color: var(--md-sys-color-error); }
+#content td md-icon-button:is(.md-icon-warning, .warn, .warning) > .material-symbols-outlined { color: var(--md-ext-color-warning); }
+
 @media (max-width: 640px) {
     .ui-card-head { padding: 12px 16px; flex-wrap: wrap; }
     .ui-card-body { padding: 16px; }

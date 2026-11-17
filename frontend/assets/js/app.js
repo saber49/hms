@@ -604,49 +604,49 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261117md3k');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261117md3l');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
 const QM_MODULE_SCRIPTS = [
     '01-qm-core', '02-qm-wachbuch', '03-qm-uebersicht', '04-qm-objekte',
     '05-qm-reklamationen', '06-qm-massnahmen', '07-qm-einstellungen', '99-qm-live',
-].map(f => 'assets/js/qm/' + f + '.js?v=20261117md3k');
+].map(f => 'assets/js/qm/' + f + '.js?v=20261117md3l');
 
 const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
     qm: QM_MODULE_SCRIPTS,
-    einstellungen: ['assets/js/einstellungen.js?v=20261117md3k'],
-    interessenten: ['assets/js/crm.js?v=20261117md3k'],
-    customers: ['assets/js/customers.js?v=20261117md3k'],
-    objects: ['assets/js/objects.js?v=20261117md3k'],
-    subcontractors: ['assets/js/subcontractors.js?v=20261117md3k'],
-    price_history: ['assets/js/price_history.js?v=20261117md3k'],
-    lager: ['assets/js/lager.js?v=20261117md3k'],
-    orders: ['assets/js/orders.js?v=20261117md3k'],
-    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261117md3k'],
+    einstellungen: ['assets/js/einstellungen.js?v=20261117md3l'],
+    interessenten: ['assets/js/crm.js?v=20261117md3l'],
+    customers: ['assets/js/customers.js?v=20261117md3l'],
+    objects: ['assets/js/objects.js?v=20261117md3l'],
+    subcontractors: ['assets/js/subcontractors.js?v=20261117md3l'],
+    price_history: ['assets/js/price_history.js?v=20261117md3l'],
+    lager: ['assets/js/lager.js?v=20261117md3l'],
+    orders: ['assets/js/orders.js?v=20261117md3l'],
+    auftragsbestaetigung: ['assets/js/order_confirmations.js?v=20261117md3l'],
     tasks: TASKS_MODULE_SCRIPTS,
     disposition: TASKS_MODULE_SCRIPTS,
     monatsabschluss: TASKS_MODULE_SCRIPTS,
     reports: [
-        'assets/js/reports.js?v=20261117md3k',
-        'assets/js/controlling/controlling-core.js?v=20261117md3k',
-        'assets/js/controlling/controlling-charts.js?v=20261117md3k',
-        'assets/js/controlling/controlling-widgets.js?v=20261117md3k',
-        'assets/js/controlling/controlling-api.js?v=20261117md3k',
-        'assets/js/controlling/controlling-worker.js?v=20261117md3k',
-        'assets/js/controlling/controlling-drilldown.js?v=20261117md3k',
-        'assets/js/controlling/controlling-snapshots.js?v=20261117md3k',
-        'assets/js/controlling/controlling-cockpit.js?v=20261117md3k',
-        'assets/js/controlling.js?v=20261117md3k'
+        'assets/js/reports.js?v=20261117md3l',
+        'assets/js/controlling/controlling-core.js?v=20261117md3l',
+        'assets/js/controlling/controlling-charts.js?v=20261117md3l',
+        'assets/js/controlling/controlling-widgets.js?v=20261117md3l',
+        'assets/js/controlling/controlling-api.js?v=20261117md3l',
+        'assets/js/controlling/controlling-worker.js?v=20261117md3l',
+        'assets/js/controlling/controlling-drilldown.js?v=20261117md3l',
+        'assets/js/controlling/controlling-snapshots.js?v=20261117md3l',
+        'assets/js/controlling/controlling-cockpit.js?v=20261117md3l',
+        'assets/js/controlling.js?v=20261117md3l'
     ],
-    workers: ['assets/js/workers.js?v=20261117md3k'],
-    absences: ['assets/js/absences.js?v=20261117md3k'],
-    users: ['assets/js/users.js?v=20261117md3k'],
-    pdf_design: ['assets/js/pdf_design.js?v=20261117md3k'],
-    company_documents: ['assets/js/company_documents.js?v=20261117md3k'],
-    aufgaben: ['assets/js/aufgaben.js?v=20261117md3k'],
-    aueg: ['assets/js/aueg.js?v=20261117md3k']
+    workers: ['assets/js/workers.js?v=20261117md3l'],
+    absences: ['assets/js/absences.js?v=20261117md3l'],
+    users: ['assets/js/users.js?v=20261117md3l'],
+    pdf_design: ['assets/js/pdf_design.js?v=20261117md3l'],
+    company_documents: ['assets/js/company_documents.js?v=20261117md3l'],
+    aufgaben: ['assets/js/aufgaben.js?v=20261117md3l'],
+    aueg: ['assets/js/aueg.js?v=20261117md3l']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app
 // <dialog> + iframe. Same element contract as orders.js

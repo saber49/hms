@@ -556,7 +556,7 @@ function wkCardHtml(w) {
     return `
         <div data-mk="${escapeHtml(w.dienst_nr)}" class="wk-card ${isActive ? '' : 'inactive'}" onclick="wkOpenProfile('${w.dienst_nr}')">
             ${pendingBadgeHtml}
-            <md-icon-button class="wk-card-menu" onclick="event.stopPropagation();wkToggleDropdown(this)" title="Menü"><md-icon slot="icon">more_horiz</md-icon></md-icon-button>
+            <md-icon-button class="wk-card-menu" onclick="event.stopPropagation();wkToggleDropdown(this)" title="Menü"><md-icon>more_horiz</md-icon></md-icon-button>
             <div class="wk-card-dropdown">
                 <md-text-button onclick="event.stopPropagation();openWorkerModal('${w.dienst_nr}')"><md-icon slot="icon">edit</md-icon>Bearbeiten</md-text-button>
                 <md-text-button onclick="event.stopPropagation();openWorkerDocs('${w.dienst_nr}')"><md-icon slot="icon">folder_open</md-icon>Dokumente</md-text-button>
@@ -1080,13 +1080,13 @@ async function wkOpenProfile(dienstNr) {
                 ${w.stadion_gesperrt == 1 ? `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 4px;padding:8px 10px;border-radius:10px;font-size:0.8rem;font-weight:700;color: var(--md-sys-color-error);background: color-mix(in srgb, var(--md-sys-color-error) 12%, transparent);border: 1px solid color-mix(in srgb, var(--md-sys-color-error) 35%, transparent)">${wkIcon('block')} Gesperrt — keine Stadion-/DFB-Einsätze</div>` : ''}
                 ${w.eintritt ? `<div class="wk-profile-eintritt">${wkIcon('work', 'font-size:13px')} Eintritt: ${formatDate(w.eintritt)}</div>` : ''}
                 <div class="wk-profile-actions">
-                    <md-filled-button class="wk-profile-action-btn btn-edit" onclick="openWorkerModal('${w.dienst_nr}')" title="Bearbeiten"><md-icon slot="icon">edit</md-icon></md-filled-button>
-                    <md-outlined-button class="wk-profile-action-btn" onclick="document.getElementById('wkPhotoInput').click()" title="Foto hochladen"><md-icon slot="icon">photo_camera</md-icon></md-outlined-button>
-                    <md-outlined-button class="wk-profile-action-btn" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" style="background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning)"><md-icon slot="icon">key</md-icon></md-outlined-button>
-                    <md-text-button class="md-btn-danger wk-profile-action-btn btn-deactivate" onclick="${w.aktiv == 1 ? `deactivateWorker('${w.dienst_nr}')` : `reactivateWorker('${w.dienst_nr}')`}" title="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}">${wkIcon(w.aktiv == 1 ? 'block' : 'undo')}</md-text-button>
-                    <md-text-button class="md-btn-danger wk-profile-action-btn btn-deactivate" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error)"><md-icon slot="icon">delete</md-icon></md-text-button>
+                    <md-filled-tonal-icon-button class="wk-profile-action-btn" onclick="openWorkerModal('${w.dienst_nr}')" title="Bearbeiten" aria-label="Bearbeiten"><md-icon>edit</md-icon></md-filled-tonal-icon-button>
+                    <md-filled-tonal-icon-button class="wk-profile-action-btn" onclick="document.getElementById('wkPhotoInput').click()" title="Foto hochladen" aria-label="Foto hochladen"><md-icon>photo_camera</md-icon></md-filled-tonal-icon-button>
+                    <md-filled-tonal-icon-button class="wk-profile-action-btn is-warning" onclick="wkResetPasswordModal('${w.dienst_nr}')" title="Passwort ändern" aria-label="Passwort ändern"><md-icon>key</md-icon></md-filled-tonal-icon-button>
+                    <md-filled-tonal-icon-button class="wk-profile-action-btn is-danger" onclick="${w.aktiv == 1 ? `deactivateWorker('${w.dienst_nr}')` : `reactivateWorker('${w.dienst_nr}')`}" title="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}" aria-label="${w.aktiv == 1 ? 'Deaktivieren' : 'Reaktivieren'}"><md-icon>${w.aktiv == 1 ? 'block' : 'undo'}</md-icon></md-filled-tonal-icon-button>
+                    <md-filled-tonal-icon-button class="wk-profile-action-btn is-danger" onclick="deleteWorker('${w.dienst_nr}')" title="Endgültig löschen" aria-label="Endgültig löschen"><md-icon>delete</md-icon></md-filled-tonal-icon-button>
                 </div>
-                <md-icon-button class="wk-profile-back" onclick="renderWorkers()"><md-icon slot="icon">arrow_back</md-icon>Zurück zur Übersicht</md-icon-button>
+                <md-outlined-button class="wk-profile-back" onclick="renderWorkers()"><md-icon slot="icon">arrow_back</md-icon>Zurück zur Übersicht</md-outlined-button>
             </div>
             <div class="wk-profile-main">
                 <md-tabs class="wk-tabs">

@@ -9,21 +9,21 @@
     --ma-primary: var(--md-ext-color-success);   /* Forest green — verified/approved */
     --ma-primary-dark: var(--md-ext-color-success);
     --ma-primary-light: var(--md-ext-color-success);
-    --ma-primary-soft: var(--md-ext-color-success-container);
-    --ma-primary-50: var(--md-ext-color-success-container);
+    --ma-primary-soft: color-mix(in srgb, var(--md-ext-color-success) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-primary-50: color-mix(in srgb, var(--md-ext-color-success) 7%, var(--md-sys-color-surface-container-lowest));
 
     --ma-accent: var(--md-ext-color-warning);   /* Warm gold — official seal */
     --ma-accent-dark: var(--md-ext-color-warning);
     --ma-accent-light: var(--md-ext-color-warning);
-    --ma-accent-soft: var(--md-ext-color-warning-container);
-    --ma-accent-50: var(--md-ext-color-warning-container);
+    --ma-accent-soft: color-mix(in srgb, var(--md-ext-color-warning) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-accent-50: color-mix(in srgb, var(--md-ext-color-warning) 7%, var(--md-sys-color-surface-container-lowest));
 
     --ma-nu: var(--md-sys-color-primary);   /* Steel blue for NU companies */
-    --ma-nu-soft: var(--md-sys-color-primary-container);
+    --ma-nu-soft: color-mix(in srgb, var(--md-sys-color-primary) 14%, var(--md-sys-color-surface-container-lowest));
     --ma-warn: var(--md-ext-color-warning);
-    --ma-warn-soft: var(--md-ext-color-warning-container);
+    --ma-warn-soft: color-mix(in srgb, var(--md-ext-color-warning) 14%, var(--md-sys-color-surface-container-lowest));
     --ma-danger: var(--md-sys-color-error);
-    --ma-danger-soft: var(--md-sys-color-error-container);
+    --ma-danger-soft: color-mix(in srgb, var(--md-sys-color-error) 14%, var(--md-sys-color-surface-container-lowest));
 
     --ma-text:           var(--gray-900);
     --ma-text-strong:    var(--gray-900);
@@ -785,7 +785,7 @@ select.ma-scope-select.active {
     box-shadow: var(--ma-shadow-sm);
 }
 .ma-worker-block:hover { box-shadow: var(--ma-shadow-md); }
-.ma-worker-block.has-anomaly { border-color: var(--ma-warn); }
+.ma-worker-block.has-anomaly { border-color: var(--ma-border); border-left: 4px solid var(--ma-warn); }
 .ma-worker-block.editing { border-color: var(--ma-accent); box-shadow: 0 0 0 3px var(--ma-accent-soft), var(--ma-shadow-md); }
 .ma-worker-head {
     display: flex;
@@ -797,7 +797,7 @@ select.ma-scope-select.active {
     flex-wrap: wrap;
 }
 .ma-worker-block.has-anomaly .ma-worker-head {
-    background: linear-gradient(180deg, var(--white) 0%, var(--ma-warn-soft) 100%);
+    background: var(--md-sys-color-surface-container-lowest);
 }
 .ma-worker-avatar {
     width: 44px; height: 44px;
@@ -1016,8 +1016,8 @@ select.ma-scope-select.active {
 }
 .ma-table tbody tr:nth-child(even) { background: var(--ma-canvas); }
 .ma-table tbody tr:hover { background: var(--ma-primary-50); }
-.ma-table tbody tr.has-anomaly { background: var(--ma-warn-soft); }
-.ma-table tbody tr.has-anomaly:hover { background: var(--md-ext-color-warning-container); }
+.ma-table tbody tr.has-anomaly { background: transparent; box-shadow: inset 3px 0 0 var(--ma-warn); }
+.ma-table tbody tr.has-anomaly:hover { background: color-mix(in srgb, var(--md-ext-color-warning) 8%, transparent); }
 [data-theme="dark"] .ma-table tbody tr.has-anomaly:hover { background: color-mix(in srgb, var(--md-ext-color-warning) 24%, transparent); }
 .ma-table tbody tr:last-child td { border-bottom: none; }
 .ma-table .ma-text-right { text-align: right; font-variant-numeric: tabular-nums; }
@@ -1429,7 +1429,7 @@ to { opacity: 1; transform: translateY(0); }
     /* Cards separate by spacing, not by zebra stripes */
     .ma-table tbody tr:nth-child(even),
 .ma-table tbody tr:hover { background: transparent; }
-.ma-table tbody tr.has-anomaly { background: var(--ma-warn-soft); }
+.ma-table tbody tr.has-anomaly { background: transparent; box-shadow: inset 3px 0 0 var(--ma-warn); }
 .ma-table tbody td {
         display: flex;
         flex-direction: column;
@@ -1728,47 +1728,47 @@ body:has(.ma-page.ma-theme-ma) {
     --ma-primary: var(--md-ext-color-success);
     --ma-primary-dark: var(--md-ext-color-success);
     --ma-primary-light: var(--md-ext-color-success);
-    --ma-primary-soft: var(--md-ext-color-success-container);
-    --ma-primary-50: var(--md-ext-color-success-container);
+    --ma-primary-soft: color-mix(in srgb, var(--md-ext-color-success) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-primary-50: color-mix(in srgb, var(--md-ext-color-success) 7%, var(--md-sys-color-surface-container-lowest));
     --ma-accent: var(--md-ext-color-success);
     --ma-accent-dark: var(--md-ext-color-success);
     --ma-accent-light: var(--md-ext-color-success);
-    --ma-accent-soft: var(--md-ext-color-success-container);
-    --ma-accent-50: var(--md-ext-color-success-container);
+    --ma-accent-soft: color-mix(in srgb, var(--md-ext-color-success) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-accent-50: color-mix(in srgb, var(--md-ext-color-success) 7%, var(--md-sys-color-surface-container-lowest));
     --ma-nu: var(--md-ext-color-info);   /* teal — NU stays distinct, same colour family */
     --ma-nu-2: var(--md-ext-color-info);
-    --ma-nu-soft: var(--md-ext-color-info-container);
+    --ma-nu-soft: color-mix(in srgb, var(--md-ext-color-info) 14%, var(--md-sys-color-surface-container-lowest));
     --ma-on-primary: var(--md-sys-color-surface-container-lowest);
     --ma-on-nu: var(--md-sys-color-surface-container-lowest);
-    --ma-canvas: var(--md-ext-color-success-container);
-    --ma-border: var(--md-ext-color-success-container);
+    --ma-canvas: var(--md-sys-color-surface-container-low);
+    --ma-border: color-mix(in srgb, var(--md-ext-color-success) 28%, var(--md-sys-color-surface-container-lowest));
     --ma-shadow-sm: 0 1px 2px color-mix(in srgb, var(--md-ext-color-success) 7%, transparent);
     --ma-shadow-md: 0 4px 12px color-mix(in srgb, var(--md-ext-color-success) 10%, transparent);
     --ma-shadow-lg: 0 12px 32px color-mix(in srgb, var(--md-ext-color-success) 14%, transparent);
-    --bg: var(--md-ext-color-success-container);
+    --bg: var(--md-sys-color-surface-container-low);
 }
 body:has(.ma-page.ma-theme-kunde) {
     --ma-primary: var(--md-sys-color-primary);
     --ma-primary-dark: var(--md-sys-color-primary);
     --ma-primary-light: var(--md-sys-color-primary);
-    --ma-primary-soft: var(--md-sys-color-primary-container);
-    --ma-primary-50: var(--md-sys-color-primary-container);
+    --ma-primary-soft: color-mix(in srgb, var(--md-sys-color-primary) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-primary-50: color-mix(in srgb, var(--md-sys-color-primary) 7%, var(--md-sys-color-surface-container-lowest));
     --ma-accent: var(--md-sys-color-primary);
     --ma-accent-dark: var(--md-sys-color-primary);
     --ma-accent-light: var(--md-sys-color-primary);
-    --ma-accent-soft: var(--md-sys-color-primary-container);
-    --ma-accent-50: var(--md-sys-color-primary-container);
+    --ma-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 14%, var(--md-sys-color-surface-container-lowest));
+    --ma-accent-50: color-mix(in srgb, var(--md-sys-color-primary) 7%, var(--md-sys-color-surface-container-lowest));
     --ma-nu: var(--md-sys-color-primary);   /* indigo — NU stays distinct, same colour family */
     --ma-nu-2: var(--md-sys-color-primary);
-    --ma-nu-soft: var(--md-sys-color-primary-container);
+    --ma-nu-soft: color-mix(in srgb, var(--md-sys-color-primary) 14%, var(--md-sys-color-surface-container-lowest));
     --ma-on-primary: var(--md-sys-color-surface-container-lowest);
     --ma-on-nu: var(--md-sys-color-surface-container-lowest);
-    --ma-canvas: var(--md-sys-color-primary-container);
-    --ma-border: var(--md-sys-color-primary-container);
+    --ma-canvas: var(--md-sys-color-surface-container-low);
+    --ma-border: color-mix(in srgb, var(--md-sys-color-primary) 28%, var(--md-sys-color-surface-container-lowest));
     --ma-shadow-sm: 0 1px 2px color-mix(in srgb, var(--md-sys-color-primary) 7%, transparent);
     --ma-shadow-md: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
     --ma-shadow-lg: 0 12px 32px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
-    --bg: var(--md-sys-color-primary-container);
+    --bg: var(--md-sys-color-surface-container-low);
 }
 /* Dark: light tones as foreground/fill + dark text on fills (MD3 on-primary) */
 [data-theme="dark"] body:has(.ma-page.ma-theme-ma) {

@@ -1168,7 +1168,7 @@
     overflow-y: auto;
 }
 .planner-team-list-assigned {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--md-sys-color-primary) 70%, transparent) 0%, var(--md-sys-color-surface-container-lowest) 100%);
+    background: var(--md-sys-color-surface-container-low);
 }
 .planner-worker-search-wrap {
     padding: 12px 12px 0;
@@ -1209,7 +1209,7 @@
 }
 .planner-worker-item.assigned {
     border-left: 4px solid var(--warning);
-    background: var(--md-ext-color-warning-container);
+    background: var(--md-sys-color-surface-container-lowest);
 }
 /* Per-worker task input (sent to the worker's app) — only on assigned cards.
    Separate from the shift-level Dispo note (bemerkung), which stays internal. */

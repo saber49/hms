@@ -1008,8 +1008,8 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div id="wizDaysCal" class="be-cal"></div>
             <div class="be-days-table-wrap" style="display:none">
                 <div id="wizDaysTopScroll" style="display:none;overflow-x:auto;overflow-y:hidden;height:14px;margin-bottom:2px" onscroll="wizTopScrollSync('top')"><div id="wizDaysTopScrollInner" style="height:1px"></div></div>
-                <md-icon-button class="be-days-nav-left is-hidden" id="wizDaysNavL" onclick="wizDaysScrollStep(-1)" title="Nach links scrollen" aria-label="Nach links scrollen"><md-icon slot="icon">chevron_left</md-icon></md-icon-button>
-                <md-icon-button class="be-days-nav-right is-hidden" id="wizDaysNavR" onclick="wizDaysScrollStep(1)" title="Nach rechts scrollen" aria-label="Nach rechts scrollen"><md-icon slot="icon">chevron_right</md-icon></md-icon-button>
+                <md-icon-button class="be-days-nav-left is-hidden" id="wizDaysNavL" onclick="wizDaysScrollStep(-1)" title="Nach links scrollen" aria-label="Nach links scrollen"><md-icon>chevron_left</md-icon></md-icon-button>
+                <md-icon-button class="be-days-nav-right is-hidden" id="wizDaysNavR" onclick="wizDaysScrollStep(1)" title="Nach rechts scrollen" aria-label="Nach rechts scrollen"><md-icon>chevron_right</md-icon></md-icon-button>
                 <div class="table-container" id="wizDaysScroll" onscroll="wizTopScrollSync('body')">
                     <table>
                         <thead>
@@ -2071,9 +2071,9 @@ function wizRedrawDayRow(tr, idx) {
         <td><div style="display:flex;gap:6px;justify-content:flex-end">
             ${scopeLocked
                 ? `<span style="color: var(--md-sys-color-primary)" title="Außerhalb Ihres Bereichs — schreibgeschützt">${beIcon('lock', 'font-size:14px')}</span>`
-                : `<md-icon-button onclick="wizEditDay(this)" title="Tag bearbeiten"><md-icon slot="icon">edit</md-icon></md-icon-button>
-            <md-icon-button onclick="wizDuplicateDay(this)" title="2. Schicht am selben Tag hinzufügen"><md-icon slot="icon">content_copy</md-icon></md-icon-button>
-            <md-icon-button onclick="wizRemoveDay(this)" title="Entfernen"><md-icon slot="icon">close</md-icon></md-icon-button>`}
+                : `<md-icon-button onclick="wizEditDay(this)" title="Tag bearbeiten"><md-icon>edit</md-icon></md-icon-button>
+            <md-icon-button onclick="wizDuplicateDay(this)" title="2. Schicht am selben Tag hinzufügen"><md-icon>content_copy</md-icon></md-icon-button>
+            <md-icon-button onclick="wizRemoveDay(this)" title="Entfernen"><md-icon>close</md-icon></md-icon-button>`}
         </div></td>
     `;
 }
@@ -2182,8 +2182,8 @@ async function wizEditDay(btn) {
             <div class="be-ort-suggest be-day-ort-suggest" style="display:none"></div>
         </div>`;
     cells[10].innerHTML = `<div style="display:flex;gap:6px;justify-content:flex-end">
-        <md-icon-button onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color: var(--md-ext-color-success)"><md-icon slot="icon">check</md-icon></md-icon-button>
-        <md-icon-button onclick="wizCancelDayEdit(this)" title="Abbrechen"><md-icon slot="icon">undo</md-icon></md-icon-button>
+        <md-icon-button onclick="wizSaveDayEdit(this)" title="Übernehmen" style="color: var(--md-ext-color-success)"><md-icon>check</md-icon></md-icon-button>
+        <md-icon-button onclick="wizCancelDayEdit(this)" title="Abbrechen"><md-icon>undo</md-icon></md-icon-button>
     </div>`;
 }
 
@@ -2847,9 +2847,9 @@ function wizRenderDaysCal() {
 
     cal.innerHTML = `
         <div class="be-cal-head">
-            <md-icon-button onclick="wizCalGo(-1)" title="Vorheriger Monat" aria-label="Vorheriger Monat"><md-icon slot="icon">chevron_left</md-icon></md-icon-button>
+            <md-icon-button onclick="wizCalGo(-1)" title="Vorheriger Monat" aria-label="Vorheriger Monat"><md-icon>chevron_left</md-icon></md-icon-button>
             <div class="be-cal-title">${MONTHS_DE[m + 1]} ${y}</div>
-            <md-icon-button onclick="wizCalGo(1)" title="Nächster Monat" aria-label="Nächster Monat"><md-icon slot="icon">chevron_right</md-icon></md-icon-button>
+            <md-icon-button onclick="wizCalGo(1)" title="Nächster Monat" aria-label="Nächster Monat"><md-icon>chevron_right</md-icon></md-icon-button>
             <div class="be-cal-sum">
                 <span>${beIcon('event_available', 'font-size:15px')}<strong>${monthRows.length}</strong> ${monthRows.length === 1 ? 'Schicht' : 'Schichten'}</span>
                 <span title="Summe Std × Menge">${beIcon('schedule', 'font-size:15px')}<strong>${_beCalFmtStd(sumStd(monthRows))}</strong> Std</span>
@@ -3048,7 +3048,7 @@ function _beCalRenderPop() {
                     ? `Schicht ${onlyN} von ${allRows.length} · jede Schicht ist ein Einsatz in der Planung · <md-text-button data-act="all">alle ${allRows.length} anzeigen</md-text-button>`
                     : (rows.length ? `${rows.length} ${rows.length === 1 ? 'Schicht' : 'Schichten'} · jede Schicht ist ein Einsatz in der Planung` : 'Noch keine Schicht an diesem Tag')}</div>
             </div>
-            <md-icon-button data-act="close" title="Schließen" aria-label="Schließen"><md-icon slot="icon">close</md-icon></md-icon-button>
+            <md-icon-button data-act="close" title="Schließen" aria-label="Schließen"><md-icon>close</md-icon></md-icon-button>
         </div>
         <div class="be-cal-sheet-body">${rows.length
             ? rows.map((r, n) => _beCalCardHtml(r, n)).join('')
@@ -3418,7 +3418,7 @@ function wizAddPosition(values) {
         </md-outlined-select>
         <md-outlined-text-field type="text" class="form-control anf-qual" placeholder="z.B. Erste Hilfe, Staplerschein" value="${escapeHtml(v.qualifikation || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
         <md-outlined-text-field type="text" class="form-control anf-kleidung" placeholder="z.B. schwarze Hose" value="${escapeHtml(v.kleidung || '')}" onchange="wizApplyMetaToRows()"></md-outlined-text-field>
-        <md-icon-button onclick="wizRemovePosition(this)" title="Entfernen"><md-icon slot="icon">close</md-icon></md-icon-button>
+        <md-icon-button onclick="wizRemovePosition(this)" title="Entfernen"><md-icon>close</md-icon></md-icon-button>
     `;
     body.appendChild(row);
 }
@@ -4178,7 +4178,7 @@ function beShowHistory() {
         <div class="be-cal-sheet-head">
             <div><div class="be-cal-sheet-title">Änderungshistorie</div>
             <div class="be-cal-sheet-sub">${rows.length} ${rows.length === 1 ? 'Eintrag' : 'Einträge'}</div></div>
-            <md-icon-button onclick="beCloseHistory()" aria-label="Schließen"><md-icon slot="icon">close</md-icon></md-icon-button>
+            <md-icon-button onclick="beCloseHistory()" aria-label="Schließen"><md-icon>close</md-icon></md-icon-button>
         </div>
         <div class="be-cal-sheet-body">${beHistoryViewHtml(rows)}</div>
     </div>`;

@@ -132,7 +132,7 @@ async function clLoadProtokolle() {
                 <td data-l="Ergebnis">${clScoreHtml(p.ergebnis_prozent)}</td>
                 <td data-l="Mängel">${p.maengel ? `<span class="cl-badge-bad">${p.maengel}</span>` : '<span class="cl-sub">0</span>'}</td>
                 <td class="cl-icons">${p.fotos ? `<span title="${p.fotos} Foto(s)">${clIcon('photo_camera')}${p.fotos}</span>` : ''}${p.unterschrift ? `<span title="Unterschrieben">${clIcon('draw')}</span>` : ''}${p.gps ? `<span title="Mit GPS">${clIcon('location_on')}</span>` : ''}</td>
-                <td class="cl-actions"><md-icon-button class="cl-ibtn" title="PDF" onclick="event.stopPropagation();clPdf(${p.id})"><md-icon slot="icon">picture_as_pdf</md-icon></md-icon-button></td>
+                <td class="cl-actions"><md-icon-button class="cl-ibtn" title="PDF" onclick="event.stopPropagation();clPdf(${p.id})"><md-icon>picture_as_pdf</md-icon></md-icon-button></td>
             </tr>`).join('')}</tbody></table></div>`;
 }
 
@@ -291,7 +291,7 @@ async function clLoadVorlagen() {
                         ${edit ? `<md-text-button class="cl-tbtn" onclick="clEditVorlage(${v.id})"><md-icon slot="icon">edit</md-icon>Bearbeiten</md-text-button>
                         <md-text-button class="cl-tbtn" onclick="clOpenObjekte(${v.id})"><md-icon slot="icon">location_city</md-icon>${escapeHtml(clTerm('objekte'))}</md-text-button>
                         <md-text-button class="cl-tbtn" onclick="clEditVorlage(${v.id}, true)"><md-icon slot="icon">content_copy</md-icon>Kopie</md-text-button>
-                        ${!v.protokolle_anzahl ? `<md-icon-button class="md-icon-danger cl-tbtn cl-del" onclick="clDeleteVorlage(${v.id})"><md-icon slot="icon">delete</md-icon></md-icon-button>` : ''}` : ''}
+                        ${!v.protokolle_anzahl ? `<md-icon-button class="md-icon-danger cl-tbtn cl-del" onclick="clDeleteVorlage(${v.id})"><md-icon>delete</md-icon></md-icon-button>` : ''}` : ''}
                     </div>
                 </div>`).join('')}</div>`).join('') : `<div class="cl-card"><div class="cl-empty">${clIcon('checklist')} Noch keine Vorlagen.<br><small>Legen Sie eine neue Vorlage an${edit && pakete.length ? ' oder übernehmen Sie die Branchen-Vorlagen oben' : ' — oder wählen Sie unter Konto & Firma → Bereiche eine Branche, dann stehen fertige Vorlagen bereit'}.</small></div></div>`}`;
 }
@@ -343,8 +343,8 @@ function clRenderBuilder() {
         const isSec = f.typ === 'abschnitt';
         return `<div class="cl-b-row ${isSec ? 'cl-b-sec' : ''}" data-i="${i}">
             <div class="cl-b-move">
-                <md-icon-button class="cl-ibtn" title="Nach oben" ${i === 0 ? 'disabled' : ''} onclick="clMoveField(${i}, -1)"><md-icon slot="icon">arrow_upward</md-icon></md-icon-button>
-                <md-icon-button class="cl-ibtn" title="Nach unten" ${i === v.felder.length - 1 ? 'disabled' : ''} onclick="clMoveField(${i}, 1)"><md-icon slot="icon">arrow_downward</md-icon></md-icon-button>
+                <md-icon-button class="cl-ibtn" title="Nach oben" ${i === 0 ? 'disabled' : ''} onclick="clMoveField(${i}, -1)"><md-icon>arrow_upward</md-icon></md-icon-button>
+                <md-icon-button class="cl-ibtn" title="Nach unten" ${i === v.felder.length - 1 ? 'disabled' : ''} onclick="clMoveField(${i}, 1)"><md-icon>arrow_downward</md-icon></md-icon-button>
             </div>
             <div class="cl-b-main">
                 <div class="cl-b-line">
@@ -359,7 +359,7 @@ function clRenderBuilder() {
                 </div>
                 ${f.typ === 'auswahl' ? `<div class="cl-b-line"><md-outlined-text-field class="crm-fld cl-b-full" type="text" value="${escapeHtml((f.optionen || []).join('; '))}" placeholder="Optionen, getrennt mit ; (z.B. Splitt; Salz; Granulat)" oninput="clSetField(${i}, 'optionen', this.value.split(';').map(s => s.trim()).filter(Boolean), true)"></md-outlined-text-field></div>` : ''}`}
             </div>
-            <md-icon-button class="md-icon-danger cl-ibtn cl-del" title="Feld entfernen" onclick="clRemoveField(${i})"><md-icon slot="icon">delete</md-icon></md-icon-button>
+            <md-icon-button class="md-icon-danger cl-ibtn cl-del" title="Feld entfernen" onclick="clRemoveField(${i})"><md-icon>delete</md-icon></md-icon-button>
         </div>`;
     }).join('');
     const body = `

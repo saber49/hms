@@ -348,7 +348,7 @@ function mlRenderReader() {
     reader.innerHTML = `
         <div class="ml-reader-head">
             <div class="ml-reader-top">
-                <md-icon-button class="wm-back-btn ml-back" onclick="mlCloseReader()" title="Zurück"><md-icon slot="icon">arrow_back</md-icon></md-icon-button>
+                <md-icon-button class="wm-back-btn ml-back" onclick="mlCloseReader()" title="Zurück"><md-icon>arrow_back</md-icon></md-icon-button>
                 <h3 class="ml-subject">${mlEsc(m.subject || '(kein Betreff)')}</h3>
                 ${canEdit('mail') ? `<div class="ml-reader-act">
                     <md-filled-tonal-button onclick="mlCompose('reply')"><md-icon slot="icon">reply</md-icon>Antworten</md-filled-tonal-button>
