@@ -552,7 +552,7 @@ function maBuildToolbar() {
 function maBuildModeTabs() {
     const tab = (mode, icon, label, title) => {
         const on = _maMode === mode;
-        return `<md-filter-chip data-seg class="ma-tab ${mode}${on ? ' active' : ''}" label="${label}" onclick="maSetMode('${mode}')" title="${title}"><md-icon slot="icon">${icon}</md-icon></md-filter-chip>`;
+        return `<md-filter-chip data-seg class="ma-tab ${mode}${on ? ' active' : ''}" ${on ? 'selected' : ''} label="${label}" onclick="maSetMode('${mode}')" title="${title}"><md-icon slot="icon">${icon}</md-icon></md-filter-chip>`;
     };
     return tab('ma', 'badge', 'Mitarbeiter', 'Zeiten der Mitarbeiter — Freigabe geht in die Mitarbeiter-App')
         + tab('kunde', 'apartment', 'Kunde', 'Werte für den Kunden — Freigabe geht in den Leistungsnachweis (Bestellungen)');
