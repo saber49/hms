@@ -1541,48 +1541,13 @@ class TaskController extends Controller
         }
 
         // ── Compose warnings per worker ───────────────────────────────────
-        // ── AÜG: Überlassungshöchstdauer / Equal Pay (Entleiher customers only,
-        //    tenants with the module switched on) ─────────────────────────────
-        $auegByWorker = [];
-        if (!empty($task->kunden_id) && \App\Support\Aueg::enabled(\App\Services\TenantService::current())) {
-            $auegCfg = \App\Support\Aueg::entleiher([$task->kunden_id]);
-            if (isset($auegCfg[$task->kunden_id])) {
-                $auegDates = \App\Support\Aueg::dates([$task->kunden_id], $dienstNrs)[$task->kunden_id] ?? [];
-                foreach ($dienstNrs as $nr) {
-                    $st = \App\Support\Aueg::evaluate($auegDates[$nr] ?? [], (string) $datum, $auegCfg[$task->kunden_id], true);
-                    if ($st) $auegByWorker[$nr] = $st;
-                }
-            }
-        }
-
         // Work hours of THIS shift (span minus break) for the 10-h day check.
         $thisWork = ($thisStart && $thisEnd)
             ? max(0, ($thisEnd->getTimestamp() - $thisStart->getTimestamp()) / 3600 - ((int) ($task->pause_minuten ?? 0)) / 60)
             : 0.0;
 
-        return $workers->map(function ($w) use ($conflictsByWorker, $multiShiftByWorker, $absencesByWorker, $hoursByWorker, $weekStart, $weekEnd, $thisHours, $datum, $restByWorker, $dayWorkByWorker, $thisWork, $arbzg, $auegByWorker) {
+        return $workers->map(function ($w) use ($conflictsByWorker, $multiShiftByWorker, $absencesByWorker, $hoursByWorker, $weekStart, $weekEnd, $thisHours, $datum, $restByWorker, $dayWorkByWorker, $thisWork, $arbzg) {
             $warnings = [];
-
-            // AÜG — per worker at this Entleiher, counting this shift's date.
-            if ($st = $auegByWorker[$w->dienst_nr] ?? null) {
-                $fmt = fn ($d) => \Carbon\Carbon::parse($d)->format('d.m.Y');
-                $info = sprintf('Beim Entleiher seit %s (%d Überlassungstage%s). Höchstdauer %d Monate → zulässig bis %s; Equal Pay nach %d Monaten → ab %s.',
-                    $fmt($st['beginn']), $st['tage'], $st['unterbrechungen'] ? ', ' . $st['unterbrechungen'] . ' Unterbrechung(en) ≤ 3 Monate angerechnet' : '',
-                    $st['max_monate'], $fmt($st['hoechstdauer_bis']), $st['ep_monate'], $fmt($st['equal_pay_ab']));
-                $add = function ($type, $label) use (&$warnings, $st, $info) {
-                    $warnings[] = ['type' => $type, 'label' => $label, 'details' => [
-                        'startdatum' => $st['beginn'], 'enddatum' => $st['hoechstdauer_bis'], 'startzeit' => null, 'endzeit' => null, 'beschreibung' => $info,
-                    ]];
-                };
-                if ($st['status'] === 'ueberschritten') {
-                    $add('aueg_max', 'AÜG: Überlassungshöchstdauer überschritten (bis ' . $fmt($st['hoechstdauer_bis']) . ')');
-                } elseif ($st['status'] === 'bald') {
-                    $add('aueg_soon', 'AÜG: Höchstdauer endet am ' . $fmt($st['hoechstdauer_bis']));
-                }
-                if (substr((string) $datum, 0, 10) >= $st['equal_pay_ab']) {
-                    $add('aueg_equal_pay', 'AÜG: Equal Pay ab ' . $fmt($st['equal_pay_ab']));
-                }
-            }
 
             // §5 ArbZG — less than 11 h rest between this and a neighbouring shift.
             foreach ($restByWorker[$w->dienst_nr] ?? [] as $c) {

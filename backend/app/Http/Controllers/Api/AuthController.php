@@ -69,8 +69,6 @@ class AuthController extends Controller
             'objektbuch_label'     => \App\Support\TenantProfile::objektbuchLabel($tenant),
             // UI wording of the main industry (Kunde/Klient, Objekt/Haushalt …).
             'terms'                => \App\Support\Branchen::terms($tenant),
-            // AÜG module (Überlassungshöchstdauer / Equal Pay) switched on.
-            'aueg_aktiv'           => \App\Support\Aueg::enabled($tenant),
         ];
     }
 

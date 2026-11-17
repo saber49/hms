@@ -208,7 +208,6 @@ const PAGE_PERMS = {
     lager:           'stammdaten.lager.view',
     workers:         'stammdaten.mitarbeiter.view',
     absences:        'stammdaten.mitarbeiter.view',
-    aueg:            'stammdaten.mitarbeiter.view',
     incoming_orders: 'auftraege.eingang.view',
     auftragsbestaetigung: 'auftraege.bestaetigung.view',
     tasks:           'auftraege.dispo.view',
@@ -432,15 +431,6 @@ if (document.readyState === 'loading') {
     _installViewerObserver();
 }
 
-/** AÜG module switched on for this company (Konto & Firma). */
-function auegAktiv() {
-    try {
-        const cur = (typeof CURRENT_TENANT !== 'undefined' && CURRENT_TENANT) || {};
-        if (typeof cur.aueg_aktiv === 'boolean') return cur.aueg_aktiv;
-        return !!JSON.parse(localStorage.getItem('hms_tenant') || '{}').aueg_aktiv;
-    } catch (e) { return false; }
-}
-
 /**
  * UI wording of the company's main industry (payload `terms`, Konto & Firma →
  * Unternehmensdaten → Branche & Bezeichnungen): Kunde/Klient, Objekt/Haushalt …
@@ -476,7 +466,7 @@ function applyPermissionGating() {
     document.querySelectorAll('.nav-item').forEach(item => {
         const page = item.dataset.page;
         const need = PAGE_PERMS[page];
-        if ((need && !hasPermission(need)) || (page === 'aueg' && !auegAktiv())) {
+        if (need && !hasPermission(need)) {
             item.style.display = 'none';
         } else {
             item.style.display = '';
@@ -604,7 +594,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261117frei1');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261117aueg1');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
@@ -645,8 +635,7 @@ const PAGE_MODULE_SCRIPTS = {
     users: ['assets/js/users.js?v=20261117md3l'],
     pdf_design: ['assets/js/pdf_design.js?v=20261117md3l'],
     company_documents: ['assets/js/company_documents.js?v=20261117md3l'],
-    aufgaben: ['assets/js/aufgaben.js?v=20261117md3l'],
-    aueg: ['assets/js/aueg.js?v=20261117md3l']
+    aufgaben: ['assets/js/aufgaben.js?v=20261117md3l']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app
 // <dialog> + iframe. Same element contract as orders.js
@@ -848,7 +837,6 @@ async function loadPage(page) {
         pdf_design: 'Dokumentvorlagen',
         company_documents: 'Konto & Firma',
         aufgaben: 'Aufgaben',
-        aueg: 'Personal — AÜG-Fristen',
         qm_wachbuch: objektbuchLabel(),
         qm: 'Qualitätsmanagement',
         einstellungen: 'Einstellungen'
@@ -914,7 +902,6 @@ async function loadPage(page) {
             case 'pdf_design': pageRender = renderPdfDesign(); break;
             case 'company_documents': pageRender = renderCompanyDocuments(); break;
             case 'aufgaben': pageRender = renderAufgaben(); break;
-            case 'aueg': pageRender = renderAueg(); break;
             case 'qm_wachbuch': pageRender = renderQmWachbuch(); break;
             case 'qm': pageRender = renderQm(); break;
             case 'einstellungen': pageRender = renderEinstellungen(); break;
@@ -1780,18 +1767,6 @@ function renderCompanyTab(c) {
             </div>
         </div>` : ''}
 
-        ${c.aueg ? `
-        <div class="acc-section">
-            <div class="acc-section-header"><i class="material-symbols-outlined">handshake</i> Arbeitnehmerüberlassung (AÜG)</div>
-            <div class="acc-info-box">
-                <i class="material-symbols-outlined">info</i>
-                Für Personaldienstleister: überwacht je Mitarbeiter und Entleiher die Überlassungshöchstdauer (18 Monate)
-                und den Equal-Pay-Anspruch (9 Monate) — als Seite „AÜG-Fristen“ unter Personal und als Hinweis in der Planung.
-            </div>
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <md-checkbox id="cf_aueg_aktiv" ${c.aueg.aktiv ? 'checked' : ''}></md-checkbox> AÜG-Modul aktivieren
-            </label>
-        </div>` : ''}
     `;
 }
 
@@ -2259,7 +2234,6 @@ function _readCompanyForm() {
     }
     const fzEl = document.getElementById('cf_firmen_zusatz');
     if (fzEl) out.firmen_zusatz = fzEl.value.trim();
-    if (document.getElementById('cf_aueg_aktiv')) out.aueg = { aktiv: document.getElementById('cf_aueg_aktiv').checked };
     if (document.getElementById('cf_arbzg_aktiv')) {
         out.arbzg = {
             aktiv: document.getElementById('cf_arbzg_aktiv').checked,

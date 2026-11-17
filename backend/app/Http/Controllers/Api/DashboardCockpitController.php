@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\TenantService;
-use App\Support\Aueg;
 use App\Support\BereichScope;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -198,21 +197,6 @@ class DashboardCockpitController extends Controller
                     'Dokumente aktiver Mitarbeiter sind abgelaufen', 'Prüfen', ['page' => 'workers', 'ablauf' => 1]);
                 $add('dok_bald', 'info', 'badge', (int) $docs()->whereBetween('x.ablaufdatum', [$today, $now->copy()->addDays(30)->toDateString()])->count(),
                     'Dokumente laufen in den nächsten 30 Tagen ab', 'Ansehen', ['page' => 'workers', 'ablauf' => 1]);
-            }
-            // AÜG deadlines (only when the module is on).
-            if (Aueg::enabled(TenantService::current()) && Aueg::ready()) {
-                $cfg = Aueg::entleiher();
-                if ($cfg) {
-                    $vis = $db->table('mitarbeiter as m')->whereRaw($wSql, $wParams)->pluck('m.dienst_nr')->all();
-                    $n = 0;
-                    foreach (Aueg::dates(array_keys($cfg), $vis) as $kid => $byW) {
-                        foreach ($byW as $dates) {
-                            $st = Aueg::evaluate($dates, $today, $cfg[$kid]);
-                            if ($st && ($st['status'] === 'ueberschritten' || $st['status'] === 'bald' || $st['geplant_ueber_frist'])) $n++;
-                        }
-                    }
-                    $add('aueg', 'danger', 'gavel', $n, 'AÜG: Überlassungshöchstdauer erreicht oder bald erreicht', 'Ansehen', ['page' => 'aueg']);
-                }
             }
         }
 

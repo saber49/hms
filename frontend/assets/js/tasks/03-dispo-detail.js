@@ -478,7 +478,7 @@ async function plannerRefreshWorkerActualTimes() {
 }
 
 // Info-level warning types (blue): never a conflict, just a notice.
-const PLANNER_SOFT_WARNINGS = ['multi_shift', 'aueg_equal_pay', 'aueg_soon'];
+const PLANNER_SOFT_WARNINGS = ['multi_shift'];
 
 function plannerWorkerOption(worker, assigned) {
     const warnings = worker.warnings || [];

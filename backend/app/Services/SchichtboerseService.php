@@ -235,7 +235,7 @@ class SchichtboerseService
             $m = new \ReflectionMethod(TaskController::class, 'attachWorkerWarnings');
             $m->setAccessible(true);
             $workers = $m->invoke(new TaskController(), $workers->values(), $task);
-            $workers = $workers->filter(fn ($w) => !collect($w->warnings ?? [])->contains(fn ($x) => in_array($x['type'] ?? '', ['assignment', 'absence', 'aueg_max'], true)));
+            $workers = $workers->filter(fn ($w) => !collect($w->warnings ?? [])->contains(fn ($x) => in_array($x['type'] ?? '', ['assignment', 'absence'], true)));
         } catch (\Throwable $ex) {
             Log::warning('Schichtboerse conflict check failed', ['einsatz' => $e->einsatz_id, 'error' => $ex->getMessage()]);
         }

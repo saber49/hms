@@ -91,7 +91,7 @@ class Branchen
             'label' => 'Personaldienstleistung / Zeitarbeit', 'icon' => 'badge',
             'terms' => ['objekt' => 'Einsatzbetrieb', 'objekte' => 'Einsatzbetriebe'],
             'flags' => ['bewachung' => false, 'stadiondienst' => false],
-            'module' => ['aueg'],
+            'module' => [],
             'paket' => [
                 'subs' => ['Lager & Logistik', 'Produktion', 'Handwerk & Technik', 'Büro & Verwaltung', 'Gastronomie & Hotellerie'],
                 'quals' => [

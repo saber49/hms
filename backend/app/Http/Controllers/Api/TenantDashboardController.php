@@ -101,7 +101,6 @@ class TenantDashboardController extends Controller
             // Zusatz line under the company name (e.g. "Sicherheitsdienst").
             'firmen_zusatz'      => (string) data_get($tenant->settings, 'firmen_zusatz', ''),
             'arbzg'                    => \App\Support\TenantProfile::arbzg($tenant),
-            'aueg'                     => ['aktiv' => \App\Support\Aueg::enabled($tenant)],
         ]);
     }
 
@@ -151,8 +150,6 @@ class TenantDashboardController extends Controller
             'arbzg.aktiv'          => 'nullable|boolean',
             'arbzg.max_tag'        => 'nullable|numeric|min:6|max:24',
             'arbzg.ruhezeit'       => 'nullable|numeric|min:5|max:24',
-            'aueg'                 => 'nullable|array',
-            'aueg.aktiv'           => 'nullable|boolean',
         ]);
 
         $tenant = $request->user()->tenant;
@@ -206,11 +203,6 @@ class TenantDashboardController extends Controller
                 'max_tag'  => isset($in['max_tag']) && $in['max_tag'] !== '' ? (float) $in['max_tag'] : $cur['max_tag'],
                 'ruhezeit' => isset($in['ruhezeit']) && $in['ruhezeit'] !== '' ? (float) $in['ruhezeit'] : $cur['ruhezeit'],
             ];
-            $settingsTouched = true;
-        }
-        // AÜG module switch — only when the key is sent.
-        if ($request->has('aueg.aktiv')) {
-            $settings['aueg'] = ['aktiv' => (bool) $request->input('aueg.aktiv')];
             $settingsTouched = true;
         }
         if ($settingsTouched) {

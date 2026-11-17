@@ -309,9 +309,6 @@ header('Expires: 0');
                     <i class="material-symbols-outlined">event_available</i><span>Anträge &amp; Urlaub</span>
                     <span class="badge" id="badge-absences" style="display:none">0</span>
                 </a>
-                <a href="#" class="nav-item" data-page="aueg" style="display:none">
-                    <i class="material-symbols-outlined">handshake</i><span>AÜG-Fristen</span>
-                </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Disposition</div>
@@ -806,7 +803,7 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=20261117md3l"></script>
-    <script defer src="assets/js/app.js?v=20261117br1"></script>
+    <script defer src="assets/js/app.js?v=20261117aueg1"></script>
     <script defer src="assets/js/ui-components.js?v=20261117md3l"></script>
     <script defer src="assets/js/dashboard.js?v=20261117md3l"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261117md3l"></script>

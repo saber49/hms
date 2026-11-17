@@ -185,13 +185,6 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
         Route::delete('/tenants/{tenant}', [TenantController::class, 'destroy']);
     });
 
-    // AÜG-Fristen (Überlassungshöchstdauer / Equal Pay) — overview + Entleiher config
-    Route::middleware('permission:stammdaten.mitarbeiter.view')->get('/aueg', [\App\Http\Controllers\Api\AuegController::class, 'index']);
-    Route::middleware('permission:stammdaten.kunden.edit')->group(function () {
-        Route::put('/aueg/entleiher/{kundeId}', [\App\Http\Controllers\Api\AuegController::class, 'saveEntleiher']);
-        Route::delete('/aueg/entleiher/{kundeId}', [\App\Http\Controllers\Api\AuegController::class, 'deleteEntleiher']);
-    });
-
     // Customers — gated by stammdaten.kunden.view / .edit
     Route::middleware('permission:stammdaten.kunden.view')->group(function () {
         Route::get('/customers', [CustomerController::class, 'index']);
