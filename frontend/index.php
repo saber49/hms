@@ -327,9 +327,6 @@ header('Expires: 0');
                 <a href="#" class="nav-item" data-page="qm">
                     <i class="material-symbols-outlined">workspace_premium</i><span>Qualitätsmanagement</span>
                 </a>
-                <a href="#" class="nav-item" data-page="checklisten">
-                    <i class="material-symbols-outlined">fact_check</i><span>Checklisten</span>
-                </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Verkauf</div>
@@ -806,7 +803,7 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=20261117md3l"></script>
-    <script defer src="assets/js/app.js?v=20261117abwedit1"></script>
+    <script defer src="assets/js/app.js?v=20261117nochecklisten1"></script>
     <script defer src="assets/js/ui-components.js?v=20261117md3l"></script>
     <script defer src="assets/js/dashboard.js?v=20261117md3l"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261117md3l"></script>

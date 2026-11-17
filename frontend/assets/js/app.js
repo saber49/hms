@@ -221,7 +221,6 @@ const PAGE_PERMS = {
     einstellungen:   'system.dokument_design.manage|stammdaten.interessenten.admin|qm.view',
     qm_wachbuch:     'qm.view',
     qm:              'qm.view',
-    checklisten:     'stammdaten.objekte.view',
     // company_documents ("Konto & Firma") has NO page permission: the
     // profile tab is for every user. Admin-only tabs (Unternehmensdaten,
     // Rechtliches, Bank, Dokumente) are gated inside the module via
@@ -255,7 +254,6 @@ const PAGE_EDIT_PERMS = {
     // price_history has no dedicated edit permission — gated by objekte.edit
     price_history:   'stammdaten.objekte.edit',
     lager:           'stammdaten.lager.edit',
-    checklisten:     'stammdaten.objekte.edit',
 };
 
 /** Returns true if the logged-in user holds the given permission key.
@@ -525,7 +523,7 @@ function _navFavKey() {
 function getNavFavorites() {
     try {
         const v = JSON.parse(localStorage.getItem(_navFavKey()) || '[]');
-        return Array.isArray(v) ? v.filter(p => typeof p === 'string') : [];
+        return Array.isArray(v) ? v.filter(p => typeof p === 'string' && p !== 'checklisten') : [];
     } catch (e) { return []; }
 }
 
@@ -608,7 +606,6 @@ const QM_MODULE_SCRIPTS = [
 const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
     qm: QM_MODULE_SCRIPTS,
-    checklisten: ['assets/js/checklisten.js?v=20261117cl1'],
     einstellungen: ['assets/js/einstellungen.js?v=20261117md3l'],
     interessenten: ['assets/js/crm.js?v=20261117md3l'],
     customers: ['assets/js/customers.js?v=20261117md3l'],
@@ -763,6 +760,8 @@ async function loadPage(page) {
     }
     // Dokumentvorlagen moved into the central page System › Einstellungen.
     if (page === 'pdf_design') return loadPage('einstellungen?tab=dokumente');
+    // The office Checklisten page was removed; keep old bookmarks functional.
+    if (page === 'checklisten') return loadPage('qm');
     // The E-Mail section was removed (old #mail bookmarks land on the overview).
     if (page === 'mail') return loadPage('dashboard');
     // Page switch: any dialog belonging to the previous page is gone (or
@@ -842,7 +841,6 @@ async function loadPage(page) {
         aufgaben: 'Aufgaben',
         qm_wachbuch: objektbuchLabel(),
         qm: 'Qualitätsmanagement',
-        checklisten: 'Checklisten & Protokolle',
         einstellungen: 'Einstellungen'
     };
     document.getElementById('pageTitle').textContent = titles[page] || page;
@@ -908,7 +906,6 @@ async function loadPage(page) {
             case 'aufgaben': pageRender = renderAufgaben(); break;
             case 'qm_wachbuch': pageRender = renderQmWachbuch(); break;
             case 'qm': pageRender = renderQm(); break;
-            case 'checklisten': pageRender = renderChecklisten(); break;
             case 'einstellungen': pageRender = renderEinstellungen(); break;
             default: content.innerHTML = '<div class="empty-state"><i class="material-symbols-outlined">engineering</i><p>Seite wird entwickelt...</p></div>';
         }
