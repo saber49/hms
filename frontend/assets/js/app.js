@@ -1754,38 +1754,6 @@ function renderCompanyTab(c) {
             </md-outlined-button>
         </div>
 
-        <div class="acc-section">
-            <div class="acc-section-header"><i class="material-symbols-outlined">menu_book</i> ${Array.isArray(c.branchen) ? 'Branche &amp; Bezeichnungen' : 'Bezeichnungen'}</div>
-            ${Array.isArray(c.branchen) ? `
-            <div class="acc-info-box">
-                <i class="material-symbols-outlined">info</i>
-                Die Hauptbranche bestimmt die Begriffe im System (z.B. „Klienten“ statt „Kunden“ in der Hauswirtschaft).
-                Branchen je Dienstleistung (Objektarten, Qualifikationen, Zusatzfelder) stellen Sie unter Konto &amp; Firma → Bereiche ein.
-            </div>
-            <div class="acc-grid acc-grid-2">
-                <div class="form-group acc-span-2">
-                    <label>Hauptbranche des Unternehmens</label>
-                    <md-outlined-select class="form-control" id="cf_branche" onchange="cfBrancheChanged(this.value)">
-                        <md-select-option value="">— keine (neutrale Begriffe) —</md-select-option>
-                        ${c.branchen.map(b => `<md-select-option value="${escapeHtml(b.key)}" ${b.key === c.branche ? 'selected' : ''}>${escapeHtml(b.label)}</md-select-option>`).join('')}
-                    </md-outlined-select>
-                </div>
-                ${[['kunde', 'Begriff für Kunde (Einzahl)'], ['kunden', 'Begriff für Kunden (Mehrzahl)'], ['objekt', 'Begriff für Objekt (Einzahl)'], ['objekte', 'Begriff für Objekte (Mehrzahl)']].map(([k, l]) => `
-                <div class="form-group">
-                    <label>${l}</label>
-                    <md-outlined-text-field type="text" class="form-control cf-term" data-term="${k}" maxlength="40" value="${escapeHtml((c.terms_custom || {})[k] || '')}" placeholder="${escapeHtml((c.terms_default || {})[k] || TERM_DEFAULTS[k])}"></md-outlined-text-field>
-                </div>`).join('')}
-                <div class="form-group acc-span-2"><small style="color:var(--gray-500)">Leer = Begriff der gewählten Branche (grau angezeigt).</small></div>
-            </div>` : ''}
-            <div class="acc-grid acc-grid-2">
-                <div class="form-group">
-                    <label>Name des Schicht-Protokolls</label>
-                    <md-outlined-text-field type="text" class="form-control" id="cf_objektbuch_label" maxlength="40" value="${escapeHtml(c.objektbuch_label_custom || '')}" placeholder="${escapeHtml(c.objektbuch_label_default || 'Wachbuch')}"></md-outlined-text-field>
-                    <small style="color:var(--gray-500)">Wird in der Mitarbeiter-App, bei den Objekten und im Kundenportal angezeigt (z.B. Wachbuch, Objektbuch, Schichtbuch). Leer = „${escapeHtml(c.objektbuch_label_default || 'Wachbuch')}“.</small>
-                </div>
-            </div>
-        </div>
-
         ${c.arbzg ? `
         <div class="acc-section">
             <div class="acc-section-header"><i class="material-symbols-outlined">work_history</i> Arbeitszeitgesetz (Hinweise in der Planung)</div>
@@ -2291,14 +2259,6 @@ function _readCompanyForm() {
     }
     const fzEl = document.getElementById('cf_firmen_zusatz');
     if (fzEl) out.firmen_zusatz = fzEl.value.trim();
-    const obEl = document.getElementById('cf_objektbuch_label');
-    if (obEl) out.objektbuch_label = obEl.value.trim();
-    const brEl = document.getElementById('cf_branche');
-    if (brEl) {
-        out.branche = brEl.value || null;
-        out.terms = {};
-        document.querySelectorAll('.cf-term').forEach(i => { out.terms[i.dataset.term] = i.value.trim(); });
-    }
     if (document.getElementById('cf_aueg_aktiv')) out.aueg = { aktiv: document.getElementById('cf_aueg_aktiv').checked };
     if (document.getElementById('cf_arbzg_aktiv')) {
         out.arbzg = {
@@ -2310,12 +2270,6 @@ function _readCompanyForm() {
     return out;
 }
 
-// Placeholders of the wording fields follow the selected main industry.
-function cfBrancheChanged(key) {
-    const b = ((_accountCompanyData && _accountCompanyData.branchen) || []).find(x => x.key === key);
-    document.querySelectorAll('.cf-term').forEach(i => { i.placeholder = (b && b.terms[i.dataset.term]) || TERM_DEFAULTS[i.dataset.term]; });
-}
-window.cfBrancheChanged = cfBrancheChanged;
 
 async function saveAccountActiveTab() {
     if (_accountActiveTab === 'profile') return; // password has its own button
