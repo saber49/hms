@@ -275,7 +275,8 @@ function plannerBuildNuPositionsFromTask() {
 // Appended to <body>, the overlay is a true viewport-fixed popup.
 function ensureNuOverlay() {
     let overlay = document.getElementById('plannerNuSelectOverlay');
-    if (overlay) return overlay;
+    if (overlay && overlay.tagName === 'DIALOG') return overlay;
+    if (overlay) overlay.remove(); // stale pre-<dialog> element — rebuild it
     overlay = document.createElement('dialog');
     overlay.id = 'plannerNuSelectOverlay';
     overlay.className = 'planner-nu-select-overlay';
@@ -339,14 +340,15 @@ function plannerOpenNuAddOverlay(einsatzId, forceSelect) {
     const view = forceSelect ? 'select'
         : (editingLive ? 'edit' : (_nuGroups.length > 0 ? 'summary' : 'select'));
     plannerNuOverlayShow(view);
-    if (view === 'select') plannerRenderNuSelectList();
-    else if (view === 'summary') plannerRenderNuSummary();
-    else plannerRenderNuEditMode();
     overlay.classList.add('active');
     // showModal() puts the dialog into the top layer — required because
     // #modalOverlay is an md-dialog; a plain z-index overlay can never
-    // paint above it.
+    // paint above it. Called BEFORE rendering so a renderer failure can
+    // never leave the dialog silently closed.
     if (!overlay.open) overlay.showModal();
+    if (view === 'select') plannerRenderNuSelectList();
+    else if (view === 'summary') plannerRenderNuSummary();
+    else plannerRenderNuEditMode();
 }
 
 // Fill the select view: only the list of available NU partners.
@@ -676,7 +678,7 @@ async function plannerCancelNu(einsatzId) {
     window._plannerSelectedNuId = remainingNuId;
     plannerUpdateNuAddCard();
     const overlay = document.getElementById('plannerNuSelectOverlay');
-    if (overlay && overlay.style.display !== 'none') {
+    if (overlay && overlay.open) {
         if (_nuGroups.length > 0) {
             plannerNuOverlayShow('summary');
             plannerRenderNuSummary();
@@ -781,7 +783,7 @@ async function plannerSaveNuPositions(einsatzId) {
         window._plannerSelectedNuId = nuId;
         plannerUpdateNuAddCard();
         const overlay = document.getElementById('plannerNuSelectOverlay');
-        if (overlay && overlay.style.display !== 'none') plannerNuOverlayShow('summary');
+        if (overlay && overlay.open) plannerNuOverlayShow('summary');
         plannerRenderNuSummary();
         plannerInjectNuWorkerCards();
         loadDisposition();
