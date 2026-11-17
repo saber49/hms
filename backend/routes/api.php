@@ -476,6 +476,7 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
         Route::post('/disposition/zeit-freigabe', [DispositionController::class, 'zeitFreigabe']);
         Route::post('/disposition/kunden-freigabe', [DispositionController::class, 'kundenFreigabe']);
         Route::post('/disposition/zeiten-speichern', [TaskController::class, 'saveZeiten']);
+        Route::put('/worker-absences/{id}/hours', [WorkerAbsenceController::class, 'updateHours'])->whereNumber('id');
     });
     Route::middleware('permission:auftraege.dispo.edit')->group(function () {
         Route::post('/tasks', [TaskController::class, 'store']);
