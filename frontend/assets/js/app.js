@@ -1430,8 +1430,8 @@ function renderDocAssetsSection(c, ctx) {
             <div class="logo-buttons" style="justify-content:center">
                 <input type="file" id="${kind}File" accept="image/png,image/webp,image/svg+xml,image/jpeg" style="display:none" onchange="uploadDocAsset(this,'${kind}')">
                 <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('${kind}File').click()"><md-icon slot="icon">upload</md-icon>${own ? 'Ersetzen' : 'Hochladen'}
-                </button>
-                <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}><md-icon slot="icon">delete</md-icon></button>
+                </md-filled-button>
+                <md-outlined-button type="button"  class="md-btn-sm" id="${kind}RemoveBtn" onclick="removeDocAsset('${kind}')" ${canRemove ? '' : 'style="display:none"'}><md-icon slot="icon">delete</md-icon></md-outlined-button>
             </div>
             ${isAdmin ? `<label class="doc-asset-scope" title="Für alle Benutzer der Firma als Standard speichern">
                 <md-checkbox id="${kind}Scope"></md-checkbox> Firmen-Standard
@@ -1597,9 +1597,9 @@ function renderLogoUploader(c) {
                     <div class="logo-buttons">
                         <input type="file" id="companyLogoFile" accept="image/png,image/jpeg,image/svg+xml" style="display:none" onchange="uploadCompanyLogo(this)">
                         <md-filled-button type="button"  class="md-btn-sm" onclick="document.getElementById('companyLogoFile').click()"><md-icon slot="icon">upload</md-icon>Logo hochladen
-                        </button>
+                        </md-filled-button>
                         <md-outlined-button type="button"  class="md-btn-sm" id="logoRemoveBtn" onclick="removeCompanyLogo()" ${hasLogo ? '' : 'style="display:none"'}><md-icon slot="icon">delete</md-icon>Entfernen
-                        </button>
+                        </md-outlined-button>
                     </div>
                     <div class="hint">PNG, JPG oder SVG · max. 2 MB · empfohlen quadratisch (z.B. 512×512 px)</div>
                 </div>
@@ -1751,7 +1751,7 @@ function renderCompanyTab(c) {
             </div>
             <div id="cfPauseRules"></div>
             <md-outlined-button type="button"  class="md-btn-sm" onclick="cfAddPauseRule()" style="margin-top:4px"><md-icon slot="icon">add</md-icon>Regel hinzufügen
-            </button>
+            </md-outlined-button>
         </div>
 
         <div class="acc-section">
@@ -1864,7 +1864,7 @@ function cfPauseRuleRowHtml(von, bis, min) {
         <md-outlined-text-field type="text" class="form-control cf-pause-von t24" inputmode="numeric" maxlength="5" value="${v(von)}" placeholder="z.B. 06:01"></md-outlined-text-field>
         <md-outlined-text-field type="text" class="form-control cf-pause-bis t24" inputmode="numeric" maxlength="5" value="${v(bis)}" placeholder="z.B. 09:00"></md-outlined-text-field>
         <md-outlined-text-field type="number" class="form-control cf-pause-min" value="${v(min)}" min="0" max="480" step="1" placeholder="z.B. 30"></md-outlined-text-field>
-        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))"><md-icon slot="icon">delete</md-icon></button>
+        <md-outlined-button type="button"  class="md-btn-sm" onclick="this.closest('.cf-pause-rule').remove()" title="Regel entfernen" style="padding:6px 8px;color: var(--danger,var(--md-sys-color-error))"><md-icon slot="icon">delete</md-icon></md-outlined-button>
     </div>`;
 }
 
@@ -2020,7 +2020,7 @@ function renderDocumentsTabHtml(items, categories) {
                 </div>
                 <div class="docs-uploader-actions">
                     <md-filled-button type="button"  id="docUploadBtn"><md-icon slot="icon">upload</md-icon>Hochladen
-                    </button>
+                    </md-filled-button>
                 </div>
             </div>
         </div>
