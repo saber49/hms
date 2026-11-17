@@ -1328,8 +1328,12 @@ async function wkLoadDocs(dienstNr, loaded) {
     document.getElementById('wkTabCountDocs').textContent = docs.length;
 
     container.innerHTML = `
-        <div class="wk-docs-upload">
-            <div class="wk-docs-upload-grid">
+        <div class="wk-docs-upload wk-docs-upload--file">
+            <div class="wk-docs-upload-heading">
+                <span class="wk-docs-upload-icon">${wkIcon('picture_as_pdf')}</span>
+                <div><strong>Dokument hochladen</strong><span>PDF-Datei · maximal 10 MB</span></div>
+            </div>
+            <div class="wk-docs-upload-grid wk-docs-upload-grid--file">
                 <div class="form-group">
                     <md-outlined-text-field id="wkDocTitel" label="Titel *" placeholder="z.B. Arbeitsvertrag, ID..." style="width:100%"></md-outlined-text-field>
                 </div>
@@ -1342,12 +1346,11 @@ async function wkLoadDocs(dienstNr, loaded) {
                 <div class="form-group">
                     <md-outlined-text-field type="date" id="wkDocAblauf" label="Ablaufdatum" style="width:100%"></md-outlined-text-field>
                 </div>
-                <div class="form-group">
-                    <label class="cust-file-label">PDF-Datei *</label>
-                    <input type="file" class="form-control" id="wkDocFile" accept=".pdf">
+                <div class="form-group wk-docs-upload-file">
+                    ${uiFilePicker({ id: 'wkDocFile', label: 'PDF-Datei *', accept: '.pdf,application/pdf', buttonLabel: 'PDF auswählen', cls: 'wk-doc-file-picker' })}
                 </div>
                 <div class="wk-docs-upload-submit">
-                    <md-filled-tonal-button onclick="wkUploadDoc('${dienstNr}')"><md-icon slot="icon">cloud_upload</md-icon>Hochladen (max. 10 MB)</md-filled-tonal-button>
+                    <md-filled-button onclick="wkUploadDoc('${dienstNr}')"><md-icon slot="icon">cloud_upload</md-icon>Hochladen</md-filled-button>
                 </div>
             </div>
         </div>
