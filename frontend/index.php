@@ -195,7 +195,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/absences.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/tasks.css?v=20261117nu3">
-    <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261117abwhrs1">
+    <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261117noborder2">
     <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/orders.css?v=20261117md3l">
