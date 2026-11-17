@@ -1462,3 +1462,6 @@ body.viewer-mode .pdfcols-panel .sb-toggle input { accent-color: var(--dd-p); }
 .dd-pv-btn.primary { background: var(--md-ext-color-warning); color: #fff; }
 /* While a stored version is previewed, the other panels are read-only. */
 body.dd-previewing .dd-panel:not([data-panel="verlauf"]) { pointer-events: none; opacity: .45; }
+
+/* Abwesenheiten rows (Urlaub/Krank from Anträge & Urlaub) in the Stundennachweis table. */
+.wkd-abw td { color: var(--md-sys-color-on-surface-variant, var(--gray-500)); }

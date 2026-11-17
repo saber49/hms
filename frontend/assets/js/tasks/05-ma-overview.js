@@ -12,6 +12,8 @@ let _maPageYear = new Date().getFullYear();
 let _maPageWorkers = {};      // Internal workers cache (keyed by dienst_nr) — used for PDFs
 let _maPageNuWorkers = {};    // NU workers cache (grouped by firma) — used for PDFs
 let _maData = null;           // Last fetched API response (for Analytics + Export)
+let _maAbw = {};              // Abwesenheiten (Anträge & Urlaub) keyed by dienst_nr
+let _maAbwSum = {};           // per-worker absence totals {std, tage, krank_tage, ...}
 let _maTab = 'overview';      // 'overview' | 'analytics'
 let _maMode = 'ma';           // 'ma' = Mitarbeiter (worker app) | 'kunde' = Leistungsnachweis (Bestellungen)
 let _maFilter = 'all';        // 'all' | 'internal' | 'nu' | 'anomaly'
@@ -199,6 +201,8 @@ async function renderMonatsabschlussContent(opts) {
         return;
     }
     _maData = data;
+    _maAbw = data.abwesenheiten || {};
+    _maAbwSum = data.abwesenheit_summen || {};
 
     // Cache workers for PDFs (kept for backward compatibility with PDF builders)
     const entries = data.entries || [];
@@ -255,7 +259,8 @@ function maShowActiveTab() {
 // ============================================================
 // DATA GROUPING
 // ============================================================
-function maGroupInternalWorkers(entries) {
+function maGroupInternalWorkers(entries, abw) {
+    abw = abw || _maAbw;
     const byWorker = {};
     entries.forEach(e => {
         if (!byWorker[e.dienst_nr]) {
@@ -263,12 +268,41 @@ function maGroupInternalWorkers(entries) {
                 vorname: e.vorname, name: e.name, foto: e.foto,
                 bereich: e.bereich, dienst_nr: e.dienst_nr,
                 aktiv: e.mitarbeiter_aktiv,
-                entries: []
+                entries: [], abw: []
             };
         }
         byWorker[e.dienst_nr].entries.push(e);
     });
+    // Workers with absences but no shifts this period still get a block —
+    // their Urlaub/Krank hours must show up in the Zeiterfassung too.
+    Object.keys(abw).forEach(dnr => {
+        if (byWorker[dnr]) { byWorker[dnr].abw = abw[dnr]; return; }
+        if (!(abw[dnr] || []).length) return;
+        const a = abw[dnr][0];
+        byWorker[dnr] = {
+            vorname: a.vorname, name: a.name, foto: a.foto,
+            bereich: a.bereich, dienst_nr: dnr,
+            aktiv: a.mi_aktiv,
+            entries: [], abw: abw[dnr]
+        };
+    });
     return byWorker;
+}
+
+/** Summaries of one worker's absence list (same shape as abwesenheit_summen). */
+function maAbwSumOf(list) {
+    const s = { std: 0, tage: 0, krank_tage: 0, urlaub_tage: 0, sonstiges_tage: 0, beantragt: 0, unbezahlt_tage: 0 };
+    (list || []).forEach(r => {
+        s.std += parseFloat(r.std) || 0;
+        const t = parseFloat(r.zeitraum_tage) || 0;
+        s.tage += t;
+        if (r.kategorie === 'urlaub') s.urlaub_tage += t;
+        else if (r.kategorie === 'krank') s.krank_tage += t;
+        else s.sonstiges_tage += t;
+        if (!parseInt(r.bezahlt)) s.unbezahlt_tage += t;
+        if (r.status === 'pending') s.beantragt++;
+    });
+    return s;
 }
 
 function maGroupNuWorkers(nuEntries) {
@@ -395,6 +429,11 @@ function maBuildBento(data) {
     const freiCount = allRows.filter(e => parseInt(e.kunden_freigabe) === 1).length;
     const freiMissing = totalEntries - freiCount;
 
+    // Abwesenheiten (Anträge & Urlaub) — bezahlte Stunden nach deutschem Recht.
+    const abwCount = Object.values(_maAbw).reduce((s, l) => s + (l || []).length, 0);
+    const abwStd = parseFloat(data.total_abwesenheit_std) || 0;
+    const abwTage = Object.values(_maAbwSum).reduce((s, t) => s + (parseFloat(t.tage) || 0), 0);
+
     return `
         <div class="ma-bento">
             <div class="ma-kpi" data-clickable="1" onclick="maSetFilter('all')">
@@ -438,6 +477,15 @@ function maBuildBento(data) {
                 <div class="ma-progress"><div class="ma-progress-fill" style="width:${nuSharePct}%;background:var(--ma-nu)"></div></div>
                 <div class="ma-kpi-sub">${nuStd.toFixed(1)} h von ${totalStd.toFixed(1)} h</div>
             </div>
+            ${abwCount > 0 ? `
+            <div class="ma-kpi abw" data-clickable="1" onclick="maSetFilter('abwesenheit')" title="Abwesenheiten aus „Anträge & Urlaub“ — bezahlte Stunden nach Schichtplan, 13-Wochen-Schnitt oder Vertrag">
+                <div class="ma-kpi-head">
+                    <div class="ma-kpi-icon">${maIcon('event_busy')}</div>
+                    <span class="ma-kpi-label">Abwesenheiten</span>
+                </div>
+                <div class="ma-kpi-value">${abwCount}</div>
+                <div class="ma-kpi-sub">${abwTage.toFixed(1).replace('.', ',')} Tage · ${abwStd > 0 ? maFmtHrs(abwStd) + ' h bezahlt' : 'unbezahlt'}</div>
+            </div>` : ''}
             <div class="ma-kpi ${anomalyCount > 0 ? 'warn' : ''}" ${anomalyCount > 0 ? 'data-clickable="1" onclick="maSetFilter(\'anomaly\')"' : ''}>
                 <div class="ma-kpi-head">
                     <div class="ma-kpi-icon">${maIcon('warning')}</div>
@@ -485,6 +533,7 @@ function maBuildToolbar() {
                     <md-filter-chip label="Intern" data-filter="internal" ${_maFilter === 'internal' ? 'selected' : ''} onclick="maSetFilter('internal')"></md-filter-chip>
                     <md-filter-chip label="NU" data-filter="nu" ${_maFilter === 'nu' ? 'selected' : ''} onclick="maSetFilter('nu')"></md-filter-chip>
                     <md-filter-chip label="Hinweise" data-filter="anomaly" ${_maFilter === 'anomaly' ? 'selected' : ''} onclick="maSetFilter('anomaly')"></md-filter-chip>
+                    <md-filter-chip label="Abwesend" data-filter="abwesenheit" ${_maFilter === 'abwesenheit' ? 'selected' : ''} onclick="maSetFilter('abwesenheit')"></md-filter-chip>
                 </md-chip-set>
                 <md-outlined-select class="ma-scope-select${_maFilterKunde ? ' active' : ''}" id="maScopeKunde" onchange="maScopeChange('kunde', this.value)" title="Nach Kunde filtern">
                     <md-select-option value=""><div slot="headline">Alle Kunden</div></md-select-option>
@@ -578,12 +627,12 @@ function maRenderQuickJump() {
     const sortedInternal = maSortWorkers(Object.values(_maPageWorkers));
     let html = '';
 
-    const showInternal = (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly');
+    const showInternal = (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly' || _maFilter === 'abwesenheit');
     const showNu = (_maFilter === 'all' || _maFilter === 'nu' || _maFilter === 'anomaly');
 
     if (sortedInternal.length > 0 && showInternal) {
         const items = sortedInternal.map((w, idx) => {
-            const std = maCalcWorkerTotal(w.entries);
+            const std = maCalcWorkerTotal(w.entries) + maAbwSumOf(w.abw).std;
             const name = ((w.vorname || '') + ' ' + (w.name || '')).trim() || w.dienst_nr;
             return `<button class="ma-quickjump-item" onclick="maJumpTo('maBlock_${idx}')">
                 <span class="ma-quickjump-item-name">${escapeHtml(name)}</span>
@@ -636,7 +685,7 @@ function maRenderBlocks(opts) {
 
     // Internal workers
     const sortedInternal = maSortWorkers(Object.values(_maPageWorkers));
-    const showInternal = (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly');
+    const showInternal = (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly' || _maFilter === 'abwesenheit');
 
     if (showInternal && sortedInternal.length > 0) {
         sortedInternal.forEach((worker, idx) => {
@@ -791,6 +840,12 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
     const sollTotal = worker.entries.reduce((s, e) => s + maSollStd(e), 0);
     const istTotal = worker.entries.reduce((s, e) => s + (maIstStd(e) || 0), 0);
 
+    // Abwesenheiten (Anträge & Urlaub) — internal workers only.
+    const abwList = (!isNu && (worker.abw || _maAbw[worker.dienst_nr])) || [];
+    const abwSum = abwList.length ? maAbwSumOf(abwList) : null;
+    const abwStd = abwSum ? abwSum.std : 0;
+    const abwTage = abwSum ? abwSum.tage : 0;
+
     // Anomaly detection
     const anomalies = worker.entries.flatMap(e => maDetectAnomalies(e));
     const hasAnomaly = anomalies.length > 0;
@@ -821,6 +876,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
         if (worker.aktiv !== null && worker.aktiv !== undefined && parseInt(worker.aktiv) !== 1) metaChips += `<span class="ma-worker-meta-chip">${maIcon('person_off', 'font-size:11px;vertical-align:-2px')} Inaktiv</span>`;
     }
     metaChips += `<span class="ma-worker-meta-chip">${maIcon('done_all', 'font-size:11px;vertical-align:-2px')} ${worker.entries.length} Einsätze</span>`;
+    if (abwSum && abwTage > 0) metaChips += `<span class="ma-worker-meta-chip ma-abw-chip">${maIcon('event_busy', 'font-size:11px;vertical-align:-2px')} Abw. ${abwTage.toFixed(1).replace('.', ',')} T</span>`;
     if (hasAnomaly) metaChips += `<span class="ma-anomaly-chip">${maIcon('warning', 'font-size:11px;vertical-align:-2px')} ${anomalies.length} Hinweis${anomalies.length > 1 ? 'e' : ''}</span>`;
 
     // Kunde/Objekt scope attributes — the block matches a scope filter when
@@ -829,7 +885,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
     const wObjekte = [...new Set(worker.entries.map(e => (e.objektname || '').trim()).filter(Boolean))];
 
     return `
-    <div class="${blockClass.join(' ')}" id="${blockId}" data-wkey="${escapeHtml(isNu ? 'nu-' + worker.nu_worker_id : 'ma-' + worker.dienst_nr)}" data-worker-name="${escapeHtml(name.toLowerCase())}" data-bereich="${escapeHtml((worker.bereich || '').toLowerCase())}" data-has-anomaly="${hasAnomaly ? '1' : '0'}" data-is-nu="${isNu ? '1' : '0'}" data-total-std="${totalStd.toFixed(2)}" data-entries-count="${worker.entries.length}" data-kunden='${escapeHtml(JSON.stringify(wKunden)).replace(/'/g, '&#039;')}' data-objekte='${escapeHtml(JSON.stringify(wObjekte)).replace(/'/g, '&#039;')}'>
+    <div class="${blockClass.join(' ')}" id="${blockId}" data-wkey="${escapeHtml(isNu ? 'nu-' + worker.nu_worker_id : 'ma-' + worker.dienst_nr)}" data-worker-name="${escapeHtml(name.toLowerCase())}" data-bereich="${escapeHtml((worker.bereich || '').toLowerCase())}" data-has-anomaly="${hasAnomaly ? '1' : '0'}" data-has-abw="${abwSum ? '1' : '0'}" data-is-nu="${isNu ? '1' : '0'}" data-total-std="${totalStd.toFixed(2)}" data-entries-count="${worker.entries.length}" data-kunden='${escapeHtml(JSON.stringify(wKunden)).replace(/'/g, '&#039;')}' data-objekte='${escapeHtml(JSON.stringify(wObjekte)).replace(/'/g, '&#039;')}'>
         <div class="ma-worker-head">
             <div class="ma-worker-avatar">${worker.foto ? `<img src="${escapeHtml(worker.foto)}" alt="">` : initials}</div>
             <div class="ma-worker-info">
@@ -841,11 +897,62 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
                 ${kunde
                     ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = im Leistungsnachweis abgerechnet (Std + Pause aus der Planung, vom Kunden bezahlt)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
-                    : `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · Abrechnung = Ist, ohne Erfassung Plan-Stunden">Soll ${maFmtHrs(sollTotal)} h · Abr. ${maFmtHrs(totalStd)} h</div>`}
+                    : `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · Abrechnung = Ist + bezahlte Abwesenheiten (Urlaub/Krank/Feiertag), ohne Erfassung Plan-Stunden">Soll ${maFmtHrs(sollTotal)} h · Abr. ${maFmtHrs(totalStd + abwStd)} h${abwStd > 0 ? ` · davon Abw. ${maFmtHrs(abwStd)} h` : ''}</div>`}
             </div>
             <div class="ma-worker-actions">${actions}</div>
         </div>
-        ${maBuildWorkerTable(worker.entries, isNu)}
+        ${worker.entries.length
+            ? maBuildWorkerTable(worker.entries, isNu)
+            : '<div class="ma-abw-empty">Keine Einsätze in diesem Zeitraum</div>'}
+        ${(!isNu && !kunde) ? maBuildAbsenceSection(abwList) : ''}
+    </div>`;
+}
+
+// ============================================================
+// ABWESENHEITEN (Anträge & Urlaub) — bezahlte Stunden nach dt. Recht.
+// Quelle: AbsenceCreditService über GET /disposition/completed-workers.
+// ============================================================
+function maBuildAbsenceSection(list) {
+    if (!list || !list.length) return '';
+    const sum = maAbwSumOf(list);
+
+    const katIcon = { urlaub: 'beach_access', krank: 'sick', sonstiges: 'event_busy' };
+    const fmtRange = r => wpFormatDate(r.startdatum)
+        + (r.enddatum && r.enddatum !== r.startdatum ? ' – ' + wpFormatDate(r.enddatum) : '');
+
+    const rows = list.map(r => {
+        const statusPill = r.status === 'pending'
+            ? '<span class="ma-status-pill pending">Beantragt</span>'
+            : `<span class="ma-status-pill absence">${parseInt(r.bezahlt) ? 'Bezahlt' : 'Unbezahlt'}</span>`;
+        const hints = (r.hinweise || []).map(h => `<div class="ma-ist-early" title="${escapeHtml(h)}">${escapeHtml(h)}</div>`).join('');
+        const daysTitle = (r.days || [])
+            .map(d => `${wpFormatDate(d.d)}: ${d.h > 0 ? maFmtHrs(d.h) + ' h' : '–'}${d.b ? ' (' + d.b + ')' : ''}`)
+            .join('\n');
+        return `<tr title="${escapeHtml(daysTitle)}">
+            <td data-label="Zeitraum">${escapeHtml(fmtRange(r))}</td>
+            <td data-label="Typ"><span class="ma-abw-typ">${maIcon(katIcon[r.kategorie] || 'event_busy', 'font-size:14px;vertical-align:-3px')} ${escapeHtml(r.typ)}</span></td>
+            <td data-label="Status">${statusPill}</td>
+            <td data-label="Tage" class="ma-text-center">${(+r.zeitraum_tage).toFixed(1).replace('.', ',')}</td>
+            <td data-label="Std" class="ma-text-right"><strong>${r.std > 0 ? maFmtHrs(r.std) : '–'}</strong></td>
+            <td data-label="Grundlage"><span class="ma-soll-sub">${escapeHtml(r.basis_label || '–')}</span></td>
+            <td data-label="Hinweis">${hints || '–'}</td>
+        </tr>`;
+    }).join('');
+
+    return `
+    <div class="ma-abw">
+        <div class="ma-abw-head">
+            ${maIcon('event_busy', 'font-size:15px')} Abwesenheiten
+            <span class="ma-abw-head-sub">aus „Anträge &amp; Urlaub“ · ${list.length === 1 ? '1 Eintrag' : list.length + ' Einträge'} · ${(+sum.tage || 0).toFixed(1).replace('.', ',')} Tage${sum.std > 0 ? ' · ' + maFmtHrs(sum.std) + ' h bezahlt' : ''}</span>
+        </div>
+        <div class="ma-table-wrap"><table class="ma-table ma-abw-table">
+            <thead><tr>
+                <th>Zeitraum</th><th>Typ</th><th>Status</th>
+                <th class="ma-text-center">Tage</th><th class="ma-text-right">Std</th>
+                <th>Grundlage</th><th>Hinweis</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table></div>
     </div>`;
 }
 
@@ -953,8 +1060,9 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
         const d = e.datum ? new Date(e.datum + 'T00:00:00') : null;
         const dayName = d ? DAYS_SHORT[d.getDay()] : '–';
         const isWeekend = d ? (d.getDay() === 0 || d.getDay() === 6) : false;
-        const statusClass = e.hms_bestaetigt === 'ja' ? 'confirmed' : (e.pruefung === 'geplant' ? 'planned' : 'pending');
-        const statusLabel = e.hms_bestaetigt === 'ja' ? 'Bestätigt' : (e.pruefung === 'geplant' ? 'Geplant' : 'Offen');
+        const abwCovered = !!e.abwesenheit_covered;
+        const statusClass = abwCovered ? 'absence' : (e.hms_bestaetigt === 'ja' ? 'confirmed' : (e.pruefung === 'geplant' ? 'planned' : 'pending'));
+        const statusLabel = abwCovered ? e.abwesenheit : (e.hms_bestaetigt === 'ja' ? 'Bestätigt' : (e.pruefung === 'geplant' ? 'Geplant' : 'Offen'));
 
         const sollStd = maSollStd(e);
         const sollPause = parseInt(e.soll_pause) || 0;
@@ -1038,12 +1146,12 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
         const anomalyTooltip = rowAnomalies.length > 0 ? `title="${escapeHtml(rowAnomalies.join(' · '))}"` : '';
 
         const rowNu = byObj ? !!e._isNu : isNu;
-        const rowFilter = byObj ? ` data-row-nu="${rowNu ? 1 : 0}" data-row-anomaly="${rowAnomalies.length ? 1 : 0}" data-row-name="${escapeHtml(maEntryWorkerName(e).toLowerCase())}" data-row-kunde="${escapeHtml((e.kundenname || '').trim())}"` : '';
+        const rowFilter = byObj ? ` data-row-nu="${rowNu ? 1 : 0}" data-row-anomaly="${rowAnomalies.length ? 1 : 0}" data-row-abw="${abwCovered ? 1 : 0}" data-row-name="${escapeHtml(maEntryWorkerName(e).toLowerCase())}" data-row-kunde="${escapeHtml((e.kundenname || '').trim())}"` : '';
         const dataAttrs = rowFilter + (rowNu
             ? `data-einsatz-id="${escapeHtml(e.einsatz_id)}" data-nu-worker-id="${escapeHtml(e.nu_worker_id)}" data-position-id="${escapeHtml(e.position_id || '')}"`
             : `data-einsatz-id="${escapeHtml(e.einsatz_id)}" data-dienst-nr="${escapeHtml(e.dienst_nr || '')}"`);
 
-        html += `<tr class="${rowAnomalyClass}" ${dataAttrs} ${anomalyTooltip}>
+        html += `<tr class="${rowAnomalyClass}${abwCovered ? ' has-absence' : ''}" ${dataAttrs} ${anomalyTooltip}>
             <td data-label="Datum">${wpFormatDate(e.datum)}</td>
             <td data-label="Tag"><span class="ma-day-chip ${isWeekend ? 'weekend' : ''}">${dayName}</span></td>
             ${byObj

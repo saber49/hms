@@ -171,6 +171,11 @@ function maCalcEntryStd(e) {
     // ist_std <= 0 means "not recorded" — falls back to planned hours,
     // identical to the Controlling billing side (NULLIF(ist_std,0)).
     if (e.ist_std != null && e.ist_std !== '' && parseFloat(e.ist_std) > 0) return parseFloat(e.ist_std);
+    // Shift falls on an approved full-day absence (Urlaub/Krank/…) and
+    // nothing was recorded — the plan hours are paid as absence credit
+    // (Abwesenheiten block), not as worked shift hours. Kunde mode projects
+    // kunden_std into ist_std first, so an office-set LN value still wins.
+    if (e.abwesenheit_covered) return 0;
     return e.ist_std_menge ? parseFloat(e.ist_std_menge) : 0;
 }
 
@@ -198,13 +203,16 @@ function maTodayIso() {
 function maDetectAnomalies(entry) {
     const e = entry._ma || entry;
     const anomalies = [];
+    if (entry.abw_aber_gearbeitet) {
+        anomalies.push(`Abwesenheit „${entry.abwesenheit || 'Abwesenheit'}“ eingetragen, aber gearbeitet`);
+    }
     const std = maIstStd(e);
     if (std == null) {
         // Internal workers only: they clock in the app, so a past shift
         // without any record is a no-show / forgotten stamp. NU times are
         // entered by the office and often stay on the plan by design.
         const running = !!e.app_clock_in && !e.app_clock_out;
-        if (!e.nu_worker_id && !running && e.datum && e.datum < maTodayIso()) anomalies.push('Keine Zeit erfasst');
+        if (!e.nu_worker_id && !running && e.datum && e.datum < maTodayIso() && !entry.abwesenheit_covered) anomalies.push('Keine Zeit erfasst');
         return anomalies;
     }
     const pause = e.em_pause != null && e.em_pause !== '' ? (parseInt(e.em_pause) || 0) : (parseInt(e.pause_minuten) || 0);
@@ -313,6 +321,7 @@ function maApplyFilters() {
                 if (_maFilter === 'internal' && tr.dataset.rowNu === '1') ok = false;
                 if (_maFilter === 'nu' && tr.dataset.rowNu !== '1') ok = false;
                 if (_maFilter === 'anomaly' && tr.dataset.rowAnomaly !== '1') ok = false;
+                if (_maFilter === 'abwesenheit' && tr.dataset.rowAbw !== '1') ok = false;
                 if (q && !(tr.dataset.rowName || '').includes(q) && !objName.includes(q)) ok = false;
                 if (_maFilterKunde && tr.dataset.rowKunde !== _maFilterKunde) ok = false;
                 if (_maFilterObjekt && block.dataset.objekt !== _maFilterObjekt) ok = false;
@@ -330,6 +339,7 @@ function maApplyFilters() {
         if (_maFilter === 'internal' && isNu) show = false;
         if (_maFilter === 'nu' && !isNu) show = false;
         if (_maFilter === 'anomaly' && !hasAnomaly) show = false;
+        if (_maFilter === 'abwesenheit' && block.dataset.hasAbw !== '1') show = false;
         if (q && !name.includes(q)) show = false;
         if (show && scopeActive) {
             let wk = [], wo = [];
@@ -809,7 +819,7 @@ function maExpGroups() {
     const s = _maExp;
     if (s.mode === 'view') return { intern: _maPageWorkers, nu: _maPageNuWorkers };
     if (!s.data) return null;
-    if (!s.data._groups) s.data._groups = { intern: maGroupInternalWorkers(s.data.entries || []), nu: maGroupNuWorkers(s.data.nu_entries || []) };
+    if (!s.data._groups) s.data._groups = { intern: maGroupInternalWorkers(s.data.entries || [], s.data.abwesenheiten || {}), nu: maGroupNuWorkers(s.data.nu_entries || []) };
     return s.data._groups;
 }
 
@@ -891,16 +901,18 @@ function maExpSummaryHtml() {
     if (s.error) return `${maIcon('error', 'font-size:18px')}<span>${escapeHtml(s.error)}</span>`;
     const sel = maExpSelection();
     const n = sel.reduce((a, x) => a + x.w.entries.length, 0);
-    if (!n) return `${maIcon('event_busy', 'font-size:18px')}<span>Keine bestätigten Einsätze ${s.objekt ? 'an diesem Objekt ' : ''}in diesem Zeitraum</span>`;
+    const abwN = sel.reduce((a, x) => a + (x.w.abw || []).length, 0);
+    if (!n && !abwN) return `${maIcon('event_busy', 'font-size:18px')}<span>Keine bestätigten Einsätze ${s.objekt ? 'an diesem Objekt ' : ''}in diesem Zeitraum</span>`;
     const std = sel.reduce((a, x) => a + maCalcWorkerTotal(x.w.entries), 0);
-    return `${maIcon('check_circle', 'font-size:18px')}<span><strong>${sel.length}</strong> Mitarbeiter · <strong>${n}</strong> Einsätze · <strong>${maFmtHrs(std)} h</strong></span>`;
+    const abwStd = sel.reduce((a, x) => a + (x.isNu ? 0 : maAbwSumOf(x.w.abw).std), 0);
+    return `${maIcon('check_circle', 'font-size:18px')}<span><strong>${sel.length}</strong> Mitarbeiter · <strong>${n}</strong> Einsätze${abwN ? ` · <strong>${abwN}</strong> Abwesenheiten` : ''} · <strong>${maFmtHrs(std + abwStd)} h</strong></span>`;
 }
 
 function maExpUpdateButton() {
     const s = _maExp; const btn = document.getElementById('maExpGo');
     if (!s || !btn) return;
     const sel = s.loading || s.error ? [] : maExpSelection();
-    const ready = sel.some(x => x.w.entries.length);
+    const ready = sel.some(x => x.w.entries.length || (x.w.abw || []).length);
     const single = sel.length === 1;
     btn.disabled = !ready || !!s.busy;
     btn.innerHTML = s.busy ? `${maSpinner(16)} Wird erstellt …`
@@ -958,7 +970,7 @@ async function maExpLoad() {
 /** Click on the primary button. Synchronous up to window.open (popup blockers). */
 function maExpRun() {
     const s = _maExp; if (!s || s.busy) return;
-    const sel = maExpSelection().filter(x => x.w.entries.length);
+    const sel = maExpSelection().filter(x => x.w.entries.length || (x.w.abw || []).length);
     if (!sel.length) return;
     const p = maExpPeriod(s);
     const single = sel.length === 1 ? sel[0] : null;
@@ -998,6 +1010,7 @@ function maWorkerVisible(worker, isNu) {
     if (_maFilter === 'internal' && isNu) return false;
     if (_maFilter === 'nu' && !isNu) return false;
     if (_maFilter === 'anomaly' && !worker.entries.some(e => maDetectAnomalies(e).length > 0)) return false;
+    if (_maFilter === 'abwesenheit' && !((worker.abw || _maAbw[worker.dienst_nr]) || []).length) return false;
     if (q && !name.includes(q)) return false;
     return maWorkerScopeMatch(worker);
 }
@@ -1005,7 +1018,7 @@ function maWorkerVisible(worker, isNu) {
 /** Visible workers in on-screen order (same sort + NU grouping as maRenderBlocks). */
 function maExportWorkers() {
     const out = [];
-    if (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly') {
+    if (_maFilter === 'all' || _maFilter === 'internal' || _maFilter === 'anomaly' || _maFilter === 'abwesenheit') {
         maSortWorkers(Object.values(_maPageWorkers)).forEach(w => { if (maWorkerVisible(w, false)) out.push({ w, isNu: false }); });
     }
     if (_maFilter === 'all' || _maFilter === 'nu' || _maFilter === 'anomaly') {
@@ -1071,6 +1084,8 @@ async function maExportCSV(opts) {
         let ext = [];
         try { ext = JSON.parse(e.app_verlaengerung_gruende || '[]') || []; } catch (err) { ext = []; }
         ext.forEach(g => notes.push(`verl. ${maUtcToLocalHm(g.am)} → ${maUtcToLocalHm(g.bis)}: ${g.grund || ''}`));
+        const hinweise = maDetectAnomalies(e);
+        if (e.abwesenheit_covered) hinweise.unshift('Abwesend: ' + (e.abwesenheit || ''));
         return [
             isNu ? 'NU' : 'Intern',
             isNu ? (e.personal_nr || ('NU-' + e.nu_worker_id)) : (e.dienst_nr || ''),
@@ -1100,7 +1115,7 @@ async function maExportCSV(opts) {
             r2(std),
             status,
             isNu ? '' : (parseInt(e.zeit_freigabe) === 1 ? 'Ja' : 'Nein'),
-            maDetectAnomalies(e).join(' · '),
+            hinweise.join(' · '),
             e.einsatz_id || ''
         ];
     };
@@ -1132,7 +1147,7 @@ async function maExportCSV(opts) {
             abr: r2(maCalcEntryStd(e)),
             quelle: MA_IST_QUELLE[e.ist_quelle] ? MA_IST_QUELLE[e.ist_quelle].label : '',
             frei: isNu ? '' : (parseInt(e.zeit_freigabe) === 1 ? 'Ja' : 'Nein'),
-            hinweise: maDetectAnomalies(e).join(' · '),
+            hinweise: (e.abwesenheit_covered ? 'Abwesend: ' + (e.abwesenheit || '') + ' · ' : '') + maDetectAnomalies(e).join(' · '),
         });
     }));
     const sum = list => {
@@ -1229,20 +1244,41 @@ async function maExportCSV(opts) {
             freiTxt(t), t.anom ? `${t.anom} Hinweise` : '']);
     });
 
+    // ── Sheet 4 · Abwesenheiten (Anträge & Urlaub, bezahlte Stunden nach dt. Recht) ──
+    const abwHeaders = ['Mitarbeiter', 'Nr.', 'Von', 'Bis', 'Tage', 'Typ', 'Kategorie',
+        'Status', 'Bezahlt', 'Stunden', 'Grundlage', 'Hinweise'];
+    const abwRows = [];
+    workers.forEach(({ w, isNu }) => {
+        if (isNu) return;
+        (w.abw || _maAbw[w.dienst_nr] || []).forEach(r => {
+            abwRows.push([wName(w, false), w.dienst_nr || '', fmtDate(r.startdatum), fmtDate(r.enddatum),
+                +(+r.zeitraum_tage).toFixed(1), r.typ || '', r.kategorie || '',
+                r.status === 'pending' ? 'Beantragt' : 'Genehmigt',
+                parseInt(r.bezahlt) ? 'Ja' : 'Nein',
+                r.std > 0 ? r2(r.std) : 0, r.basis_label || '', (r.hinweise || []).join(' · ')]);
+        });
+    });
+    abwRows.sort((a, b) => a[0].localeCompare(b[0], 'de') || String(a[2]).localeCompare(String(b[2])));
+
+    const extraSheets = [
+        { title: 'Nach Mitarbeiter', headers: maHeaders, rows: ma, layout: {
+            group_rows: maGroup, sum_rows: maSum, num_cols: [7, 11, 12, 13], int_cols: [10], landscape: true,
+            widths: [11, 5, 40, 34, 16, 9, 9, 9, 9, 9, 10, 9, 11, 13, 10, 12, 40] } },
+        { title: 'Nach Objekt', headers: obHeaders, rows: ob, layout: {
+            group_rows: obGroup, sum_rows: obSum, num_cols: [8, 12, 13, 14], int_cols: [11], landscape: true,
+            widths: [11, 5, 24, 10, 22, 16, 9, 9, 9, 9, 9, 10, 9, 11, 13, 12, 40] } },
+        { title: 'Alle Einsätze', headers, rows, layout: {
+            autofilter: true, num_cols: [13, 17, 18, 24], int_cols: [12, 16, 22], landscape: true } },
+    ];
+    if (abwRows.length) extraSheets.push({ title: 'Abwesenheiten', headers: abwHeaders, rows: abwRows, layout: {
+        autofilter: true, num_cols: [4, 9], landscape: true,
+        widths: [26, 10, 11, 11, 7, 22, 11, 11, 9, 9, 22, 50] } });
+
     const fileLabel = opts ? opts.fileLabel : maCurrentFileLabel();
     const fileSuffix = opts && opts.fileSuffix ? '_' + opts.fileSuffix : (filterLabel ? '_gefiltert' : '');
     const filename = `Zeiterfassung_${fileLabel}${fileSuffix}.xlsx`;
     try {
-        await downloadXlsx(filename, 'Übersicht', ovHeaders, ov, [
-            { title: 'Nach Mitarbeiter', headers: maHeaders, rows: ma, layout: {
-                group_rows: maGroup, sum_rows: maSum, num_cols: [7, 11, 12, 13], int_cols: [10], landscape: true,
-                widths: [11, 5, 40, 34, 16, 9, 9, 9, 9, 9, 10, 9, 11, 13, 10, 12, 40] } },
-            { title: 'Nach Objekt', headers: obHeaders, rows: ob, layout: {
-                group_rows: obGroup, sum_rows: obSum, num_cols: [8, 12, 13, 14], int_cols: [11], landscape: true,
-                widths: [11, 5, 24, 10, 22, 16, 9, 9, 9, 9, 9, 10, 9, 11, 13, 12, 40] } },
-            { title: 'Alle Einsätze', headers, rows, layout: {
-                autofilter: true, num_cols: [13, 17, 18, 24], int_cols: [12, 16, 22], landscape: true } },
-        ], {
+        await downloadXlsx(filename, 'Übersicht', ovHeaders, ov, extraSheets, {
             title_rows: titleRows, group_rows: ovGroup, sum_rows: ovSum, head_rows: ovHead,
             num_cols: [6, 7, 8, 9], int_cols: [4, 5, 10, 12], landscape: true,
             widths: [34, 12, 8, 40, 10, 8, 10, 10, 12, 13, 9, 12, 10],

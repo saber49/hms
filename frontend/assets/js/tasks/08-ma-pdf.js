@@ -103,6 +103,17 @@ function maBuildWorkerTemplateTable(worker) {
             escapeHtml(std ? std.toFixed(2) : '-'),
         ];
         return '<tr>' + cells.map((c, idx) => `<td style="${tdStyle}${idx === 0 ? 'width:42px;color:var(--gray-500);' : ''}${idx === 7 ? 'text-align:right;' : ''}">${c}</td>`).join('') + '</tr>';
+    }).join('') + maAbsenceDocRows(worker).map((r, ai) => {
+        total += r.std;
+        const cells = [
+            escapeHtml(String((worker.entries || []).length + ai + 1)),
+            escapeHtml(r.datum),
+            'Abw.',
+            escapeHtml(r.objekt),
+            '–', '–', '–',
+            escapeHtml(r.std ? r.std.toFixed(2) : '–'),
+        ];
+        return '<tr class="ma-abw-row">' + cells.map((c, idx) => `<td style="${tdStyle}${idx === 0 ? 'width:42px;color:var(--gray-500);' : ''}${idx === 7 ? 'text-align:right;' : ''}">${c}</td>`).join('') + '</tr>';
     }).join('');
     const body = rows || '<tr><td colspan="8" style="padding:18px;text-align:center;color:var(--gray-400)">Keine Einsätze</td></tr>';
     const html = `<table style="width:100%;border-collapse:collapse;margin-top:6px"><thead>${thead}</thead><tbody>${body}</tbody></table>`;
@@ -176,6 +187,16 @@ function maBuildWorkerPDFHtml(worker, monthLabel) {
             '<td>' + (pause > 0 ? pause + ' Min' : '-') + '</td>' +
             '<td style="text-align:right">' + (std ? std.toFixed(2) : '-') + '</td>' +
             '</tr>';
+    }).join('') + maAbsenceDocRows(worker).map((r, ai) => {
+        totalStd += r.std;
+        return '<tr class="ma-abw-row">' +
+            '<td>' + (worker.entries.length + ai + 1) + '</td>' +
+            '<td>' + escapeHtml(r.datum) + '</td>' +
+            '<td>Abw.</td>' +
+            '<td>' + escapeHtml(r.objekt) + '</td>' +
+            '<td>–</td><td>–</td><td>–</td>' +
+            '<td style="text-align:right">' + (r.std ? r.std.toFixed(2) : '–') + '</td>' +
+            '</tr>';
     }).join('');
 
     const primary = _maBrand.primary || '#1e3a5f';
@@ -208,6 +229,7 @@ function maBuildWorkerPDFHtml(worker, monthLabel) {
         `.summary strong { font-size:12px; }` +
         `.footer { margin-top:24px; padding-top:8px; border-top:1px solid var(--gray-200); display:flex; justify-content:space-between; font-size:7px; color:#999; }` +
         `.sub { display:block; font-size:7.5px; color:#6b7280; } .legend { margin-top:8px; font-size:7.5px; line-height:1.45; color:#6b7280; }` +
+        `.ma-abw-row td { color:#6b7280; }` +
         `@media print { body { padding:10mm; } @page { margin:0; size:A4; } }` +
         `</style></head><body>` +
         _maHeaderHtml(companyName, 'Stundennachweis / Monatsabschluss', monthLabel, logoImg) +
@@ -257,12 +279,26 @@ function maWorkerTimeCellsHtml(e) {
     return '<td>' + escapeHtml(t.von) + '</td><td>' + escapeHtml(t.bis) + '</td>';
 }
 
+/** Abwesenheiten (Anträge & Urlaub) als Tabellenzeilen für den Stundennachweis. */
+function maAbsenceDocRows(worker) {
+    const list = worker.abw || _maAbw[worker.dienst_nr] || [];
+    return list.map(r => ({
+        datum: wpFormatDate(r.startdatum)
+            + (r.enddatum && r.enddatum !== r.startdatum ? ' – ' + wpFormatDate(r.enddatum) : ''),
+        tag: 'Abw.',
+        objekt: (r.typ || 'Abwesenheit') + (r.status === 'pending' ? ' (beantragt)' : ''),
+        von: '–', bis: '–', pause: 0,
+        std: parseFloat(r.std) || 0,
+        abw: 1,
+    }));
+}
+
 // Rows for the shared PDF editor (order_form.php?doc=worker) — the same
 // hour/pause maths as maBuildWorkerPDFHtml, so editor and print match.
 function maBuildWorkerDocData(worker, monthLabel) {
     let totalStd = 0;
     let totalPause = 0;
-    const rows = (worker.entries || []).map((e) => {
+    const shiftRows = (worker.entries || []).map((e) => {
         const d = e.datum ? new Date(e.datum + 'T00:00:00') : null;
         const std = maCalcEntryStd(e);
         const pause = wpCalcPause(e.ist_start, e.ist_ende, std, e.pause_minuten ?? 0);
@@ -275,13 +311,18 @@ function maBuildWorkerDocData(worker, monthLabel) {
             pause, std,
         };
     });
+    // Paid absences are payroll hours too — appended as "Abw." rows after the shifts.
+    const abwRows = maAbsenceDocRows(worker);
+    const abwStd = abwRows.reduce((s, r) => s + (r.std || 0), 0);
+    const rows = shiftRows.concat(abwRows);
+    totalStd += abwStd;
     const objInfo = maWorkerObjektInfo(worker.entries);
     return {
         // Archive key of this Stundennachweis (POST /api/dokument-archiv).
         archive_ref: worker.dienst_nr ? 'MA:' + worker.dienst_nr + '|' + String(monthLabel || '').replace(/[|\u0000-\u001f]/g, ' ').slice(0, 80) : '',
         name: ((worker.vorname || '') + ' ' + (worker.name || '')).trim() || worker.dienst_nr,
         objekt: objInfo.objekt, anschrift: objInfo.anschrift, monthLabel,
-        rows, totalStd, totalPause,
+        rows, totalStd, totalPause, shiftCount: shiftRows.length, abwStd,
     };
 }
 
@@ -405,6 +446,9 @@ function maDownloadAllPDFsLegacy(opts) {
             totalStd += std;
             totalPause += pause;
             return '<tr><td>' + (i+1) + '</td><td>' + wpFormatDate(e.datum) + '</td><td>' + dayName + '</td><td>' + escapeHtml(e.objektname||'-') + '</td>' + maWorkerTimeCellsHtml(e) + '<td>' + (pause>0?pause+' Min':'-') + '</td><td style="text-align:right">' + (std?std.toFixed(2):'-') + '</td></tr>';
+        }).join('') + maAbsenceDocRows(w).map((r, ai) => {
+            totalStd += r.std;
+            return '<tr class="ma-abw-row"><td>' + (w.entries.length + ai + 1) + '</td><td>' + escapeHtml(r.datum) + '</td><td>Abw.</td><td>' + escapeHtml(r.objekt) + '</td><td>–</td><td>–</td><td>–</td><td style="text-align:right">' + (r.std ? r.std.toFixed(2) : '–') + '</td></tr>';
         }).join('');
         const oi = maWorkerObjektInfo(w.entries);
         return '<div class="page">' +
@@ -466,6 +510,7 @@ function maDownloadAllPDFsLegacy(opts) {
         '.summary { display:flex; justify-content:flex-end; gap:20px; padding:8px 12px; background:' + primary + '; color:white; border-radius:4px; font-size:10px; } .summary strong { font-size:12px; }' +
         '.footer { margin-top:24px; padding-top:8px; border-top:1px solid var(--gray-200); display:flex; justify-content:space-between; font-size:7px; color:#999; }' +
         '.sub { display:block; font-size:7.5px; color:#6b7280; } .legend { margin-top:8px; font-size:7.5px; line-height:1.45; color:#6b7280; }' +
+        '.ma-abw-row td { color:#6b7280; }' +
         '@media print { .page { padding:10mm; page-break-after:always; } .page:last-child { page-break-after:auto; } @page { margin:0; size:A4; } }' +
         '</style></head><body>' + allHtml + nuHtml + '</body></html>';
 

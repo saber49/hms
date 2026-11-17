@@ -1910,3 +1910,50 @@ body:has(.ma-page[class*="ma-theme-"]) .ma-topbar-stack .ma-month-nav { backgrou
 .ma-mode-switch md-filter-chip.ma-tab:not(.kunde) { --md-filter-chip-selected-container-color: var(--md-ext-color-success-container); --md-filter-chip-selected-label-text-color: var(--md-ext-color-on-success-container); --md-filter-chip-selected-icon-color: var(--md-ext-color-on-success-container); }
 .ma-mode-switch md-filter-chip.ma-tab.kunde { --md-filter-chip-selected-container-color: var(--md-sys-color-primary-container); --md-filter-chip-selected-label-text-color: var(--md-sys-color-on-primary-container); --md-filter-chip-selected-icon-color: var(--md-sys-color-on-primary-container); }
 md-outlined-select.ma-scope-select { min-width: 180px; --md-outlined-field-top-space: 8px; --md-outlined-field-bottom-space: 8px; }
+
+/* ============================================================
+   ABWESENHEITEN (Anträge & Urlaub) — per-worker block inside
+   the Monatsabschluss; paid hours follow the German rules
+   computed by AbsenceCreditService.
+   ============================================================ */
+.ma-status-pill.absence {
+    background: var(--md-ext-color-info-container, var(--gray-100));
+    color: var(--md-ext-color-on-info-container, var(--gray-600));
+}
+.ma-status-pill.absence::before { background: var(--md-ext-color-info, var(--gray-600)); }
+tr.has-absence td { background: var(--md-ext-color-info-container, var(--gray-50)); }
+tr.has-absence:hover td { background: var(--md-ext-color-info-container, var(--gray-50)); }
+
+.ma-abw {
+    border-top: 1px dashed var(--md-sys-color-outline-variant, var(--border, #e2e8f0));
+    padding: 10px 14px 14px;
+}
+.ma-abw-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: var(--md-sys-typescale-label-large-size, 0.8rem);
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface-variant, var(--gray-600));
+    margin-bottom: 8px;
+}
+.ma-abw-head .material-symbols-outlined { font-size: 15px; vertical-align: -3px; }
+.ma-abw-head-sub {
+    font-weight: 500;
+    font-size: var(--md-sys-typescale-body-small-size, 0.75rem);
+    color: var(--md-sys-color-on-surface-variant, var(--gray-500));
+}
+.ma-abw-table th,
+.ma-abw-table td { font-size: var(--md-sys-typescale-body-small-size, 0.78rem); }
+.ma-abw-table .ma-abw-typ { font-weight: 600; }
+.ma-worker-meta-chip.ma-abw-chip {
+    background: var(--md-ext-color-info-container, var(--gray-100));
+    color: var(--md-ext-color-on-info-container, var(--gray-600));
+}
+.ma-abw-empty {
+    padding: 14px;
+    text-align: center;
+    font-size: var(--md-sys-typescale-body-small-size, 0.8rem);
+    color: var(--md-sys-color-on-surface-variant, var(--gray-500));
+}
+.ma-kpi.abw .ma-kpi-icon { color: var(--md-ext-color-info, var(--gray-600)); }

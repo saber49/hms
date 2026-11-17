@@ -1127,7 +1127,7 @@
             TENANT.company_phone ? 'Tel: ' + TENANT.company_phone : '', TENANT.company_email].filter(Boolean).join(' | ');
         // Only the counted (quarter-rounded) times are printed — no Plan
         // column, no real app stamps (both removed 2026-10-23).
-        const rows = (d.rows || []).map((r, i) => `<tr>
+        const rows = (d.rows || []).map((r, i) => `<tr${r.abw ? ' class="wkd-abw"' : ''}>
                 <td ${E}>${i + 1}</td>
                 <td ${E}>${esc(r.datum)}</td>
                 <td ${E}>${esc(r.tag)}</td>
@@ -1137,7 +1137,9 @@
                 <td ${E}>${r.pause > 0 ? r.pause + ' Min' : '–'}</td>
                 <td class="ocd-num" ${E}>${r.std ? n2(r.std) : '–'}</td>
             </tr>`).join('');
-        const count = (d.rows || []).length;
+        // "Einsätze" counts shifts only — appended Abwesenheiten rows
+        // (paid Urlaub/Krank hours) still count into totalStd.
+        const count = d.shiftCount != null ? d.shiftCount : (d.rows || []).length;
         const cols = 8;
         return `
             ${headerHtml(companyName, companyInfo)}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Mail\NuNotificationMail;
 use App\Services\AbrechnungDataService;
+use App\Services\AbsenceCreditService;
 use App\Services\TenantService;
 use App\Support\BereichScope;
 use Carbon\Carbon;
@@ -1452,12 +1453,31 @@ class DispositionController extends Controller
 
         $settlement = AbrechnungDataService::completedAssignments($request->user(), $startDate, $endDate);
 
+        // Abwesenheiten aus "Anträge & Urlaub": paid hours per German law
+        // (AbsenceCreditService) + the shifts they cover so a sick worker's
+        // plan is not counted as worked time.
+        $absenzen = AbsenceCreditService::forPeriod($request->user(), $startDate, $endDate);
+        foreach ($settlement['entries'] as $row) {
+            $cov = $absenzen['covered'][$row->dienst_nr][substr((string) $row->datum, 0, 10)] ?? null;
+            if (!$cov) continue;
+            $row->abwesenheit = $cov['typ'];
+            if ($row->ist_std !== null && (float) $row->ist_std > 0) {
+                $row->abw_aber_gearbeitet = 1;   // recorded work despite the absence
+            } else {
+                $row->abwesenheit_covered = 1;   // plan hours become absence credit
+            }
+        }
+
         return response()->json(array_merge([
             'monat' => $monat,
             'jahr' => $jahr,
             'von' => $startDate,
             'bis' => $endDate,
-        ], $settlement));
+        ], $settlement, [
+            'abwesenheiten' => $absenzen['records'],
+            'abwesenheit_summen' => $absenzen['summen'],
+            'total_abwesenheit_std' => $absenzen['total_std'],
+        ]));
     }
 
     /**
