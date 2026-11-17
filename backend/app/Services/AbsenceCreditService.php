@@ -190,6 +190,7 @@ class AbsenceCreditService
                     'typ' => $r->typ,
                     'kategorie' => $kat,
                     'status' => $status,
+                    'zeit_freigabe' => (int) ($r->zeit_freigabe ?? 0),
                     'bezahlt' => (int) $r->bezahlt,
                     'ganzer_tag' => (int) ($r->ganzer_tag ?? 1),
                     'startdatum' => substr((string) $r->startdatum, 0, 10),

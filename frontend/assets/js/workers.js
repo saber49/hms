@@ -210,6 +210,7 @@ function wkProfileCompleteness(w) {
     if (!w || w.aktiv != 1) return { pct: 100, missing: [], severity: null };
 
     const missing = [];
+    const absent = wkAbsentFields(w);
     let critMissing = 0;
 
     for (const f of WK_REQUIRED_FIELDS) {
@@ -217,7 +218,7 @@ function wkProfileCompleteness(w) {
         const empty = f.isMissing
             ? f.isMissing(v)
             : (v === null || v === undefined || String(v).trim() === '');
-        if (empty) {
+        if (empty && !absent.has(f.key)) {
             missing.push({ key: f.key, label: f.label, critical: !!f.critical });
             if (f.critical) critMissing++;
         }
@@ -934,7 +935,7 @@ async function wkOpenUrlaubDetail() {
 // ============================================================
 // DOC RENEWALS — request / approve / reject
 // ============================================================
-async function wkRequestDocRenewal(dienstNr, docId, titel) {
+async function wkRequestDocRenewal(dienstNr, docId, titel, fromProfile = false) {
     const result = await apiPost(WK_API.renewals + '/request', {
         dienst_nr: dienstNr,
         dokument_id: docId,
@@ -942,7 +943,8 @@ async function wkRequestDocRenewal(dienstNr, docId, titel) {
     });
     if (result && result.success) {
         showToast('Erneuerung angefordert — Mitarbeiter wurde benachrichtigt');
-        wkOpenExpiringDocs();
+        if (fromProfile) wkLoadDocs(dienstNr);
+        else wkOpenExpiringDocs();
     } else {
         showToast((result && result.error) || 'Fehler beim Anfordern', 'error');
     }
@@ -996,7 +998,7 @@ async function wkOpenRenewalLog(id) {
     document.getElementById('workersDialogBody').innerHTML = html;
 }
 
-function wkApproveDocRenewal(id, ablaufNeu) {
+function wkApproveDocRenewal(id, ablaufNeu, dienstNr) {
     const body = `
         <div style="padding:4px 2px">
             <p style="margin:0 0 12px">Das hochgeladene Dokument wird das bisherige ersetzen.</p>
@@ -1013,7 +1015,8 @@ function wkApproveDocRenewal(id, ablaufNeu) {
         const r = await apiPost(WK_API.renewals + '/' + id + '/approve', { ablaufdatum });
         if (r && r.success) {
             showToast('Dokument genehmigt und übernommen');
-            wkOpenExpiringDocs();
+            if (dienstNr) wkLoadDocs(dienstNr);
+            else wkOpenExpiringDocs();
             if (typeof wkLoadStats === 'function') { try { wkLoadStats(); } catch (e) {} }
         } else {
             showToast((r && r.error) || 'Fehler bei der Genehmigung', 'error');
@@ -1119,7 +1122,7 @@ async function wkOpenProfile(dienstNr) {
     window._wkCurrentWorker = w;
     wkLoadDocs(dienstNr, w);
     wkLoadChecklist(dienstNr);
-    wkLoadAbsences(dienstNr);
+    await wkLoadAbsences(dienstNr);
     wkLoadActivity(dienstNr);
     wkLoadLager(dienstNr);
 }
@@ -1139,10 +1142,37 @@ function wkSwitchTab(btn) {
  * Empty values render a soft "Nicht hinterlegt"; the header pill counts the
  * filled data fields (info fields such as Status are not counted).
  */
+const WK_OPTIONAL_FIELDS = {
+    geburtsname: 'Geburtsname', geburtsort: 'Geburtsort', geburtsland: 'Geburtsland',
+    kinderzahl_freibetrag: 'Kinder / Freibetrag', telefon: 'Telefon (Festnetz)',
+    mobil: 'Mobil', strasse: 'Straße', plz: 'PLZ', ort: 'Ort',
+    personalausweis_nr: 'Personalausweis-Nr.', personalausweis_gueltig_ab: 'Gültig ab',
+    personalausweis_gueltig_bis: 'Gültig bis', bewacherregister_nr: 'Bewacherregister-Nr.',
+    funkrufname: 'Funkrufname', dfb_pin: 'DFB-Pin', barcode: 'Barcode',
+    ordnernummer: 'Ordnernummer',
+};
+const WK_OPTIONAL_INPUTS = {
+    geburtsname: 'f_w_geburtsname', geburtsort: 'f_w_geburtsort', geburtsland: 'f_w_geburtsland',
+    kinderzahl_freibetrag: 'f_w_kinder', telefon: 'f_w_telefon', mobil: 'f_w_mobil',
+    strasse: 'f_w_strasse', plz: 'f_w_plz', ort: 'f_w_ort',
+    personalausweis_nr: 'f_w_pa_nr', personalausweis_gueltig_ab: 'f_w_pa_ab',
+    personalausweis_gueltig_bis: 'f_w_pa_bis', bewacherregister_nr: 'f_w_bewreg',
+    funkrufname: 'f_w_funk', dfb_pin: 'f_w_dfbpin', barcode: 'f_w_barcode',
+    ordnernummer: 'f_w_ordner',
+};
+function wkAbsentFields(w) {
+    try { return new Set(Array.isArray(w.nicht_vorhanden) ? w.nicht_vorhanden : JSON.parse(w.nicht_vorhanden || '[]')); }
+    catch { return new Set(); }
+}
+function wkToggleAbsent(input, checkbox) {
+    input.disabled = checkbox.checked;
+    if (checkbox.checked) input.value = '';
+}
+
 function wkSdSection(icon, title, fields) {
     const isEmpty = (html) => String(html ?? '').replace(/<[^>]*>/g, '').trim() === '';
     const counted = fields.filter(x => !(x[2] && x[2].info));
-    const filled = counted.filter(x => !isEmpty(x[1])).length;
+    const filled = counted.filter(x => !isEmpty(x[1]) || x[2]?.absent).length;
     const pill = counted.length
         ? `<span class="wk-sd-meta ${filled === counted.length ? 'is-done' : ''}" title="${filled} von ${counted.length} Feldern ausgefüllt">${filled === counted.length ? wkIcon('check_circle') : ''}${filled}/${counted.length}</span>`
         : '';
@@ -1155,10 +1185,10 @@ function wkSdSection(icon, title, fields) {
             </header>
             <div class="wk-sd-fields">
                 ${fields.map(([label, html, o = {}]) => {
-                    const empty = isEmpty(html);
+                    const empty = isEmpty(html) && !o.absent;
                     return `<div class="wk-sd-field${o.wide ? ' is-wide' : ''}${empty ? ' is-empty' : ''}">
                         <span class="wk-sd-label">${escapeHtml(label)}</span>
-                        <span class="wk-sd-value${o.mono && !empty ? ' is-mono' : ''}">${empty ? 'Nicht hinterlegt' : html}</span>
+                        <span class="wk-sd-value${o.mono && !empty ? ' is-mono' : ''}">${o.absent ? 'Nicht vorhanden' : (empty ? 'Nicht hinterlegt' : html)}</span>
                     </div>`;
                 }).join('')}
             </div>
@@ -1166,6 +1196,7 @@ function wkSdSection(icon, title, fields) {
 }
 
 function wkStammdatenTabHtml(w) {
+    const absent = wkAbsentFields(w);
     const f = (v) => v || '';
     const adresse = [w.strasse, [w.plz, w.ort].filter(Boolean).join(' '), w.bundesland, w.land].filter(Boolean).join(', ');
     const geschlechtLabel = { m: 'männlich', w: 'weiblich', d: 'divers', k: 'keine Angabe' }[w.geschlecht] || '';
@@ -1179,8 +1210,13 @@ function wkStammdatenTabHtml(w) {
         ? formatDate(String(w.app_last_login).substring(0, 10)) + (w.app_first_login ? ` <small style="color:var(--gray-500);font-weight:400">(erstmals ${formatDate(String(w.app_first_login).substring(0, 10))})</small>` : '')
         : '<span class="status status-nein">Noch kein App-Login</span>';
 
+    const section = (icon, title, fields) => wkSdSection(icon, title, fields.map(([label, html, opts = {}]) => {
+        const key = Object.keys(WK_OPTIONAL_FIELDS).find(k => WK_OPTIONAL_FIELDS[k] === label);
+        return [label, html, { ...opts, absent: (!!key && absent.has(key))
+            || (label === 'Adresse' && ['strasse', 'plz', 'ort'].every(k => absent.has(k))) }];
+    }));
     const sections = [
-        wkSdSection('person', 'Persönliche Daten', [
+        section('person', 'Persönliche Daten', [
             ['Anrede', e(w.anrede)],
             ['Geschlecht', escapeHtml(geschlechtLabel)],
             ['Vorname', e(w.vorname)],
@@ -1193,17 +1229,17 @@ function wkStammdatenTabHtml(w) {
             ['Familienstand', e(w.familienstand)],
             ['Kinder / Freibetrag', f(w.kinderzahl_freibetrag)],
         ]),
-        wkSdSection('call', 'Kontakt', [
+        section('call', 'Kontakt', [
             ['E-Mail', w.email ? `<a href="mailto:${escapeHtml(w.email)}" style="color:var(--wk-accent)">${escapeHtml(w.email)}</a>` : '', { wide: true }],
             ['Telefon (Festnetz)', e(w.telefon)],
             ['Mobil', e(w.mobil)],
             ['Adresse', escapeHtml(adresse), { wide: true }],
         ]),
-        wkSdSection('work', 'Beschäftigung', [
+        section('work', 'Beschäftigung', [
             ['Art', e(w.art_der_beschaeftigung)],
             ['Bereich', e(((typeof bereichTagsOf === 'function') ? bereichTagsOf(w) : [w.bereich].filter(Boolean)).join(', '))],
             ['Eintritt', w.eintritt ? formatDate(w.eintritt) : ''],
-            ['Austritt', w.austritt ? formatDate(w.austritt) : ''],
+            ['Austritt', w.austritt ? formatDate(w.austritt) : '', { info: true }],
             ['Std-Typ', e(w.arbeitsstunden_typ)],
             ['Std', w.arbeitsstunden ? w.arbeitsstunden + ' Std' : ''],
             [w.lohn_typ === 'gehalt' ? 'Gehalt' : 'Lohn', lohnHtml],
@@ -1212,14 +1248,14 @@ function wkStammdatenTabHtml(w) {
             ['App-Zugang', w.app_zugang == 1 ? '<span class="status status-ja">Ja</span>' : '<span class="status status-nein">Nein</span>', { info: true }],
             ...(w.app_zugang == 1 ? [['App zuletzt genutzt', appLoginHtml, { info: true }]] : []),
         ]),
-        wkSdSection('badge', 'Personalausweis', [
+        section('badge', 'Personalausweis', [
             ['Personalausweis-Nr.', e(w.personalausweis_nr), { mono: true, wide: true }],
             ['Gültig ab', w.personalausweis_gueltig_ab ? formatDate(w.personalausweis_gueltig_ab) : ''],
             ['Gültig bis', w.personalausweis_gueltig_bis ? formatDate(w.personalausweis_gueltig_bis) : ''],
         ]),
         // Security-specific block — only for workers whose Bereich contains
         // "Sicherheit" (same rule as the edit modal's Sicherheits-Tab).
-        sec.bew ? wkSdSection('shield', sec.std ? 'Bewachung & DFB' : 'Bewachung', [
+        sec.bew ? section('shield', sec.std ? 'Bewachung & DFB' : 'Bewachung', [
             ['Bewacherregister-Nr.', e(w.bewacherregister_nr)],
             ['Funkrufname', e(w.funkrufname)],
             ...(sec.std ? [
@@ -1235,7 +1271,7 @@ function wkStammdatenTabHtml(w) {
         wkSdSection('account_balance', 'Steuer & Sozialversicherung', [
             ['Steuer-ID', e(w.steuer_id), { mono: true }],
             ['SV-Nummer', e(w.sv_nummer), { mono: true }],
-            ['Steuerklasse', f(w.steuerklasse)],
+            ['Steuerklasse', w.steuerklasse ? `${escapeHtml(w.steuerklasse)}${w.steuerklasse == 4 && w.steuer_faktor ? ' · Faktor ' + escapeHtml(w.steuer_faktor) : ''}` : ''],
             ['Krankenkasse', e(w.krankenkasse)],
         ]),
         wkSdSection('account_balance_wallet', 'Bankverbindung', [
@@ -1287,6 +1323,8 @@ async function wkLoadDocs(dienstNr, loaded) {
     // The profile passes the worker it just fetched; reloads fetch fresh.
     const w = loaded || await apiGet(WK_API.show(dienstNr));
     const docs = w?.dokumente || [];
+    const requests = await apiGet(WK_API.renewals);
+    const ownRequests = Array.isArray(requests) ? requests.filter(r => r.dienst_nr === dienstNr && r.status !== 'genehmigt') : [];
     document.getElementById('wkTabCountDocs').textContent = docs.length;
 
     container.innerHTML = `
@@ -1313,6 +1351,23 @@ async function wkLoadDocs(dienstNr, loaded) {
                 </div>
             </div>
         </div>
+        <div class="wk-docs-upload" style="margin-top:12px">
+            <strong>Dokument beim Mitarbeiter anfordern</strong>
+            <div class="wk-docs-upload-grid" style="margin-top:10px">
+                <md-outlined-text-field id="wkRequestTitel" label="Dokumenttitel *" placeholder="z. B. Führungszeugnis" style="width:100%"></md-outlined-text-field>
+                <md-outlined-text-field id="wkRequestNachricht" label="Nachricht (optional)" style="width:100%"></md-outlined-text-field>
+                <md-filled-tonal-button onclick="wkRequestNewDoc('${dienstNr}')"><md-icon slot="icon">send</md-icon>Anfordern</md-filled-tonal-button>
+            </div>
+            ${ownRequests.length ? `<div style="margin-top:12px">${ownRequests.map(r => `
+                <div class="wk-cl-item">
+                    <div class="wk-cl-body"><strong>${escapeHtml(r.titel)}</strong> · ${escapeHtml(r.status)}${r.nachricht ? `<div class="wk-cl-meta">${escapeHtml(r.nachricht)}</div>` : ''}</div>
+                    ${r.status === 'hochgeladen' ? `
+                        <md-outlined-button onclick="wkOpenRenewalFile(${r.id})">Ansehen</md-outlined-button>
+                        <md-filled-tonal-button onclick="wkApproveDocRenewal(${r.id},'', '${dienstNr}')">Genehmigen</md-filled-tonal-button>
+                        <md-outlined-button onclick="wkRejectDocRenewal(${r.id})">Ablehnen</md-outlined-button>` : ''}
+                    ${r.status === 'angefordert' || r.status === 'abgelehnt' ? `<md-outlined-button onclick="wkResendDocRenewal(${r.id})">Erinnern</md-outlined-button>` : ''}
+                </div>`).join('')}</div>` : ''}
+        </div>
         <div class="wk-docs-grid">
             ${docs.length ? docs.map(d => wkDocCardHtml(d, dienstNr)).join('') : `<div class="wk-empty" style="grid-column:1/-1">${wkIcon('picture_as_pdf')}<p>Noch keine Dokumente</p></div>`}
         </div>
@@ -1320,6 +1375,31 @@ async function wkLoadDocs(dienstNr, loaded) {
 
     // Lazy-load PDF/image thumbnails for the freshly rendered cards.
     if (typeof hydrateSecureThumbs === 'function') hydrateSecureThumbs(container);
+}
+
+async function wkRequestNewDoc(dienstNr) {
+    const titel = document.getElementById('wkRequestTitel')?.value.trim();
+    if (!titel) { showToast('Dokumenttitel eingeben', 'warning'); return; }
+    const result = await apiPost(WK_API.renewals + '/request', {
+        dienst_nr: dienstNr, titel, nachricht: document.getElementById('wkRequestNachricht')?.value.trim() || null,
+    });
+    if (result?.success) { showToast('Dokument angefordert'); wkLoadDocs(dienstNr); }
+    else showToast(result?.error || 'Anfrage fehlgeschlagen', 'error');
+}
+
+async function wkOpenRenewalFile(id) {
+    const tab = window.open('', '_blank');
+    try {
+        const response = await fetch(WK_API.renewals + '/' + id + '/file', { headers: getAuthHeaders() });
+        if (!response.ok) throw new Error('Dokument konnte nicht geladen werden');
+        const url = URL.createObjectURL(await response.blob());
+        if (tab) tab.location.href = url;
+        else window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (e) {
+        tab?.close();
+        showToast(e.message, 'error');
+    }
 }
 
 function wkDocCardHtml(doc, dienstNr) {
@@ -1353,6 +1433,7 @@ function wkDocCardHtml(doc, dienstNr) {
                 </div>
             </div>
             <div class="wk-doc-actions">
+                <md-icon-button onclick="wkRequestDocRenewal('${dienstNr}',${doc.id},'${escapeHtml(doc.titel).replace(/'/g, '&#39;')}',true)" title="Erneuerung jetzt anfordern"><md-icon>send</md-icon></md-icon-button>
                 <md-icon-button onclick="wkEditDoc(${doc.id},'${escapeHtml(doc.titel)}','${doc.ablaufdatum || ''}','${dienstNr}','${escapeHtml(doc.dok_typ || '')}')" title="Bearbeiten"><md-icon>edit</md-icon></md-icon-button>
                 <md-icon-button onclick="hmsOpenFile('${hmsFileArg(doc.dateipfad)}')" title="Anzeigen"><md-icon>visibility</md-icon></md-icon-button>
                 <md-icon-button onclick="hmsOpenFile('${hmsFileArg(doc.dateipfad)}', true)" title="Herunterladen"><md-icon>download</md-icon></md-icon-button>
@@ -2270,10 +2351,13 @@ async function openWorkerModal(id = null) {
                 <div class="form-group"><md-outlined-text-field id="f_w_steuer" label="Steuer-ID (11 Ziffern)" value="${escapeHtml(w.steuer_id || '')}" maxlength="11" style="width:100%"></md-outlined-text-field></div>
                 <div class="form-group"><md-outlined-text-field id="f_w_sv" label="SV-Nummer" value="${escapeHtml(w.sv_nummer || '')}" placeholder="12345678A123" style="width:100%"></md-outlined-text-field></div>
                 <div class="form-group">
-                    <md-outlined-select id="f_w_stklasse" label="Steuerklasse" style="width:100%">
+                    <md-outlined-select id="f_w_stklasse" label="Steuerklasse" onchange="wkUpdateSteuerFaktor()" style="width:100%">
                         <md-select-option value="" ${!w.steuerklasse ? 'selected' : ''}><div slot="headline">–</div></md-select-option>
                         ${[1,2,3,4,5,6].map(n => `<md-select-option value="${n}" ${w.steuerklasse == n ? 'selected' : ''}><div slot="headline">${n}</div></md-select-option>`).join('')}
                     </md-outlined-select>
+                </div>
+                <div class="form-group" id="f_w_faktor_box" style="display:${w.steuerklasse == 4 ? '' : 'none'}">
+                    <md-outlined-text-field type="number" id="f_w_faktor" label="Faktor (optional)" min="0.001" max="1" step="0.001" value="${escapeHtml(w.steuer_faktor || '')}" supporting-text="Nur bei Steuerklasse IV mit Faktorverfahren" style="width:100%"></md-outlined-text-field>
                 </div>
                 <div class="form-group"><md-outlined-text-field id="f_w_kk" label="Krankenkasse" value="${escapeHtml(w.krankenkasse || '')}" style="width:100%"></md-outlined-text-field></div>
             </div>
@@ -2313,6 +2397,21 @@ async function openWorkerModal(id = null) {
         <md-filled-button onclick="saveWorker('${id || ''}')" style="--md-filled-button-container-color:var(--wk-accent)">${id ? 'Aktualisieren' : 'Erstellen'}</md-filled-button>
     `;
     openWorkersDialog(id ? 'Mitarbeiter bearbeiten — ' + id : 'Neuen Mitarbeiter anlegen', body, footer, true);
+    const absent = wkAbsentFields(w);
+    for (const [key, inputId] of Object.entries(WK_OPTIONAL_INPUTS)) {
+        const input = document.getElementById(inputId);
+        if (!input) continue;
+        const label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:7px;margin-top:6px;font-size:0.78rem;color:var(--wk-text-muted);cursor:pointer';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.dataset.absentField = key;
+        checkbox.checked = absent.has(key);
+        checkbox.addEventListener('change', () => wkToggleAbsent(input, checkbox));
+        label.append(checkbox, document.createTextNode('Nicht vorhanden'));
+        input.closest('.form-group')?.appendChild(label);
+        wkToggleAbsent(input, checkbox);
+    }
     // md-tabs drives the panes: sync on user tab change.
     const tabsEl = document.getElementById('wkModalTabs');
     tabsEl?.addEventListener('change', () => {
@@ -2474,6 +2573,13 @@ function wkSwitchModalPane(pane) {
     document.querySelectorAll('.wk-modal-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + pane));
 }
 
+function wkUpdateSteuerFaktor() {
+    const visible = document.getElementById('f_w_stklasse')?.value === '4';
+    const box = document.getElementById('f_w_faktor_box');
+    if (box) box.style.display = visible ? '' : 'none';
+    if (!visible) document.getElementById('f_w_faktor').value = '';
+}
+
 /**
  * Austritt ↔ Status coupling: entering an exit date flips the Aktiv
  * select to „Nein“ immediately (and clearing it flips back to „Ja“),
@@ -2608,6 +2714,8 @@ async function saveWorker(id) {
         krankenkasse:           v('f_w_kk'),
         bank_verbindung:        v('f_w_bank'),
         steuerklasse:           v('f_w_stklasse'),
+        steuer_faktor:          v('f_w_stklasse') === '4' ? v('f_w_faktor') : null,
+        nicht_vorhanden:        [...document.querySelectorAll('[data-absent-field]:checked')].map(el => el.dataset.absentField),
 
         // ---- Status ----
         aktiv:                  document.getElementById('f_w_aktiv').value,

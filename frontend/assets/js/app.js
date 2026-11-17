@@ -596,7 +596,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261117nu3');
+].map(f => 'assets/js/tasks/' + f + '.js?v=20261117abwedit1');
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
@@ -633,7 +633,7 @@ const PAGE_MODULE_SCRIPTS = {
         'assets/js/controlling/controlling-cockpit.js?v=20261117md3l',
         'assets/js/controlling.js?v=20261117md3l'
     ],
-    workers: ['assets/js/workers.js?v=20261117md3l'],
+    workers: ['assets/js/workers.js?v=20261117abwedit1'],
     absences: ['assets/js/absences.js?v=20261117md3l'],
     users: ['assets/js/users.js?v=20261117md3l'],
     pdf_design: ['assets/js/pdf_design.js?v=20261117md3l'],
@@ -938,6 +938,9 @@ async function loadPage(page) {
             }
         });
     }
+    // Cross-page actions (e.g. editing an absence from Zeiterfassung) need
+    // the worker list mounted before they can open a profile.
+    if (page === 'workers') await pageRender;
 
     if (!window.__hmsBootReady) {
         Promise.resolve(pageRender).catch(() => {}).finally(() => {

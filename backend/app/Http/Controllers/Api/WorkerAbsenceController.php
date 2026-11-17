@@ -45,6 +45,21 @@ class WorkerAbsenceController extends Controller
         return $this->decide($request, $id, 'genehmigt');
     }
 
+    public function zeitFreigabe(Request $request, int $id)
+    {
+        $data = $request->validate(['freigabe' => 'required|boolean']);
+        $absence = DB::connection('tenant')->table('mitarbeiter_abwesenheiten')->where('id', $id)->first();
+        if (!$absence || !BereichScope::allowsWorker($request->user(), (string) $absence->dienst_nr)) {
+            return response()->json(['error' => 'Abwesenheit nicht gefunden'], 404);
+        }
+        if (($absence->status ?? 'genehmigt') !== 'genehmigt') {
+            return response()->json(['error' => 'Nur genehmigte Abwesenheiten freigeben'], 409);
+        }
+        DB::connection('tenant')->table('mitarbeiter_abwesenheiten')->where('id', $id)
+            ->update(['zeit_freigabe' => $data['freigabe']]);
+        return response()->json(['success' => true]);
+    }
+
     /**
      * POST /api/worker-absences/{id}/reject
      * Body: { grund: "..." }
@@ -78,6 +93,7 @@ class WorkerAbsenceController extends Controller
             ->where('id', $id)
             ->update([
                 'status'           => $status,
+                'zeit_freigabe'    => false,
                 'entschieden_von'  => $userId,
                 'entschieden_am'   => now(),
                 'ablehnungsgrund'  => $grund,
@@ -403,6 +419,7 @@ class WorkerAbsenceController extends Controller
             'endzeit' => $data['endzeit'] ?? null,
             'tage' => $tage,
             'beschreibung' => $data['beschreibung'] ?? null,
+            'zeit_freigabe' => false,
         ]);
 
         return response()->json(['success' => true]);

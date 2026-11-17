@@ -90,6 +90,12 @@ class WorkerDocRenewalController extends Controller
         if (!$worker || !BereichScope::allowsWorker($request->user(), (string) $data['dienst_nr'])) {
             return response()->json(['error' => 'Mitarbeiter nicht gefunden'], 404);
         }
+        if (!empty($data['dokument_id'])) {
+            $doc = DB::connection('tenant')->table('mitarbeiter_dokumente')
+                ->where('id', $data['dokument_id'])->where('dienst_nr', $data['dienst_nr'])->first();
+            if (!$doc) return response()->json(['error' => 'Dokument nicht gefunden'], 404);
+            $data['titel'] = $doc->titel;
+        }
 
         // One open request per document/title — don't spam the worker.
         $open = DB::connection('tenant')->table('mitarbeiter_dokument_anfragen')

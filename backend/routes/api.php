@@ -704,6 +704,7 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
         Route::put('/worker-absences/{id}', [WorkerAbsenceController::class, 'update']);
         Route::delete('/worker-absences/{id}', [WorkerAbsenceController::class, 'destroy']);
         Route::post('/worker-absences/{id}/approve', [WorkerAbsenceController::class, 'approve'])->whereNumber('id');
+        Route::post('/worker-absences/{id}/zeit-freigabe', [WorkerAbsenceController::class, 'zeitFreigabe'])->whereNumber('id');
         Route::post('/worker-absences/{id}/reject',  [WorkerAbsenceController::class, 'reject'])->whereNumber('id');
     });
 
