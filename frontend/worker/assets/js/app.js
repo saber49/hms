@@ -81,6 +81,7 @@ const API = {
     docRequests: W_API_BASE + '/worker-app/doc-requests',
     boerse: W_API_BASE + '/worker-app/schichtboerse',
     signaturen: W_API_BASE + '/worker-app/signaturen',
+    checklisten: W_API_BASE + '/worker-app/checklisten',
     push: W_API_BASE + '/worker-app/push'
 };
 
@@ -995,8 +996,19 @@ function renderActiveShift(active) {
                 }
                 <button class="zeit-btn zeit-btn-stop" onclick="zeitClockOut()"><i class="fas fa-stop"></i> Beenden</button>
             </div>
+            ${clZeitRowHtml(active)}
         </div>
     `;
+}
+
+// Checklisten entry on the Erfassen cards (Checklisten & Protokolle module,
+// assets/js/checklisten.js). `checklisten` comes from the zeit API:
+// {anzahl, pflicht, pflicht_offen, erledigt} or null when none exist.
+function clZeitRowHtml(shift) {
+    const cl = shift.checklisten;
+    if (!cl || !cl.anzahl) return '';
+    const warn = cl.pflicht_offen ? ` · <span class="wcl-warn">${cl.pflicht_offen} Pflicht offen</span>` : '';
+    return `<div class="wcl-zeit-row"><button class="zeit-btn wcl-open" onclick="WCl.open('${esc(shift.einsatz_id)}')"><i class="fas fa-list-check"></i> Checklisten <span class="wcl-open-sub">${cl.erledigt}/${cl.anzahl} erledigt${warn}</span></button></div>`;
 }
 
 function renderUpcomingShifts(shifts) {
@@ -1028,10 +1040,11 @@ function renderUpcomingShifts(shifts) {
                 ${ortLineHtml(s.ort)}
                 ${note ? '<div class="zeit-upcoming-note">' + esc(note) + '</div>' : ''}
                 ${countdownHtml}
-                <button class="zeit-btn zeit-btn-start ${canStart ? '' : 'disabled'}" 
+                <button class="zeit-btn zeit-btn-start ${canStart ? '' : 'disabled'}"
                         onclick="zeitClockIn('${esc(s.einsatz_id)}')" ${canStart ? '' : 'disabled'}>
                     <i class="fas fa-play"></i> ${canStart ? 'Schicht starten' : 'Noch nicht verfügbar'}
                 </button>
+                ${s.checklisten ? `<div class="wcl-upcoming-row"><button class="wcl-mini-btn" onclick="WCl.open('${esc(s.einsatz_id)}')"><i class="fas fa-list-check"></i> ${s.checklisten.anzahl} Checkliste${s.checklisten.anzahl === 1 ? '' : 'n'}${s.checklisten.pflicht ? ' · ' + s.checklisten.pflicht + ' Pflicht' : ''}</button></div>` : ''}
             </div>
         `;
     });
@@ -1161,6 +1174,9 @@ async function zeitClockIn(einsatzId) {
 
 async function zeitClockOut() {
     if (!confirm('Schicht jetzt beenden?')) return;
+    // Pflicht-Checklisten der Schicht noch offen → warn once, never block.
+    const cl = zeitData && zeitData.active && zeitData.active.checklisten;
+    if (cl && cl.pflicht_offen > 0 && !confirm('Achtung: ' + cl.pflicht_offen + ' Pflicht-Checkliste' + (cl.pflicht_offen === 1 ? ' ist' : 'n sind') + ' noch offen.\n\nTrotzdem beenden?')) return;
     const btn = event && event.target ? event.target.closest('.zeit-btn') : null;
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Standort wird geprüft...'; }
     const loc = await getGeo();
@@ -1292,6 +1308,8 @@ async function zeitExtendSubmit() {
 
 async function zeitExtendFinish() {
     const btn = document.getElementById('extendFinishBtn');
+    const cl = zeitData && zeitData.active && zeitData.active.checklisten;
+    if (cl && cl.pflicht_offen > 0 && !confirm('Achtung: ' + cl.pflicht_offen + ' Pflicht-Checkliste' + (cl.pflicht_offen === 1 ? ' ist' : 'n sind') + ' noch offen.\n\nTrotzdem beenden?')) return;
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Standort wird geprüft...';
     const loc = await getGeo();

@@ -59,6 +59,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
     <!-- Material Symbols (self-hosted subset) — replaces Font Awesome -->
     <link rel="stylesheet" href="assets/css/ms-icons.css?v=20261109ico1">
     <link rel="stylesheet" href="assets/css/qm-wachbuch.css?v=20261109dark1">
+    <link rel="stylesheet" href="assets/css/checklisten.css?v=20261117cl1">
     <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 </head>
 <body>
@@ -104,7 +105,8 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
     <script src="assets/js/storage.js?v=20260818uni2"></script>
     <script src="assets/js/qm-wachbuch.js?v=20261109live1"></script>
     <script src="assets/js/qm-live.js?v=20261109live1"></script>
-    <script src="assets/js/app.js?v=20261111sig4"></script>
+    <script src="assets/js/checklisten.js?v=20261117cl1"></script>
+    <script src="assets/js/app.js?v=20261117cl1"></script>
     <script src="assets/js/call.js?v=20260929call6"></script>
     <script src="assets/js/capacitor-bridge.js?v=20261111sig4"></script>
 
@@ -132,7 +134,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=84').catch(() => {});
+            navigator.serviceWorker.register('sw.js?v=85').catch(() => {});
         }
     </script>
 </body>

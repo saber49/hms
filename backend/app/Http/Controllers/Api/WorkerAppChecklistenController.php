@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Support\Checklisten;
+use App\Support\ShiftWindow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,7 +33,7 @@ class WorkerAppChecklistenController extends Controller
 
     private function fenster(string $dienstNr, string $einsatzId): ?array
     {
-        $w = WorkerAppWachbuchController::shiftWindow($dienstNr, $einsatzId);
+        $w = ShiftWindow::fuer($dienstNr, $einsatzId);
         if (!$w) return null;
         $von = $w[0]->copy()->subMinutes(self::VORLAUF_MIN);
         $bis = $w[1]->copy()->addHours(self::NACHLAUF_STD);
@@ -165,6 +166,24 @@ class WorkerAppChecklistenController extends Controller
             }
         }
         \App\Helpers\Realtime::changed('checklisten');
+
+        // Mirror into the Objekt's Wachbuch when active: the protocol then
+        // lives in the tamper-evident shift log, not only as a side record.
+        // The protocol itself is already stored — glue must never fail it.
+        try {
+            if (\App\Services\Qm\WachbuchService::aktiv((string) $e->obj_id)
+                && ($blatt = \App\Services\Qm\WachbuchService::blattFuerSchicht($e->einsatz_id, $dienstNr))) {
+                \App\Services\Qm\WachbuchService::append($blatt, [
+                    'art'  => 'notiz',
+                    'text' => 'Checkliste „' . $vorlage->name . '“ ausgefüllt'
+                        . ($prozent !== null ? ' — Ergebnis ' . round($prozent) . ' %' : '')
+                        . ($maengel ? ' · ' . $maengel . ($maengel === 1 ? ' Mangel' : ' Mängel') : ''),
+                    'details' => ['protokoll_id' => $id, 'vorlage' => $vorlage->name,
+                        'ergebnis_prozent' => $prozent, 'maengel' => $maengel],
+                    'client_uuid' => $uuid ? 'cl_' . $uuid : null,
+                ], ['quelle' => 'app', 'dienst_nr' => $dienstNr, 'auto' => true]);
+            }
+        } catch (\Throwable $ex) { /* logbook glue is best-effort */ }
 
         return response()->json(['success' => true, 'id' => $id, 'ergebnis_prozent' => $prozent, 'maengel' => $maengel], 201);
     }

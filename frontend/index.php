@@ -327,6 +327,9 @@ header('Expires: 0');
                 <a href="#" class="nav-item" data-page="qm">
                     <i class="material-symbols-outlined">workspace_premium</i><span>Qualitätsmanagement</span>
                 </a>
+                <a href="#" class="nav-item" data-page="checklisten">
+                    <i class="material-symbols-outlined">fact_check</i><span>Checklisten</span>
+                </a>
             </div>
             <div class="nav-section">
                 <div class="nav-section-title">Verkauf</div>

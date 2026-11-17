@@ -93,7 +93,7 @@ function clRenderProtokolleShell() {
     ['clVon', 'clBis', 'clKat', 'clMaengel'].forEach(id => document.getElementById(id).addEventListener('change', reload));
     let t = null;
     document.getElementById('clQ').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => { _cl.filter.q = e.target.value.trim(); clLoadProtokolle(); }, 300); });
-    if (!_cl.vorlagen) apiGet(CL_API + '/vorlagen').then(d => { if (d && d.kategorien) { _cl.vorlagen = d; if (_cl.tab === 'protokolle' && !document.getElementById('clKat').options.length > 1) clRenderProtokolleShell(); } });
+    if (!_cl.vorlagen) apiGet(CL_API + '/vorlagen').then(d => { if (d && d.kategorien) { _cl.vorlagen = d; const kat = document.getElementById('clKat'); if (_cl.tab === 'protokolle' && kat && kat.options.length <= 1) clRenderProtokolleShell(); } });
 }
 
 async function clLoadProtokolle() {
