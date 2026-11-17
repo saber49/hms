@@ -59,7 +59,7 @@ function maMorphNode(from, to, opts) {
         return;
     }
     if (from.nodeType !== 1) return;
-    if (opts && opts.skipEditing && (from.classList.contains('editing') || from.classList.contains('ma-row-editing'))) {
+    if (opts && opts.skipEditing && (from.classList.contains('editing') || from.classList.contains('ma-row-editing') || from.classList.contains('ma-abw-row-editing'))) {
         const fb = from.querySelector('.ma-freigabe-btn'), tb = to.querySelector('.ma-freigabe-btn');
         if (fb && tb) maMorphNode(fb, tb);
         return;
@@ -228,7 +228,7 @@ async function renderMonatsabschlussContent(opts) {
 let _maRealtimeTimer = null;
 
 function maHasOpenEdit() {
-    return !!document.querySelector('tr.ma-row-editing');
+    return !!document.querySelector('tr.ma-row-editing, tr.ma-abw-row-editing');
 }
 
 function maRealtimeSchedule() {
@@ -917,22 +917,32 @@ function maBuildAbsenceSection(list, dienstNr) {
     const sum = maAbwSumOf(list);
 
     const katIcon = { urlaub: 'beach_access', krank: 'sick', sonstiges: 'event_busy' };
-    const canEdit = typeof hasPermission === 'function' && hasPermission('stammdaten.mitarbeiter.edit');
+    const canEdit = typeof hasPermission === 'function' && hasPermission('auftraege.monatsabschluss.edit');
+    const canRelease = typeof hasPermission === 'function' && hasPermission('stammdaten.mitarbeiter.edit');
     const rows = list.flatMap(r => (r.days || []).map(day => {
         const statusPill = r.status === 'pending'
             ? '<span class="ma-status-pill pending">Beantragt</span>'
             : `<span class="ma-status-pill absence">${parseInt(r.bezahlt) ? 'Bezahlt' : 'Unbezahlt'}</span>`;
         const weekday = new Date(day.d + 'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short' });
-        const basis = day.b ? ({plan: 'Schichtplan', schnitt13: '13-Wochen-Schnitt', vertrag: 'Vertragsarbeitszeit'}[day.b] || day.b) : r.basis_label;
-        return `<tr>
+        const basis = day.manual
+            ? (+day.paid_h === 0 && +day.h > 0 ? 'Manuell · ohne Gutschrift' : 'Manuell')
+            : (day.b ? ({plan: 'Schichtplan', schnitt13: '13-Wochen-Schnitt', vertrag: 'Vertragsarbeitszeit'}[day.b] || day.b) : r.basis_label);
+        return `<tr data-absence-id="${r.id}" data-absence-date="${escapeHtml(day.d)}">
             <td data-label="Datum">${escapeHtml(wpFormatDate(day.d))}</td>
             <td data-label="Tag">${escapeHtml(weekday)}</td>
             <td data-label="Typ"><span class="ma-abw-typ">${maIcon(katIcon[r.kategorie] || 'event_busy', 'font-size:14px;vertical-align:-3px')} ${escapeHtml(r.typ)}</span></td>
             <td data-label="Status">${statusPill}</td>
-            <td data-label="Std" class="ma-text-right"><strong>${day.h > 0 ? maFmtHrs(day.h) : '–'}</strong></td>
+            <td data-label="Std" class="ma-text-right">
+                <strong class="ma-abw-hours-display">${day.manual || day.h > 0 ? maFmtHrs(day.h) : '–'}</strong>
+                ${canEdit ? `<input class="ma-abw-hours-input" type="text" inputmode="decimal" value="${(+day.h).toFixed(2).replace('.', ',')}" aria-label="Stunden am ${escapeHtml(wpFormatDate(day.d))}" title="0–24 Stunden, leer = automatische Berechnung" style="display:none">` : ''}
+            </td>
             <td data-label="Grundlage"><span class="ma-soll-sub">${escapeHtml(basis || '–')}</span></td>
-            <td data-label="Freigabe" class="ma-text-center">${canEdit ? `<button class="ma-freigabe-btn ${+r.zeit_freigabe === 1 ? 'on' : ''}" ${r.status === 'pending' ? 'disabled' : ''} onclick="maToggleAbsenceFreigabe(${r.id}, '${escapeHtml(dienstNr)}')" title="${+r.zeit_freigabe === 1 ? 'Freigabe zurücknehmen' : 'Abwesenheit freigeben'}">${maIcon('check_circle', 'font-size:20px')}</button>` : (+r.zeit_freigabe === 1 ? 'Ja' : '–')}</td>
-            <td data-label="Bearbeiten">${canEdit ? `<button class="ma-row-edit-btn" onclick="maEditAbsence('${escapeHtml(dienstNr)}', ${r.id}, '${escapeHtml(day.d)}')" title="Abwesenheit bearbeiten">${maIcon('edit', 'font-size:17px')}</button>` : '–'}</td>
+            <td data-label="Freigabe" class="ma-text-center">${canRelease ? `<button class="ma-freigabe-btn ${+r.zeit_freigabe === 1 ? 'on' : ''}" ${r.status === 'pending' ? 'disabled' : ''} onclick="maToggleAbsenceFreigabe(${r.id}, '${escapeHtml(dienstNr)}')" title="${+r.zeit_freigabe === 1 ? 'Freigabe zurücknehmen' : 'Abwesenheit freigeben'}">${maIcon('check_circle', 'font-size:20px')}</button>` : (+r.zeit_freigabe === 1 ? 'Ja' : '–')}</td>
+            <td data-label="Bearbeiten" class="ma-cell-edit">${canEdit ? `
+                <button class="ma-row-edit-btn ma-abw-edit" onclick="maEditAbsence(this)" title="Stunden dieses Tages bearbeiten">${maIcon('edit', 'font-size:17px')}</button>
+                <button class="ma-row-save-btn ma-abw-save" onclick="maSaveAbsenceHours(this)" style="display:none" title="Stunden speichern">${maIcon('save', 'font-size:17px')}</button>
+                <button class="ma-row-cancel-btn ma-abw-cancel" onclick="maCancelAbsenceHours(this)" style="display:none" title="Abbrechen">${maIcon('close', 'font-size:17px')}</button>
+                ${day.manual ? `<button class="ma-row-cancel-btn ma-abw-reset" onclick="maSaveAbsenceHours(this, true)" title="Automatische Berechnung wiederherstellen">${maIcon('undo', 'font-size:17px')}</button>` : ''}` : '–'}</td>
         </tr>`;
     })).join('');
 
@@ -964,18 +974,60 @@ async function maToggleAbsenceFreigabe(id, dienstNr) {
     showToast(target ? 'Abwesenheit freigegeben' : 'Freigabe zurückgenommen');
 }
 
-async function maEditAbsence(dienstNr, id, datum) {
-    await loadPage('workers');
-    await wkOpenProfile(dienstNr);
-    const tab = document.querySelector('.wk-tab[data-tab="abwesenheiten"]');
-    if (tab) wkSwitchTab(tab);
-    const response = await apiGet(WK_API.absences + '?dienst_nr=' + encodeURIComponent(dienstNr) + '&jahr=' + datum.slice(0, 4));
-    const absence = (response?.abwesenheiten || []).find(a => +a.id === id);
-    if (absence) {
-        await wkLoadAbsences(dienstNr, +datum.slice(0, 4));
-        wkEditAbsence(absence, dienstNr);
+function maEditAbsence(btn) {
+    if (maHasOpenEdit()) return showToast('Bitte zuerst die andere Bearbeitung abschließen', 'warning');
+    const row = btn.closest('tr');
+    row.classList.add('ma-abw-row-editing');
+    row.querySelector('.ma-abw-hours-display').style.display = 'none';
+    const input = row.querySelector('.ma-abw-hours-input');
+    input.style.display = '';
+    row.querySelector('.ma-abw-edit').style.display = 'none';
+    row.querySelector('.ma-abw-save').style.display = '';
+    row.querySelector('.ma-abw-cancel').style.display = '';
+    row.querySelector('.ma-abw-reset')?.style.setProperty('display', 'none');
+    input.focus();
+    input.select();
+}
+
+function maCancelAbsenceHours(btn) {
+    const row = btn.closest('tr');
+    row.classList.remove('ma-abw-row-editing');
+    row.querySelector('.ma-abw-hours-display').style.display = '';
+    const input = row.querySelector('.ma-abw-hours-input');
+    input.value = input.defaultValue;
+    input.style.display = 'none';
+    row.querySelector('.ma-abw-edit').style.display = '';
+    row.querySelector('.ma-abw-save').style.display = 'none';
+    row.querySelector('.ma-abw-cancel').style.display = 'none';
+    row.querySelector('.ma-abw-reset')?.style.removeProperty('display');
+}
+
+async function maSaveAbsenceHours(btn, reset = false) {
+    const row = btn.closest('tr');
+    if (row.dataset.saving) return;
+    if (reset && maHasOpenEdit()) return showToast('Bitte zuerst die andere Bearbeitung abschließen', 'warning');
+    const raw = reset ? '' : row.querySelector('.ma-abw-hours-input').value.trim().replace(',', '.');
+    if (raw && (!/^\d{1,2}(\.\d{1,2})?$/.test(raw) || +raw > 24)) {
+        return showToast('Stunden zwischen 0 und 24 mit maximal zwei Nachkommastellen eingeben', 'error');
     }
-    else showToast('Abwesenheit nicht gefunden', 'error');
+    row.dataset.saving = '1';
+    const buttons = [...row.querySelectorAll('button')];
+    const disabled = buttons.map(button => button.disabled);
+    buttons.forEach(button => { button.disabled = true; });
+    try {
+        const res = await apiPut(API_BASE + '/worker-absences/' + row.dataset.absenceId + '/hours', {
+            datum: row.dataset.absenceDate, stunden: raw === '' ? null : +raw,
+        });
+        if (!res?.success) return showToast(res?.error || 'Speichern fehlgeschlagen', 'error');
+        maCancelAbsenceHours(btn);
+        await renderMonatsabschlussContent({ silent: true });
+        showToast(raw === '' ? 'Automatische Berechnung wiederhergestellt' : 'Abwesenheitsstunden gespeichert');
+    } catch (e) {
+        showToast('Speichern fehlgeschlagen', 'error');
+    } finally {
+        buttons.forEach((button, i) => { button.disabled = disabled[i]; });
+        delete row.dataset.saving;
+    }
 }
 
 // Soll = original plan from the Bestelleingang day (soll_std, else span − pause).

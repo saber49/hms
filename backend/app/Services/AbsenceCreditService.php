@@ -63,6 +63,7 @@ class AbsenceCreditService
         'feiertag'  => 'Feiertag',
         'gemischt'  => 'Gemischt',
         'unbezahlt' => 'Unbezahlt',
+        'manuell'   => 'Manuell',
         'gearbeitet'=> 'Gearbeitet',
         'wartezeit' => 'Wartezeit (§3 EFZG)',
         'efzg'      => '6-Wochen-Grenze',
@@ -184,6 +185,8 @@ class AbsenceCreditService
                 $status = ($r->status ?? null) ?: 'genehmigt';
                 $isKrank = $kat === 'krank';
                 $avg = self::avg13($days, $absDays, $eintritt, (string) $r->startdatum);
+                $manualHours = json_decode($r->stunden_korrekturen ?? '[]', true);
+                if (!is_array($manualHours)) $manualHours = [];
 
                 $rec = [
                     'id' => (int) $r->id,
@@ -219,10 +222,15 @@ class AbsenceCreditService
                     );
                     if ($d < $von || $d > $bis) continue;
 
+                    $manual = array_key_exists($d, $manualHours);
+                    [$basis, $kredit, $displayHours] = self::applyManualCredit(
+                        $manual ? (float) $manualHours[$d] : null, $basis, $kredit, (bool) $r->bezahlt
+                    );
                     $rec['zeitraum_tage'] += $frac;
                     $rec['std'] += $kredit;
                     $basisCounts[$basis] = ($basisCounts[$basis] ?? 0) + 1;
-                    $rec['days'][] = ['d' => $d, 'h' => round($kredit, 2), 'b' => $basis];
+                    $rec['days'][] = ['d' => $d, 'h' => round($displayHours, 2),
+                        'paid_h' => round($kredit, 2), 'b' => $basis, 'manual' => $manual];
 
                     switch ($basis) {
                         case 'wartezeit':
@@ -279,6 +287,16 @@ class AbsenceCreditService
             'covered' => $covered,
             'total_std' => round($totalStd, 2),
         ];
+    }
+
+    /** Manual absence time may be recorded without creating paid hours. */
+    private static function applyManualCredit(?float $hours, string $basis, float $credit, bool $paid): array
+    {
+        if ($hours === null) return [$basis, $credit, $credit];
+        if ($paid && !in_array($basis, ['gearbeitet', 'wartezeit', 'efzg', 'austritt'], true)) {
+            return ['manuell', $hours, $hours];
+        }
+        return [$basis, 0.0, $hours];
     }
 
     /** Credit (paid hours) + basis key for ONE absence day. */

@@ -60,6 +60,39 @@ class WorkerAbsenceController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function updateHours(Request $request, int $id)
+    {
+        $data = $request->validate([
+            'datum' => 'required|date_format:Y-m-d',
+            'stunden' => 'present|nullable|numeric|between:0,24|decimal:0,2',
+        ]);
+
+        return DB::connection('tenant')->transaction(function () use ($request, $id, $data) {
+            $absence = DB::connection('tenant')->table('mitarbeiter_abwesenheiten')
+                ->where('id', $id)->lockForUpdate()->first();
+            if (!$absence || !BereichScope::allowsWorker($request->user(), (string) $absence->dienst_nr)) {
+                return response()->json(['error' => 'Abwesenheit nicht gefunden'], 404);
+            }
+            $datum = $data['datum'];
+            if (($absence->status ?? 'genehmigt') === 'abgelehnt'
+                || $datum < substr((string) $absence->startdatum, 0, 10)
+                || $datum > substr((string) ($absence->enddatum ?: $absence->startdatum), 0, 10)) {
+                return response()->json(['error' => 'Datum liegt nicht in einer aktiven Abwesenheit'], 422);
+            }
+
+            $hours = json_decode($absence->stunden_korrekturen ?? '[]', true);
+            if (!is_array($hours)) $hours = [];
+            if ($data['stunden'] === null) unset($hours[$datum]);
+            else $hours[$datum] = round((float) $data['stunden'], 2);
+
+            DB::connection('tenant')->table('mitarbeiter_abwesenheiten')->where('id', $id)->update([
+                'stunden_korrekturen' => $hours ? json_encode($hours) : null,
+                'zeit_freigabe' => false,
+            ]);
+            return response()->json(['success' => true]);
+        });
+    }
+
     /**
      * POST /api/worker-absences/{id}/reject
      * Body: { grund: "..." }
@@ -408,6 +441,9 @@ class WorkerAbsenceController extends Controller
             return response()->json(['error' => 'Es existiert bereits eine Abwesenheit in diesem Zeitraum'], 409);
         }
 
+        $hours = json_decode($existing->stunden_korrekturen ?? '[]', true);
+        $hours = is_array($hours) ? array_filter($hours, fn ($h, $day) =>
+            $day >= $start->toDateString() && $day <= $end->toDateString(), ARRAY_FILTER_USE_BOTH) : [];
         DB::connection('tenant')->table('mitarbeiter_abwesenheiten')->where('id', $id)->update([
             'typ' => $data['typ'],
             'kategorie' => $this->kategorieForTyp($data['typ']),
@@ -420,6 +456,7 @@ class WorkerAbsenceController extends Controller
             'tage' => $tage,
             'beschreibung' => $data['beschreibung'] ?? null,
             'zeit_freigabe' => false,
+            'stunden_korrekturen' => $hours ? json_encode($hours) : null,
         ]);
 
         return response()->json(['success' => true]);

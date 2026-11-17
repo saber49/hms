@@ -516,15 +516,6 @@
 .ma-mode-banner.kunde .material-symbols-outlined { color: var(--ma-kunde, var(--md-sys-color-primary)); }
 [data-theme="dark"] .ma-mode-banner.ma { background: color-mix(in srgb, var(--md-ext-color-success) 10%, transparent); color: var(--md-ext-color-success-container); }
 [data-theme="dark"] .ma-mode-banner.kunde { background: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); color: var(--md-sys-color-primary-container); }
-/* Worker cards carry the mode colour on their left edge */
-.ma-worker-block.is-ma,
-    .ma-worker-block.is-kunde { position: relative; }
-.ma-worker-block.is-ma::before,
-    .ma-worker-block.is-kunde::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; z-index: 2; pointer-events: none;
-    background: var(--ma-mode-ma);
-}
-.ma-worker-block.is-kunde::before { background: var(--ma-kunde, var(--md-sys-color-primary)); }
 .ma-worker-block.is-kunde .ma-worker-head { background: linear-gradient(180deg, color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent), transparent); }
 .ma-th-frei { color: var(--ma-mode-ma) !important; white-space: nowrap; }
 .ma-th-frei.kunde { color: var(--ma-kunde, var(--md-sys-color-primary)) !important; }
@@ -785,7 +776,7 @@ select.ma-scope-select.active {
     box-shadow: var(--ma-shadow-sm);
 }
 .ma-worker-block:hover { box-shadow: var(--ma-shadow-md); }
-.ma-worker-block.has-anomaly { border-color: var(--ma-border); border-left: 4px solid var(--ma-warn); }
+.ma-worker-block.has-anomaly { border-color: var(--ma-border); }
 .ma-worker-block.editing { border-color: var(--ma-accent); box-shadow: 0 0 0 3px var(--ma-accent-soft), var(--ma-shadow-md); }
 .ma-worker-head {
     display: flex;
@@ -1152,9 +1143,6 @@ select.ma-scope-select.active {
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-}
-.ma-worker-block.is-nu {
-    border-left: 4px solid var(--ma-nu);
 }
 .ma-worker-block.is-nu .ma-worker-head {
     background: linear-gradient(180deg, var(--white) 0%, var(--ma-nu-soft) 100%);
@@ -1687,8 +1675,8 @@ to { opacity: 1; transform: translateY(0); }
     }
     /* Solid base under the (partly translucent) header gradients */
 .ma-page .ma-worker-block .ma-worker-head { background-color: var(--ma-surface); }
-.ma-worker-block.is-ma .ma-worker-head { box-shadow: inset 4px 0 0 var(--ma-mode-ma), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
-.ma-worker-block.is-kunde .ma-worker-head { box-shadow: inset 4px 0 0 var(--ma-kunde), 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
+.ma-worker-block.is-ma .ma-worker-head,
+.ma-worker-block.is-kunde .ma-worker-head { box-shadow: 0 4px 8px -6px color-mix(in srgb, var(--md-sys-color-primary) 25%, transparent); }
 }
 
 /* ── Row-level edit (pencil → save/cancel inside the row) ── */
@@ -1951,6 +1939,29 @@ tr.has-absence:hover td { background: var(--md-ext-color-info-container, var(--g
 .ma-abw-table td { font-size: var(--md-sys-typescale-body-small-size, 0.78rem); }
 .ma-abw-table .ma-abw-typ { font-weight: 600; }
 .ma-abw-table .ma-freigabe-btn:disabled { opacity: .35; cursor: not-allowed; }
+.ma-abw-hours-input {
+    width: 72px;
+    max-width: 100%;
+    padding: 5px 7px;
+    border: 1px solid var(--ma-border);
+    border-radius: var(--ma-radius-sm);
+    background: var(--ma-surface);
+    color: var(--ma-text);
+    text-align: right;
+    font: inherit;
+}
+.ma-abw-hours-input:focus { outline: 2px solid var(--ma-primary); outline-offset: 1px; }
+.ma-abw-table .ma-abw-reset { color: var(--ma-text-muted); }
+.ma-abw-table tr.ma-abw-row-editing td { background: var(--ma-primary-50); }
+@media (max-width: 768px) {
+    .ma-abw-table tbody tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas: none;
+    }
+    .ma-abw-table tbody td { grid-area: auto !important; min-width: 0; }
+    .ma-abw-table tbody td.ma-cell-edit { text-align: right; }
+}
 .ma-worker-meta-chip.ma-abw-chip {
     background: var(--md-ext-color-info-container, var(--gray-100));
     color: var(--md-ext-color-on-info-container, var(--gray-600));
