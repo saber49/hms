@@ -379,8 +379,9 @@ class AbsenceCreditService
     {
         $h = (float) ($stunden ?? 0);
         if ($h <= 0) return null;
-        if ($typ === 'wöchentlich') return $h / 7;
-        if ($typ === 'monatlich') return $h * 12 / 365;
+        $t = mb_strtolower(trim((string) $typ));
+        if (in_array($t, ['wöchentlich', 'woechentlich', 'woche'], true)) return $h / 7;
+        if (in_array($t, ['monatlich', 'monat'], true)) return $h * 12 / 365;
         return null;
     }
 
