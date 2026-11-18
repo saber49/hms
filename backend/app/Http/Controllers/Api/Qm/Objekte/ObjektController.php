@@ -98,6 +98,7 @@ class ObjektController extends Controller
         if ($e = $this->nichtBereit() ?? $this->objektOderFehler($u, $objId) ?? $this->rechtOderFehler($u, 'objekt_einstellungen')) return $e;
         [$d, $err] = Qm::pruefe($request->all(), [
             'wachbuch_aktiv' => 'sometimes|boolean', 'waechterkontrolle_aktiv' => 'sometimes|boolean', 'fotopflicht' => 'sometimes|boolean',
+            'kunde_pdf' => 'sometimes|boolean',
             'objektleiter_id' => 'sometimes|nullable|integer', 'bericht_empfaenger' => 'sometimes|nullable|string|max:500',
             'gps_grenze_m' => 'sometimes|integer|min:20|max:2000', 'notfallkontakte' => 'sometimes|nullable|string|max:2000',
             'soll_begehung_tage' => 'sometimes|nullable|integer|min:1|max:365', 'soll_besuch_tage' => 'sometimes|nullable|integer|min:1|max:365',

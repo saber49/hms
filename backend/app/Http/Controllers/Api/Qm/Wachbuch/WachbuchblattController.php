@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Qm\Wachbuch;
 use App\Http\Controllers\Api\Qm\Concerns\QmGuards;
 use App\Http\Controllers\Controller;
 use App\Services\Qm\DienstanweisungService;
+use App\Services\Qm\WachbuchPdf;
 use App\Services\Qm\WachbuchService;
 use App\Support\Qm\Qm;
 use App\Support\Qm\QmRechte;
@@ -104,6 +105,14 @@ class WachbuchblattController extends Controller
             'fotopflicht' => (bool) Qm::objektEinstellung($objId)->fotopflicht,
             'eintraege' => WachbuchService::eintraege($blaetter->pluck('id')->all()),
         ]);
+    }
+
+    /** GET /api/qm/wachbuch/objekte/{objId}/tag/{datum}/pdf — office day report. */
+    public function pdf(Request $request, string $objId, string $datum)
+    {
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($request->user(), $objId)) return $e;
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $datum)) return response()->json(['error' => 'Ungültiges Datum'], 422);
+        return WachbuchPdf::download($objId, $datum, false);
     }
 
     /** POST /api/qm/wachbuch/eintraege {obj_id, datum, art, text, …} — office entry or correction. */

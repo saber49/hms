@@ -19,6 +19,7 @@ Route::get('/fotos', [PortalController::class, 'fotos']);
 Route::get('/fotos/{id}', [PortalController::class, 'foto'])->whereNumber('id');
 
 Route::get('/wachbuch', [PortalQmController::class, 'wachbuch']);
+Route::get('/wachbuch/pdf', [PortalQmController::class, 'wachbuchPdf']);
 Route::get('/wachbuch/fotos/{id}', [PortalQmController::class, 'wachbuchFoto'])->whereNumber('id');
 Route::post('/wachbuch/hinweis', [PortalQmController::class, 'hinweis']);
 Route::get('/dienstanweisungen', [PortalQmController::class, 'dienstanweisungen']);

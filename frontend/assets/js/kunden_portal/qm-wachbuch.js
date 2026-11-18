@@ -11,6 +11,14 @@ const KP_WB_ART_ICON = {
 };
 let kpWbDatum = kpIso(new Date());
 
+async function kpWbPdf(obj) {
+    try {
+        const blob = await kpFetch('/wachbuch/pdf?obj_id=' + encodeURIComponent(obj) + '&datum=' + kpWbDatum, true);
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank'); setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (e) { kpToast(e.message || 'PDF konnte nicht geladen werden'); }
+}
+
 function kpWbTag(n) { const d = new Date(kpWbDatum + 'T12:00:00'); d.setDate(d.getDate() + n); kpWbDatum = kpIso(d); kpLoad(); }
 function kpWbZeit(ts) { const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); }
 
@@ -46,6 +54,7 @@ KP_TABS.wachbuch = {
                     <div>${s.bewacht ? `<span class="kp-live"><span class="kp-live-dot"></span> bewacht · ${s.wachpersonen} Wachperson${s.wachpersonen === 1 ? '' : 'en'} seit ${kpWbZeit(s.seit)}</span>` : '<span class="kp-muted">derzeit niemand im Dienst</span>'}</div>
                     <div class="kp-card-sub">${s.vorkommnisse_7_tage} Vorkommnis${s.vorkommnisse_7_tage === 1 ? '' : 'se'} in 7 Tagen</div>
                     <button class="kp-chip-btn" onclick="kpHinweisDialog('${kpEsc(s.obj_id)}', '${kpEsc(s.objektname).replace(/'/g, '&#39;')}')"><i class="material-symbols-outlined">campaign</i> Hinweis an den Wachdienst</button>
+                    ${s.pdf_erlaubt ? `<button class="kp-chip-btn" onclick="kpWbPdf('${kpEsc(s.obj_id)}')"><i class="material-symbols-outlined">picture_as_pdf</i> ${kpEsc(kpObLabel)} als PDF</button>` : ''}
                 </div>`).join('') || kpEmpty('menu_book', 'Für Ihre Objekte ist kein ' + kpObLabel + ' aktiv.')}</div>
             <div class="kp-wb-list">${(data.eintraege || []).map(e => `
                 <article class="kp-card kp-wb-e kp-wb-${kpEsc(e.art)}${korrigiert.has(e.id) ? ' kp-wb-struck' : ''}">

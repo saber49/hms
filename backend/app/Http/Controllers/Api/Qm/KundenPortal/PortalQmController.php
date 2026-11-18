@@ -8,6 +8,7 @@ use App\Services\Qm\DienstanweisungService;
 use App\Services\Qm\MassnahmeService;
 use App\Services\Qm\QmNotify;
 use App\Services\Qm\ReklamationService;
+use App\Services\Qm\WachbuchPdf;
 use App\Services\Qm\WachbuchService;
 use App\Support\Qm\Qm;
 use Carbon\Carbon;
@@ -29,7 +30,9 @@ class PortalQmController extends Controller
         $objIds = PortalController::objekteFuer($request);
         $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::wachbuchTag();
         if (!Qm::ready() || !Qm::boolSetting('modul_wachbuch')) return response()->json(['datum' => $datum, 'eintraege' => [], 'status' => []]);
-        $aktiv = Qm::t('qm_objekt_einstellungen')->whereIn('obj_id', $objIds)->where('wachbuch_aktiv', 1)->pluck('obj_id')->all();
+        $cfgRows = Qm::t('qm_objekt_einstellungen')->whereIn('obj_id', $objIds)->where('wachbuch_aktiv', 1)->get(['obj_id', 'kunde_pdf']);
+        $aktiv = $cfgRows->pluck('obj_id')->all();
+        $pdfErlaubt = $cfgRows->mapWithKeys(fn ($c) => [(string) $c->obj_id => (bool) ($c->kunde_pdf ?? false)]);
         $blaetter = Qm::t('qm_wb_blaetter')->whereIn('obj_id', $aktiv)->where('datum', $datum)->pluck('id')->all();
         $namen = Qm::t('objekte')->whereIn('obj_id', $aktiv)->pluck('objektname', 'obj_id');
         $eintraege = collect(WachbuchService::eintraege($blaetter))->whereIn('art', self::WB_ARTEN)->map(fn ($e) => [
@@ -50,9 +53,23 @@ class PortalQmController extends Controller
                 'obj_id' => $o, 'objektname' => $namen[$o] ?? $o, 'bewacht' => isset($imDienst[$o]),
                 'wachpersonen' => (int) ($imDienst[$o]->n ?? 0), 'seit' => isset($imDienst[$o]) ? Carbon::parse($imDienst[$o]->seit)->toIso8601String() : null,
                 'vorkommnisse_7_tage' => (int) ($vk7[$o] ?? 0),
+                'pdf_erlaubt' => (bool) ($pdfErlaubt[$o] ?? false),
             ])->values(),
             'eintraege' => $eintraege,
         ]);
+    }
+
+    /** GET /api/kunden-portal/wachbuch/pdf?obj_id=&datum= — customer day report (needs the Objekt's "kunde_pdf" switch). */
+    public function wachbuchPdf(Request $request)
+    {
+        $objId = (string) $request->query('obj_id');
+        $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::wachbuchTag();
+        if (!in_array($objId, $request->attributes->get('kp_objekte') ?: [], true)
+            || !WachbuchService::aktiv($objId)
+            || !Qm::objektEinstellung($objId)->kunde_pdf) {
+            return response()->json(['error' => 'PDF ist für dieses Objekt nicht freigegeben.'], 404);
+        }
+        return WachbuchPdf::download($objId, $datum, true);
     }
 
     /** GET /api/kunden-portal/wachbuch/fotos/{id} */
