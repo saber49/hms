@@ -59,7 +59,8 @@ class PortalController extends Controller
             'passwort_aendern' => (bool) ($z->passwort_aendern ?? false),
             'firma'   => $tenant->name,
             'objektbuch_label' => \App\Support\TenantProfile::objektbuchLabel($tenant),
-            'qm'      => Qm::ready() && Qm::boolSetting('modul_qm'),
+            'qm'      => Qm::ready() && Qm::boolSetting('portal_qm'),
+            'wachbuch' => Qm::ready() && Qm::boolSetting('modul_wachbuch'),
             'objekte' => $objekte,
         ]);
     }

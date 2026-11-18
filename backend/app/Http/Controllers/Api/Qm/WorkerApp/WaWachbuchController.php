@@ -8,6 +8,7 @@ use App\Services\Qm\FotoService;
 use App\Services\Qm\WachbuchService;
 use App\Support\Qm\Qm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Worker app › Wachbuch — the guard writes ONLY into the sheet of his own
@@ -45,7 +46,8 @@ class WaWachbuchController extends Controller
                 'status' => $schicht->status,
             ],
             'blatt_id' => (int) $blatt->id,
-            'fotopflicht' => (bool) $cfg->fotopflicht,
+            'fotopflicht' => (bool) $cfg->fotopflicht, 'gps_grenze_m' => (int) ($cfg->gps_grenze_m ?? 150),
+            'notfallkontakte' => trim((string) ($cfg->notfallkontakte ?? '')) ?: null,
             'eintraege' => WachbuchService::eintraege([(int) $blatt->id]),
             'hinweise' => $hinweise,
             'arten' => WachbuchService::ARTEN, 'freigabe_durch' => WachbuchService::FREIGABE_DURCH,
@@ -57,19 +59,56 @@ class WaWachbuchController extends Controller
     {
         $dn = (string) $request->attributes->get('worker_dienst_nr');
         if (!Qm::ready()) return response()->json(['error' => 'Wachbuch ist nicht aktiv.'], 409);
-        [$d, $err] = WachbuchService::pruefeEintrag($request->all());
+
+        $input = $request->all();
+        if (is_string($input['details'] ?? null)) {
+            $details = json_decode($input['details'], true);
+            $input['details'] = is_array($details) ? $details : null;
+        }
+        [$d, $err] = WachbuchService::pruefeEintrag($input);
         if ($err) return Qm::fehler($err);
         $blatt = $this->zielBlatt($dn, $request->input('einsatz_id'), $request->attributes->get('qm_terminal_obj'));
         if (!$blatt) return response()->json(['error' => 'Kein laufender Dienst — das Wachbuch kann nur während der eigenen Schicht geführt werden.', 'locked' => true], 409);
+        if ($blatt->gegengezeichnet_am) return response()->json(['error' => 'Das Blatt ist gegengezeichnet und eingefroren.', 'locked' => true], 409);
         if (!WachbuchService::berichtigungOk($blatt, $d['ref_id'] ?? null)) return response()->json(['error' => 'Eintrag nicht gefunden'], 404);
         if (!empty($d['ref_id']) && (int) Qm::t('qm_wb_eintraege')->where('id', $d['ref_id'])->value('blatt_id') !== (int) $blatt->id) {
             return response()->json(['error' => 'Berichtigen geht nur für Einträge der eigenen Schicht.'], 403);
         }
-        $row = WachbuchService::append($blatt, $d, [
-            'quelle' => $request->attributes->get('qm_terminal_obj') ? 'terminal' : 'app',
-            'dienst_nr' => $dn, 'erfasst_von' => Qm::workerName($dn),
-        ]);
-        return response()->json(['success' => true, 'eintrag' => WachbuchService::format($row)]);
+
+        $cfg = Qm::objektEinstellung((string) $blatt->obj_id);
+        $fotoPflicht = $d['art'] === 'foto' || ($d['art'] === 'vorkommnis' && (bool) $cfg->fotopflicht);
+        if ($fotoPflicht && !$request->hasFile('foto')) {
+            return Qm::fehler(['foto' => ['Foto ist Pflicht.']]);
+        }
+        $fotoDaten = [];
+        $foto = null;
+        if ($request->hasFile('foto')) {
+            [$fotoDaten, $err] = Qm::pruefe($request->all() + ['foto' => $request->file('foto')], [
+                'foto' => FotoService::REGEL, 'lat' => 'nullable|numeric|between:-90,90', 'lng' => 'nullable|numeric|between:-180,180',
+                'genauigkeit_m' => 'nullable|numeric|min:0|max:100000', 'erfasst_am' => 'nullable|date',
+            ]);
+            if ($err) return Qm::fehler($err);
+            $foto = $request->file('foto');
+        }
+
+        $quelle = $request->attributes->get('qm_terminal_obj') ? 'terminal' : 'app';
+        try {
+            [$row, $fotoRow] = DB::connection('tenant')->transaction(function () use ($blatt, $d, $quelle, $dn, $foto, $fotoDaten) {
+                $row = WachbuchService::append($blatt, $d, [
+                    'quelle' => $quelle,
+                    'dienst_nr' => $dn, 'erfasst_von' => Qm::workerName($dn),
+                ]);
+                $fotoRow = null;
+                // client_uuid retries must not duplicate the evidence photo.
+                if ($foto && !Qm::t('qm_wb_fotos')->where('eintrag_id', $row->id)->exists()) {
+                    $fotoRow = FotoService::speichern($row, $foto, $fotoDaten + ['quelle' => $quelle], Qm::workerName($dn));
+                }
+                return [$row, $fotoRow];
+            });
+        } catch (\DomainException $e) {
+            return response()->json(['error' => $e->getMessage(), 'locked' => true], 409);
+        }
+        return response()->json(['success' => true, 'eintrag' => WachbuchService::format($row, collect($fotoRow ? [$fotoRow] : []))]);
     }
 
     /** POST /api/worker-app/qm/wachbuch/eintraege/{id}/fotos (multipart foto, lat, lng, genauigkeit_m) */
@@ -79,10 +118,12 @@ class WaWachbuchController extends Controller
         $e = Qm::t('qm_wb_eintraege')->find($id);
         $blatt = $e ? Qm::t('qm_wb_blaetter')->find($e->blatt_id) : null;
         if (!$e || !$blatt || $blatt->dienst_nr !== $dn) return response()->json(['error' => 'Eintrag nicht gefunden'], 404);
+        if (!WachbuchService::aktiv((string) $blatt->obj_id)) return response()->json(['error' => 'Für dieses Objekt ist das Wachbuch nicht aktiv.', 'locked' => true], 409);
+        if ($blatt->gegengezeichnet_am) return response()->json(['error' => 'Das Blatt ist gegengezeichnet und eingefroren.', 'locked' => true], 409);
         if (Qm::t('qm_wb_fotos')->where('eintrag_id', $id)->count() >= 6) return response()->json(['error' => 'Maximal 6 Fotos je Eintrag.'], 422);
         [$d, $err] = Qm::pruefe($request->all() + ['foto' => $request->file('foto')], [
             'foto' => FotoService::REGEL, 'lat' => 'nullable|numeric|between:-90,90', 'lng' => 'nullable|numeric|between:-180,180',
-            'genauigkeit_m' => 'nullable|numeric|min:0|max:100000',
+            'genauigkeit_m' => 'nullable|numeric|min:0|max:100000', 'erfasst_am' => 'nullable|date',
         ]);
         if ($err) return Qm::fehler($err);
         $f = FotoService::speichern($e, $request->file('foto'), $d + ['quelle' => $request->attributes->get('qm_terminal_obj') ? 'terminal' : 'app'], Qm::workerName($dn));
@@ -135,7 +176,7 @@ class WaWachbuchController extends Controller
         }
         if (!$einsatzId) return null;
         $b = Qm::t('qm_wb_blaetter')->where('einsatz_id', (string) $einsatzId)->where('dienst_nr', $dn)->first();
-        if (!$b || ($nurObjekt && $b->obj_id !== $nurObjekt)) return null;
+        if (!$b || ($nurObjekt && $b->obj_id !== $nurObjekt) || !WachbuchService::aktiv((string) $b->obj_id)) return null;
         return $b->geschlossen_am && now()->subHours(self::NACHREICHEN_STD)->lte($b->geschlossen_am) ? $b : null;
     }
 }

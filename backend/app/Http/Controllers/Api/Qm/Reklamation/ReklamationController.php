@@ -103,7 +103,7 @@ class ReklamationController extends Controller
         $r = Qm::t('qm_reklamationen')->find($id);
         if (!$r) return response()->json(['error' => 'Reklamation nicht gefunden'], 404);
         if ($e = $this->objektOderFehler($u, $r->obj_id)) return $e;
-        $d = $request->only(['text', 'berechtigt', 'zustaendig_id', 'kosten_eur']);
+        $d = $request->only(['text', 'berechtigt', 'zustaendig_id', 'kosten_eur', 'schwere']);
         if (array_key_exists('berechtigt', $d) && $d['berechtigt'] !== null) $d['berechtigt'] = filter_var($d['berechtigt'], FILTER_VALIDATE_BOOLEAN);
         if (isset($d['text'])) $d['text'] = mb_substr((string) $d['text'], 0, 5000);
         if ($err = ReklamationService::aktion($r, $aktion, $d, $u)) return response()->json(['error' => $err], 422);

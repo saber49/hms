@@ -89,6 +89,10 @@ class WachbuchService
 
         $id = DB::connection('tenant')->transaction(function () use ($blatt, $e, $ctx) {
             $b = Qm::t('qm_wb_blaetter')->where('id', $blatt->id)->lockForUpdate()->first();
+            // A countersignature freezes the sheet. Later office entries,
+            // corrections, offline catch-ups and status edits must create a
+            // NEW sheet/record elsewhere — never change what was signed.
+            if ($b->gegengezeichnet_am) throw new \DomainException('Das Blatt ist bereits gegengezeichnet und darf nicht mehr geändert werden.');
             $nr = (int) $b->letzte_nr + 1;
             // Whole seconds: MySQL TIMESTAMP rounds fractions, the hash must match the stored value.
             $now = Carbon::now()->startOfSecond();
@@ -154,15 +158,24 @@ class WachbuchService
         return hash('sha256', ($r['vorgaenger_hash'] ?? '') . '|' . $payload);
     }
 
-    /** Re-computes the chain of one sheet; returns the first broken nr or null. */
-    public static function pruefeKette(int $blattId): ?int
+    /**
+     * Re-computes the chain of one sheet; returns the first broken nr or null.
+     * Also catches removed entries: numbers must be gapless from 1 and the
+     * last entry must match the sheet's letzte_nr / letzter_hash (a deleted
+     * tail would otherwise leave a shorter but valid chain).
+     */
+    public static function pruefeKette(int $blattId, ?object $blatt = null): ?int
     {
         $prev = null;
+        $nr = 0;
         foreach (Qm::t('qm_wb_eintraege')->where('blatt_id', $blattId)->orderBy('nr')->get() as $r) {
             $arr = (array) $r;
+            if ((int) $r->nr !== ++$nr) return $nr;
             if (($r->vorgaenger_hash ?? null) !== $prev || self::hash($arr) !== $r->hash) return (int) $r->nr;
             $prev = $r->hash;
         }
+        $blatt ??= Qm::t('qm_wb_blaetter')->find($blattId);
+        if ($blatt && ((int) $blatt->letzte_nr !== $nr || ($blatt->letzter_hash ?? null) !== $prev)) return $nr + 1;
         return null;
     }
 
@@ -258,7 +271,7 @@ class WachbuchService
             'fotos' => collect($fotos ?? [])->map(fn ($f) => [
                 'id' => (int) $f->id, 'aufgenommen_am' => $f->aufgenommen_am,
                 'lat' => $f->lat, 'lng' => $f->lng, 'genauigkeit_m' => $f->genauigkeit_m,
-                'nicht_am_objekt' => (bool) $f->nicht_am_objekt,
+                'entfernung_objekt_m' => $f->entfernung_objekt_m, 'nicht_am_objekt' => (bool) $f->nicht_am_objekt,
             ])->values()->all(),
         ];
     }

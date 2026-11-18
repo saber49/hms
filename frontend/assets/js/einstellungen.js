@@ -24,7 +24,15 @@ async function renderEinstellungen() {
     const content = document.getElementById('content');
     const p = window._pageParams instanceof URLSearchParams ? window._pageParams : new URLSearchParams();
     window._pageParams = null;
-    const tabs = EST_TABS.filter(t => hasPermission(t.perm));
+    let tabs = EST_TABS.filter(t => hasPermission(t.perm));
+    // Qualität: an Objektleiter without any settings right would only open an empty section.
+    if (tabs.some(t => t.key === 'qualitaet')) {
+        try {
+            await ensurePageScripts('qm');
+            await qmLoadOpt();
+            if (!qmEinstTabs().length) tabs = tabs.filter(t => t.key !== 'qualitaet');
+        } catch (e) { /* keep the tab — it shows the real error when opened */ }
+    }
     if (!tabs.length) { content.innerHTML = `<div class="empty-state">${estIcon('lock')}<p>Keine Einstellungen freigegeben.</p></div>`; return; }
     if (p.get('tab') && tabs.some(t => t.key === p.get('tab'))) estTab = p.get('tab');
     if (!tabs.some(t => t.key === estTab)) estTab = tabs[0].key;
@@ -56,6 +64,7 @@ async function estRender(sub) {
     try {
         if (tab === 'dokumente') {
             await ensurePageScripts('pdf_design');
+            if (estTab !== tab) return;
             body.innerHTML = '<div id="estDoc"></div>';
             renderPdfDesign(document.getElementById('estDoc'));
         } else if (tab === 'vertrieb') {

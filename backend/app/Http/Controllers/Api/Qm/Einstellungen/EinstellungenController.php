@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Qm\Einstellungen;
 use App\Http\Controllers\Api\Qm\Concerns\QmGuards;
 use App\Http\Controllers\Controller;
 use App\Support\Qm\Qm;
+use App\Services\TenantService;
 use App\Support\Qm\QmRechte;
+use App\Support\TenantProfile;
 use Illuminate\Http\Request;
 
 /**
@@ -20,6 +22,8 @@ class EinstellungenController extends Controller
     private const WERTE = [
         'modul_wachbuch'       => ['0', '1'],
         'modul_qm'             => ['0', '1'],
+        'portal_qm'            => ['0', '1'],
+        'tag_beginn'           => ['00:00', '05:00', '06:00', '07:00'],
         'da_freigabe_pflicht'  => ['0', '1'],
         'da_pruefung_monate'   => ['6', '12', '24'],
         'rek_bestaetigung_std' => ['4', '8', '24', '48'],
@@ -38,8 +42,11 @@ class EinstellungenController extends Controller
     public function show(Request $request)
     {
         if ($e = $this->nichtBereit()) return $e;
+        $tenant = TenantService::current();
         return response()->json([
-            'werte' => array_intersect_key(Qm::settings(), self::WERTE + ['absender_email' => 1]),
+            'werte' => array_intersect_key(Qm::settings(), self::WERTE + ['absender_email' => 1])
+                + ['objektbuch_label' => trim((string) data_get($tenant?->settings, 'objektbuch_label', ''))],
+            'objektbuch_standard' => TenantProfile::defaultObjektbuchLabel($tenant),
             'auswahl' => self::WERTE,
             'rechte' => QmRechte::tabelle(),
             'rollen' => QmRechte::ROLLEN_LABEL,
@@ -62,14 +69,42 @@ class EinstellungenController extends Controller
                 Qm::setSetting($k, $v, $u);
                 continue;
             }
+            if ($k === 'objektbuch_label') {
+                $v = trim((string) $v);
+                if (mb_strlen($v) > 30) { $errors[$k][] = 'Höchstens 30 Zeichen.'; continue; }
+                $this->objektbuchLabel($v, $u);
+                continue;
+            }
             if (!isset(self::WERTE[$k])) continue;
             $v = is_bool($v) ? ($v ? '1' : '0') : (string) $v;
             if (!in_array($v, self::WERTE[$k], true)) { $errors[$k][] = 'Ungültiger Wert.'; continue; }
+            if ($k === 'modul_qm' && !$request->exists('portal_qm')
+                && !Qm::t('qm_einstellungen')->where('schluessel', 'portal_qm')->exists()) {
+                // Freeze the legacy portal value before changing the old combined switch.
+                Qm::t('qm_einstellungen')->insert([
+                    'schluessel' => 'portal_qm', 'wert' => (string) Qm::setting('portal_qm'),
+                    'updated_by' => $u->id, 'updated_at' => now(),
+                ]);
+                Qm::forget();
+            }
             Qm::setSetting($k, $v, $u);
         }
         if ($errors) return Qm::fehler($errors);
         Qm::changed('einstellungen');
         return $this->show($request);
+    }
+
+    /** Name of the shift log (Wachbuch / Objektbuch / …) — tenant-wide, empty = industry default. */
+    private function objektbuchLabel(string $neu, $u): void
+    {
+        $tenant = TenantService::assertActive();
+        $settings = is_array($tenant->settings) ? $tenant->settings : [];
+        $alt = trim((string) ($settings['objektbuch_label'] ?? ''));
+        if ($alt === $neu) return;
+        if ($neu === '') unset($settings['objektbuch_label']); else $settings['objektbuch_label'] = $neu;
+        $tenant->settings = $settings;
+        $tenant->save();
+        Qm::log('einstellungen', 'objektbuch_label', 'geaendert', ['wert' => $alt], ['wert' => $neu], $u);
     }
 
     /** PUT /api/qm/einstellungen/rechte {aktion: [rollen]} */
@@ -81,6 +116,8 @@ class EinstellungenController extends Controller
         foreach (QmRechte::STANDARD as $k => [$_, $std]) {
             $in = $request->input($k);
             $neu[$k] = is_array($in) ? array_values(array_intersect(array_keys(QmRechte::ROLLEN), $in)) : QmRechte::tabelle()[$k]['rollen'];
+            // The QMB keeps every right — an action without any role would be dead for everyone.
+            if (!in_array('qmb', $neu[$k], true)) array_unshift($neu[$k], 'qmb');
         }
         $neu['einstellungen'] = ['qmb'];
         Qm::setSetting('rechte', json_encode($neu), $u);

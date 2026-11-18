@@ -27,8 +27,8 @@ class PortalQmController extends Controller
     public function wachbuch(Request $request)
     {
         $objIds = PortalController::objekteFuer($request);
-        $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::heute();
-        if (!Qm::ready()) return response()->json(['datum' => $datum, 'eintraege' => [], 'status' => []]);
+        $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::wachbuchTag();
+        if (!Qm::ready() || !Qm::boolSetting('modul_wachbuch')) return response()->json(['datum' => $datum, 'eintraege' => [], 'status' => []]);
         $aktiv = Qm::t('qm_objekt_einstellungen')->whereIn('obj_id', $objIds)->where('wachbuch_aktiv', 1)->pluck('obj_id')->all();
         $blaetter = Qm::t('qm_wb_blaetter')->whereIn('obj_id', $aktiv)->where('datum', $datum)->pluck('id')->all();
         $namen = Qm::t('objekte')->whereIn('obj_id', $aktiv)->pluck('objektname', 'obj_id');
@@ -59,7 +59,8 @@ class PortalQmController extends Controller
     public function wachbuchFoto(Request $request, int $id)
     {
         $f = Qm::t('qm_wb_fotos as f')->join('qm_wb_eintraege as w', 'w.id', '=', 'f.eintrag_id')->where('f.id', $id)->first(['f.pfad', 'w.obj_id', 'w.art']);
-        if (!$f || !in_array($f->obj_id, $request->attributes->get('kp_objekte') ?: [], true) || !in_array($f->art, self::WB_ARTEN, true)) abort(404);
+        if (!$f || !in_array($f->obj_id, $request->attributes->get('kp_objekte') ?: [], true) || !in_array($f->art, self::WB_ARTEN, true)
+            || !WachbuchService::aktiv((string) $f->obj_id)) abort(404);
         return WachbuchblattController::fotoResponse($f->pfad);
     }
 
@@ -73,7 +74,7 @@ class PortalQmController extends Controller
         $z = $request->attributes->get('kp_zugang');
         $laufend = Qm::t('qm_wb_blaetter as b')->join('zeiterfassung as zf', fn ($j) => $j->on('zf.einsatz_id', '=', 'b.einsatz_id')->on('zf.dienst_nr', '=', 'b.dienst_nr'))
             ->where('b.obj_id', $objId)->whereNull('b.geschlossen_am')->whereIn('zf.status', ['aktiv', 'pause'])->get(['b.*']);
-        $ziele = $laufend->isNotEmpty() ? $laufend : collect([WachbuchService::bueroBlatt($objId, Qm::heute())]);
+        $ziele = $laufend->isNotEmpty() ? $laufend : collect([WachbuchService::bueroBlatt($objId, Qm::wachbuchTag())]);
         foreach ($ziele as $b) {
             WachbuchService::append($b, ['art' => 'hinweis', 'text' => $text, 'details' => ['von' => 'kunde']],
                 ['quelle' => 'kunde', 'erfasst_von' => ($z->name ?: $z->username) . ' (Kunde)']);
@@ -86,11 +87,13 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/dienstanweisungen */
     public function dienstanweisungen(Request $request)
     {
-        if (!Qm::ready()) return response()->json(['dienstanweisungen' => []]);
+        if (!$this->qmAktiv()) return response()->json(['dienstanweisungen' => []]);
         $z = $request->attributes->get('kp_zugang');
         $das = Qm::t('qm_dienstanweisungen as d')->join('objekte as o', 'o.obj_id', '=', 'd.obj_id')
             ->whereIn('d.obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])->where('d.status', 'freigegeben')
-            ->orderBy('o.objektname')->orderByDesc('d.version')->get(['d.*', 'o.objektname'])->unique('obj_id');
+            ->where('d.gueltig_ab', '<=', Qm::heute())
+            ->orderBy('o.objektname')->orderByDesc('d.version')->get(['d.*', 'o.objektname'])
+            ->sortByDesc(fn ($d) => DienstanweisungService::rang($d))->unique('obj_id')->sortBy('objektname')->values();
         $kunde = Qm::t('qm_da_kunde')->whereIn('dienstanweisung_id', $das->pluck('id'))->orderBy('id')->get()->groupBy('dienstanweisung_id');
         return response()->json(['dienstanweisungen' => $das->map(fn ($d) => [
             'id' => (int) $d->id, 'obj_id' => $d->obj_id, 'objektname' => $d->objektname, 'version' => (int) $d->version,
@@ -129,7 +132,7 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/reklamationen */
     public function reklamationen(Request $request)
     {
-        if (!Qm::ready()) return response()->json(['reklamationen' => []]);
+        if (!$this->qmAktiv()) return response()->json(['reklamationen' => []]);
         $rows = Qm::t('qm_reklamationen')->where('kunde_id', $request->attributes->get('kunde_id'))
             ->whereIn('obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])
             ->orderByDesc('eingang_am')->limit(300)->get();
@@ -140,7 +143,7 @@ class PortalQmController extends Controller
     /** POST /api/kunden-portal/reklamationen {obj_id, text} */
     public function reklamationMelden(Request $request)
     {
-        if (!Qm::ready()) return response()->json(['error' => 'Nicht verfügbar'], 409);
+        if (!$this->qmAktiv()) return response()->json(['error' => 'Nicht verfügbar'], 409);
         $objId = (string) $request->input('obj_id');
         if (!in_array($objId, $request->attributes->get('kp_objekte') ?: [], true)) return response()->json(['error' => 'Objekt nicht gefunden'], 404);
         [$d, $err] = Qm::pruefe($request->all(), ['obj_id' => 'required|string', 'text' => 'required|string|min:5|max:5000']);
@@ -152,7 +155,7 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/massnahmen — only those released for the portal, without cause and names. */
     public function massnahmen(Request $request)
     {
-        if (!Qm::ready()) return response()->json(['massnahmen' => []]);
+        if (!$this->qmAktiv()) return response()->json(['massnahmen' => []]);
         $rows = Qm::t('qm_massnahmen as m')->join('objekte as o', 'o.obj_id', '=', 'm.obj_id')
             ->whereIn('m.obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])->where('m.im_kundenportal', 1)
             ->orderByDesc('m.created_at')->limit(300)->get(['m.id', 'm.nr', 'm.titel', 'm.status', 'm.frist', 'm.erledigt_am', 'm.obj_id', 'o.objektname']);
@@ -166,9 +169,16 @@ class PortalQmController extends Controller
 
     private function da(Request $request, int $id): object
     {
-        $da = Qm::ready() ? Qm::t('qm_dienstanweisungen')->find($id) : null;
-        if (!$da || $da->status !== 'freigegeben' || !in_array($da->obj_id, $request->attributes->get('kp_objekte') ?: [], true)) abort(404);
+        $da = $this->qmAktiv() ? Qm::t('qm_dienstanweisungen')->find($id) : null;
+        if (!$da || $da->status !== 'freigegeben' || substr((string) $da->gueltig_ab, 0, 10) > Qm::heute()
+            || !in_array($da->obj_id, $request->attributes->get('kp_objekte') ?: [], true)) abort(404);
         return $da;
+    }
+
+    /** Setting "Kundenportal zeigt Dienstanweisungen und Reklamationen" — enforced here, not only by hiding tabs. */
+    private function qmAktiv(): bool
+    {
+        return Qm::ready() && Qm::boolSetting('portal_qm');
     }
 
     /** Details whitelist per Art (no ID-card checks or internal approvals). */

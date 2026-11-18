@@ -109,6 +109,7 @@ async function qmRekDetail(id) {
                 ${btn('ursache', 'reklamation_bearbeiten', 'search', 'Ursache')}
                 ${btn('antworten', 'reklamation_antworten', 'reply', 'Antwort an Kunde', !!x.bestaetigt_am && !x.antwort)}
                 ${btn('zustaendig', 'reklamation_zustaendig', 'person_search', 'Zuständigkeit')}
+                ${btn('schwere', 'reklamation_bearbeiten', 'priority_high', 'Schwere')}
                 ${qmCan('massnahme_bearbeiten') ? `<md-outlined-button onclick="qmMnNeu({quelle_typ:'reklamation', quelle_id:'${id}', obj_id:'${qmE(x.obj_id)}', titel:${qmE(JSON.stringify('Reklamation ' + x.nr))}, ursache:${qmE(JSON.stringify(x.ursache || ''))}})"><md-icon slot="icon">add_task</md-icon>Maßnahme</md-outlined-button>` : ''}
                 ${btn('abschliessen', 'reklamation_abschliessen', 'task_alt', 'Abschließen', !!x.antwort)}
                 ${btn('notiz', 'reklamation_anlegen', 'sticky_note_2', 'Notiz')}
@@ -131,7 +132,7 @@ async function qmRekDetail(id) {
                 <div class="crm-card"><div class="crm-card-title">${qmIcon('description')} Sachverhalt</div><div class="crm-pad qm-pre">${qmE(x.text)}</div>
                     ${x.mitarbeiter ? `<div class="crm-pad crm-sub">Betroffener Mitarbeiter: ${qmE(x.mitarbeiter)}</div>` : ''}</div>
                 <div class="crm-card"><div class="crm-card-title">${qmIcon('history')} Bearbeitung</div>
-                    <div class="crm-timeline">${(x.schritte || []).map(s => `<div class="crm-tl-item"><div class="crm-tl-icon">${qmIcon({ eingang: 'inbox', bestaetigung: 'mark_email_read', sofortmassnahme: 'bolt', ursache: 'search', antwort: 'reply', zustaendig: 'person_search', abschluss: 'task_alt', massnahme: 'add_task', eskalation: 'priority_high' }[s.art] || 'sticky_note_2')}</div>
+                    <div class="crm-timeline">${(x.schritte || []).map(s => `<div class="crm-tl-item"><div class="crm-tl-icon">${qmIcon({ eingang: 'inbox', bestaetigung: 'mark_email_read', sofortmassnahme: 'bolt', ursache: 'search', antwort: 'reply', zustaendig: 'person_search', abschluss: 'task_alt', massnahme: 'add_task', eskalation: 'priority_high', schwere: 'priority_high', versand: 'outgoing_mail' }[s.art] || 'sticky_note_2')}</div>
                         <div class="crm-tl-body"><div class="crm-tl-head"><strong>${qmE(qmListe('rek_schritte')[s.art] || s.art)}</strong>${s.an_kunde ? ' ' + qmBadge('an Kunde', 'info') : ''} <span class="crm-tl-meta">${qmE(qmDT(s.am))} · ${qmE(s.von_name || '')}</span></div>
                         ${s.text ? `<div class="crm-tl-text qm-pre">${qmE(s.text)}</div>` : ''}</div></div>`).join('')}</div></div>
             </div>
@@ -155,14 +156,17 @@ async function qmRekDetail(id) {
 function qmRekAktionDialog(id, aktion) {
     const x = qm.cache.rekDetail || {};
     const titel = { bestaetigen: 'Eingangsbestätigung an den Kunden', sofortmassnahme: 'Sofortmaßnahme', ursache: 'Ursache',
-        antworten: 'Antwort an den Kunden', zustaendig: 'Zuständigkeit ändern', abschliessen: 'Reklamation abschließen', notiz: 'Notiz' }[aktion];
+        antworten: 'Antwort an den Kunden', zustaendig: 'Zuständigkeit ändern', schwere: 'Schwere ändern', abschliessen: 'Reklamation abschließen', notiz: 'Notiz' }[aktion];
+    const mailHinweis = 'Erscheint im Kundenportal. Eine E-Mail wird an den Melder mit Portalzugang bzw. an die Kundenzugänge des Objekts mit E-Mail-Adresse in die Versandwarteschlange gestellt; der Versandversuch steht danach in der Bearbeitung.';
     const text = (label, val = '', ph = '') => `<md-outlined-text-field class="crm-fld" label="${label}" type="textarea" id="qa_text" rows="5" maxlength="5000" placeholder="${qmE(ph)}" value="${qmE(val)}"></md-outlined-text-field>`;
     const felder = {
-        bestaetigen: text('Text der Bestätigung (leer = Standardtext)', '', 'Vielen Dank für Ihre Meldung …') + `<div class="crm-muted">Geht per E-Mail an den Kunden und erscheint im Kundenportal.</div>`,
+        bestaetigen: text('Text der Bestätigung (leer = Standardtext)', '', 'Vielen Dank für Ihre Meldung …') + `<div class="crm-muted">${mailHinweis}</div>`,
         sofortmassnahme: text('Was wurde sofort getan? *', x.sofortmassnahme || ''),
         ursache: text('Ursache (intern, nie im Kundenportal) *', x.ursache || '') + `<div class="crm-radio-row"><label><md-radio name="qa_ber" value="1" ${x.berechtigt === true ? 'checked' : ''}></md-radio> berechtigt</label><label><md-radio name="qa_ber" value="0" ${x.berechtigt === false ? 'checked' : ''}></md-radio> nicht berechtigt</label></div>`,
-        antworten: text('Antwort *', x.antwort || '') + `<div class="crm-muted">Geht per E-Mail an den Kunden und erscheint im Kundenportal. Keine internen Ursachen oder Namen nennen.</div>`,
+        antworten: text('Antwort *', x.antwort || '') + `<div class="crm-muted">${mailHinweis} Keine internen Ursachen oder Namen nennen.</div>`,
         zustaendig: `<md-outlined-select class="crm-fld" label="Neu zuständig *" id="qa_user">${qmUserOptions(x.zustaendig_id)}</md-outlined-select>` + text('Bemerkung'),
+        schwere: `<md-outlined-select class="crm-fld" label="Neue Schwere *" id="qa_schwere">${qmSelectOptions(qmListe('rek_schwere'), x.schwere)}</md-outlined-select>` + text('Begründung *')
+            + `<div class="crm-muted">Die Erledigungsfrist wird ab dem Eingang neu berechnet.</div>`,
         abschliessen: `<md-outlined-text-field class="crm-fld" label="Kosten in € (optional)" id="qa_kosten" type="number" min="0" step="0.01"></md-outlined-text-field>` + text('Abschlussvermerk'),
         notiz: text('Notiz (intern) *'),
     }[aktion];
@@ -174,6 +178,7 @@ async function qmRekAktion(id, aktion) {
     const body = { text: qmV('qa_text') || '' };
     if (aktion === 'ursache') { const b = [...document.querySelectorAll('md-radio[name="qa_ber"]')].find(r => r.checked); body.berechtigt = b ? b.value === '1' : null; }
     if (aktion === 'zustaendig') body.zustaendig_id = +qmV('qa_user');
+    if (aktion === 'schwere') body.schwere = qmV('qa_schwere');
     if (aktion === 'abschliessen') body.kosten_eur = qmV('qa_kosten');
     const btn = document.getElementById('qaSave'); if (btn) btn.disabled = true;
     const r = await qmReq('POST', QM_API + '/reklamationen/' + id + '/' + aktion, body);

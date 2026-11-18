@@ -49,13 +49,20 @@ class WaLegacyController extends Controller
             return response()->json(['error' => 'Die Schicht läuft nicht.', 'locked' => true, 'fenster' => ['status' => now()->lt($w[0]) ? 'vorher' : 'nachher']], 409);
         }
         if (!Qm::ready()) return response()->json(['error' => 'Wachbuch nicht verfügbar'], 409);
+        // Same switch as the current app: company setting + Objekt setting.
+        $objId = (string) Qm::t('einsaetze')->where('einsatz_id', $eid)->value('obj_id');
+        if ($objId === '' || !WachbuchService::aktiv($objId)) return response()->json(['error' => 'Für dieses Objekt ist das Wachbuch nicht aktiv.', 'locked' => true], 409);
         $blatt = WachbuchService::blattFuerSchicht($eid, $dn);
         if (!$blatt) return response()->json(['error' => 'Einsatz nicht gefunden'], 404);
         $uuid = $request->input('client_uuid');
-        WachbuchService::append($blatt, [
-            'art' => 'notiz', 'text' => $text, 'details' => [],
-            'client_uuid' => is_string($uuid) && $uuid !== '' ? mb_substr('legacy-' . $uuid, 0, 64) : null,
-        ], ['quelle' => 'app', 'dienst_nr' => $dn, 'erfasst_von' => Qm::workerName($dn)]);
+        try {
+            WachbuchService::append($blatt, [
+                'art' => 'notiz', 'text' => $text, 'details' => [],
+                'client_uuid' => is_string($uuid) && $uuid !== '' ? mb_substr('legacy-' . $uuid, 0, 64) : null,
+            ], ['quelle' => 'app', 'dienst_nr' => $dn, 'erfasst_von' => Qm::workerName($dn)]);
+        } catch (\DomainException $e) {
+            return response()->json(['error' => $e->getMessage(), 'locked' => true], 409);
+        }
         return response()->json(['success' => true]);
     }
 }

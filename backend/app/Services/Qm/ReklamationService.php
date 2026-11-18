@@ -36,6 +36,7 @@ class ReklamationService
         'eingang' => 'Eingang', 'bestaetigung' => 'Eingangsbestätigung', 'sofortmassnahme' => 'Sofortmaßnahme',
         'ursache' => 'Ursache', 'antwort' => 'Antwort an Kunde', 'zustaendig' => 'Zuständigkeit',
         'eskalation' => 'Eskalation', 'abschluss' => 'Abschluss', 'notiz' => 'Notiz', 'massnahme' => 'Maßnahme',
+        'schwere' => 'Schwere geändert', 'versand' => 'E-Mail an Kunde',
     ];
 
     /** $d: obj_id, text, kategorie, schwere, kanal, melder, eingang_am, dienst_nr, zustaendig_id; $zugang = portal access when the customer reports. */
@@ -53,7 +54,7 @@ class ReklamationService
             'text' => $d['text'], 'kategorie' => $d['kategorie'] ?? null, 'schwere' => $schwere,
             'dienst_nr' => $d['dienst_nr'] ?? null, 'zustaendig_id' => $zust, 'status' => 'eingegangen',
             'frist_bestaetigung' => $eingang->copy()->addHours(max(1, Qm::intSetting('rek_bestaetigung_std', 24))),
-            'frist_erledigung' => $eingang->copy()->setTimezone('Europe/Berlin')->addDays(max(1, Qm::intSetting('rek_frist_' . $schwere, 7)))->toDateString(),
+            'frist_erledigung' => self::fristErledigung($eingang, $schwere),
             'erstellt_von' => $u->id ?? null, 'created_at' => now(), 'updated_at' => now(),
         ]);
         $r = Qm::t('qm_reklamationen')->find($id);
@@ -71,7 +72,7 @@ class ReklamationService
 
     /**
      * One workflow step. @return string|null error
-     * $aktion: bestaetigen | sofortmassnahme | ursache | antworten | zustaendig | abschliessen | notiz
+     * $aktion: bestaetigen | sofortmassnahme | ursache | antworten | zustaendig | schwere | abschliessen | notiz
      */
     public static function aktion(object $r, string $aktion, array $d, $u): ?string
     {
@@ -80,6 +81,7 @@ class ReklamationService
             'bestaetigen' => 'reklamation_antworten', 'antworten' => 'reklamation_antworten',
             'sofortmassnahme' => 'reklamation_bearbeiten', 'ursache' => 'reklamation_bearbeiten',
             'zustaendig' => 'reklamation_zustaendig', 'abschliessen' => 'reklamation_abschliessen',
+            'schwere' => 'reklamation_bearbeiten',
             'notiz' => 'reklamation_anlegen',
         ][$aktion] ?? null;
         if (!$recht) return 'Unbekannte Aktion.';
@@ -87,12 +89,13 @@ class ReklamationService
 
         $patch = [];
         $text = trim((string) ($d['text'] ?? ''));
+        $versand = null;   // number of e-mail recipients for steps addressed to the customer
         switch ($aktion) {
             case 'bestaetigen':
                 if ($r->bestaetigt_am) return 'Der Eingang wurde bereits bestätigt.';
                 $text = $text ?: 'Vielen Dank für Ihre Meldung. Wir haben Ihre Reklamation ' . $r->nr . ' erhalten und kümmern uns darum.';
                 $patch = ['bestaetigt_am' => now(), 'status' => $r->status === 'eingegangen' ? 'bestaetigt' : $r->status];
-                self::anKunde($r, 'Eingangsbestätigung Reklamation ' . $r->nr, $text);
+                $versand = self::anKunde($r, 'Eingangsbestätigung Reklamation ' . $r->nr, $text);
                 break;
             case 'sofortmassnahme':
                 if ($text === '') return 'Bitte die Sofortmaßnahme beschreiben.';
@@ -106,7 +109,7 @@ class ReklamationService
             case 'antworten':
                 if ($text === '') return 'Bitte die Antwort an den Kunden schreiben.';
                 $patch = ['antwort' => $text, 'beantwortet_am' => now(), 'status' => 'beantwortet', 'bestaetigt_am' => $r->bestaetigt_am ?? now()];
-                self::anKunde($r, 'Antwort zu Ihrer Reklamation ' . $r->nr, $text);
+                $versand = self::anKunde($r, 'Antwort zu Ihrer Reklamation ' . $r->nr, $text);
                 break;
             case 'zustaendig':
                 $neu = (int) ($d['zustaendig_id'] ?? 0);
@@ -115,8 +118,21 @@ class ReklamationService
                 $text = 'Zuständig: ' . Qm::userNames()[$neu] . ($text ? ' — ' . $text : '');
                 QmNotify::users([$neu], 'reklamation.assigned', 'Reklamation ' . $r->nr . ' an dich übergeben', mb_substr((string) $r->text, 0, 200), '#qm?view=reklamationen&id=' . $r->id, 'reklamation', $r->id);
                 break;
+            case 'schwere':
+                $neu = (string) ($d['schwere'] ?? '');
+                if (!isset(self::SCHWERE[$neu])) return 'Bitte eine Schwere wählen.';
+                if ($neu === $r->schwere) return 'Die Schwere ist unverändert.';
+                if ($text === '') return 'Bitte kurz begründen, warum die Schwere geändert wird.';
+                // The deadline follows the severity — counted from the original Eingang.
+                $frist = self::fristErledigung(Carbon::parse($r->eingang_am), $neu);
+                $patch = ['schwere' => $neu, 'frist_erledigung' => $frist];
+                $text = (self::SCHWERE[$r->schwere] ?? $r->schwere) . ' → ' . self::SCHWERE[$neu]
+                    . ' · Erledigung bis ' . Carbon::parse($frist)->format('d.m.Y') . ' — ' . $text;
+                break;
             case 'abschliessen':
                 if (!$r->antwort) return 'Vor dem Abschluss muss der Kunde eine Antwort erhalten haben.';
+                $offeneMn = Qm::t('qm_massnahmen')->where('quelle_typ', 'reklamation')->where('quelle_id', (string) $r->id)->where('status', 'offen')->count();
+                if ($offeneMn) return 'Zu dieser Reklamation ' . ($offeneMn === 1 ? 'ist noch 1 Maßnahme' : "sind noch $offeneMn Maßnahmen") . ' offen. Bitte zuerst erledigen.';
                 if ($r->berechtigt === null) return 'Vor dem Abschluss bitte die Ursache und „berechtigt ja/nein" eintragen.';
                 $kosten = isset($d['kosten_eur']) && $d['kosten_eur'] !== '' ? round((float) $d['kosten_eur'], 2) : null;
                 $patch = ['status' => 'abgeschlossen', 'abgeschlossen_am' => now(), 'abgeschlossen_von' => $u->id ?? null, 'kosten_eur' => $kosten];
@@ -133,9 +149,22 @@ class ReklamationService
             if ($diff) Qm::log('reklamation', $r->id, $aktion, $diff[0], $diff[1], $u);
         }
         self::schritt($r, $aktion === 'bestaetigen' ? 'bestaetigung' : ($aktion === 'antworten' ? 'antwort' : ($aktion === 'abschliessen' ? 'abschluss' : $aktion)),
-            $text, $u, null, in_array($aktion, ['bestaetigen', 'antworten'], true));
+            $text, $u, null, $versand !== null);
+        // Honest record: the text above is visible in the Kundenportal, but
+        // whether an e-mail really went out is logged as its own internal step.
+        if ($versand !== null) {
+            self::schritt($r, 'versand', $versand > 0
+                ? 'Per E-Mail gesendet an ' . $versand . ' Empfänger.'
+                : 'NICHT per E-Mail gesendet — für diesen Kunden ist kein Kundenzugang mit E-Mail-Adresse hinterlegt. Bitte auf anderem Weg (Telefon, eigene E-Mail) mitteilen.', $u);
+        }
         Qm::changed('reklamation', (string) $r->obj_id);
         return null;
+    }
+
+    /** Deadline per Schwere in calendar days from the Eingang (Berlin date). */
+    public static function fristErledigung(Carbon $eingang, string $schwere): string
+    {
+        return $eingang->copy()->setTimezone('Europe/Berlin')->addDays(max(1, Qm::intSetting('rek_frist_' . $schwere, 7)))->toDateString();
     }
 
     public static function schritt(object $r, string $art, ?string $text, $u, ?string $name = null, bool $anKunde = false): void
@@ -147,11 +176,11 @@ class ReklamationService
     }
 
     /** E-mail to the reporting portal user (or every portal access of the customer for the Objekt). */
-    private static function anKunde(object $r, string $titel, string $text): void
+    private static function anKunde(object $r, string $titel, string $text): int
     {
         $q = Qm::t('kunden_portal_zugaenge')->where('kunde_id', $r->kunde_id)->where('aktiv', 1);
         $zugaenge = $r->melder_zugang_id ? $q->where('id', $r->melder_zugang_id)->get() : $q->get()->filter(fn ($z) => PortalService::zugangSiehtObjekt($z, $r->obj_id));
-        QmNotify::mail($zugaenge->pluck('email')->filter()->all(), 'reklamation.answered', $titel, $text, 'kunde', $r->kunde_id, 'reklamation', $r->id);
+        return QmNotify::mail($zugaenge->pluck('email')->filter()->all(), 'reklamation.answered', $titel, $text, 'kunde', $r->kunde_id, 'reklamation', $r->id);
     }
 
     /** Overdue flags (Berlin time). */

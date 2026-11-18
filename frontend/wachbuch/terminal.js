@@ -79,6 +79,7 @@ async function tStart() {
 function tWerBistDu() {
     const g = T.status.geplant || [];
     document.getElementById('tMain').innerHTML = `<div class="t-card"><h2>Wer bist du?</h2>
+        ${T.status.notfallkontakte ? `<details class="wqm-notfall"><summary><i class="fas fa-phone"></i> Notfallkontakte</summary><div>${tEsc(T.status.notfallkontakte).replace(/\n/g, '<br>')}</div></details>` : ''}
         ${g.length ? `<div class="t-people">${g.map(p => `<button class="t-p" onclick="tPinDialog('${tEsc(p.dienst_nr)}', '${tEsc(p.name).replace(/'/g, '&#39;')}')">
             <i class="fas fa-user"></i><strong>${tEsc(p.name)}</strong><span>${tEsc(p.plan_von)}–${tEsc(p.plan_bis)}${p.status ? ' · ' + (p.status === 'beendet' ? 'beendet' : 'im Dienst') : ''}</span></button>`).join('')}</div>`
             : '<p class="wqm-muted">Heute ist für dieses Objekt niemand eingeplant.</p>'}</div>`;

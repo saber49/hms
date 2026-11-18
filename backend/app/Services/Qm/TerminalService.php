@@ -5,6 +5,7 @@ namespace App\Services\Qm;
 use App\Models\Tenant;
 use App\Services\TenantService;
 use App\Support\Qm\Qm;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
@@ -28,11 +29,40 @@ class TerminalService
         $obj = Qm::t('objekte')->where('obj_id', $objId)->value('objektname') ?? $objId;
         $p = fn ($s, $n) => Str::of(Str::ascii((string) $s))->upper()->replaceMatches('/[^A-Z0-9]+/', '')->substr(0, $n)->value();
         $base = trim(($p($tenant->slug ?? 'CX', 4) ?: 'CX') . '-' . ($p($obj, 8) ?: 'OBJ'), '-');
+        // The terminal login knows no tenant, so a Kennung must be unique on
+        // the whole platform — otherwise a wrong PIN would count against a
+        // terminal of another company.
+        $vergeben = self::alleKennungen($base . '-');
         for ($i = 1; $i < 100; $i++) {
             $k = $base . '-' . str_pad((string) $i, 2, '0', STR_PAD_LEFT);
-            if (!Qm::t('qm_terminals')->where('kennung', $k)->exists()) return $k;
+            if (!isset($vergeben[$k])) return $k;
         }
-        return $base . '-' . Str::upper(Str::random(4));
+        return $base . '-' . Str::upper(Str::random(6));
+    }
+
+    /** Kennungen with this prefix in every tenant database: [kennung => true]. */
+    private static function alleKennungen(string $prefix): array
+    {
+        $current = TenantService::current();
+        $out = [];
+        try {
+            foreach (Tenant::where('aktiv', true)->get() as $tenant) {
+                try {
+                    TenantService::switchToTenant($tenant);
+                    Qm::forget();
+                    if (!Schema::connection('tenant')->hasTable('qm_terminals')) continue;
+                    foreach (Qm::t('qm_terminals')->where('kennung', 'like', $prefix . '%')->pluck('kennung') as $k) {
+                        $out[$k] = true;
+                    }
+                } catch (\Throwable $e) {
+                    report($e);
+                }
+            }
+        } finally {
+            $current ? TenantService::switchToTenant($current) : TenantService::reset();
+            Qm::forget();
+        }
+        return $out;
     }
 
     /** Create the terminal or issue a new PIN. Returns [terminal, plainPin]. */
@@ -78,23 +108,39 @@ class TerminalService
     public static function login(string $kennung, string $pin, ?string $geraet, ?string $ip): array
     {
         $kennung = Str::upper(trim($kennung));
-        $treffer = null;
-        $gesperrt = false;
+        // 1) every terminal with this Kennung (normally exactly one on the platform)
+        $kandidaten = [];
         foreach (Tenant::where('aktiv', true)->get() as $tenant) {
             try {
                 TenantService::switchToTenant($tenant);
                 if (!Schema::connection('tenant')->hasTable('qm_terminals')) continue;
                 $t = Qm::t('qm_terminals')->where('kennung', $kennung)->first();
-                if (!$t || !$t->pin_hash) continue;
-                if (!$t->aktiv || $t->gesperrt_seit) { $gesperrt = true; continue; }
-                if (!Hash::check($pin, $t->pin_hash)) { self::fehlversuch($t); continue; }
-                $treffer = [$tenant, $t];
-                break;
+                if ($t && $t->pin_hash) $kandidaten[] = [$tenant, $t];
             } catch (\Throwable $e) {
-                continue;
+                report($e);
             }
         }
+        if (count($kandidaten) > 1) {
+            TenantService::reset(); Qm::forget();
+            return [null, ['Diese Objekt-Kennung ist mehreren Firmen zugeordnet. Bitte das Büro um eine neue Kennung bitten.', 409]];
+        }
+        // 2) check the PIN; a failure is only counted when the Kennung belongs
+        //    to ONE company — never against another tenant's terminal.
+        $treffer = null;
+        $gesperrt = false;
+        $falsch = [];
+        foreach ($kandidaten as [$tenant, $t]) {
+            if (!$t->aktiv || $t->gesperrt_seit) { $gesperrt = true; continue; }
+            if (Hash::check($pin, $t->pin_hash)) { $treffer = [$tenant, $t]; break; }
+            $falsch[] = [$tenant, $t];
+        }
+        if (!$treffer && count($kandidaten) === 1 && $falsch) {
+            TenantService::switchToTenant($falsch[0][0]);
+            self::fehlversuch($falsch[0][1]);
+            TenantService::reset(); Qm::forget();
+        }
         if (!$treffer) {
+            TenantService::reset(); Qm::forget();
             return [null, $gesperrt
                 ? ['Dieser Terminal-Zugang ist gesperrt. Die Objektleitung kann ihn entsperren.', 423]
                 : ['Objekt-Kennung oder PIN falsch.', 401]];
@@ -103,19 +149,21 @@ class TerminalService
         [$tenant, $t] = $treffer;
         TenantService::switchToTenant($tenant);
         $plain = bin2hex(random_bytes(32));
+        $sitzungStd = min(24, max(1, Qm::intSetting('terminal_sitzung_std', 12)));
         $sid = Qm::t('qm_terminal_sitzungen')->insertGetId([
             'terminal_id' => $t->id, 'token_hash' => hash('sha256', $plain), 'start' => now(),
-            'laeuft_ab' => now()->addHours(max(1, Qm::intSetting('terminal_sitzung_std', 12))),
+            'laeuft_ab' => now()->addHours($sitzungStd),
             'geraet' => $geraet ? mb_substr($geraet, 0, 255) : null, 'ip' => $ip,
         ]);
         DB::connection('mysql')->table('personal_access_tokens')->insert([
             'tokenable_type' => self::TOKEN_TYPE, 'tokenable_id' => $sid, 'name' => 'qm-terminal',
             'token' => hash('sha256', $plain), 'abilities' => json_encode(['qm-terminal', 'tenant_id' => $tenant->id]),
-            'expires_at' => now()->addHours(max(1, Qm::intSetting('terminal_sitzung_std', 12))),
+            'expires_at' => now()->addHours($sitzungStd),
             'created_at' => now(), 'updated_at' => now(),
         ]);
         Qm::t('qm_terminals')->where('id', $t->id)->update(['fehlversuche' => 0, 'letzte_anmeldung' => now()]);
         Qm::log('terminal', $t->id, 'anmeldung', null, ['geraet' => $geraet, 'ip' => $ip]);
+        TenantService::reset(); Qm::forget();
         return [['token' => $plain, 'tenant_slug' => $tenant->slug], null];
     }
 
@@ -138,14 +186,45 @@ class TerminalService
         Qm::t('qm_terminals')->where('id', $t->id)->update($upd);
     }
 
-    /** Workers planned today for the Objekt (the "Wer bist du?" list). */
+    /** Minutes a night shift stays selectable after its planned end (late check-out). */
+    public const NACHLAUF_MIN = 180;
+
+    /**
+     * Workers planned for the Objekt now (the "Wer bist du?" list): today's
+     * shifts PLUS yesterday's shifts that are still running — a night shift
+     * (22:00–06:00) keeps its guard on the list after midnight, and so does
+     * anybody who is still clocked in.
+     */
     public static function heuteGeplant(string $objId)
     {
-        return Qm::t('einsatz_mitarbeiter as em')
+        return self::geplantJetzt([$objId]);
+    }
+
+    /** Same for many objects (Leitstand); rows carry obj_id + datum. */
+    public static function geplantJetzt(array $objIds)
+    {
+        if (!$objIds) return collect();
+        $heute = Qm::heute();
+        $gestern = Carbon::parse($heute)->subDay()->toDateString();
+        $now = Carbon::now('Europe/Berlin');
+        $rows = Qm::t('einsatz_mitarbeiter as em')
             ->join('einsaetze as e', 'e.einsatz_id', '=', 'em.einsatz_id')
             ->join('mitarbeiter as m', 'm.dienst_nr', '=', 'em.dienst_nr')
-            ->where('e.obj_id', $objId)->where('e.datum', Qm::heute())->where('e.pruefung', 'geplant')->where('m.aktiv', 1)
-            ->orderBy('e.ist_start')->orderBy('m.vorname')
-            ->get(['em.dienst_nr', 'm.vorname', 'm.name', 'e.einsatz_id', 'e.ist_start', 'e.ist_ende']);
+            ->whereIn('e.obj_id', $objIds)->whereIn('e.datum', [$gestern, $heute])->where('e.pruefung', 'geplant')->where('m.aktiv', 1)
+            ->orderBy('e.datum')->orderBy('e.ist_start')->orderBy('m.vorname')
+            ->get(['e.obj_id', 'e.datum', 'em.dienst_nr', 'm.vorname', 'm.name', 'e.einsatz_id', 'e.ist_start', 'e.ist_ende']);
+        $alt = $rows->filter(fn ($r) => substr((string) $r->datum, 0, 10) === $gestern);
+        if ($alt->isEmpty()) return $rows->values();
+        $laufend = Qm::t('zeiterfassung')->whereIn('einsatz_id', $alt->pluck('einsatz_id')->unique())->whereIn('status', ['aktiv', 'pause'])
+            ->get(['einsatz_id', 'dienst_nr'])->mapWithKeys(fn ($z) => [$z->einsatz_id . '|' . $z->dienst_nr => true]);
+        return $rows->filter(function ($r) use ($gestern, $now, $laufend) {
+            if (substr((string) $r->datum, 0, 10) !== $gestern) return true;
+            if (isset($laufend[$r->einsatz_id . '|' . $r->dienst_nr])) return true;
+            $von = substr((string) $r->ist_start, 0, 5);
+            $bis = substr((string) $r->ist_ende, 0, 5);
+            if ($von === '' || $bis === '' || $bis > $von) return false;      // ended yesterday
+            // overnight: the planned end lies on today's date
+            return $now->lte(Carbon::parse($now->toDateString() . ' ' . $bis, 'Europe/Berlin')->addMinutes(self::NACHLAUF_MIN));
+        })->values();
     }
 }

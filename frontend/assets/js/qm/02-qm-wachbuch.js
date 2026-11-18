@@ -75,8 +75,8 @@ async function qmLeitstandLaden() {
         qmTile({ cls: sum('fehlende_checkins') ? 'bento-tile-warn crm-tile-amber' : '', icon: 'person_off', label: 'Fehlende Check-ins', n: sum('fehlende_checkins') }),
         qmTile({ cls: sum('vorkommnisse_offen') ? 'bento-tile-warn crm-tile-red' : '', icon: 'report', label: 'Offene Vorkommnisse', n: sum('vorkommnisse_offen') }),
         qmTile({ cls: sum('alarm_offen') ? 'bento-tile-warn crm-tile-red' : '', icon: 'e911_emergency', label: 'Offene Alarme', n: sum('alarm_offen') }),
-        qmTile({ icon: 'edit_note', label: 'Einträge seit 06:00', n: sum('eintraege_heute') }),
-    ].join(''));
+        qmTile({ icon: 'edit_note', label: 'Einträge seit ' + (r.data.tag_beginn || '06:00'), n: sum('eintraege_heute') }),
+    ].join('') + (r.data.modul_aktiv === false ? `<div class="crm-banner crm-banner-amber qm-banner-wide">${qmIcon('power_settings_new')} Das ${qmE(qmLabel())} ist für die Firma ausgeschaltet: Es entstehen keine neuen Einträge. Einschalten unter <a href="#" onclick="loadPage('einstellungen?tab=qualitaet');return false">Einstellungen › Qualität</a>.</div>` : ''));
 
     qmPaint(rows, o.length ? `<div class="table-container"><table class="crm-table qm-table">
         <thead><tr><th>Objekt</th><th>Im Dienst</th><th class="crm-num">Geplant heute</th><th>Fehlende Check-ins</th><th class="crm-num">Vorkommnisse</th><th class="crm-num">Einträge</th><th>Letzter Eintrag</th></tr></thead>
@@ -223,8 +223,9 @@ async function qmTagLaden(datum, still = false) {
                 <div><strong>${qmE(b.name)}</strong>${b.plan_von ? ` <span class="crm-muted">Plan ${qmE(b.plan_von)}–${qmE(b.plan_bis)}</span>` : ''}</div>
                 <div class="crm-sub">${b.geoeffnet_am ? 'ab ' + qmE(qmTime(b.geoeffnet_am)) : ''}${b.geschlossen_am ? ' · bis ' + qmE(qmTime(b.geschlossen_am)) : (b.dienst_nr ? ' · läuft' : '')}</div>
                 <div>${b.kette_ok ? qmBadge('Prüfkette ok', 'ok') : qmBadge('Prüfkette verletzt!', 'err')}
+                    ${b.gegenzeichnung_aufgehoben_am ? qmBadge('Gegenzeichnung aufgehoben (neuer Eintrag ' + qmDT(b.gegenzeichnung_aufgehoben_am) + ')', 'warn') : ''}
                     ${b.gegengezeichnet_am ? qmBadge('gegengezeichnet ' + (b.gegengezeichnet_von || ''), 'info')
-                        : (qmCan('wachbuch_gegenzeichnen') && (b.geschlossen_am || !b.dienst_nr) ? `<md-text-button onclick="qmGegenzeichnen(${b.id},'${datum}')"><md-icon slot="icon">draw</md-icon>Gegenzeichnen</md-text-button>` : '')}</div>
+                        : (qmCan('wachbuch_gegenzeichnen') && !b.laeuft ? `<md-text-button onclick="qmGegenzeichnen(${b.id},'${datum}')"><md-icon slot="icon">draw</md-icon>Gegenzeichnen</md-text-button>` : '')}</div>
                 ${b.hinweis_nachfolger ? `<div class="qm-hinweis">${qmIcon('sync_alt')} Übergabe: ${qmE(b.hinweis_nachfolger)}</div>` : ''}
             </div>`).join('')}
         </div>
@@ -251,29 +252,31 @@ function qmDetailsText(e) {
 function qmEintragHtml(e, wer = '') {
     const det = qmDetailsText(e);
     const struck = e.berichtigt_durch ? ' qm-berichtigt' : '';
+    const blattGesperrt = !!(qm.cache.tag?.blaetter || []).find(b => b.id === e.blatt_id)?.gegengezeichnet_am;
     return `<div class="qm-eintrag qm-art-${qmE(e.art)}${e.wichtig ? ' qm-wichtig' : ''}${struck}" id="qmE_${e.id}">
         <div class="qm-eintrag-zeit">${qmE(qmTime(e.zeit))}<span class="crm-muted">#${e.nr}</span></div>
         <div class="qm-eintrag-icon">${qmIcon(QM_WB_ART_ICON[e.art] || 'notes')}</div>
         <div class="qm-eintrag-body">
             <div class="qm-eintrag-head"><strong>${qmE(e.art_label)}</strong>${e.ort ? ' · ' + qmE(e.ort) : ''}
                 ${e.auto ? qmBadge('automatisch') : ''}${e.nachgereicht ? qmBadge('nachgereicht · erfasst ' + qmTime(e.erfasst_am), 'warn') : ''}
+                ${qm.cache.tag?.fotopflicht && e.art === 'vorkommnis' && !e.fotos?.length ? qmBadge('Foto fehlt (Fotopflicht)', 'err') : ''}
                 ${e.status === 'offen' ? qmBadge('offen', 'err') : ''}${e.status === 'erledigt' && ['vorkommnis', 'alarm'].includes(e.art) ? qmBadge('erledigt', 'ok') : ''}
                 ${e.ref_id ? `<a href="#qmE_${e.ref_id}" class="crm-muted">berichtigt #${(qm.cache.tag?.eintraege || []).find(x => x.id === e.ref_id)?.nr ?? ''}</a>` : ''}</div>
             ${e.text ? `<div class="qm-eintrag-text">${qmE(e.text)}</div>` : ''}
             ${det ? `<div class="crm-sub">${qmE(det)}</div>` : ''}
-            ${e.fotos?.length ? `<div class="qm-fotos">${e.fotos.map(f => `<img data-qm-src="${QM_API}/wachbuch/fotos/${f.id}" alt="Foto" onclick="qmFotoGross('${QM_API}/wachbuch/fotos/${f.id}', ${qmE(JSON.stringify((f.lat ? f.lat + ', ' + f.lng + ' ±' + (f.genauigkeit_m || 0) + ' m' : 'ohne GPS') + (f.nicht_am_objekt ? ' · nicht am Objekt' : '')))})">`).join('')}</div>` : ''}
+            ${e.fotos?.length ? `<div class="qm-fotos">${e.fotos.map(f => `<img data-qm-src="${QM_API}/wachbuch/fotos/${f.id}" alt="Foto" onclick="qmFotoGross('${QM_API}/wachbuch/fotos/${f.id}', ${qmE(JSON.stringify((f.lat ? f.lat + ', ' + f.lng + ' ±' + (f.genauigkeit_m || 0) + ' m' : 'ohne GPS') + (f.entfernung_objekt_m != null ? ' · ' + f.entfernung_objekt_m + ' m vom Ort' : '') + (f.nicht_am_objekt ? ' · nicht am Objekt' : '')))})">`).join('')}</div>` : ''}
             <div class="crm-sub">${qmE(e.erfasst_von || wer || '')} · ${qmE({ app: 'App', terminal: 'Terminal', buero: 'Büro', kunde: 'Kundenportal', system: 'System' }[e.quelle] || e.quelle)}</div>
         </div>
         <div class="qm-eintrag-akt">
-            ${qmCan('wachbuch_eintrag') && e.art !== 'berichtigung' && !e.berichtigt_durch && !e.auto ? `<md-icon-button title="Berichtigen" onclick="qmEintragDialog(${e.id})"><md-icon>edit_off</md-icon></md-icon-button>` : ''}
-            ${qmCan('wachbuch_eintrag') && e.status ? `<md-icon-button title="${e.status === 'offen' ? 'Erledigt' : 'Wieder öffnen'}" onclick="qmVkErledigt(${e.id}, ${e.status !== 'offen'})"><md-icon>${e.status === 'offen' ? 'done' : 'undo'}</md-icon></md-icon-button>` : ''}
+            ${qmCan('wachbuch_eintrag') && !blattGesperrt && e.art !== 'berichtigung' && !e.berichtigt_durch && !e.auto ? `<md-icon-button title="Berichtigen" onclick="qmEintragDialog(${e.id})"><md-icon>edit_off</md-icon></md-icon-button>` : ''}
+            ${qmCan('wachbuch_eintrag') && !blattGesperrt && e.status ? `<md-icon-button title="${e.status === 'offen' ? 'Erledigt' : 'Wieder öffnen'}" onclick="qmVkErledigt(${e.id}, ${e.status !== 'offen'})"><md-icon>${e.status === 'offen' ? 'done' : 'undo'}</md-icon></md-icon-button>` : ''}
             ${qmCan('massnahme_bearbeiten') && ['vorkommnis', 'alarm'].includes(e.art) ? `<md-icon-button title="Maßnahme anlegen" onclick="qmMnNeu({quelle_typ:'wachbuch', quelle_id:'${e.id}', obj_id:'${qmE(e.obj_id)}', titel:${qmE(JSON.stringify((e.art_label + ': ' + (e.text || '')).slice(0, 200)))}})"><md-icon>add_task</md-icon></md-icon-button>` : ''}
         </div>
     </div>`;
 }
 
 async function qmGegenzeichnen(id, datum) {
-    if (!(await mdConfirm('Dieses Wachbuchblatt gegenzeichnen? Danach ist es als geprüft markiert.', { title: 'Gegenzeichnen', confirmLabel: 'Gegenzeichnen' }))) return;
+    if (!(await mdConfirm('Dieses Blatt gegenzeichnen? Danach ist es eingefroren: Einträge, Berichtigungen und Statusänderungen sind nicht mehr möglich.', { title: 'Gegenzeichnen', confirmLabel: 'Gegenzeichnen' }))) return;
     const r = await qmReq('POST', QM_API + '/wachbuch/blaetter/' + id + '/gegenzeichnen');
     if (qmFehler(r)) return;
     showToast('Gegengezeichnet');
@@ -283,12 +286,17 @@ async function qmGegenzeichnen(id, datum) {
 /** Office entry; with refId = correction of that entry (append-only). */
 function qmEintragDialog(refId = null) {
     const ref = refId ? (qm.cache.tag?.eintraege || []).find(e => e.id === refId) : null;
+    const blaetter = qm.cache.tag?.blaetter || [];
+    const gesperrt = refId ? blaetter.find(b => b.id === ref?.blatt_id)?.gegengezeichnet_am
+        : blaetter.find(b => !b.dienst_nr && b.gegengezeichnet_am)?.gegengezeichnet_am;
+    if (gesperrt) { showToast('Das Blatt ist gegengezeichnet und eingefroren.', 'error'); return; }
+    const wbTag = qm.opt?.wachbuch_tag || qmHeute();
     const arten = { notiz: 'Notiz', vorkommnis: 'Vorkommnis', hinweis: 'Hinweis', besucher: 'Besucher', lieferung: 'Lieferung / Fremdfirma', schluessel: 'Schlüssel' };
     openModal(ref ? `Berichtigung zu #${ref.nr}` : 'Eintrag aus dem Büro', `
         <div class="crm-form">
             ${ref ? `<div class="crm-banner">${qmIcon('info')} Der ursprüngliche Eintrag bleibt durchgestrichen sichtbar: „${qmE((ref.text || ref.art_label).slice(0, 160))}“</div>`
                 : `<md-outlined-select class="crm-fld" label="Art" id="qe_art">${qmSelectOptions(arten, 'notiz')}</md-outlined-select>
-                   <md-outlined-text-field class="crm-fld" label="Datum" id="qe_datum" type="date" value="${qmE(qm.wb.tag || qmHeute())}"></md-outlined-text-field>
+                   <md-outlined-text-field class="crm-fld" label="Datum" id="qe_datum" type="date" data-f="datum" max="${qmE(wbTag)}" value="${qmE(qm.wb.tag || wbTag)}"></md-outlined-text-field>
                    <md-outlined-text-field class="crm-fld" label="Ort" type="text" id="qe_ort" data-max="200"></md-outlined-text-field>`}
             <md-outlined-text-field class="crm-fld" label="${ref ? 'Richtigstellung *' : 'Text *'}" type="textarea" id="qe_text" rows="4" maxlength="4000" data-f="text"></md-outlined-text-field>
         </div>`,

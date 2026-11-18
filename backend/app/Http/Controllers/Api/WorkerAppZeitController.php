@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Support\GeoLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -1260,29 +1261,7 @@ class WorkerAppZeitController extends Controller
             ], 403);
         }
 
-        $noteRow = DB::connection('tenant')->selectOne("
-            SELECT e.beschreibung, e.bemerkung, e.ort, d.beschreibung AS plan_beschreibung
-            FROM einsaetze e
-            LEFT JOIN bestellungen b ON e.bestell_id = b.bestell_id
-            LEFT JOIN bestelleingang_tage d ON d.eingang_id = b.eingang_id AND d.datum = e.datum
-                AND (
-                    (e.tag_nr IS NOT NULL AND d.tag_nr = e.tag_nr)
-                 OR (e.tag_nr IS NULL AND d.tag_nr = (
-                        SELECT MIN(d2.tag_nr) FROM bestelleingang_tage d2
-                         WHERE d2.eingang_id = b.eingang_id AND d2.datum = e.datum
-                    ))
-                )
-            WHERE e.einsatz_id = ?
-        ", [$einsatzId]);
-
-        $fullNote = ($noteRow->beschreibung ?? '') . ' ' . ($noteRow->plan_beschreibung ?? '') . ' ' . ($noteRow->bemerkung ?? '');
-
-        $locationAddress = null;
-        if (!empty($noteRow->ort)) {
-            $locationAddress = trim($noteRow->ort);
-        } elseif (preg_match('/ort\s*:\s*(.+?)(?:\n|,\s*[a-zA-Z]+\s*:|$)/iu', $fullNote, $matches)) {
-            $locationAddress = trim($matches[1]);
-        }
+        $locationAddress = GeoLocation::einsatzAdresse($einsatzId);
 
         if (!$locationAddress) {
             return response()->json([
@@ -1302,7 +1281,7 @@ class WorkerAppZeitController extends Controller
             }
         }
 
-        $geoResult = $this->geocodeAddress($locationAddress);
+        $geoResult = GeoLocation::geocodeAddress($locationAddress);
         if (!$geoResult) {
             return response()->json([
                 'error' => 'Der Einsatzort konnte nicht überprüft werden. Bitte versuchen Sie es erneut oder melden Sie sich bei der Disposition.',
@@ -1310,7 +1289,7 @@ class WorkerAppZeitController extends Controller
         }
 
         [$workerLat, $workerLon] = explode(',', $geo);
-        $distance = $this->haversineDistance(
+        $distance = GeoLocation::haversineDistance(
             (float)$workerLat, (float)$workerLon,
             (float)$geoResult['lat'], (float)$geoResult['lon']
         );
@@ -1323,105 +1302,5 @@ class WorkerAppZeitController extends Controller
         }
 
         return null;
-    }
-
-    // --- GPS helpers ---
-
-    /**
-     * If the stored Einsatzort IS a coordinate pair — decimal
-     * ("51.663750, 11.815917") or DMS ("51°39'49.5\"N, 11°48'57.3\"E",
-     * German O=Ost accepted) — parse it directly. Mirrors beParseCoords()
-     * in the wizard frontend so an exact pin entered there verifies
-     * against the exact point instead of a Nominatim text search.
-     */
-    private function parseCoordsString(string $s): ?array
-    {
-        $s   = trim($s);
-        $lat = null;
-        $lon = null;
-        $dms = '(\d{1,3})\s*[°:d]\s*(\d{1,2})\s*[\'′:\s]\s*(\d{1,2}(?:[.,]\d+)?)\s*["″”\']*';
-        if (preg_match('/^' . $dms . '\s*([NSns])[,;\s]+' . $dms . '\s*([EWOewo])$/u', $s, $m)) {
-            $lat = (float) $m[1] + (float) $m[2] / 60 + (float) str_replace(',', '.', $m[3]) / 3600;
-            $lon = (float) $m[5] + (float) $m[6] / 60 + (float) str_replace(',', '.', $m[7]) / 3600;
-            if (preg_match('/s/i', $m[4])) $lat = -$lat;
-            if (preg_match('/w/i', $m[8])) $lon = -$lon;
-        } elseif (preg_match('/^(-?\d{1,3}[.,]\d+)\s*[,;]\s*(-?\d{1,3}[.,]\d+)$/', $s, $m)) {
-            $lat = (float) str_replace(',', '.', $m[1]);
-            $lon = (float) str_replace(',', '.', $m[2]);
-        }
-        if ($lat === null || $lon === null || abs($lat) > 90 || abs($lon) > 180) {
-            return null;
-        }
-        return ['lat' => (string) $lat, 'lon' => (string) $lon];
-    }
-
-    private function geocodeAddress($address)
-    {
-        // Exact coordinates need no geocoder at all.
-        $coords = $this->parseCoordsString((string) $address);
-        if ($coords) {
-            return $coords;
-        }
-
-        // Two-tier cache:
-        //   1. Fresh tier (30 days) — avoids hammering Nominatim (rate-limited)
-        //      on every clock-in.
-        //   2. Forever tier — once an address has EVER been resolved, that
-        //      result is kept permanently as a fallback so clock-in/out never
-        //      fails just because the external geocoder is down.
-        // Failures are intentionally NOT cached so they retry next time.
-        $addrHash   = md5(mb_strtolower(trim($address)));
-        $key        = 'geocode:' . $addrHash;
-        $foreverKey = 'geocode:forever:' . $addrHash;
-
-        $cached = \Illuminate\Support\Facades\Cache::get($key);
-        if ($cached) {
-            return $cached;
-        }
-
-        // Real-world Einsatzorte often carry a venue prefix
-        // ("Bürgerservice, Am Stadion 6, ...") or stray double spaces that
-        // make Nominatim return nothing. Retry progressively simpler
-        // variants before declaring the address unresolvable; cache the
-        // winner under the ORIGINAL address hash.
-        $normalized = trim(preg_replace('/\s+/u', ' ', (string) $address));
-        $queries    = [$normalized];
-        if (mb_strpos($normalized, ',') !== false) {
-            $queries[] = trim(mb_substr($normalized, mb_strpos($normalized, ',') + 1));
-        }
-
-        foreach (array_unique(array_filter($queries)) as $i => $q) {
-            if ($i > 0) usleep(250000); // be gentle with the rate-limited geocoder
-            $coords = $this->nominatimLookup($q);
-            if ($coords) {
-                \Illuminate\Support\Facades\Cache::put($key, $coords, now()->addDays(30));
-                \Illuminate\Support\Facades\Cache::forever($foreverKey, $coords);
-                return $coords;
-            }
-        }
-
-        // Geocoder down or no result — fall back to the last known
-        // coordinates for this address (if it ever resolved before).
-        return \Illuminate\Support\Facades\Cache::get($foreverKey);
-    }
-
-    private function nominatimLookup(string $query): ?array
-    {
-        $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query([
-            'q' => $query, 'format' => 'json', 'limit' => 1, 'countrycodes' => 'de',
-        ]);
-        $ctx = stream_context_create(['http' => ['header' => "User-Agent: HMS-Worker-App/1.0\r\n", 'timeout' => 5]]);
-        $response = @file_get_contents($url, false, $ctx);
-        $results  = $response ? json_decode($response, true) : null;
-        return !empty($results) ? ['lat' => $results[0]['lat'], 'lon' => $results[0]['lon']] : null;
-    }
-
-    private function haversineDistance($lat1, $lon1, $lat2, $lon2)
-    {
-        $R = 6371000;
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
-        $a = sin($dLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
-        return $R * 2 * atan2(sqrt($a), sqrt(1 - $a));
     }
 }

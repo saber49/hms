@@ -28,7 +28,7 @@ class ObjektController extends Controller
         if (!$ids) return response()->json(['objekte' => []]);
 
         $das = Qm::t('qm_dienstanweisungen')->whereIn('obj_id', $ids)->whereIn('status', ['freigegeben', 'entwurf'])->get();
-        $aktuell = $das->where('status', 'freigegeben')->sortByDesc('version')->unique('obj_id')->keyBy('obj_id');
+        $aktuell = $das->where('status', 'freigegeben')->sortByDesc(fn ($d) => DienstanweisungService::rang($d))->unique('obj_id')->keyBy('obj_id');
         $entwuerfe = $das->where('status', 'entwurf')->countBy('obj_id');
         $bestaetigt = Qm::t('qm_da_bestaetigungen')->whereIn('dienstanweisung_id', $aktuell->pluck('id'))->whereNotNull('bestaetigt_am')
             ->get(['dienstanweisung_id', 'dienst_nr'])->groupBy('dienstanweisung_id');
@@ -69,7 +69,7 @@ class ObjektController extends Controller
     {
         if ($e = $this->nichtBereit() ?? $this->objektOderFehler($request->user(), $objId)) return $e;
         $versionen = Qm::t('qm_dienstanweisungen')->where('obj_id', $objId)->orderByDesc('id')->get();
-        $da = $versionen->where('status', 'freigegeben')->sortByDesc('version')->first();
+        $da = $versionen->where('status', 'freigegeben')->sortByDesc(fn ($d) => DienstanweisungService::rang($d))->first();
         $best = [];
         if ($da) {
             $rows = Qm::t('qm_da_bestaetigungen')->where('dienstanweisung_id', $da->id)->get()->keyBy('dienst_nr');

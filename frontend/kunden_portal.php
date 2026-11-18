@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Kundenportal</title>
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
-    <link rel="stylesheet" href="assets/css/kunden_portal.css?v=20261114md3g">
+    <link rel="stylesheet" href="assets/css/kunden_portal.css?v=20261118qmfix1">
     <link rel="stylesheet" href="assets/css/kunden_portal_qm.css?v=20261114md3g">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
     <script>
@@ -126,7 +126,7 @@
         Powered by <a href="https://clood-x.com" target="_blank" rel="noopener">clood-x.com</a>
     </footer>
 
-    <script src="assets/js/kunden_portal.js?v=20261114md3g"></script>
+    <script src="assets/js/kunden_portal.js?v=20261118qmfix1"></script>
     <!-- QM module sections (register in KP_TABS; order irrelevant, after the core) -->
     <script src="/worker/assets/js/qm-live.js?v=20261114md3g"></script>
     <script src="assets/js/kunden_portal/qm-konto.js?v=20261114md3g"></script>

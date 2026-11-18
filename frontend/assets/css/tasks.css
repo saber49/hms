@@ -2778,74 +2778,85 @@ md-icon-button.nu-summary-action-btn.danger {
     backdrop-filter: blur(3px);
 }
 .planner-nu-select-dialog {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
+    background: var(--md-sys-color-surface-container-lowest);
+    color: var(--md-sys-color-on-surface);
+    border-radius: var(--md-sys-shape-corner-extra-large);
     width: 100%; max-width: 1080px; max-height: 88vh;
     display: flex; flex-direction: column;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--md-sys-elevation-level3);
     overflow: hidden;
     transition: max-width 0.2s ease;
     animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 /* Select view = compact popup (just the partner list). */
-.planner-nu-select-dialog[data-view="select"] { max-width: 620px; }
+.planner-nu-select-dialog[data-view="select"] { max-width: 560px; }
 .planner-nu-select-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--gray-200);
-    background: var(--white);
+    padding: 24px 24px 8px;
+    gap: 16px;
 }
-.planner-nu-select-title { font-size: var(--md-sys-typescale-body-large-size); font-weight: 700; color: var(--primary); }
-.planner-nu-select-sub { font-size: 0.82rem; color: var(--gray-500); margin-top: 4px; }
+.planner-nu-select-title {
+    font-size: 1.25rem; line-height: 1.4; font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+}
+.planner-nu-select-sub {
+    font-size: var(--md-sys-typescale-body-medium-size);
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 4px;
+}
 md-icon-button.planner-nu-select-close { --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant); flex-shrink: 0; }
 .planner-nu-select-body {
-    display: flex; flex-direction: column; gap: 10px;
-    padding: 24px 28px; overflow-y: auto; flex: 1;
+    padding: 12px 16px 24px; overflow-y: auto; flex: 1;
     overscroll-behavior: contain;
-    background: var(--gray-50);
 }
 .planner-nu-edit-body {
     padding: 24px 28px; overflow-y: auto; flex: 1;
     overscroll-behavior: contain;
-    background: var(--gray-50);
+    background: var(--md-sys-color-surface-container-low);
 }
 .planner-nu-edit-body .nu-positions-panel {
     border-left-color: var(--accent);
     box-shadow: 0 2px 10px color-mix(in srgb, var(--md-sys-color-scrim) 6%, transparent);
 }
-.planner-nu-select-list { display: flex; flex-direction: column; gap: 12px; }
+.planner-nu-select-list { min-height: 0; }
 .planner-nu-select-list-title {
-    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; color: var(--gray-500);
-    margin-bottom: 4px;
+    padding: 8px 8px 4px;
+    font-size: var(--md-sys-typescale-label-medium-size);
+    font-weight: 600; color: var(--md-sys-color-on-surface-variant);
 }
-.planner-nu-select-item {
-    display: flex; align-items: center; gap: 14px;
-    padding: 16px 18px; border: 1px solid var(--gray-200);
-    border-radius: var(--md-sys-shape-corner-large); background: var(--white);
-    cursor: pointer; transition: all 0.18s;
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 5%, transparent);
+.planner-nu-select-options {
+    --md-list-container-color: transparent;
 }
-.planner-nu-select-item:hover {
-    border-color: var(--accent);
-    background: var(--white);
-    box-shadow: 0 8px 22px color-mix(in srgb, var(--md-sys-color-primary) 15%, transparent);
-    transform: translateY(-2px);
+md-list-item.planner-nu-select-item {
+    border-radius: var(--md-sys-shape-corner-medium);
+    --md-list-item-label-text-color: var(--md-sys-color-on-surface);
+    --md-list-item-supporting-text-color: var(--md-sys-color-on-surface-variant);
+}
+md-list-item.planner-nu-select-item:hover,
+md-list-item.planner-nu-select-item:focus-visible {
+    background: var(--md-sys-color-surface-container-low);
 }
 .planner-nu-select-avatar {
-    width: 50px; height: 50px; border-radius: var(--md-sys-shape-corner-large);
-    display: flex; align-items: center; justify-content: center;
-    background: var(--accent-soft); color: var(--accent);
-    font-weight: 700; font-size: 0.95rem;
+    width: 40px; height: 40px; border-radius: var(--md-sys-shape-corner-full);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-weight: 600; font-size: var(--md-sys-typescale-label-large-size);
 }
-.planner-nu-select-info { flex: 1; }
-.planner-nu-select-name { font-weight: 700; color: var(--gray-900); font-size: 0.95rem; }
-.planner-nu-select-bereich { font-size: 0.78rem; color: var(--gray-500); margin-top: 3px; }
 .planner-nu-select-arrow {
-    color: var(--accent); opacity: 0.7; transition: opacity 0.15s;
+    color: var(--md-sys-color-on-surface-variant);
 }
-.planner-nu-select-item:hover .planner-nu-select-arrow { opacity: 1; }
+@media (max-width: 640px) {
+    .planner-nu-select-overlay {
+        padding: var(--sa-top, 0px) 0 var(--sa-bottom, 0px);
+    }
+    .planner-nu-select-dialog {
+        height: 100%; max-height: 100%;
+        border-radius: 0;
+    }
+    .planner-nu-select-header { padding: 16px 16px 8px; }
+    .planner-nu-select-body { padding: 8px 8px 16px; }
+}
 /* ============================================
    iPad / Tablet (641px–1024px)
    Ziel: verhält sich wie Desktop, nur kompakter.

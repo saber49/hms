@@ -67,7 +67,7 @@
             const items = (await qAll()).sort((a, b) => (a.kind === 'foto') - (b.kind === 'foto') || a.id - b.id);
             for (const it of items) {
                 if (it.kind === 'eintrag') {
-                    const r = await req('POST', '/wachbuch/eintraege', it.body);
+                    const r = await sendEintrag(it.body, it.blob, it.meta);
                     if (r.status === 0) break;                               // still offline
                     if (r.ok && r.data.eintrag) uuidSet(it.body.client_uuid, r.data.eintrag.id);
                     await qDel(it.id);                                       // sent, duplicate or permanent rejection
@@ -112,6 +112,16 @@
         Object.entries(meta || {}).forEach(([k, v]) => { if (v != null) fd.append(k, v); });
         return req('POST', '/wachbuch/eintraege/' + eintragId + '/fotos', fd, true);
     }
+    function sendEintrag(body, blob, meta) {
+        if (!blob) return req('POST', '/wachbuch/eintraege', body);
+        const fd = new FormData();
+        Object.entries(body || {}).forEach(([k, v]) => {
+            if (v != null) fd.append(k, typeof v === 'object' ? JSON.stringify(v) : v);
+        });
+        fd.append('foto', blob, 'foto.jpg');
+        Object.entries(meta || {}).forEach(([k, v]) => { if (v != null) fd.append(k, v); });
+        return req('POST', '/wachbuch/eintraege', fd, true);
+    }
 
     // ---------------------------------------------------------------
     // Render
@@ -155,6 +165,7 @@
                 <div><strong>${esc(s.objektname)}</strong><div class="wqm-muted">Plan ${esc(s.plan_von)}–${esc(s.plan_bis)} · ${s.status === 'pause' ? 'Pause' : 'im Dienst'}</div></div>
                 ${pending || offline ? `<span class="wqm-pending"><i class="fas fa-cloud-arrow-up"></i> ${pending} wartet auf Netz</span>` : ''}
             </div>
+            ${d.notfallkontakte ? `<details class="wqm-notfall"><summary><i class="fas fa-phone"></i> Notfallkontakte</summary><div>${esc(d.notfallkontakte).replace(/\n/g, '<br>')}</div></details>` : ''}
             ${offeneHinweise.map(h => `<div class="wqm-hinweis"><i class="fas fa-bullhorn"></i><div><strong>Hinweis vom Kunden · ${zeit(h.zeit)}</strong><div>${esc(h.text)}</div></div>
                 <button onclick="WQm.umgesetzt(${h.id})">Umgesetzt</button></div>`).join('')}
             <div class="wqm-grid">${ARTEN_BUTTONS.map(([a, l, i]) => `<button class="wqm-art wqm-art-${a}" onclick="WQm.neu('${a}')"><i class="fas ${i}"></i><span>${l}</span></button>`).join('')}</div>
@@ -243,10 +254,9 @@
         const btn = document.getElementById('wq_save'); btn.disabled = true;
         const meta = file ? await gps() : null;
         const blob = file ? await verkleinern(file) : null;
-        const r = await req('POST', '/wachbuch/eintraege', body);
+        const r = await sendEintrag(body, blob, meta);
         if (r.status === 0) {
-            await qAdd({ kind: 'eintrag', body });
-            if (blob) await qAdd({ kind: 'foto', eintrag_uuid: body.client_uuid, blob, meta: { ...meta, erfasst_am: body.erfasst_am }, t: Date.now() });
+            await qAdd({ kind: 'eintrag', body, blob, meta: { ...meta, erfasst_am: body.erfasst_am }, t: Date.now() });
             zu(); toast('Offline gespeichert — wird automatisch gesendet');
             state.data.eintraege.push({ id: -Date.now(), nr: '…', art: body.art, art_label: (ARTEN_BUTTONS.find(a => a[0] === art) || [, art])[1], zeit: body.erfasst_am,
                 text, ort: body.ort, fotos: [], nachgereicht: true, auto: false });
@@ -254,11 +264,6 @@
         }
         btn.disabled = false;
         if (!r.ok) return err(r.data.error || Object.values(r.data.errors || {}).flat()[0] || 'Speichern fehlgeschlagen');
-        if (blob) {
-            const f = await sendFoto(r.data.eintrag.id, blob, meta);
-            if (f.status === 0) { uuidSet(body.client_uuid, r.data.eintrag.id); await qAdd({ kind: 'foto', eintrag_uuid: body.client_uuid, blob, meta, t: Date.now() }); }
-            else if (!f.ok) toast(f.data.error || 'Foto konnte nicht hochgeladen werden', 'error');
-        }
         zu(); toast((art === 'alarm' ? 'Alarm gemeldet — die Objektleitung ist informiert' : 'Gespeichert'));
         mount(state.root, cfg);
     }

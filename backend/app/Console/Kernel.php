@@ -110,6 +110,15 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->onOneServer()
             ->appendOutputTo(storage_path('logs/crm-automation.log'));
+
+        // Qualitätsmanagement & Wachbuch: overdue deadlines, escalation, open
+        // alarms, Dienstanweisung validity/review, Tagesbericht. Every item
+        // is reported once (qm_benachrichtigungen), so a short interval is safe.
+        $schedule->command('qm:automation')
+            ->everyTenMinutes()
+            ->withoutOverlapping()
+            ->onOneServer()
+            ->appendOutputTo(storage_path('logs/qm-automation.log'));
     }
 
     /**

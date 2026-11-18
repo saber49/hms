@@ -26,6 +26,7 @@ class QmController extends Controller
         $u = $request->user();
         return response()->json([
             'heute'    => Qm::heute(),
+            'wachbuch_tag' => Qm::wachbuchTag(),
             'ich'      => ['id' => (int) $u->id, 'rollen' => QmRechte::rollen($u), 'rechte' => QmRechte::fuer($u), 'alle_objekte' => QmScope::alleObjekte($u)],
             'label'    => TenantProfile::objektbuchLabel(TenantService::current()),
             'objekte'  => QmScope::objekte($u)->map(fn ($o) => [
@@ -41,7 +42,7 @@ class QmController extends Controller
                 'rek_schritte' => ReklamationService::SCHRITTE,
                 'mn_quellen' => MassnahmeService::QUELLEN, 'mn_arten' => MassnahmeService::ARTEN, 'mn_status' => MassnahmeService::STATUS,
             ],
-            'einstellungen' => array_intersect_key(Qm::settings(), array_flip(['modul_wachbuch', 'modul_qm', 'da_freigabe_pflicht', 'mn_max_verlaengerung'])),
+            'einstellungen' => array_intersect_key(Qm::settings(), array_flip(['modul_wachbuch', 'modul_qm', 'da_freigabe_pflicht', 'mn_max_verlaengerung', 'mn_wirksam_tage', 'tag_beginn'])),
         ]);
     }
 

@@ -19,6 +19,11 @@ use Illuminate\Support\Str;
  *
  * Without a confirmation of the CURRENT version a worker cannot check in at
  * that Objekt; "Gelesen und verstanden" needs the full PDF opened first.
+ *
+ * "Gültig ab" is binding: a released version with a future date is already
+ * visible (workers can read and confirm it in advance), but the previous
+ * version stays the current one — and the one the check-in asks for — until
+ * that day. `faelligWerden()` (qm:automation) archives it then.
  */
 class DienstanweisungService
 {
@@ -60,8 +65,11 @@ class DienstanweisungService
     {
         DB::connection('tenant')->transaction(function () use ($da, $u) {
             $max = (int) Qm::t('qm_dienstanweisungen')->where('obj_id', $da->obj_id)->lockForUpdate()->max('version');
-            Qm::t('qm_dienstanweisungen')->where('obj_id', $da->obj_id)->where('status', 'freigegeben')
-                ->update(['status' => 'archiv', 'updated_at' => now()]);
+            $alt = Qm::t('qm_dienstanweisungen')->where('obj_id', $da->obj_id)->where('status', 'freigegeben')->where('id', '!=', $da->id);
+            // Valid from today: it replaces everything. Valid later: the current
+            // version stays in force; only an older "not yet valid" one is replaced.
+            if (substr((string) $da->gueltig_ab, 0, 10) > Qm::heute()) $alt->where('gueltig_ab', '>', Qm::heute());
+            $alt->update(['status' => 'archiv', 'updated_at' => now()]);
             Qm::t('qm_dienstanweisungen')->where('id', $da->id)->update([
                 'status' => 'freigegeben', 'version' => $max + 1,
                 'freigegeben_von' => $u->id ?? null, 'freigegeben_am' => now(),
@@ -133,10 +141,34 @@ class DienstanweisungService
     // Reading + confirmation
     // ---------------------------------------------------------------
 
+    /** The version in force today (released and "gültig ab" reached). */
     public static function aktuelle(string $objId): ?object
     {
         return Qm::t('qm_dienstanweisungen')->where('obj_id', $objId)->where('status', 'freigegeben')
-            ->orderByDesc('version')->first();
+            ->where('gueltig_ab', '<=', Qm::heute())->orderByDesc('version')->first();
+    }
+
+    /** Sort key: versions in force first, then the newest — for "current version" pickers on collections. */
+    public static function rang(object $d): array
+    {
+        return [substr((string) $d->gueltig_ab, 0, 10) <= Qm::heute() ? 1 : 0, (int) $d->version];
+    }
+
+    /** A version reached its "gültig ab": archive the versions it replaces. Returns the number archived. */
+    public static function faelligWerden(): int
+    {
+        $heute = Qm::heute();
+        $n = 0;
+        $gueltig = Qm::t('qm_dienstanweisungen')->where('status', 'freigegeben')->where('gueltig_ab', '<=', $heute)
+            ->orderByDesc('version')->get(['id', 'obj_id', 'version'])->groupBy('obj_id');
+        foreach ($gueltig as $objId => $rows) {
+            if ($rows->count() < 2) continue;
+            $neu = $rows->first();
+            $n += Qm::t('qm_dienstanweisungen')->whereIn('id', $rows->slice(1)->pluck('id'))->update(['status' => 'archiv', 'updated_at' => now()]);
+            Qm::log('dienstanweisung', $neu->id, 'gueltig', null, ['version' => (int) $neu->version], null, 'Gültig-ab-Datum erreicht — Vorversion archiviert.');
+            Qm::changed('dienstanweisung', (string) $objId);
+        }
+        return $n;
     }
 
     /** Current DA of the Objekt the worker has not confirmed yet (check-in gate), or null. */
@@ -162,7 +194,11 @@ class DienstanweisungService
         $das = Qm::t('qm_dienstanweisungen as d')->join('objekte as o', 'o.obj_id', '=', 'd.obj_id')
             ->whereIn('d.obj_id', $objIds)->where('d.status', 'freigegeben')
             ->orderBy('o.objektname')->orderByDesc('d.version')
-            ->get(['d.*', 'o.objektname', 'o.adresse', 'o.plz', 'o.stadt'])->unique('obj_id');
+            ->get(['d.*', 'o.objektname', 'o.adresse', 'o.plz', 'o.stadt']);
+        // Per Objekt: the version in force (check-in asks for it) plus a newer
+        // one that is released but not valid yet (can be confirmed in advance).
+        $inKraft = $das->filter(fn ($d) => substr((string) $d->gueltig_ab, 0, 10) <= $heute)->unique('obj_id')->pluck('version', 'obj_id');
+        $das = $das->filter(fn ($d) => (int) $d->version >= (int) ($inKraft[$d->obj_id] ?? 0))->values();
         $best = Qm::t('qm_da_bestaetigungen')->where('dienst_nr', $dienstNr)->whereIn('dienstanweisung_id', $das->pluck('id'))
             ->get()->keyBy('dienstanweisung_id');
         return $das->map(fn ($d) => self::format($d) + [
@@ -170,6 +206,7 @@ class DienstanweisungService
             'adresse' => trim(($d->adresse ?? '') . ', ' . trim(($d->plz ?? '') . ' ' . ($d->stadt ?? '')), ', '),
             'pdf_geoeffnet_am' => $best[$d->id]->pdf_geoeffnet_am ?? null,
             'bestaetigt_am' => $best[$d->id]->bestaetigt_am ?? null,
+            'in_kraft' => substr((string) $d->gueltig_ab, 0, 10) <= $heute,
         ])->values()->all();
     }
 

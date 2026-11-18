@@ -47,6 +47,7 @@ html,
     background: none; border: 0; border-bottom: 3px solid transparent; padding: 14px 16px;
     font: inherit; font-size: var(--md-sys-typescale-body-medium-size); color: var(--kp-muted); cursor: pointer; white-space: nowrap; display: flex; gap: 8px; align-items: center;
 }
+.kp-tab[hidden] { display: none; }
 .kp-tab.active { color: var(--kp-primary); border-bottom-color: var(--kp-primary); font-weight: 600; }
 /* Toolbar */
 .kp-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; max-width: 960px; margin: 16px auto 0; padding: 0 16px; }

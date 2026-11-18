@@ -8,7 +8,8 @@ namespace App\Support\Qm;
  * in QM-Einstellungen › Zuständigkeit & Rechte (stored as JSON in
  * qm_einstellungen.rechte, merged over STANDARD).
  *
- * Inhaber / Administrator hold every key, so they are always QMB.
+ * The Inhaber holds every key, so he is always QMB; everyone else gets the
+ * roles only by his explicit grant (PermissionRegistry::OWNER_GRANT).
  */
 class QmRechte
 {
@@ -56,6 +57,8 @@ class QmRechte
                 $r = is_array($over[$k] ?? null) ? array_values(array_intersect(array_keys(self::ROLLEN), $over[$k])) : $rollen;
                 // QM settings stay QMB-only — nobody can lock himself out or escalate.
                 if ($k === 'einstellungen') $r = ['qmb'];
+                // The QMB can do everything: no action may end up without any role.
+                if (!in_array('qmb', $r, true)) array_unshift($r, 'qmb');
                 $out[$k] = ['label' => $label, 'rollen' => $r];
             }
             return $out;

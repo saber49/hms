@@ -67,7 +67,7 @@ async function qmObjDetail(objId) {
                     ${d.versionen.length ? `<table class="crm-proto"><tbody>${d.versionen.map(v => `<tr>
                         <td>${v.version ? '<strong>v' + v.version + '</strong>' : 'Entwurf'}</td>
                         <td>${qmBadge(v.status, statusTon[v.status])}</td>
-                        <td>gültig ab ${qmE(qmDate(v.gueltig_ab))}<div class="crm-sub">${qmE(v.erstellt_von || '')} · ${qmE(qmDT(v.created_at))}${v.zurueckgewiesen_grund ? ' · Grund: ' + qmE(v.zurueckgewiesen_grund) : ''}</div>
+                        <td>gültig ab ${qmE(qmDate(v.gueltig_ab))} ${v.status === 'freigegeben' && v.gueltig_ab > qmHeute() ? qmBadge('noch nicht gültig', 'warn') : ''}<div class="crm-sub">${qmE(v.erstellt_von || '')} · ${qmE(qmDT(v.created_at))}${v.zurueckgewiesen_grund ? ' · Grund: ' + qmE(v.zurueckgewiesen_grund) : ''}</div>
                             <ul class="qm-kurz">${v.kurz.map(k => `<li>${qmE(k)}</li>`).join('')}</ul></td>
                         <td class="crm-actions"><md-icon-button title="PDF öffnen (${v.seiten} Seiten)" onclick="qmOpenPdf('${QM_API}/dienstanweisungen/${v.id}/pdf')"><md-icon>picture_as_pdf</md-icon></md-icon-button>
                             ${v.status === 'entwurf' && qmCan('da_freigeben') ? `<md-filled-tonal-button onclick="qmDaFreigabe(${v.id},'${qmE(objId)}')">Freigeben…</md-filled-tonal-button>` : ''}</td>
@@ -84,9 +84,14 @@ async function qmObjDetail(objId) {
                     <div class="crm-form crm-pad">
                         <label class="crm-switch-row"><md-checkbox id="qo_wb" ${cfg.wachbuch_aktiv ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> ${qmE(qmLabel())} aktiv</label>
                         <label class="crm-switch-row"><md-checkbox id="qo_foto" ${cfg.fotopflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Fotopflicht bei Vorkommnissen</label>
+                        <div class="crm-sub">App und Terminal verlangen das Foto bereits beim Speichern; im Büro bleibt ein fehlendes Pflichtfoto rot markiert.</div>
+                        <md-outlined-text-field class="crm-fld" label="GPS-Grenze für Fotos (m)" type="number" min="20" max="2000" step="10" id="qo_gps" value="${qmE(cfg.gps_grenze_m || 150)}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
+                        <div class="crm-sub">Fotos außerhalb dieser Entfernung zum Einsatz- bzw. Objektort werden als „nicht am Objekt“ markiert.</div>
                         <md-outlined-select class="crm-fld" label="Zuständiger Objektleiter" id="qo_ol" ${darfCfg ? '' : 'disabled'}>${qmUserOptions(cfg.objektleiter_id, '— keiner —')}</md-outlined-select>
                         <md-outlined-text-field class="crm-fld" label="Empfänger der Tagesberichte (E-Mail, mehrere mit Komma)" type="text" id="qo_mail" data-f="bericht_empfaenger" value="${qmE(cfg.bericht_empfaenger || '')}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
+                        <div class="crm-sub">Jeden Morgen zum Beginn des Wachbuch-Tags (${qmE(qm.opt.einstellungen?.tag_beginn || '06:00')} Uhr) geht der Bericht des Vortags per E-Mail raus — nur wenn es Einträge gab, in der Kundenfassung.</div>
                         <md-outlined-text-field class="crm-fld" label="Notfallkontakte" type="textarea" id="qo_notfall" rows="3" ${darfCfg ? '' : 'disabled'} value="${qmE(cfg.notfallkontakte || '')}"></md-outlined-text-field>
+                        <div class="crm-sub">Wird der Wachperson im Dienst angezeigt (App und Terminal).</div>
                         ${darfCfg ? `<div class="crm-form-actions"><md-filled-button onclick="qmObjCfgSpeichern('${qmE(objId)}')"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button></div>` : '<div class="crm-muted">Nur der QMB ändert diese Einstellung.</div>'}
                     </div></div>
             </div>
@@ -95,8 +100,9 @@ async function qmObjDetail(objId) {
 
 async function qmObjCfgSpeichern(objId) {
     const r = await qmReq('PUT', QM_API + '/objekte/' + encodeURIComponent(objId) + '/einstellung', {
-        wachbuch_aktiv: qmV('qo_wb'), fotopflicht: qmV('qo_foto'), objektleiter_id: qmV('qo_ol') ? +qmV('qo_ol') : null,
-        bericht_empfaenger: qmV('qo_mail') || null, notfallkontakte: qmV('qo_notfall') || null,
+        wachbuch_aktiv: qmV('qo_wb'), fotopflicht: qmV('qo_foto'), gps_grenze_m: +qmV('qo_gps') || 150,
+        objektleiter_id: qmV('qo_ol') ? +qmV('qo_ol') : null, bericht_empfaenger: qmV('qo_mail') || null,
+        notfallkontakte: qmV('qo_notfall') || null,
     });
     if (qmFehler(r)) return;
     showToast('Gespeichert');
@@ -116,7 +122,8 @@ function qmDaDialog(objId) {
             <div id="qd_kurz" data-f="kurz">${punkt()}${punkt()}${punkt()}</div>
             <md-outlined-button onclick="if(document.querySelectorAll('.qm-kurz-in').length<8)document.getElementById('qd_kurz').insertAdjacentHTML('beforeend', window._qmKurzPunkt())"><md-icon slot="icon">add</md-icon>Punkt</md-outlined-button>
             <div class="crm-banner">${qmIcon('info')} ${freigabe ? 'Der Entwurf geht zur Freigabe an den QMB. Erst danach sehen ihn Mitarbeiter und Kunde.'
-                : 'Wird sofort veröffentlicht: neue Version, die alte kommt ins Archiv. Mitarbeiter (eingeplant oder in 90 Tagen dort tätig) bekommen eine Push-Nachricht, der Kunde eine E-Mail.'}</div>
+                : 'Wird sofort veröffentlicht. Mitarbeiter (eingeplant oder in 90 Tagen dort tätig) bekommen eine Push-Nachricht, der Kunde eine E-Mail.'}
+                Verbindlich wird die neue Version am Datum „Gültig ab": Bis dahin gilt die bisherige weiter (auch beim Check-in), danach kommt sie ins Archiv.</div>
         </div>`,
         `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qdSave" onclick="qmDaSpeichern('${qmE(objId)}')"><md-icon slot="icon">upload</md-icon>${freigabe ? 'Zur Freigabe senden' : 'Veröffentlichen'}</md-filled-button>`);
 }
