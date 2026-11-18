@@ -321,27 +321,6 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
     // Qualitätsmanagement & Wachbuch (module routes: routes/qm/*.php)
     require __DIR__ . '/qm/office.php';
 
-    // Checklisten & Protokolle (QM, Leistungsnachweis, Wartung, Winterdienst …) —
-    // tied to Objekte, so they share the stammdaten.objekte permission pair.
-    Route::middleware('permission:stammdaten.objekte.view')->group(function () {
-        Route::get('/checklisten/vorlagen', [\App\Http\Controllers\Api\ChecklistenController::class, 'vorlagen']);
-        Route::get('/checklisten/vorlagen/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'vorlage'])->whereNumber('id');
-        Route::get('/checklisten/vorlagen/{id}/objekte', [\App\Http\Controllers\Api\ChecklistenController::class, 'objekte'])->whereNumber('id');
-        Route::get('/checklisten/protokolle', [\App\Http\Controllers\Api\ChecklistenController::class, 'protokolle']);
-        Route::get('/checklisten/protokolle/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'protokoll'])->whereNumber('id');
-        Route::get('/checklisten/protokolle/{id}/pdf', [\App\Http\Controllers\Api\ChecklistenController::class, 'pdf'])->whereNumber('id');
-        Route::get('/checklisten/protokolle/{id}/unterschrift/{wer}', [\App\Http\Controllers\Api\ChecklistenController::class, 'unterschrift'])->whereNumber('id')->whereIn('wer', ['kunde', 'ma']);
-        Route::get('/checklisten/fotos/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'foto'])->whereNumber('id');
-    });
-    Route::middleware('permission:stammdaten.objekte.edit')->group(function () {
-        Route::post('/checklisten/vorlagen', [\App\Http\Controllers\Api\ChecklistenController::class, 'storeVorlage']);
-        Route::post('/checklisten/vorlagen/paket', [\App\Http\Controllers\Api\ChecklistenController::class, 'paket']);
-        Route::put('/checklisten/vorlagen/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'updateVorlage'])->whereNumber('id');
-        Route::delete('/checklisten/vorlagen/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'destroyVorlage'])->whereNumber('id');
-        Route::put('/checklisten/vorlagen/{id}/objekte', [\App\Http\Controllers\Api\ChecklistenController::class, 'saveObjekte'])->whereNumber('id');
-        Route::delete('/checklisten/protokolle/{id}', [\App\Http\Controllers\Api\ChecklistenController::class, 'destroyProtokoll'])->whereNumber('id');
-    });
-
     // Subcontractors — stammdaten.nu.view / .edit
     Route::middleware('permission:stammdaten.nu.view')->group(function () {
         Route::get('/subcontractors', [SubcontractorController::class, 'index']);
@@ -924,8 +903,6 @@ Route::middleware(['worker.auth', 'tenant.boundary'])->prefix('worker-app')->gro
     Route::post('/schichtboerse/angebote/{id}/zurueckziehen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'withdrawHandOver'])->whereNumber('id');
     // Qualitätsmanagement: Wachbuch, Dienstanweisungen, Meine PIN
     require __DIR__ . '/qm/worker.php';
-    Route::get('/checklisten', [\App\Http\Controllers\Api\WorkerAppChecklistenController::class, 'index']);
-    Route::post('/checklisten', [\App\Http\Controllers\Api\WorkerAppChecklistenController::class, 'store'])->middleware('throttle:30,1');
 
     // Worker-facing notification feed (approve/reject responses, etc.)
     Route::get('/notifications',                   [WorkerAppNotificationController::class, 'index']);

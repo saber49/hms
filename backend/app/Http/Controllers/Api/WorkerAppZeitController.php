@@ -62,7 +62,7 @@ class WorkerAppZeitController extends Controller
 
         // 1. Active clock-in
         $active = DB::connection('tenant')->selectOne("
-            SELECT z.*, e.datum, e.obj_id, e.kunden_id, e.artikel_id,
+            SELECT z.*, e.datum, e.obj_id, e.kunden_id,
                    k.kundenname, o.objektname,
                    e.beschreibung, e.bemerkung, e.ort,
                    e.ist_start, e.ist_ende,
@@ -122,13 +122,13 @@ class WorkerAppZeitController extends Controller
             $active->display_note  = null;
             $active->beschreibung  = null;
             $active->bemerkung     = null;
-            $active->checklisten   = self::checklistenInfo($active, $dienstNr);
+
         }
 
         // 2. Upcoming shifts (not yet clocked in)
         $upcomingRaw = DB::connection('tenant')->select("
             SELECT e.einsatz_id, e.datum, e.ist_start, e.ist_ende,
-                   e.beschreibung, e.bemerkung, e.ort, e.kunden_id, e.obj_id, e.artikel_id,
+                   e.beschreibung, e.bemerkung, e.ort, e.kunden_id, e.obj_id,
                    k.kundenname, o.objektname,
                    {$aufgabeCol},
                    b.zeit_von AS order_zeit_von, b.zeit_bis AS order_zeit_bis,
@@ -185,7 +185,7 @@ class WorkerAppZeitController extends Controller
                 'beschreibung'  => $displayNote,
                 'can_clock_in'  => $canClockIn,
                 'minutes_until' => $minutesUntil,
-                'checklisten'   => self::checklistenInfo($s, $dienstNr),
+
             ];
         }
 
@@ -225,28 +225,6 @@ class WorkerAppZeitController extends Controller
             'completed'   => $completed,
             'server_time' => $now->toDateTimeString(),
         ]);
-    }
-
-    /** {anzahl, pflicht, pflicht_offen, erledigt} of the shift's Checklisten (null without any). */
-    private static function checklistenInfo($s, string $dienstNr): ?array
-    {
-        if (empty($s->obj_id) || !\App\Support\Checklisten::ready()) return null;
-        try {
-            $v = \App\Support\Checklisten::vorlagenFuer($s->obj_id, \App\Support\Checklisten::einsatzBereiche($s->obj_id, $s->artikel_id ?? null, $s->kunden_id ?? null));
-            if (!$v) return null;
-            $done = DB::connection('tenant')->table('checklisten_protokolle')
-                ->where('einsatz_id', $s->einsatz_id)->where('created_by_dienst_nr', $dienstNr)
-                ->distinct()->pluck('vorlage_id')->map(fn ($i) => (int) $i)->all();
-            $pflicht = array_filter($v, fn ($x) => !empty($x->pflicht));
-            return [
-                'anzahl'        => count($v),
-                'pflicht'       => count($pflicht),
-                'pflicht_offen' => count(array_filter($pflicht, fn ($x) => !in_array((int) $x->id, $done, true))),
-                'erledigt'      => count($done),
-            ];
-        } catch (\Throwable $e) {
-            return null;
-        }
     }
 
     /**

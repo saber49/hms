@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  * the industry therefore lives on each main Bereich. Every entry carries:
  *   terms   → UI wording for the company's main industry (Kunde/Klient …)
  *   flags   → bewachung / stadiondienst switches of the Bereich
- *   module  → feature keys later phases gate on (checklisten, turnus …)
+ *   module  → feature keys later phases gate on (turnus …)
  *   paket   → starter pack: Objektarten (subs), Qualifikations- and
  *             Kleidungs-Listen. Applying it only ADDS missing names.
  *
@@ -35,7 +35,7 @@ class Branchen
             'label' => 'Gebäudereinigung', 'icon' => 'cleaning_services',
             'terms' => [],
             'flags' => ['bewachung' => false, 'stadiondienst' => false],
-            'module' => ['checklisten', 'turnus', 'flaechen', 'leistungsverzeichnis', 'qualitaet'],
+            'module' => ['turnus', 'flaechen', 'leistungsverzeichnis', 'qualitaet'],
             'paket' => [
                 'subs' => ['Unterhaltsreinigung', 'Glas- & Fassadenreinigung', 'Grundreinigung', 'Bauendreinigung',
                     'Praxis- & Klinikreinigung', 'Schul- & Kitareinigung', 'Industriereinigung', 'Treppenhausreinigung'],
@@ -55,7 +55,7 @@ class Branchen
             'label' => 'Sicherheitsdienst', 'icon' => 'shield',
             'terms' => [],
             'flags' => ['bewachung' => true, 'stadiondienst' => false],
-            'module' => ['checklisten', 'turnus', 'rundgaenge', 'wachbuch'],
+            'module' => ['turnus', 'rundgaenge', 'wachbuch'],
             'paket' => [
                 'subs' => ['Objektschutz', 'Revierdienst', 'Empfangs- & Pfortendienst', 'Baustellenbewachung', 'Werkschutz'],
                 'quals' => [
@@ -72,7 +72,7 @@ class Branchen
             'label' => 'Veranstaltungs- & Ordnerdienst', 'icon' => 'stadium',
             'terms' => [],
             'flags' => ['bewachung' => true, 'stadiondienst' => true],
-            'module' => ['checklisten', 'wachbuch'],
+            'module' => ['wachbuch'],
             'paket' => [
                 'subs' => ['Einlass & Kontrolle', 'Ordnerdienst', 'Stadion', 'Konzert & Festival', 'Messe & Kongress'],
                 'quals' => [
@@ -108,7 +108,7 @@ class Branchen
             'label' => 'Facility Management', 'icon' => 'apartment',
             'terms' => ['objekt' => 'Liegenschaft', 'objekte' => 'Liegenschaften'],
             'flags' => ['bewachung' => false, 'stadiondienst' => false],
-            'module' => ['checklisten', 'turnus', 'anlagen', 'wartung', 'tickets'],
+            'module' => ['turnus', 'anlagen', 'wartung', 'tickets'],
             'paket' => [
                 'subs' => ['Hausmeisterdienst', 'Technische Gebäudeausrüstung (TGA)', 'Empfang & Service',
                     'Grünpflege', 'Winterdienst', 'Objektbetreuung'],
@@ -126,7 +126,7 @@ class Branchen
             'label' => 'Garten- & Landschaftspflege', 'icon' => 'park',
             'terms' => ['objekt' => 'Grundstück', 'objekte' => 'Grundstücke'],
             'flags' => ['bewachung' => false, 'stadiondienst' => false],
-            'module' => ['checklisten', 'turnus', 'flaechen', 'winterdienst'],
+            'module' => ['turnus', 'flaechen', 'winterdienst'],
             'paket' => [
                 'subs' => ['Grünflächenpflege', 'Baum- & Heckenpflege', 'Winterdienst', 'Neuanlage', 'Spielplatzpflege'],
                 'quals' => [
@@ -143,7 +143,7 @@ class Branchen
             'label' => 'Hauswirtschaft & Alltagshilfe', 'icon' => 'volunteer_activism',
             'terms' => ['kunde' => 'Klient', 'kunden' => 'Klienten', 'objekt' => 'Haushalt', 'objekte' => 'Haushalte'],
             'flags' => ['bewachung' => false, 'stadiondienst' => false],
-            'module' => ['checklisten', 'turnus', 'pflegekasse', 'unterschrift'],
+            'module' => ['turnus', 'pflegekasse', 'unterschrift'],
             'paket' => [
                 'subs' => ['Haushaltshilfe', 'Alltagsbegleitung', 'Betreuung (§ 45a SGB XI)', 'Einkaufs- & Begleitdienst', 'Wäscheservice'],
                 'quals' => [
@@ -189,7 +189,6 @@ class Branchen
                     'subs' => $b['paket']['subs'],
                     'quals' => array_map(fn ($l) => ['name' => $l['name'], 'anzahl' => count($l['opts'])], $b['paket']['quals']),
                     'kleidung' => array_map(fn ($l) => ['name' => $l['name'], 'anzahl' => count($l['opts'])], $b['paket']['kleidung']),
-                    'checklisten' => Checklisten::paketNamen($key),
                 ],
             ];
         }
@@ -278,7 +277,7 @@ class Branchen
     public static function applyPaket(int $mainId, string $key): array
     {
         $b = self::get($key);
-        $res = ['subs' => 0, 'listen' => 0, 'eintraege' => 0, 'flags' => [], 'checklisten' => 0];
+        $res = ['subs' => 0, 'listen' => 0, 'eintraege' => 0, 'flags' => []];
         if (!$b) return $res;
         $db = DB::connection('tenant');
         $s = Schema::connection('tenant');
@@ -345,8 +344,6 @@ class Branchen
                 $db->table('bereiche_katalog')->where('id', $main->id)->update($upd);
             }
         });
-        // Checklisten templates of the industry (QM, Leistungsnachweis, Winterdienst …).
-        $res['checklisten'] = Checklisten::installPaket($key, (int) $main->id);
         return $res;
     }
 }
