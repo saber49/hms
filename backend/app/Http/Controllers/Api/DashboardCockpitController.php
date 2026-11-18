@@ -148,12 +148,13 @@ class DashboardCockpitController extends Controller
             $add('ausstehend', 'warning', 'hourglass_top', $stale, 'Geleistete Einsätze seit über 7 Tagen nicht bestätigt', 'Bestätigen',
                 ['page' => 'tasks', 'ansicht' => 'month', 'datum' => $oldest], 'Fehlen in Umsatz und Auswertung' . ($oldest ? ' · ältester: ' . Carbon::parse($oldest)->format('d.m.Y') : ''));
 
-            if ($s->hasTable('schicht_anfragen')) {
-                $boerse = (int) $db->table('schicht_anfragen as a')->join('schicht_angebote as g', 'g.id', '=', 'a.angebot_id')
-                    ->join('einsaetze as e', 'e.einsatz_id', '=', 'g.einsatz_id')
-                    ->where('a.status', 'angefragt')->where('g.status', 'aktiv')->whereRaw($eScope[0], $eScope[1])->count();
-                $add('boerse', 'info', 'swap_horiz', $boerse, 'Anfragen in der Schichtbörse', 'Entscheiden', ['page' => 'tasks', 'boerse' => 1]);
-            }
+            // Schichtbörse temporarily disabled — see routes/api.php.
+            // if ($s->hasTable('schicht_anfragen')) {
+            //     $boerse = (int) $db->table('schicht_anfragen as a')->join('schicht_angebote as g', 'g.id', '=', 'a.angebot_id')
+            //         ->join('einsaetze as e', 'e.einsatz_id', '=', 'g.einsatz_id')
+            //         ->where('a.status', 'angefragt')->where('g.status', 'aktiv')->whereRaw($eScope[0], $eScope[1])->count();
+            //     $add('boerse', 'info', 'swap_horiz', $boerse, 'Anfragen in der Schichtbörse', 'Entscheiden', ['page' => 'tasks', 'boerse' => 1]);
+            // }
         }
 
         // ── Orders ────────────────────────────────────────────────────────
