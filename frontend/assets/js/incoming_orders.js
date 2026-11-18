@@ -3124,7 +3124,7 @@ async function _beCalSaveEdit(row, form) {
         showToast(`${formatDate(newDatum)} liegt außerhalb des Bestellmonats ${wizOrderMonthLabel()}`, 'error');
         return;
     }
-    const editBtn = row.querySelector('button[onclick^="wizEditDay"]');
+    const editBtn = row.querySelector('[onclick^="wizEditDay"]');
     if (!editBtn) return;
     await wizEditDay(editBtn);
     if (!row.classList.contains('be-day-editing')) return;
@@ -3159,7 +3159,7 @@ async function _beCalSaveEdit(row, form) {
     }
     if (form._pauseTouched) row._pauseTouched = true;
     if (!wizSaveDayEdit(row)) {
-        const cancel = row.querySelector('button[onclick^="wizCancelDayEdit"]');
+        const cancel = row.querySelector('[onclick^="wizCancelDayEdit"]');
         if (cancel) wizCancelDayEdit(cancel);
         return;
     }
