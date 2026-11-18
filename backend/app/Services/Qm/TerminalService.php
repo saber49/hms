@@ -149,7 +149,8 @@ class TerminalService
         [$tenant, $t] = $treffer;
         TenantService::switchToTenant($tenant);
         $plain = bin2hex(random_bytes(32));
-        $sitzungStd = min(24, max(1, Qm::intSetting('terminal_sitzung_std', 12)));
+        $sitzungStd = Qm::intSetting('terminal_sitzung_std', 12);
+        $sitzungStd = in_array($sitzungStd, [8, 12, 24], true) ? $sitzungStd : 12;
         $sid = Qm::t('qm_terminal_sitzungen')->insertGetId([
             'terminal_id' => $t->id, 'token_hash' => hash('sha256', $plain), 'start' => now(),
             'laeuft_ab' => now()->addHours($sitzungStd),
