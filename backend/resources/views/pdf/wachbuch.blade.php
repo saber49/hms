@@ -1,80 +1,127 @@
+@php
+    // Same branding contract as pdf/auftragsbestaetigung — the day report
+    // inherits the tenant's Dokument-Design (colours, font, logo position).
+    $primary    = $settings['primary_color']   ?? '#1a2744';
+    $accent     = $settings['accent_color']    ?? '#3b82f6';
+    $fontFamily = $settings['font_family']     ?? 'DejaVu Sans, sans-serif';
+    $fontSizeKey= $settings['font_size']       ?? 'medium';
+    $headerStyle= $settings['header_style']    ?? 'border-bottom-thick';
+    $tableStyle = $settings['table_style']     ?? 'striped';
+    $logoPos    = $settings['logo_position']   ?? 'right';
+    $bodyFontSize  = ['small' => '9px',  'medium' => '10.5px', 'large' => '12.5px'][$fontSizeKey] ?? '10.5px';
+    $tableFontSize = ['small' => '8.5px','medium' => '9.5px',  'large' => '11.5px'][$fontSizeKey] ?? '9.5px';
+    $headerBorder = match($headerStyle) {
+        'underline-thin' => '1px solid ' . $primary,
+        'double-line'    => '3px double ' . $primary,
+        'flat'           => '0',
+        default          => '3px solid ' . $primary,
+    };
+    $fmt  = fn ($ts) => $ts ? \Carbon\Carbon::parse($ts)->setTimezone('Europe/Berlin')->format('d.m.Y H:i') : null;
+    $fmtT = fn ($ts) => $ts ? \Carbon\Carbon::parse($ts)->setTimezone('Europe/Berlin')->format('H:i') : null;
+    $adresse = trim(($objekt->adresse ?? '') . ', ' . trim(($objekt->plz ?? '') . ' ' . ($objekt->stadt ?? '')), ', ');
+    $firmaInfo = trim(implode(' · ', array_filter([
+        trim(($company['address'] ?? '') . ', ' . trim(($company['zip'] ?? '') . ' ' . ($company['city'] ?? '')), ', '),
+        !empty($company['phone']) ? 'Tel: ' . $company['phone'] : '',
+        $company['email'] ?? '',
+    ])));
+@endphp
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <title>{{ $label }} — {{ $objekt->objektname }} — {{ \Carbon\Carbon::parse($datum)->format('d.m.Y') }}</title>
 <style>
-    @page { margin: 16mm 14mm 18mm 14mm; }
-    body { font-family: 'DejaVu Sans', sans-serif; font-size: 9pt; color: #1f2937; }
-    .head { width: 100%; border-bottom: 2px solid #1a2744; padding-bottom: 8px; margin-bottom: 12px; }
-    .head td { vertical-align: middle; }
-    .firma { font-size: 13pt; font-weight: bold; color: #1a2744; }
-    .firma-info { font-size: 7.5pt; color: #64748b; margin-top: 2px; }
-    .logo { max-height: 48px; max-width: 150px; }
-    h1 { font-size: 14pt; margin: 0 0 2px; color: #111827; }
-    .sub { font-size: 8.5pt; color: #64748b; margin-bottom: 10px; }
-    .meta { width: 100%; margin-bottom: 12px; font-size: 8.8pt; }
-    .meta td { padding: 2px 0; vertical-align: top; }
-    .meta .lbl { color: #64748b; width: 110px; }
-    .blatt { border: 1px solid #cbd5e1; border-radius: 4px; padding: 8px 10px; margin-bottom: 12px; page-break-inside: avoid; }
-    .blatt .t { font-weight: bold; color: #1a2744; }
-    .blatt .m { font-size: 8pt; color: #64748b; margin-top: 2px; }
-    .pill { display: inline-block; font-size: 7pt; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1px 6px; margin-left: 4px; color: #475569; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    @page { margin: 30px 0 105px 0; }
+    body { font-family: {{ $fontFamily }}; font-size: {{ $bodyFontSize }}; color: #1e293b; line-height: 1.4; }
+    .page { padding: 26px 40px 0 40px; }
+
+    .header { border-bottom: {{ $headerBorder }}; padding-bottom: 12px; margin-bottom: 22px; display: table; width: 100%; }
+    .header-left { display: table-cell; vertical-align: middle; }
+    .header-right { display: table-cell; vertical-align: middle; text-align: right; width: 130px; }
+    .header-right img, .header-center img { max-width: 115px; max-height: 64px; }
+    .header-center { text-align: center; margin-bottom: 10px; }
+    .company-name { font-size: 17px; font-weight: bold; color: {{ $primary }}; }
+    .company-info { font-size: 8.5px; color: #64748b; margin-top: 3px; }
+
+    .doc-title { font-size: 16px; font-weight: bold; color: {{ $primary }}; margin: 4px 0 3px; }
+    .doc-sub { font-size: 9px; color: #64748b; margin-bottom: 14px; }
+    .doc-sub .kunde-fassung { color: {{ $accent }}; font-weight: bold; }
+
+    .meta-wrap { width: 100%; margin-bottom: 16px; }
+    .meta-row { display: table; width: 100%; font-size: 9.5px; margin-bottom: 3px; }
+    .meta-label { display: table-cell; width: 130px; color: #64748b; }
+    .meta-value { display: table-cell; font-weight: bold; }
+
+    .blatt { border: 1px solid #e2e8f0; border-left: 3px solid {{ $primary }}; border-radius: 3px; padding: 7px 10px; margin-bottom: 10px; page-break-inside: avoid; background: #f8fafc; }
+    .blatt .t { font-weight: bold; color: {{ $primary }}; font-size: 10px; }
+    .blatt .m { font-size: 8px; color: #64748b; margin-top: 2px; }
+    .pill { display: inline-block; font-size: 7px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1px 6px; margin-left: 4px; color: #475569; }
     .pill.ok { border-color: #86efac; color: #15803d; }
     .pill.warn { border-color: #fcd34d; color: #b45309; }
     .pill.err { border-color: #fca5a5; color: #b91c1c; }
-    .uebergabe { font-size: 8pt; color: #374151; background: #f1f5f9; padding: 4px 6px; border-radius: 3px; margin-top: 4px; }
-    table.e { width: 100%; border-collapse: collapse; }
-    table.e td { border-bottom: 1px solid #e5e7eb; padding: 5px 4px; vertical-align: top; }
-    td.zeit { width: 52px; white-space: nowrap; font-weight: bold; }
-    td.zeit .nr { font-weight: normal; color: #94a3b8; font-size: 7.5pt; }
+    .uebergabe { font-size: 8.5px; color: #374151; background: #fff; padding: 4px 6px; border-radius: 3px; margin-top: 4px; border: 1px solid #e2e8f0; }
+
+    table.e { width: 100%; border-collapse: collapse; font-size: {{ $tableFontSize }}; }
+    table.e td { border-bottom: 1px solid #e2e8f0; padding: 5px 6px; vertical-align: top; }
+    table.e tr.stripe td { background: #f8fafc; }
+    td.zeit { width: 56px; white-space: nowrap; font-weight: bold; color: {{ $primary }}; }
+    td.zeit .nr { font-weight: normal; color: #94a3b8; font-size: 7.5px; }
     .art { font-weight: bold; }
     .art.wichtig { color: #b91c1c; }
     .txt { white-space: pre-wrap; margin-top: 1px; }
-    .det { font-size: 8pt; color: #64748b; margin-top: 1px; }
-    .von { font-size: 7.8pt; color: #94a3b8; margin-top: 2px; }
+    .det { font-size: 8.5px; color: #64748b; margin-top: 1px; }
+    .von { font-size: 7.8px; color: #94a3b8; margin-top: 2px; }
     .berichtigt { text-decoration: line-through; color: #9ca3af; }
-    .berichtigung { border-left: 3px solid #f59e0b; padding-left: 6px; }
-    .fotos img { max-width: 165px; max-height: 120px; margin: 4px 6px 0 0; border: 1px solid #e5e7eb; }
-    .fotos .cap { font-size: 6.8pt; color: #94a3b8; }
+    .berichtigung { border-left: 3px solid {{ $accent }}; padding-left: 6px; }
+    .fotos img { max-width: 165px; max-height: 120px; margin: 5px 6px 0 0; border: 1px solid #e2e8f0; }
+    .fotos .cap { font-size: 6.8px; color: #94a3b8; }
     .leer { color: #64748b; padding: 10px 0; }
-    .foot { position: fixed; bottom: -10mm; left: 0; right: 0; font-size: 7pt; color: #94a3b8; text-align: center; }
+
+    /* Same pinned legal-footer contract as pdf/order-form + a doc line above it. */
+    .footer-doc { position: fixed; left: 40px; right: 40px; bottom: 88px; font-size: 7px; color: #94a3b8; text-align: center; }
+    .footer-legal { position: fixed; left: 40px; right: 40px; bottom: 8px; padding-top: 4px; border-top: 4px solid #000; font-size: 6px !important; color: #000; line-height: 1.2; }
+    .footer-legal table, .footer-legal td, .footer-legal .footer-line { font-size: 6px !important; line-height: 1.2 !important; }
+    .footer-legal-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .footer-legal-col { vertical-align: top; padding: 0 12px; width: 33.33%; }
+    .footer-legal-col:first-child { padding-left: 0; }
+    .footer-legal-col:last-child { padding-right: 0; }
+    .footer-line { padding: 0; margin: 0; word-break: break-word; }
 </style>
 </head>
 <body>
-@php
-    $fmt = fn ($ts) => $ts ? \Carbon\Carbon::parse($ts)->setTimezone('Europe/Berlin')->format('d.m.Y H:i') : null;
-    $fmtT = fn ($ts) => $ts ? \Carbon\Carbon::parse($ts)->setTimezone('Europe/Berlin')->format('H:i') : null;
-    $adresse = trim(($objekt->adresse ?? '') . ', ' . trim(($objekt->plz ?? '') . ' ' . ($objekt->stadt ?? '')), ', ');
-@endphp
-<div class="foot">{{ $firma }} · {{ $label }} {{ $objekt->objektname }} · {{ \Carbon\Carbon::parse($datum)->format('d.m.Y') }} · erstellt am {{ $erstellt }} Uhr</div>
+<div class="page">
 
-<table class="head" cellspacing="0" cellpadding="0">
-    <tr>
-        <td>
-            <div class="firma">{{ $firma }}</div>
-            @if($firmaInfo)<div class="firma-info">{{ $firmaInfo }}</div>@endif
-        </td>
-        @if($logo)
-            <td style="text-align:right"><img class="logo" src="{{ $logo }}" alt=""></td>
-        @endif
-    </tr>
-</table>
-
-<h1>{{ $label }} — {{ $objekt->objektname }}</h1>
-<div class="sub">
-    {{ \Carbon\Carbon::parse($datum)->locale('de')->isoFormat('dddd, DD.MM.YYYY') }} ({{ $label }}-Tag {{ $tagBeginn }} – {{ $tagBeginn }} Uhr)
-    @if($kunde) · Kundenfassung @endif
+@if($logo && $logoPos === 'center')
+    <div class="header-center"><img src="{{ $logo }}" alt=""></div>
+@endif
+<div class="header">
+    @if($logo && $logoPos === 'left')
+        <div class="header-right" style="text-align:left"><img src="{{ $logo }}" alt=""></div>
+    @endif
+    <div class="header-left" @if($logoPos === 'center') style="text-align:center" @endif>
+        <div class="company-name">{{ $company['name'] }}</div>
+        @if($firmaInfo)<div class="company-info">{{ $firmaInfo }}</div>@endif
+    </div>
+    @if($logo && $logoPos !== 'left' && $logoPos !== 'center')
+        <div class="header-right"><img src="{{ $logo }}" alt=""></div>
+    @endif
 </div>
 
-<table class="meta" cellspacing="0" cellpadding="0">
-    @if($adresse)<tr><td class="lbl">Adresse</td><td>{{ $adresse }}</td></tr>@endif
-    <tr><td class="lbl">Kunde</td><td>{{ $objekt->kundenname ?? '–' }}</td></tr>
+<div class="doc-title">{{ $label }} — {{ $objekt->objektname }}</div>
+<div class="doc-sub">
+    {{ \Carbon\Carbon::parse($datum)->locale('de')->isoFormat('dddd, DD.MM.YYYY') }} · {{ $label }}-Tag {{ $tagBeginn }} – {{ $tagBeginn }} Uhr
+    @if($kunde) · <span class="kunde-fassung">Kundenfassung</span>@endif
+</div>
+
+<div class="meta-wrap">
+    @if($adresse)<div class="meta-row"><div class="meta-label">Adresse</div><div class="meta-value">{{ $adresse }}</div></div>@endif
+    <div class="meta-row"><div class="meta-label">Kunde</div><div class="meta-value">{{ $objekt->kundenname ?? '–' }}</div></div>
     @if(!$kunde && ($objekt->ansprechpartner || $objekt->kontakt_telefon))
-        <tr><td class="lbl">Ansprechpartner</td><td>{{ trim(($objekt->ansprechpartner ?? '') . ' ' . ($objekt->kontakt_telefon ?? '')) }}</td></tr>
+        <div class="meta-row"><div class="meta-label">Ansprechpartner</div><div class="meta-value">{{ trim(($objekt->ansprechpartner ?? '') . ' ' . ($objekt->kontakt_telefon ?? '')) }}</div></div>
     @endif
-    <tr><td class="lbl">Blätter / Einträge</td><td>{{ $blaetter->count() }} {{ $blaetter->count() === 1 ? 'Blatt' : 'Blätter' }} · {{ $eintraege->count() }} Einträge</td></tr>
-</table>
+    <div class="meta-row"><div class="meta-label">Blätter / Einträge</div><div class="meta-value">{{ $blaetter->count() }} {{ $blaetter->count() === 1 ? 'Blatt' : 'Blätter' }} · {{ $eintraege->count() }} Einträge</div></div>
+</div>
 
 @foreach($blaetter as $b)
     <div class="blatt">
@@ -103,7 +150,7 @@
 @else
 <table class="e" cellspacing="0" cellpadding="0">
 @foreach($eintraege as $e)
-    <tr>
+    <tr{{ $tableStyle === 'striped' && $loop->even ? ' class="stripe"' : '' }}>
         <td class="zeit">{{ $fmtT($e['zeit']) }}<div class="nr">#{{ $e['nr'] }}</div></td>
         <td>
             <div class="{{ $e['berichtigt_durch'] ? 'berichtigt' : '' }} {{ $e['art'] === 'berichtigung' ? 'berichtigung' : '' }}">
@@ -135,5 +182,45 @@
 @if($fotosNichtGezeigt > 0)
     <div class="leer">+ {{ $fotosNichtGezeigt }} weitere Foto(s) — vollständig im System{{ $kunde ? '/Kundenportal' : '' }} einsehbar.</div>
 @endif
+</div>
+
+<div class="footer-doc">{{ $company['name'] }} · {{ $label }} {{ $objekt->objektname }} · {{ \Carbon\Carbon::parse($datum)->format('d.m.Y') }} · erstellt am {{ $erstellt }} Uhr</div>
+@php
+    // Three-column legal footer (Impressum) — same contract as order-form.
+    $col1 = array_filter([
+        $company['name'] ?? null,
+        !empty($company['geschaeftsfuehrer']) ? 'Geschäftsführer: ' . $company['geschaeftsfuehrer'] : null,
+        '',
+        trim(($company['address'] ?? '') . (($company['zip'] || $company['city']) ? ', ' . trim(($company['zip'] ?? '') . ' ' . ($company['city'] ?? '')) : '')) ?: null,
+        !empty($company['phone']) ? 'Telefon: ' . $company['phone'] : null,
+    ], fn ($v) => $v !== null);
+    $registerLine = null;
+    if (!empty($company['registergericht']) && !empty($company['handelsregister_nr'])) {
+        $registerLine = $company['registergericht'] . ': ' . $company['handelsregister_nr'];
+    } elseif (!empty($company['handelsregister_nr'])) {
+        $registerLine = 'HR-Nr.: ' . $company['handelsregister_nr'];
+    }
+    $col2 = array_filter([
+        !empty($company['email'])        ? 'E-Mail: '     . $company['email']        : null,
+        !empty($company['website'])      ? 'Internet: '   . $company['website']      : null,
+        $registerLine,
+        !empty($company['steuernummer']) ? 'Ust.-Nr.: '   . $company['steuernummer'] : null,
+        !empty($company['ust_id'])       ? 'Ust.-IdNr.: ' . $company['ust_id']       : null,
+    ], fn ($v) => $v !== null);
+    $col3 = array_filter([
+        $company['bank_name'] ?? null,
+        !empty($company['iban']) ? 'IBAN: ' . $company['iban'] : null,
+        !empty($company['bic'])  ? 'BIC: '  . $company['bic']  : null,
+    ], fn ($v) => $v !== null);
+@endphp
+<div class="footer-legal">
+    <table class="footer-legal-table">
+        <tr>
+            <td class="footer-legal-col">@foreach($col1 as $line)<div class="footer-line">{!! $line === '' ? '&nbsp;' : e($line) !!}</div>@endforeach</td>
+            <td class="footer-legal-col">@foreach($col2 as $line)<div class="footer-line">{{ $line }}</div>@endforeach</td>
+            <td class="footer-legal-col">@foreach($col3 as $line)<div class="footer-line">{{ $line }}</div>@endforeach</td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
