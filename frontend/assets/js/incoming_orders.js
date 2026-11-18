@@ -3083,7 +3083,7 @@ async function _beCalPopClick(e) {
     if (!btn || !_beCalPop) return;
     const act = btn.dataset.act;
     const row = (_beCalPop._rows || [])[parseInt(btn.dataset.n)];
-    const rowBtn = (fn) => row ? row.querySelector(`button[onclick^="${fn}"]`) : null;
+    const rowBtn = (fn) => row ? row.querySelector(`[onclick^="${fn}"]`) : null;
     if (act === 'close') return wizCalClose();
     if (act === 'all') { _beCalPopOnly = null; _beCalRenderPop(); return; }
     if (act === 'add') return _beCalAddShift(_beCalPopIso);
