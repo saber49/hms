@@ -46,9 +46,8 @@ class FotoService
         $nichtAmObjekt = false;
         if ($lat !== null && $lng !== null) {
             $blatt = Qm::t('qm_wb_blaetter')->where('id', $eintrag->blatt_id)->first(['einsatz_id']);
-            $ziel = !empty($blatt?->einsatz_id)
-                ? GeoLocation::einsatzAdresse((string) $blatt->einsatz_id)
-                : GeoLocation::objektAdresse((string) $eintrag->obj_id);
+            $ziel = !empty($blatt?->einsatz_id) ? GeoLocation::einsatzAdresse((string) $blatt->einsatz_id) : null;
+            $ziel = $ziel ?: GeoLocation::objektAdresse((string) $eintrag->obj_id);
             if ($ziel && ($geo = GeoLocation::geocodeAddress($ziel))) {
                 $grenze = max(1, (int) (Qm::objektEinstellung((string) $eintrag->obj_id)->gps_grenze_m ?? 150));
                 $entfernung = (int) round(GeoLocation::haversineDistance($lat, $lng, (float) $geo['lat'], (float) $geo['lon']));
