@@ -79,8 +79,9 @@ class WachbuchPdf
             ];
         }
 
+        $settings = self::pdfSettings();
         $logo = null;
-        if (!empty($tenant->logo_path)) {
+        if (empty($settings['hide_logo']) && !empty($tenant->logo_path)) {
             $full = storage_path('app/public/' . $tenant->logo_path);
             $ext = strtolower(pathinfo($full, PATHINFO_EXTENSION));
             if (is_file($full) && in_array($ext, ['png', 'jpg', 'jpeg', 'gif'], true)) {
@@ -90,12 +91,24 @@ class WachbuchPdf
 
         $label = TenantProfile::objektbuchLabel($tenant);
         $pdf = Pdf::loadView('pdf.wachbuch', [
-            'firma' => $tenant->name ?? '',
-            'firmaInfo' => trim(implode(' | ', array_filter([
-                trim(($tenant->company_address ?? '') . ', ' . trim(($tenant->company_zip ?? '') . ' ' . ($tenant->company_city ?? '')), ', '),
-                !empty($tenant->company_phone) ? 'Tel: ' . $tenant->company_phone : '',
-                $tenant->company_email ?? '',
-            ]))),
+            'company' => [
+                'name'              => $tenant->name ?? '',
+                'address'           => $tenant->company_address ?? '',
+                'zip'               => $tenant->company_zip ?? '',
+                'city'              => $tenant->company_city ?? '',
+                'phone'             => $tenant->company_phone ?? '',
+                'email'             => $tenant->company_email ?? '',
+                'website'           => $tenant->website ?? '',
+                'geschaeftsfuehrer'  => $tenant->geschaeftsfuehrer ?? '',
+                'handelsregister_nr' => $tenant->handelsregister_nr ?? '',
+                'registergericht'    => $tenant->registergericht ?? '',
+                'ust_id'             => $tenant->ust_id ?? '',
+                'steuernummer'       => $tenant->steuernummer ?? '',
+                'bank_name'          => $tenant->bank_name ?? '',
+                'iban'               => $tenant->iban ?? '',
+                'bic'                => $tenant->bic ?? '',
+            ],
+            'settings' => $settings,
             'logo' => $logo,
             'label' => $label,
             'kunde' => $kunde,
@@ -111,6 +124,17 @@ class WachbuchPdf
 
         $name = preg_replace('/[^A-Za-z0-9_-]+/', '_', $label . '_' . ($o->objektname ?: $objId)) . '_' . $datum . '.pdf';
         return $pdf->download($name);
+    }
+
+    /** Default pdf_template settings (Dokument-Design) — same source as the Auftragsbestätigung. */
+    private static function pdfSettings(): array
+    {
+        if (!\Illuminate\Support\Facades\Schema::connection('tenant')->hasTable('pdf_templates')) return [];
+        $t = Qm::t('pdf_templates')->where('is_default', 1)->first()
+            ?? Qm::t('pdf_templates')->where('is_system', 1)->orderBy('id')->first();
+        if (!$t) return [];
+        $s = json_decode((string) $t->settings, true);
+        return is_array($s) ? $s : [];
     }
 
     private static function dataUri(?string $path): ?string
