@@ -1,5 +1,7 @@
 // tasks/01-tasks-core.js — Einsätze-Liste, Einsatz-Modal, Planner-State + Datums-Helfer
 // Teil 1/10 des früheren tasks.js. Alle Teile teilen den globalen Scope und MÜSSEN in dieser Reihenfolge geladen werden (PAGE_MODULE_SCRIPTS in app.js).
+// Schichtbörse vorübergehend deaktiviert (Office + Worker-App) — auf true setzen, um sie wieder zu aktivieren.
+const PLANNER_BOERSE_ENABLED = false;
 // ============================================
 // TASKS (Einsätze) — moved from app.js
 // ============================================
@@ -130,7 +132,7 @@ async function renderTasks() {
                     <button class="btn btn-outline btn-sm" style="border-color:#16a34a;color:#16a34a" title="Aktive MA" onclick="openActiveWorkersPanel()"><span class="material-symbols-outlined">engineering</span> <span class="planner-btn-label">Aktive MA</span></button>
                     <button class="btn btn-outline btn-sm" style="border-color:#f59e0b;color:#f59e0b" title="Woche planen" onclick="bulkMarkPlanned()"><span class="material-symbols-outlined">assignment</span> <span class="planner-btn-label">Woche planen</span></button>
                     <button class="btn btn-outline btn-sm" title="Woche bestätigen" onclick="bulkConfirmDispo()"><span class="material-symbols-outlined">done_all</span> <span class="planner-btn-label">Woche bestätigen</span></button>
-                    <button class="btn btn-outline btn-sm planner-boerse-btn" title="Schichtbörse" onclick="openBoerseDialog()"><span class="material-symbols-outlined">swap_horiz</span> <span class="planner-btn-label">Schichtbörse</span><span class="planner-boerse-badge" style="display:none">0</span></button>
+                    ${PLANNER_BOERSE_ENABLED ? `<button class="btn btn-outline btn-sm planner-boerse-btn" title="Schichtbörse" onclick="openBoerseDialog()"><span class="material-symbols-outlined">swap_horiz</span> <span class="planner-btn-label">Schichtbörse</span><span class="planner-boerse-badge" style="display:none">0</span></button>` : ''}
                 </div>
                 <div class="planner-topbar-stats" id="plannerTopbarStats"></div>
             </div>
@@ -143,7 +145,7 @@ async function renderTasks() {
                 <button class="btn btn-outline btn-sm" style="border-color:#16a34a;color:#16a34a" onclick="openActiveWorkersPanel()"><span class="material-symbols-outlined">engineering</span> Aktive MA</button>
                 <button class="btn btn-outline btn-sm" style="border-color:#f59e0b;color:#f59e0b" onclick="bulkMarkPlanned()"><span class="material-symbols-outlined">assignment</span> Woche planen</button>
                 <button class="btn btn-outline btn-sm" onclick="bulkConfirmDispo()"><span class="material-symbols-outlined">done_all</span> Woche bestätigen</button>
-                <button class="btn btn-outline btn-sm planner-boerse-btn" title="Schichtbörse" onclick="openBoerseDialog()"><span class="material-symbols-outlined">swap_horiz</span> <span class="planner-btn-label">Schichtbörse</span><span class="planner-boerse-badge" style="display:none">0</span></button>
+                ${PLANNER_BOERSE_ENABLED ? `<button class="btn btn-outline btn-sm planner-boerse-btn" title="Schichtbörse" onclick="openBoerseDialog()"><span class="material-symbols-outlined">swap_horiz</span> <span class="planner-btn-label">Schichtbörse</span><span class="planner-boerse-badge" style="display:none">0</span></button>` : ''}
             </div>
             <div id="dispoOverview"></div>
             <div class="planner-mobile-weeknav card">

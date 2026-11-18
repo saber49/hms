@@ -423,19 +423,21 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
     // (data it is allowed to see), we just pack them into an .xlsx workbook.
     Route::post('/export/xlsx', [ExportController::class, 'xlsxTable']);
 
-    // Schichtbörse (shift exchange) — reads behind dispo.view, every change
-    // of the plan (publish / approve / reject / withdraw) behind dispo.edit.
-    Route::middleware('permission:auftraege.dispo.view')->group(function () {
-        Route::get('/schichtboerse',                         [\App\Http\Controllers\Api\SchichtboerseController::class, 'index']);
-        Route::get('/schichtboerse/count',                   [\App\Http\Controllers\Api\SchichtboerseController::class, 'count']);
-        Route::get('/schichtboerse/einsatz/{id}',            [\App\Http\Controllers\Api\SchichtboerseController::class, 'einsatz']);
-    });
-    Route::middleware('permission:auftraege.dispo.edit')->group(function () {
-        Route::post('/schichtboerse/einsatz/{id}/veroeffentlichen', [\App\Http\Controllers\Api\SchichtboerseController::class, 'publish']);
-        Route::post('/schichtboerse/angebote/{id}/zurueckziehen',   [\App\Http\Controllers\Api\SchichtboerseController::class, 'withdraw'])->whereNumber('id');
-        Route::post('/schichtboerse/anfragen/{id}/genehmigen',      [\App\Http\Controllers\Api\SchichtboerseController::class, 'approve'])->whereNumber('id');
-        Route::post('/schichtboerse/anfragen/{id}/ablehnen',        [\App\Http\Controllers\Api\SchichtboerseController::class, 'reject'])->whereNumber('id');
-    });
+    // Schichtbörse (shift exchange) — temporarily disabled (office + worker app).
+    // To re-enable: uncomment these routes, the worker-app routes below, the
+    // cockpit card in DashboardCockpitController, and set PLANNER_BOERSE_ENABLED /
+    // BOERSE_W_ENABLED to true in the frontend.
+    // Route::middleware('permission:auftraege.dispo.view')->group(function () {
+    //     Route::get('/schichtboerse',                         [\App\Http\Controllers\Api\SchichtboerseController::class, 'index']);
+    //     Route::get('/schichtboerse/count',                   [\App\Http\Controllers\Api\SchichtboerseController::class, 'count']);
+    //     Route::get('/schichtboerse/einsatz/{id}',            [\App\Http\Controllers\Api\SchichtboerseController::class, 'einsatz']);
+    // });
+    // Route::middleware('permission:auftraege.dispo.edit')->group(function () {
+    //     Route::post('/schichtboerse/einsatz/{id}/veroeffentlichen', [\App\Http\Controllers\Api\SchichtboerseController::class, 'publish']);
+    //     Route::post('/schichtboerse/angebote/{id}/zurueckziehen',   [\App\Http\Controllers\Api\SchichtboerseController::class, 'withdraw'])->whereNumber('id');
+    //     Route::post('/schichtboerse/anfragen/{id}/genehmigen',      [\App\Http\Controllers\Api\SchichtboerseController::class, 'approve'])->whereNumber('id');
+    //     Route::post('/schichtboerse/anfragen/{id}/ablehnen',        [\App\Http\Controllers\Api\SchichtboerseController::class, 'reject'])->whereNumber('id');
+    // });
 
     // Tasks (Einsätze) + Disposition — both belong to auftraege.dispo.*
     Route::middleware('permission:auftraege.dispo.view')->group(function () {
@@ -896,11 +898,12 @@ Route::middleware(['worker.auth', 'tenant.boundary'])->prefix('worker-app')->gro
     Route::post('/messages', [WorkerAppMessageController::class, 'store']);
     Route::get('/messages/photo-context', [\App\Http\Controllers\Api\WorkerAppPhotoController::class, 'context']);
     Route::post('/messages/photo', [\App\Http\Controllers\Api\WorkerAppPhotoController::class, 'store'])->middleware('throttle:30,1');
-    Route::get('/schichtboerse', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'index']);
-    Route::post('/schichtboerse/angebote/{id}/anfragen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'request'])->whereNumber('id')->middleware('throttle:30,1');
-    Route::delete('/schichtboerse/angebote/{id}/anfragen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'cancelRequest'])->whereNumber('id');
-    Route::post('/schichtboerse/abgeben', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'handOver'])->middleware('throttle:20,1');
-    Route::post('/schichtboerse/angebote/{id}/zurueckziehen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'withdrawHandOver'])->whereNumber('id');
+    // Schichtbörse (worker side) — temporarily disabled, see comment above.
+    // Route::get('/schichtboerse', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'index']);
+    // Route::post('/schichtboerse/angebote/{id}/anfragen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'request'])->whereNumber('id')->middleware('throttle:30,1');
+    // Route::delete('/schichtboerse/angebote/{id}/anfragen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'cancelRequest'])->whereNumber('id');
+    // Route::post('/schichtboerse/abgeben', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'handOver'])->middleware('throttle:20,1');
+    // Route::post('/schichtboerse/angebote/{id}/zurueckziehen', [\App\Http\Controllers\Api\WorkerAppSchichtboerseController::class, 'withdrawHandOver'])->whereNumber('id');
     // Qualitätsmanagement: Wachbuch, Dienstanweisungen, Meine PIN
     require __DIR__ . '/qm/worker.php';
 

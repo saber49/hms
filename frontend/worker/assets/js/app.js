@@ -615,8 +615,12 @@ function shiftCardHtml(shift) {
 // Anforderungen, gender, no overlapping shift/absence). A request or a
 // hand-over changes nothing until the office approves it.
 let _wBoerse = { angebote: [], meine_abgaben: [] };
+// Schichtbörse temporarily disabled (office + app) — set true to re-enable
+// together with the commented routes in hms backend/routes/api.php.
+const BOERSE_W_ENABLED = false;
 
 async function loadBoerseW() {
+    if (!BOERSE_W_ENABLED) return;
     const data = await apiGet(API.boerse);
     if (!data || data.error) return;
     _wBoerse = { angebote: data.angebote || [], meine_abgaben: data.meine_abgaben || [] };
@@ -667,6 +671,7 @@ function renderBoerseW() {
 
 // "Abgeben" on own future, unconfirmed shifts (plan tab only).
 function boerseShiftActionHtml(shift) {
+    if (!BOERSE_W_ENABLED) return '';
     if (currentTab !== 'plan' || !shift || !shift.einsatz_id || shift.hms_bestaetigt === 'ja') return '';
     const start = new Date(String(shift.datum).substring(0, 10) + 'T' + (fmtTime(shift.display_start || shift.ist_start) || '00:00') + ':00');
     if (!(start > new Date())) return '';

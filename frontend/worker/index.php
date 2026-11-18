@@ -105,7 +105,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
     <script src="assets/js/storage.js?v=20260818uni2"></script>
     <script src="assets/js/qm-wachbuch.js?v=20261118qmfix2"></script>
     <script src="assets/js/qm-live.js?v=20261109live1"></script>
-    <script src="assets/js/app.js?v=20261118clrem1"></script>
+    <script src="assets/js/app.js?v=20261118sboff1"></script>
     <script src="assets/js/call.js?v=20260929call6"></script>
     <script src="assets/js/capacitor-bridge.js?v=20261111sig4"></script>
 
@@ -133,7 +133,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=88').catch(() => {});
+            navigator.serviceWorker.register('sw.js?v=89').catch(() => {});
         }
     </script>
 </body>

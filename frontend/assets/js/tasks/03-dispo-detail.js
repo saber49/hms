@@ -1220,6 +1220,7 @@ function boerseReqRowHtml(r, angebot, einsatzId) {
 }
 
 async function plannerLoadBoerse(einsatzId) {
+    if (typeof PLANNER_BOERSE_ENABLED !== 'undefined' && !PLANNER_BOERSE_ENABLED) return;
     const box = document.getElementById('plannerBoerseBox');
     if (!box) return;
     const s = await apiGet(BOERSE_API + '/einsatz/' + encodeURIComponent(einsatzId));
@@ -1294,6 +1295,7 @@ async function plannerBoerseDecide(anfrageId, approve, einsatzId) {
 }
 
 async function plannerBoerseRefreshBadge() {
+    if (typeof PLANNER_BOERSE_ENABLED !== 'undefined' && !PLANNER_BOERSE_ENABLED) return;
     const r = await apiGet(BOERSE_API + '/count');
     const n = (r && r.offene_anfragen) | 0;
     document.querySelectorAll('.planner-boerse-badge').forEach(b => { b.textContent = n > 99 ? '99+' : n; b.style.display = n > 0 ? '' : 'none'; });
