@@ -28,7 +28,7 @@ function qmIcon(n, st = '') { return `<span class="material-symbols-outlined"${s
 const qmE = v => escapeHtml(v == null ? '' : String(v));
 function qmDate(d) { return d ? formatDate(String(d).slice(0, 10)) : '–'; }
 function qmDT(ts) { return ts ? formatDateTimeLocal(ts) : '–'; }
-function qmTime(ts) { if (!ts) return ''; const d = new Date(ts); return isNaN(d) ? '' : d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); }
+function qmTime(ts) { if (!ts) return ''; const s = String(ts); const d = new Date(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(s) ? s.replace(' ', 'T').substring(0, 19) + 'Z' : s); return isNaN(d) ? '' : d.toLocaleTimeString('de-DE', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' }); }
 function qmHeute() { return qm.opt?.heute || new Date().toISOString().slice(0, 10); }
 function qmAddDays(n, from) { const d = new Date((from || qmHeute()) + 'T12:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
 function qmCan(aktion) { return !!qm.opt?.ich?.rechte?.[aktion]; }

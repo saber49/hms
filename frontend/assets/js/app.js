@@ -601,7 +601,7 @@ const TASKS_MODULE_SCRIPTS = [
 const QM_MODULE_SCRIPTS = [
     '01-qm-core', '02-qm-wachbuch', '03-qm-uebersicht', '04-qm-objekte',
     '05-qm-reklamationen', '06-qm-massnahmen', '07-qm-einstellungen', '99-qm-live',
-].map(f => 'assets/js/qm/' + f + '.js?v=20261118wbpdf1');
+].map(f => 'assets/js/qm/' + f + '.js?v=20261118qmtime1');
 
 const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
