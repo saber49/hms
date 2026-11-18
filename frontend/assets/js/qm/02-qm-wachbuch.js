@@ -218,6 +218,9 @@ async function qmTagLaden(datum, still = false) {
     qm.cache.tag = r.data;
     const nameDesBlatts = id => blaetter.find(b => b.id === id)?.name || '';
     box.innerHTML = `
+        <div class="crm-form-actions" style="justify-content:flex-end;margin-bottom:8px">
+            <md-outlined-button onclick="qmOpenPdf(QM_API + '/wachbuch/objekte/' + encodeURIComponent(qm.wb.obj) + '/tag/${datum}/pdf')"><md-icon slot="icon">picture_as_pdf</md-icon>PDF herunterladen</md-outlined-button>
+        </div>
         <div class="qm-blaetter">${blaetter.map(b => `
             <div class="qm-blatt">
                 <div><strong>${qmE(b.name)}</strong>${b.plan_von ? ` <span class="crm-muted">Plan ${qmE(b.plan_von)}–${qmE(b.plan_bis)}</span>` : ''}</div>

@@ -30,6 +30,7 @@ Route::prefix('qm')->middleware('permission:qm.view')->group(function () {
     Route::get('/wachbuch/objekte/{objId}', [WachbuchblattController::class, 'objekt']);
     Route::get('/wachbuch/objekte/{objId}/tage', [WachbuchblattController::class, 'tage']);
     Route::get('/wachbuch/objekte/{objId}/tag/{datum}', [WachbuchblattController::class, 'tag']);
+    Route::get('/wachbuch/objekte/{objId}/tag/{datum}/pdf', [WachbuchblattController::class, 'pdf']);
     Route::get('/wachbuch/fotos/{id}', [WachbuchblattController::class, 'foto'])->whereNumber('id');
 
     // Objekte & Dienstanweisungen

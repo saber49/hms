@@ -139,7 +139,7 @@ class Qm
         $row = self::t('qm_objekt_einstellungen')->where('obj_id', $objId)->first();
         return $row ?: (object) [
             'id' => null, 'obj_id' => $objId, 'wachbuch_aktiv' => 0, 'waechterkontrolle_aktiv' => 0,
-            'fotopflicht' => 0, 'objektleiter_id' => null, 'bericht_empfaenger' => null, 'gps_grenze_m' => 150,
+            'fotopflicht' => 0, 'kunde_pdf' => 0, 'objektleiter_id' => null, 'bericht_empfaenger' => null, 'gps_grenze_m' => 150,
             'soll_begehung_tage' => null, 'soll_besuch_tage' => null, 'notfallkontakte' => null,
         ];
     }

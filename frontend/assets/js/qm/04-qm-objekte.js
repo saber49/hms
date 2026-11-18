@@ -84,6 +84,8 @@ async function qmObjDetail(objId) {
                     <div class="crm-form crm-pad">
                         <label class="crm-switch-row"><md-checkbox id="qo_wb" ${cfg.wachbuch_aktiv ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> ${qmE(qmLabel())} aktiv</label>
                         <label class="crm-switch-row"><md-checkbox id="qo_foto" ${cfg.fotopflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Fotopflicht bei Vorkommnissen</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_kpdf" ${cfg.kunde_pdf ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Kundenportal: ${qmE(qmLabel())} als PDF herunterladen</label>
+                        <div class="crm-sub">Der Kunde sieht im Portal einen „PDF herunterladen"-Button je Tag — mit derselben gefilterten Kundenfassung wie seine Online-Ansicht.</div>
                         <div class="crm-sub">App und Terminal verlangen das Foto bereits beim Speichern; im Büro bleibt ein fehlendes Pflichtfoto rot markiert.</div>
                         <md-outlined-text-field class="crm-fld" label="GPS-Grenze für Fotos (m)" type="number" min="20" max="2000" step="10" id="qo_gps" value="${qmE(cfg.gps_grenze_m || 150)}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
                         <div class="crm-sub">Fotos außerhalb dieser Entfernung zum Einsatz- bzw. Objektort werden als „nicht am Objekt“ markiert.</div>
@@ -100,7 +102,7 @@ async function qmObjDetail(objId) {
 
 async function qmObjCfgSpeichern(objId) {
     const r = await qmReq('PUT', QM_API + '/objekte/' + encodeURIComponent(objId) + '/einstellung', {
-        wachbuch_aktiv: qmV('qo_wb'), fotopflicht: qmV('qo_foto'), gps_grenze_m: +qmV('qo_gps') || 150,
+        wachbuch_aktiv: qmV('qo_wb'), fotopflicht: qmV('qo_foto'), kunde_pdf: qmV('qo_kpdf'), gps_grenze_m: +qmV('qo_gps') || 150,
         objektleiter_id: qmV('qo_ol') ? +qmV('qo_ol') : null, bericht_empfaenger: qmV('qo_mail') || null,
         notfallkontakte: qmV('qo_notfall') || null,
     });
