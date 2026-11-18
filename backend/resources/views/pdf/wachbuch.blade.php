@@ -73,7 +73,7 @@
     @if(!$kunde && ($objekt->ansprechpartner || $objekt->kontakt_telefon))
         <tr><td class="lbl">Ansprechpartner</td><td>{{ trim(($objekt->ansprechpartner ?? '') . ' ' . ($objekt->kontakt_telefon ?? '')) }}</td></tr>
     @endif
-    <tr><td class="lbl">Blätter / Einträge</td><td>{{ $blaetter->count() }} Blatt{{ $blaetter->count() === 1 ? '' : 'ter' }} · {{ $eintraege->count() }} Einträge</td></tr>
+    <tr><td class="lbl">Blätter / Einträge</td><td>{{ $blaetter->count() }} {{ $blaetter->count() === 1 ? 'Blatt' : 'Blätter' }} · {{ $eintraege->count() }} Einträge</td></tr>
 </table>
 
 @foreach($blaetter as $b)
