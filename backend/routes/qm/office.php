@@ -64,7 +64,7 @@ Route::prefix('qm')->middleware('permission:qm.view')->group(function () {
 
     Route::post('/reklamationen', [ReklamationController::class, 'store']);
     Route::post('/reklamationen/{id}/{aktion}', [ReklamationController::class, 'aktion'])->whereNumber('id')
-        ->whereIn('aktion', ['bestaetigen', 'sofortmassnahme', 'ursache', 'antworten', 'zustaendig', 'abschliessen', 'notiz']);
+        ->whereIn('aktion', ['bestaetigen', 'sofortmassnahme', 'ursache', 'antworten', 'zustaendig', 'schwere', 'abschliessen', 'notiz']);
 
     Route::post('/massnahmen', [MassnahmeController::class, 'store']);
     Route::put('/massnahmen/{id}', [MassnahmeController::class, 'update'])->whereNumber('id');

@@ -53,6 +53,7 @@ class TerminalController extends Controller
             'objekt' => $obj,
             'label' => \App\Support\TenantProfile::objektbuchLabel(\App\Services\TenantService::current()),
             'wachbuch_aktiv' => WachbuchService::aktiv($t->obj_id),
+            'notfallkontakte' => WachbuchService::aktiv($t->obj_id) ? trim((string) (Qm::objektEinstellung($t->obj_id)->notfallkontakte ?? '')) : '',
             'sitzung_bis' => $s->laeuft_ab,
             'wachperson' => $dn ? ['dienst_nr' => $dn, 'name' => Qm::workerName($dn), 'seit' => $s->wachperson_seit] : null,
             'geplant' => TerminalService::heuteGeplant($t->obj_id)->map(fn ($p) => [
@@ -70,7 +71,7 @@ class TerminalController extends Controller
         $s = $request->attributes->get('qm_sitzung');
         $dn = (string) $request->input('dienst_nr');
         if (!TerminalService::heuteGeplant($t->obj_id)->contains('dienst_nr', $dn)) {
-            return response()->json(['error' => 'Du bist heute nicht für dieses Objekt eingeplant.'], 403);
+            return response()->json(['error' => 'Du bist jetzt nicht für dieses Objekt eingeplant.'], 403);
         }
         [$ok, $err] = PinService::pruefen($dn, (string) $request->input('pin'), $t->obj_id);
         if (!$ok) return response()->json(['error' => $err], 401);
@@ -100,7 +101,7 @@ class TerminalController extends Controller
         $plan = TerminalService::heuteGeplant($t->obj_id)->where('dienst_nr', $dn);
         $stempel = Qm::t('zeiterfassung')->where('dienst_nr', $dn)->whereIn('einsatz_id', $plan->pluck('einsatz_id'))->pluck('einsatz_id')->all();
         $einsatz = $plan->first(fn ($p) => !in_array($p->einsatz_id, $stempel, true));
-        if (!$einsatz) return response()->json(['error' => 'Keine offene Schicht für heute an diesem Objekt.'], 409);
+        if (!$einsatz) return response()->json(['error' => 'Keine offene Schicht an diesem Objekt.'], 409);
         $sub = Request::create('/', 'POST', ['einsatz_id' => $einsatz->einsatz_id]);
         $sub->attributes->add($request->attributes->all());
         return app(WorkerAppZeitController::class)->clockIn($sub);

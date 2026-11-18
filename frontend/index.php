@@ -186,15 +186,15 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/style.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/customers.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/interessenten.css?v=20261117md3l">
-    <link rel="stylesheet" href="assets/css/qm.css?v=20261117md3l">
-    <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261117md3l">
+    <link rel="stylesheet" href="assets/css/qm.css?v=20261118qmfix1">
+    <link rel="stylesheet" href="assets/css/einstellungen.css?v=20261118qmfix1">
     <link rel="stylesheet" href="assets/css/lager.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/subcontractors.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/price_history.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/workers.css?v=20261117docui1">
     <link rel="stylesheet" href="assets/css/absences.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20261117md3l">
-    <link rel="stylesheet" href="assets/css/tasks.css?v=20261117partialstripes1">
+    <link rel="stylesheet" href="assets/css/tasks.css?v=20261117nupicker1">
     <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261117objmode1">
     <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261117md3l">
@@ -803,7 +803,7 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=20261117md3l"></script>
-    <script defer src="assets/js/app.js?v=20261117docui1"></script>
+    <script defer src="assets/js/app.js?v=20261118qmfix2"></script>
     <script defer src="assets/js/ui-components.js?v=20261117md3l"></script>
     <script defer src="assets/js/dashboard.js?v=20261117md3l"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261117md3l"></script>

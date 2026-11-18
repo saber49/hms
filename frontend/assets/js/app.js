@@ -594,19 +594,19 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=20261117modesel1');
+].map(f => 'assets/js/tasks/' + f + '.js?v=' + (f === '09-dispo-nu' ? '20261117nupicker1' : '20261117modesel1'));
 
 // Qualitätsmanagement & Wachbuch: ordered parts, ONE global scope (like
 // tasks/). Both QM pages load the SAME list.
 const QM_MODULE_SCRIPTS = [
     '01-qm-core', '02-qm-wachbuch', '03-qm-uebersicht', '04-qm-objekte',
     '05-qm-reklamationen', '06-qm-massnahmen', '07-qm-einstellungen', '99-qm-live',
-].map(f => 'assets/js/qm/' + f + '.js?v=20261117md3l');
+].map(f => 'assets/js/qm/' + f + '.js?v=20261118qmfix2');
 
 const PAGE_MODULE_SCRIPTS = {
     qm_wachbuch: QM_MODULE_SCRIPTS,
     qm: QM_MODULE_SCRIPTS,
-    einstellungen: ['assets/js/einstellungen.js?v=20261117md3l'],
+    einstellungen: ['assets/js/einstellungen.js?v=20261118qmfix1'],
     interessenten: ['assets/js/crm.js?v=20261117md3l'],
     customers: ['assets/js/customers.js?v=20261117md3l'],
     objects: ['assets/js/objects.js?v=20261117objmode1'],

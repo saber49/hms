@@ -3,6 +3,7 @@
 namespace App\Services\Qm;
 
 use App\Services\TenantService;
+use App\Support\GeoLocation;
 use App\Support\Qm\Qm;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -26,20 +27,46 @@ class FotoService
         $dir = 'qm/' . $tenant->id . '/wachbuch/' . $eintrag->blatt_id;
         $name = Str::random(32) . '.jpg';
         $zeit = Carbon::now();
+        try {
+            $aufgenommen = !empty($meta['erfasst_am']) ? Carbon::parse($meta['erfasst_am']) : $zeit;
+            if ($aufgenommen->gt($zeit)) $aufgenommen = $zeit;
+        } catch (\Throwable) {
+            $aufgenommen = $zeit;
+        }
         $lat = is_numeric($meta['lat'] ?? null) ? round((float) $meta['lat'], 7) : null;
         $lng = is_numeric($meta['lng'] ?? null) ? round((float) $meta['lng'], 7) : null;
         $acc = is_numeric($meta['genauigkeit_m'] ?? null) ? (int) round((float) $meta['genauigkeit_m']) : null;
 
         $obj = Qm::t('objekte')->where('obj_id', $eintrag->obj_id)->value('objektname') ?? $eintrag->obj_id;
+
+        // Distance to the planned Einsatzort (shift sheet) or Objekt
+        // address (office/terminal sheet). It is evidence metadata, not a
+        // block: photos may legitimately document something away from it.
+        $entfernung = null;
+        $nichtAmObjekt = false;
+        if ($lat !== null && $lng !== null) {
+            $blatt = Qm::t('qm_wb_blaetter')->where('id', $eintrag->blatt_id)->first(['einsatz_id']);
+            $ziel = !empty($blatt?->einsatz_id)
+                ? GeoLocation::einsatzAdresse((string) $blatt->einsatz_id)
+                : GeoLocation::objektAdresse((string) $eintrag->obj_id);
+            if ($ziel && ($geo = GeoLocation::geocodeAddress($ziel))) {
+                $grenze = max(1, (int) (Qm::objektEinstellung((string) $eintrag->obj_id)->gps_grenze_m ?? 150));
+                $entfernung = (int) round(GeoLocation::haversineDistance($lat, $lng, (float) $geo['lat'], (float) $geo['lon']));
+                $nichtAmObjekt = $entfernung > $grenze;
+            }
+        }
+
         $stempel = $zeit->copy()->setTimezone('Europe/Berlin')->format('d.m.Y H:i:s') . ' · ' . $obj
-            . ($wer ? ' · ' . $wer : '') . ($lat !== null ? sprintf(' · %.5f, %.5f ±%dm', $lat, $lng, $acc ?? 0) : ' · ohne GPS');
+            . ($wer ? ' · ' . $wer : '') . ($lat !== null ? sprintf(' · %.5f, %.5f ±%dm', $lat, $lng, $acc ?? 0) : ' · ohne GPS')
+            . ($nichtAmObjekt ? ' · nicht am Objekt' : '');
 
         $bytes = self::verarbeiten($file->getRealPath(), $stempel);
         Storage::disk('local')->put($dir . '/' . $name, $bytes ?? file_get_contents($file->getRealPath()));
 
         $id = Qm::t('qm_wb_fotos')->insertGetId([
-            'eintrag_id' => $eintrag->id, 'pfad' => $dir . '/' . $name, 'aufgenommen_am' => $zeit,
+            'eintrag_id' => $eintrag->id, 'pfad' => $dir . '/' . $name, 'aufgenommen_am' => $aufgenommen,
             'lat' => $lat, 'lng' => $lng, 'genauigkeit_m' => $acc,
+            'entfernung_objekt_m' => $entfernung, 'nicht_am_objekt' => $nichtAmObjekt,
             'quelle' => in_array($meta['quelle'] ?? '', ['app', 'terminal', 'buero'], true) ? $meta['quelle'] : 'app',
             'created_at' => now(),
         ]);

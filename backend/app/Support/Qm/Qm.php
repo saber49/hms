@@ -19,7 +19,8 @@ class Qm
     /** Default settings — QM-Einstellungen override them per tenant. */
     public const DEFAULTS = [
         'modul_wachbuch'        => '1',
-        'modul_qm'              => '1',
+        'modul_qm'              => '1',     // Dienstanweisung must be confirmed before check-in
+        'portal_qm'             => '1',     // Kundenportal shows Dienstanweisungen + Reklamationen
         'da_freigabe_pflicht'   => '1',     // Objektleiter drafts need QMB release
         'da_pruefung_monate'    => '12',
         'rek_bestaetigung_std'  => '24',    // Eingangsbestätigung within N hours
@@ -69,6 +70,26 @@ class Qm
         return Carbon::now('Europe/Berlin')->toDateString();
     }
 
+    /** Start (HH:MM, Berlin) of the Wachbuch day — setting tag_beginn. */
+    public static function tagBeginn(): string
+    {
+        $v = (string) self::setting('tag_beginn', '06:00');
+        return preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $v) ? $v : '06:00';
+    }
+
+    /** Date of the running Wachbuch day: before tag_beginn it is still yesterday's. */
+    public static function wachbuchTag(): string
+    {
+        $now = Carbon::now('Europe/Berlin');
+        return $now->format('H:i') < self::tagBeginn() ? $now->copy()->subDay()->toDateString() : $now->toDateString();
+    }
+
+    /** UTC instant the running Wachbuch day started. */
+    public static function wachbuchTagStart(): Carbon
+    {
+        return Carbon::parse(self::wachbuchTag() . ' ' . self::tagBeginn(), 'Europe/Berlin')->utc();
+    }
+
     // ---------------------------------------------------------------
     // Settings
     // ---------------------------------------------------------------
@@ -77,7 +98,11 @@ class Qm
     {
         return self::memo('settings', function () {
             $rows = self::ready() ? self::t('qm_einstellungen')->pluck('wert', 'schluessel')->all() : [];
-            return array_merge(self::DEFAULTS, array_intersect_key($rows, self::DEFAULTS));
+            $s = array_merge(self::DEFAULTS, array_intersect_key($rows, self::DEFAULTS));
+            // portal_qm was part of modul_qm before it became its own switch:
+            // an unset value keeps following it, so nothing changes silently.
+            if (!array_key_exists('portal_qm', $rows)) $s['portal_qm'] = $s['modul_qm'];
+            return $s;
         });
     }
 

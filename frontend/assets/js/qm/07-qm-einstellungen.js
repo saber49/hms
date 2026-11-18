@@ -8,21 +8,23 @@
 
 const QM_FRAGEN = [
     ['Wachbuch', [
-        ['modul_wachbuch', 'Soll das digitale Wachbuch genutzt werden?', 'Schaltet das Wachbuch für die Firma ein. Je Objekt wird es zusätzlich unter „Objekte & Dienstanweisungen" aktiviert.', { 0: 'Nein', 1: 'Ja' }],
-        ['terminal_sitzung_std', 'Wie lange bleibt ein Objekt-Terminal angemeldet?', 'Danach muss das Gerät an der Pforte neu mit Kennung und PIN angemeldet werden.', { 8: '8 Stunden', 12: '12 Stunden', 24: '24 Stunden' }],
+        ['modul_wachbuch', 'Soll das digitale Wachbuch genutzt werden?', 'Nein = es entstehen keine neuen Einträge mehr (App, Terminal, Büro, Kundenportal) und Kunden sehen es nicht. Vorhandene Blätter bleiben im Büro lesbar. Je Objekt wird es zusätzlich unter „Objekte & Dienstanweisungen" aktiviert.', { 0: 'Nein', 1: 'Ja' }],
+        ['tag_beginn', 'Wann beginnt der Wachbuch-Tag?', 'Büro-Einträge und Kundenhinweise vor dieser Uhrzeit zählen noch zum Vortag; der Tagesbericht wird zu dieser Uhrzeit versendet.', { '00:00': '00:00 Uhr', '05:00': '05:00 Uhr', '06:00': '06:00 Uhr', '07:00': '07:00 Uhr' }],
+        ['terminal_sitzung_std', 'Wie lange bleibt ein Objekt-Terminal angemeldet?', 'Danach muss das Gerät an der Pforte neu mit Kennung und Terminal-PIN angemeldet werden — die PIN kennt nur das Büro. Maximal 24 Stunden; gilt ab der nächsten Anmeldung.', { 8: '8 Stunden', 12: '12 Stunden', 24: '24 Stunden' }],
         ['terminal_max_fehl', 'Nach wie vielen falschen Terminal-PINs wird gesperrt?', 'Die Objektleitung bekommt eine Meldung und kann den Zugang wieder freigeben.', { 3: '3 Versuchen', 5: '5 Versuchen', 10: '10 Versuchen' }],
         ['pin_max_fehl', 'Nach wie vielen falschen Mitarbeiter-PINs wird gesperrt?', 'Gilt für die persönliche 4-stellige PIN der Wachperson.', { 3: '3 Versuchen', 5: '5 Versuchen' }],
     ]],
     ['Qualität', [
         ['modul_qm', 'Sollen Dienstanweisungen vor dem Check-in bestätigt werden müssen?', 'Ohne Bestätigung der aktuellen Version ist kein Check-in am Objekt möglich (Nachweis DIN 77200).', { 0: 'Nein', 1: 'Ja' }],
         ['da_freigabe_pflicht', 'Muss der QMB Dienstanweisungen der Objektleiter freigeben?', 'Ohne Freigabe sieht niemand außer Büro und Objektleitung den Entwurf.', { 0: 'Nein', 1: 'Ja' }],
-        ['da_pruefung_monate', 'Wie oft wird jede Dienstanweisung geprüft?', 'Die Objektleitung bekommt dann eine Erinnerung.', { 6: 'alle 6 Monate', 12: 'jährlich', 24: 'alle 2 Jahre' }],
-        ['rek_bestaetigung_std', 'Wie schnell muss der Eingang einer Reklamation bestätigt sein?', 'Danach erscheint sie als „Bestätigung überfällig".', { 4: 'in 4 Stunden', 8: 'in 8 Stunden', 24: 'in 24 Stunden', 48: 'in 2 Tagen' }],
-        ['rek_frist_kritisch', 'Wie schnell muss eine kritische Reklamation erledigt sein?', '', { 1: 'in 1 Tag', 2: 'in 2 Tagen' }],
+        ['portal_qm', 'Sollen Kunden im Kundenportal Dienstanweisungen und Reklamationen sehen?', 'Nein = beide Bereiche sind für alle Kundenzugänge gesperrt (auch das Melden einer Reklamation).', { 0: 'Nein', 1: 'Ja' }],
+        ['da_pruefung_monate', 'Wie oft wird jede Dienstanweisung geprüft?', 'Gezählt ab „Gültig ab". Ab dem Fälligkeitstag bekommt die Objektleitung (sonst der QMB) eine Erinnerung. Gilt für Versionen, die ab jetzt freigegeben werden.', { 6: 'alle 6 Monate', 12: 'jährlich', 24: 'alle 2 Jahre' }],
+        ['rek_bestaetigung_std', 'Wie schnell muss der Eingang einer Reklamation bestätigt sein?', 'Danach erscheint sie als „Bestätigung überfällig" und Zuständiger und QMB werden benachrichtigt. Gilt für neue Reklamationen.', { 4: 'in 4 Stunden', 8: 'in 8 Stunden', 24: 'in 24 Stunden', 48: 'in 2 Tagen' }],
+        ['rek_frist_kritisch', 'Wie schnell muss eine kritische Reklamation erledigt sein?', 'Alle Erledigungsfristen zählen in Kalendertagen ab Eingang (Wochenenden zählen mit) und gelten für neue Reklamationen. Bei Überschreitung werden Zuständiger und QMB benachrichtigt.', { 1: 'in 1 Tag', 2: 'in 2 Tagen' }],
         ['rek_frist_hoch', 'Wie schnell muss eine Reklamation mit hoher Schwere erledigt sein?', '', { 1: 'in 1 Tag', 2: 'in 2 Tagen', 3: 'in 3 Tagen', 5: 'in 5 Tagen' }],
         ['rek_frist_mittel', 'Wie schnell muss eine Reklamation mittlerer Schwere erledigt sein?', '', { 3: 'in 3 Tagen', 5: 'in 5 Tagen', 7: 'in 1 Woche', 14: 'in 2 Wochen' }],
         ['rek_frist_gering', 'Wie schnell muss eine geringe Reklamation erledigt sein?', '', { 7: 'in 1 Woche', 14: 'in 2 Wochen', 30: 'in 1 Monat' }],
-        ['mn_wirksam_tage', 'Wann wird die Wirksamkeit einer Maßnahme geprüft?', 'Gezählt ab der Erledigung.', { 14: 'nach 2 Wochen', 30: 'nach 30 Tagen', 60: 'nach 60 Tagen', 90: 'nach 90 Tagen' }],
+        ['mn_wirksam_tage', 'Wann wird die Wirksamkeit einer Maßnahme geprüft?', 'Gezählt ab der Erledigung. Am Fälligkeitstag wird der QMB erinnert.', { 14: 'nach 2 Wochen', 30: 'nach 30 Tagen', 60: 'nach 60 Tagen', 90: 'nach 90 Tagen' }],
         ['mn_max_verlaengerung', 'Wie oft darf eine Frist verlängert werden?', 'Danach muss eine Folgemaßnahme angelegt werden.', { 1: '1-mal', 2: '2-mal', 3: '3-mal' }],
     ]],
 ];
@@ -30,8 +32,13 @@ const QM_FRAGEN = [
 const QM_ST_TABS = [['allgemein', 'tune', 'Allgemein', 'einstellungen_lesen'], ['rechte', 'admin_panel_settings', 'Zuständigkeit & Rechte', 'einstellungen_lesen'],
     ['terminals', 'tablet', 'Objekt-Terminals', 'terminal_pin'], ['pins', 'pin', 'Mitarbeiter-PIN', 'terminal_pin'], ['kunden', 'badge', 'Kundenzugänge', 'kundenzugaenge']];
 
+/** Settings sub-tabs this user may open (also used by the central Einstellungen page to hide an empty section). */
+function qmEinstTabs() {
+    return QM_ST_TABS.filter(t => t[3] === 'einstellungen_lesen' ? qm.opt?.ich?.alle_objekte : qmCan(t[3]));
+}
+
 function qmEinstRender() {
-    const tabs = QM_ST_TABS.filter(t => t[3] === 'einstellungen_lesen' ? qm.opt.ich.alle_objekte : qmCan(t[3]));
+    const tabs = qmEinstTabs();
     if (!tabs.length) { document.getElementById('qmBody').innerHTML = qmEmpty('lock', 'Keine Einstellungen freigegeben.'); return; }
     if (!tabs.some(t => t[0] === qm.st.tab)) qm.st.tab = tabs[0][0];
     document.getElementById('qmBody').innerHTML = `
@@ -62,19 +69,44 @@ async function qmStAllgemein() {
                 </div>`).join('')}
             </div>`).join('')}
             <div class="crm-card crm-settings-card"><div class="crm-card-title">${qmIcon('mail')} System</div>
+                <div class="qm-frage"><div><strong>Wie heißt das Schichtbuch in Ihrer Firma?</strong><div class="crm-sub">Erscheint im Menü, in der Mitarbeiter-App, am Terminal und im Kundenportal. Leer = „${qmE(r.data.objektbuch_standard || 'Wachbuch')}" (Standard Ihrer Branche).</div></div>
+                    <md-outlined-text-field class="crm-fld is-sm" type="text" maxlength="30" placeholder="${qmE(r.data.objektbuch_standard || 'Wachbuch')}" value="${qmE(w.objektbuch_label || '')}" ${darf ? '' : 'disabled'} onchange="qmStSetzen('objektbuch_label', this.value)"></md-outlined-text-field></div>
                 <div class="qm-frage"><div><strong>An welche Adresse sollen Kunden auf QM-E-Mails antworten?</strong><div class="crm-sub">Leer = Standard-Absender des Systems.</div></div>
                     <md-outlined-text-field class="crm-fld is-sm" type="email" value="${qmE(w.absender_email || '')}" ${darf ? '' : 'disabled'} onchange="qmStSetzen('absender_email', this.value)"></md-outlined-text-field></div>
             </div>
         </div>
         <details class="crm-card qm-mt"><summary class="crm-card-title">${qmIcon('receipt_long')} Verlauf der Einstellungen</summary>
             <table class="crm-proto"><tbody>${(r.data.verlauf || []).map(v => { const a = JSON.parse(v.alt || '{}'), n = JSON.parse(v.neu || '{}');
-                return `<tr><td class="crm-muted">${qmE(qmDT(v.zeit))}</td><td>${qmE(v.benutzer_name || '')}</td><td>${qmE(v.datensatz_id)}: ${qmE(a.wert ?? '–')} → ${qmE(n.wert ?? '–')}</td></tr>`; }).join('') || '<tr><td class="crm-muted">Noch keine Änderungen</td></tr>'}</tbody></table></details>`;
+                return `<tr><td class="crm-muted">${qmE(qmDT(v.zeit))}</td><td>${qmE(v.benutzer_name || '')}</td><td>${qmE(qmStVerlaufText(v.datensatz_id, a.wert, n.wert, r.data))}</td></tr>`; }).join('') || '<tr><td class="crm-muted">Noch keine Änderungen</td></tr>'}</tbody></table></details>`;
+}
+/** One Verlauf line in plain words: the question and the chosen answers instead of keys and raw values. */
+function qmStVerlaufText(key, alt, neu, data) {
+    if (key === 'rechte') {
+        const lese = j => { try { return JSON.parse(j || '{}') || {}; } catch (e) { return {}; } };
+        const a = lese(alt), n = lese(neu), rollen = data.rollen || {};
+        const teile = Object.keys(n).filter(k => JSON.stringify([...(a[k] || data.rechte?.[k]?.rollen || [])].sort()) !== JSON.stringify([...(n[k] || [])].sort()))
+            .map(k => (data.rechte?.[k]?.label || k) + ': ' + ((n[k] || []).map(x => rollen[x] || x).join(', ') || 'niemand'));
+        return 'Rechte geändert' + (teile.length && Object.keys(a).length ? ' — ' + teile.join(' · ') : '');
+    }
+    const frage = QM_FRAGEN.flatMap(g => g[1]).find(f => f[0] === key);
+    const wert = v => v === '' || v == null ? '–' : (frage?.[3]?.[v] ?? v);
+    const name = frage ? frage[1] : ({ absender_email: 'Antwortadresse für QM-E-Mails', objektbuch_label: 'Name des Schichtbuchs' }[key] || key);
+    return name + ' ' + wert(alt) + ' → ' + wert(neu);
 }
 async function qmStSetzen(k, v) {
     const r = await qmReq('PUT', QM_API + '/einstellungen', { [k]: v });
     if (qmFehler(r)) return qmStAllgemein();
     showToast('Gespeichert');
-    qmLoadOpt(true);
+    await qmLoadOpt(true);
+    if (k === 'objektbuch_label') {
+        // the name is cached with the tenant — refresh it so menu and titles follow at once
+        try {
+            const t = JSON.parse(localStorage.getItem('hms_tenant') || '{}'); t.objektbuch_label = qm.opt.label; localStorage.setItem('hms_tenant', JSON.stringify(t));
+            if (typeof CURRENT_TENANT !== 'undefined' && CURRENT_TENANT) CURRENT_TENANT.objektbuch_label = qm.opt.label;
+        } catch (e) { /* cache only */ }
+        const nav = document.getElementById('navQmWachbuchLabel'); if (nav) nav.textContent = qm.opt.label;
+    }
+    qmStAllgemein();   // also refreshes the Verlauf
 }
 
 // ---------- Rechte ----------
@@ -85,11 +117,11 @@ async function qmStRechte() {
     qm.cache.st = r.data;
     const rollen = r.data.rollen, darf = r.data.darf_aendern;
     box.innerHTML = `
-        <div class="crm-banner">${qmIcon('lightbulb')} <strong>Kurz erklärt:</strong> Die Rollen QMB, Objektleiter und Büro vergeben Sie in der Benutzerverwaltung (Bereich „Qualität"). Hier legen Sie fest, was jede Rolle darf. Objektleiter sehen immer nur die Objekte, für die sie zuständig sind.</div>
+        <div class="crm-banner">${qmIcon('lightbulb')} <strong>Kurz erklärt:</strong> Die Rollen QMB, Objektleiter und Büro vergibt der Inhaber in der Benutzerverwaltung (Block „Qualitätsmanagement & Wachbuch"). Hier legen Sie fest, was Objektleiter und Büro dürfen — der QMB darf immer alles. Objektleiter sehen immer nur die Objekte (und deren Kunden), für die sie zuständig sind.</div>
         <div class="data-table-card"><div class="crm-settings-tablewrap"><table class="crm-table crm-settings-table">
             <thead><tr><th>Recht</th>${Object.values(rollen).map(l => `<th class="crm-num">${qmE(l)}</th>`).join('')}</tr></thead>
             <tbody>${Object.entries(r.data.rechte).map(([k, v]) => `<tr><td>${qmE(v.label)}</td>${Object.keys(rollen).map(rl => `
-                <td class="crm-num"><md-checkbox data-recht="${k}" data-rolle="${rl}" ${v.rollen.includes(rl) ? 'checked' : ''} ${darf && k !== 'einstellungen' ? '' : 'disabled'}></md-checkbox></td>`).join('')}</tr>`).join('')}</tbody>
+                <td class="crm-num"><md-checkbox data-recht="${k}" data-rolle="${rl}" ${v.rollen.includes(rl) ? 'checked' : ''} ${darf && k !== 'einstellungen' && rl !== 'qmb' ? '' : 'disabled'}></md-checkbox></td>`).join('')}</tr>`).join('')}</tbody>
         </table></div></div>
         ${darf ? `<div class="crm-form-actions qm-mt"><md-filled-button onclick="qmRechteSpeichern()"><md-icon slot="icon">save</md-icon>Rechte speichern</md-filled-button></div>` : ''}`;
 }
@@ -217,7 +249,9 @@ async function qmKzDialog(id = null) {
     const kunden = qm.cache.kzKunden;
     const objHtml = (kid, sel) => {
         const objs = (kunden.find(k => k.kunde_id === kid)?.objekte) || [];
-        return `<label class="crm-switch-row"><md-checkbox id="qk_alle" ${sel === null ? 'checked' : ''} onchange="document.querySelectorAll('.qk-obj').forEach(c=>c.disabled=this.checked)"></md-checkbox> alle Objekte des Kunden (auch künftige)</label>
+        const einzeln = !!qm.cache.kz?.nur_eigene_objekte;   // Objektleiter: only his objects, never "alle"
+        if (einzeln && sel === null) sel = objs.map(o => o.obj_id);
+        return `${einzeln ? '' : `<label class="crm-switch-row"><md-checkbox id="qk_alle" ${sel === null ? 'checked' : ''} onchange="document.querySelectorAll('.qk-obj').forEach(c=>c.disabled=this.checked)"></md-checkbox> alle Objekte des Kunden (auch künftige)</label>`}
             ${objs.map(o => `<label class="crm-switch-row"><md-checkbox class="qk-obj" value="${qmE(o.obj_id)}" ${sel === null ? 'disabled' : ''} ${sel && sel.includes(o.obj_id) ? 'checked' : ''}></md-checkbox> ${qmE(o.objektname)}</label>`).join('') || '<div class="crm-muted">Kunde hat keine aktiven Objekte</div>'}`;
     };
     window._qmKzObj = objHtml;

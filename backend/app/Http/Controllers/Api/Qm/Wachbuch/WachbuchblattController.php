@@ -83,6 +83,9 @@ class WachbuchblattController extends Controller
         $blaetter = Qm::t('qm_wb_blaetter')->where('obj_id', $objId)->where('datum', $datum)->orderBy('geoeffnet_am')->get();
         $einsaetze = Qm::t('einsaetze')->whereIn('einsatz_id', $blaetter->pluck('einsatz_id')->filter())->get(['einsatz_id', 'ist_start', 'ist_ende'])->keyBy('einsatz_id');
         $users = Qm::userNames();
+        // Countersignatures withdrawn by a later entry (see WachbuchService::append).
+        $aufgehoben = Qm::t('qm_verlauf')->where('tabelle', 'wachbuch_blatt')->where('aktion', 'gegenzeichnung_aufgehoben')
+            ->whereIn('datensatz_id', $blaetter->pluck('id')->map(fn ($i) => (string) $i))->orderBy('id')->pluck('zeit', 'datensatz_id');
         return response()->json([
             'datum' => $datum,
             'blaetter' => $blaetter->map(fn ($b) => [
@@ -93,8 +96,12 @@ class WachbuchblattController extends Controller
                 'hinweis_nachfolger' => $b->hinweis_nachfolger,
                 'gegengezeichnet_am' => $b->gegengezeichnet_am,
                 'gegengezeichnet_von' => $b->gegengezeichnet_von ? ($users[(int) $b->gegengezeichnet_von] ?? null) : null,
-                'kette_ok' => WachbuchService::pruefeKette((int) $b->id) === null,
+                'gegenzeichnung_aufgehoben_am' => $b->gegengezeichnet_am ? null : ($aufgehoben[(string) $b->id] ?? null),
+                'kette_ok' => WachbuchService::pruefeKette((int) $b->id, $b) === null,
+                // The office sheet of a day stays open until the Wachbuch day is over.
+                'laeuft' => $b->einsatz_id ? !$b->geschlossen_am : substr((string) $b->datum, 0, 10) >= Qm::wachbuchTag(),
             ])->values(),
+            'fotopflicht' => (bool) Qm::objektEinstellung($objId)->fotopflicht,
             'eintraege' => WachbuchService::eintraege($blaetter->pluck('id')->all()),
         ]);
     }
@@ -107,7 +114,15 @@ class WachbuchblattController extends Controller
         if ($e = $this->nichtBereit() ?? $this->objektOderFehler($u, $objId) ?? $this->rechtOderFehler($u, 'wachbuch_eintrag')) return $e;
         [$d, $err] = WachbuchService::pruefeEintrag($request->all());
         if ($err) return Qm::fehler($err);
-        $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->input('datum')) ? $request->input('datum') : Qm::heute();
+        // No date given = the running Wachbuch day (before tag_beginn that is still yesterday's).
+        $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->input('datum')) ? $request->input('datum') : Qm::wachbuchTag();
+        if ($datum > Qm::wachbuchTag()) return Qm::fehler(['datum' => ['Das Datum darf nicht in der Zukunft liegen.']]);
+        // Switched off (company or Objekt) = no new entries. Corrections of
+        // existing entries stay possible — the record must remain correctable.
+        if (empty($d['ref_id']) && !WachbuchService::aktiv($objId)) {
+            return response()->json(['error' => 'Das ' . \App\Support\TenantProfile::objektbuchLabel(\App\Services\TenantService::current())
+                . ' ist für dieses Objekt nicht aktiv (Einstellungen › Qualität bzw. Objekte & Dienstanweisungen).'], 409);
+        }
 
         // A correction goes onto the sheet of the corrected entry (same chain).
         $blatt = null;
@@ -117,7 +132,12 @@ class WachbuchblattController extends Controller
             $blatt = Qm::t('qm_wb_blaetter')->find($ref->blatt_id);
         }
         $blatt = $blatt ?: WachbuchService::bueroBlatt($objId, $datum);
-        $row = WachbuchService::append($blatt, $d, ['quelle' => 'buero', 'user_id' => $u->id, 'erfasst_von' => Qm::userName($u)]);
+        if ($blatt->gegengezeichnet_am) return response()->json(['error' => 'Das Blatt ist gegengezeichnet und eingefroren.'], 409);
+        try {
+            $row = WachbuchService::append($blatt, $d, ['quelle' => 'buero', 'user_id' => $u->id, 'erfasst_von' => Qm::userName($u)]);
+        } catch (\DomainException $e) {
+            return response()->json(['error' => $e->getMessage()], 409);
+        }
         return response()->json(['success' => true, 'eintrag' => WachbuchService::format($row)]);
     }
 
@@ -129,7 +149,13 @@ class WachbuchblattController extends Controller
         if (!$b) return response()->json(['error' => 'Blatt nicht gefunden'], 404);
         if ($e = $this->objektOderFehler($u, $b->obj_id) ?? $this->rechtOderFehler($u, 'wachbuch_gegenzeichnen')) return $e;
         if ($b->einsatz_id && !$b->geschlossen_am) return response()->json(['error' => 'Die Schicht läuft noch — gegenzeichnen erst nach dem Dienstende.'], 409);
+        if (!$b->einsatz_id && substr((string) $b->datum, 0, 10) >= Qm::wachbuchTag()) {
+            return response()->json(['error' => 'Der Tag läuft noch — das Büro-Blatt kann erst nach Tagesende gegengezeichnet werden.'], 409);
+        }
         if ($b->gegengezeichnet_am) return response()->json(['error' => 'Bereits gegengezeichnet.'], 409);
+        if (($nr = WachbuchService::pruefeKette($id, $b)) !== null) {
+            return response()->json(['error' => 'Die Prüfkette ist ab Eintrag ' . $nr . ' beschädigt. Gegenzeichnen nicht möglich.'], 409);
+        }
         Qm::t('qm_wb_blaetter')->where('id', $id)->update(['gegengezeichnet_von' => $u->id, 'gegengezeichnet_am' => now(), 'updated_at' => now()]);
         Qm::log('wachbuch_blatt', $id, 'gegengezeichnet', null, null, $u);
         Qm::changed('wachbuch');
@@ -143,6 +169,9 @@ class WachbuchblattController extends Controller
         $r = Qm::t('qm_wb_eintraege')->find($id);
         if (!$r || !in_array($r->art, ['vorkommnis', 'alarm'], true)) return response()->json(['error' => 'Eintrag nicht gefunden'], 404);
         if ($e = $this->objektOderFehler($u, $r->obj_id) ?? $this->rechtOderFehler($u, 'wachbuch_eintrag')) return $e;
+        if (Qm::t('qm_wb_blaetter')->where('id', $r->blatt_id)->value('gegengezeichnet_am')) {
+            return response()->json(['error' => 'Das Blatt ist gegengezeichnet und eingefroren.'], 409);
+        }
         $neu = $request->boolean('offen') ? 'offen' : 'erledigt';
         Qm::t('qm_wb_eintraege')->where('id', $id)->update(['status' => $neu, 'bearbeitet_von' => $u->id, 'bearbeitet_am' => now()]);
         Qm::log('wachbuch_eintrag', $id, 'status', ['status' => $r->status], ['status' => $neu], $u);

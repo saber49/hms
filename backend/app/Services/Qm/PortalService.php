@@ -29,29 +29,47 @@ class PortalService
             : Tenant::where('aktiv', true)->get();
         if ($slug && $tenants->isEmpty()) return [null, ['Firma nicht gefunden', 404]];
 
-        $matches = [];
-        $gesperrt = false;
+        // 1) every access with this username (usernames are unique per company only)
+        $kandidaten = [];
         foreach ($tenants as $tenant) {
             try {
                 TenantService::switchToTenant($tenant);
                 if (!Schema::connection('tenant')->hasTable('kunden_portal_zugaenge')) continue;
                 $z = Qm::t('kunden_portal_zugaenge')->where('username', $username)->where('aktiv', 1)->first();
                 if (!$z || !$z->password) continue;
-                if (!empty($z->gesperrt_seit)) { $gesperrt = true; continue; }
-                if (!Hash::check($password, $z->password)) {
-                    self::fehlversuch($z);
-                    continue;
-                }
-                if (Qm::t('kunden')->where('kunde_id', $z->kunde_id)->where('aktiv', 1)->exists()) $matches[] = [$tenant, $z];
+                $kandidaten[] = [$tenant, $z, Qm::t('kunden')->where('kunde_id', $z->kunde_id)->where('aktiv', 1)->exists()];
             } catch (\Throwable $e) {
-                continue;
+                report($e);
             }
+        }
+        // A password must never choose between companies sharing a username.
+        if (!$slug && count($kandidaten) > 1) {
+            TenantService::reset(); Qm::forget();
+            return [null, ['Dieser Benutzername existiert in mehreren Firmen. Bitte verwenden Sie den direkten Link Ihres Dienstleisters.', 409]];
+        }
+        // 2) check the password; a failure is counted only when the username
+        //    belongs to ONE company (direct link or unique name) — a login
+        //    without the company link must never lock other companies' customers.
+        $matches = [];
+        $gesperrt = false;
+        $falsch = [];
+        foreach ($kandidaten as [$tenant, $z, $kundeAktiv]) {
+            if (!empty($z->gesperrt_seit)) { $gesperrt = true; continue; }
+            if (!Hash::check($password, $z->password)) { $falsch[] = [$tenant, $z]; continue; }
+            if ($kundeAktiv) $matches[] = [$tenant, $z];
+        }
+        if (!$matches && count($kandidaten) === 1 && $falsch) {
+            TenantService::switchToTenant($falsch[0][0]);
+            self::fehlversuch($falsch[0][1]);
+            TenantService::reset(); Qm::forget();
         }
 
         if (count($matches) > 1) {
+            TenantService::reset(); Qm::forget();
             return [null, ['Dieser Benutzername existiert in mehreren Firmen. Bitte verwenden Sie den direkten Link Ihres Dienstleisters.', 409]];
         }
         if (count($matches) !== 1) {
+            TenantService::reset(); Qm::forget();
             return [null, $gesperrt
                 ? ['Der Zugang ist nach zu vielen Fehlversuchen gesperrt. Bitte wenden Sie sich an Ihren Dienstleister.', 423]
                 : ['Ungültige Anmeldedaten oder Portal nicht aktiviert', 401]];
@@ -62,6 +80,7 @@ class PortalService
         $plain = bin2hex(random_bytes(32));
         DB::connection('mysql')->table('personal_access_tokens')
             ->where('tokenable_type', 'kunden_portal')->where('tokenable_id', $z->id)
+            ->where('abilities', 'like', '%"tenant_id":' . $tenant->id . '}')
             ->where('created_at', '<', now()->subDays(ResolveKundenPortalToken::TOKEN_TTL_DAYS))->delete();
         DB::connection('mysql')->table('personal_access_tokens')->insert([
             'tokenable_type' => 'kunden_portal', 'tokenable_id' => $z->id, 'name' => 'kunden-portal',
@@ -70,6 +89,7 @@ class PortalService
             'created_at' => now(), 'updated_at' => now(),
         ]);
         Qm::t('kunden_portal_zugaenge')->where('id', $z->id)->update(['last_login_at' => now(), 'fehlversuche' => 0]);
+        TenantService::reset(); Qm::forget();
         return [['token' => $plain, 'tenant_slug' => $tenant->slug, 'passwort_aendern' => (bool) ($z->passwort_aendern ?? false)], null];
     }
 
@@ -90,7 +110,8 @@ class PortalService
     public static function beendeSitzungen(int $zugangId): void
     {
         DB::connection('mysql')->table('personal_access_tokens')
-            ->where('tokenable_type', 'kunden_portal')->where('tokenable_id', $zugangId)->delete();
+            ->where('tokenable_type', 'kunden_portal')->where('tokenable_id', $zugangId)
+            ->where('abilities', 'like', '%"tenant_id":' . (TenantService::current()->id ?? 0) . '}')->delete();
     }
 
     public static function startPasswort(): string

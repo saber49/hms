@@ -4,6 +4,7 @@
    ============================================ */
 
 .qm-page .qm-mt { margin-top: 14px; }
+.qm-page .qm-banner-wide { grid-column: 1 / -1; margin: 0; }
 .qm-subtabs { margin-bottom: 12px; }
 .qm-clip { max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
 .qm-pre { white-space: pre-line; }

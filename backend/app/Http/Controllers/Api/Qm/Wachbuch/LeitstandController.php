@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Qm\Wachbuch;
 
 use App\Http\Controllers\Api\Qm\Concerns\QmGuards;
 use App\Http\Controllers\Controller;
+use App\Services\Qm\TerminalService;
 use App\Services\Qm\WachbuchService;
 use App\Support\Qm\Qm;
 use App\Support\Qm\QmScope;
@@ -29,22 +30,26 @@ class LeitstandController extends Controller
         $heute = Qm::heute();
         $objekte = QmScope::objekte($u)->filter(fn ($o) => (bool) $o->wachbuch_aktiv)->keyBy('obj_id');
         $ids = $objekte->keys()->all();
-        if (!$ids) return response()->json(['objekte' => [], 'vorkommnisse' => []]);
+        $kopf = ['modul_aktiv' => Qm::boolSetting('modul_wachbuch'), 'tag_beginn' => Qm::tagBeginn()];
+        if (!$ids) return response()->json($kopf + ['objekte' => [], 'vorkommnisse' => []]);
 
         $imDienst = Qm::t('zeiterfassung as z')->join('einsaetze as e', 'e.einsatz_id', '=', 'z.einsatz_id')
             ->join('mitarbeiter as m', 'm.dienst_nr', '=', 'z.dienst_nr')
             ->whereIn('e.obj_id', $ids)->whereIn('z.status', ['aktiv', 'pause'])
             ->get(['e.obj_id', 'z.dienst_nr', 'z.status', 'z.clock_in', 'm.vorname', 'm.name'])->groupBy('obj_id');
 
-        $geplant = Qm::t('einsatz_mitarbeiter as em')->join('einsaetze as e', 'e.einsatz_id', '=', 'em.einsatz_id')
-            ->join('mitarbeiter as m', 'm.dienst_nr', '=', 'em.dienst_nr')
-            ->leftJoin('zeiterfassung as z', fn ($j) => $j->on('z.einsatz_id', '=', 'em.einsatz_id')->on('z.dienst_nr', '=', 'em.dienst_nr'))
-            ->whereIn('e.obj_id', $ids)->where('e.datum', $heute)->where('e.pruefung', 'geplant')
-            ->get(['e.obj_id', 'em.dienst_nr', 'e.ist_start', 'e.ist_ende', 'z.id as z_id', 'm.vorname', 'm.name'])->groupBy('obj_id');
+        // Today's shifts plus yesterday's night shifts that are still running.
+        $plan = TerminalService::geplantJetzt($ids);
+        $gestempelt = Qm::t('zeiterfassung')->whereIn('einsatz_id', $plan->pluck('einsatz_id')->unique())
+            ->get(['einsatz_id', 'dienst_nr'])->mapWithKeys(fn ($z) => [$z->einsatz_id . '|' . $z->dienst_nr => true]);
+        $geplant = $plan->map(function ($p) use ($gestempelt) {
+            $p->z_id = isset($gestempelt[$p->einsatz_id . '|' . $p->dienst_nr]) ? 1 : null;
+            return $p;
+        })->groupBy('obj_id');
 
         $vk = Qm::t('qm_wb_eintraege')->whereIn('obj_id', $ids)->whereIn('art', ['vorkommnis', 'alarm'])->where('status', 'offen')
             ->orderByDesc('zeit')->limit(200)->get();
-        $heuteVon = Carbon::parse($heute . ' ' . Qm::setting('tag_beginn', '06:00'), 'Europe/Berlin')->utc();
+        $heuteVon = Qm::wachbuchTagStart();
         $eintraege = Qm::t('qm_wb_eintraege')->whereIn('obj_id', $ids)->where('zeit', '>=', $heuteVon)
             ->selectRaw('obj_id, COUNT(*) AS n, MAX(zeit) AS letzte')->groupBy('obj_id')->get()->keyBy('obj_id');
 
@@ -52,7 +57,7 @@ class LeitstandController extends Controller
         $rows = $objekte->map(function ($o) use ($imDienst, $geplant, $vk, $eintraege, $now, $heute) {
             $plan = $geplant[$o->obj_id] ?? collect();
             $fehlt = $plan->filter(fn ($p) => !$p->z_id && $p->ist_start
-                && $now->gt(Carbon::parse($heute . ' ' . substr($p->ist_start, 0, 5), 'Europe/Berlin')->addMinutes(self::CHECKIN_TOLERANZ_MIN)));
+                && $now->gt(Carbon::parse(substr((string) $p->datum, 0, 10) . ' ' . substr($p->ist_start, 0, 5), 'Europe/Berlin')->addMinutes(self::CHECKIN_TOLERANZ_MIN)));
             $offen = $vk->where('obj_id', $o->obj_id);
             return [
                 'obj_id' => $o->obj_id, 'objektname' => $o->objektname, 'kundenname' => $o->kundenname,
@@ -70,7 +75,7 @@ class LeitstandController extends Controller
         })->sortByDesc(fn ($r) => [$r['alarm_offen'], $r['vorkommnisse_offen'], count($r['fehlende_checkins'])])->values();
 
         $blattDatum = Qm::t('qm_wb_blaetter')->whereIn('id', $vk->pluck('blatt_id')->unique())->pluck('datum', 'id');
-        return response()->json([
+        return response()->json($kopf + [
             'objekte' => $rows,
             'vorkommnisse' => $vk->take(50)->map(fn ($r) => WachbuchService::format($r) + [
                 'objektname' => $objekte[$r->obj_id]->objektname ?? $r->obj_id,

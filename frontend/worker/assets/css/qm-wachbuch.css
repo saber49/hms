@@ -10,6 +10,9 @@
 .wqm-pending { font-size: .78rem; color: #b45309; }
 .wqm-hinweis { display: flex; gap: 10px; align-items: flex-start; background: rgba(37, 99, 235, .1); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
 .wqm-hinweis > div { flex: 1; }
+.wqm-notfall { background: var(--card-bg, #fff); color: var(--text-primary, inherit); border-radius: 12px; padding: 10px 14px; margin-bottom: 8px; }
+.wqm-notfall summary { cursor: pointer; font-weight: 600; }
+.wqm-notfall > div { margin-top: 8px; line-height: 1.5; overflow-wrap: anywhere; }
 .wqm-hinweis button { border: 0; background: var(--primary, #2563eb); color: var(--md-sys-color-on-primary, #fff); border-radius: 10px; padding: 8px 10px; font: inherit; font-size: .82rem; }
 .wqm-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
 .wqm-art { display: flex; flex-direction: column; align-items: center; gap: 6px; border: 1px solid var(--border, #e5e7eb); background: var(--card-bg, #fff); color: inherit;

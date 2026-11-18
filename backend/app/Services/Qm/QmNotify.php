@@ -43,20 +43,36 @@ class QmNotify
         }
     }
 
-    public static function mail(array $to, string $ereignis, string $titel, string $text, string $empfTyp = 'kunde', $empfId = '', ?string $bezugTyp = null, $bezugId = null): void
+    /** @return int number of addresses the mail was queued for (0 = nothing sent) */
+    public static function mail(array $to, string $ereignis, string $titel, string $text, string $empfTyp = 'kunde', $empfId = '', ?string $bezugTyp = null, $bezugId = null): int
     {
         try {
-            $to = array_values(array_filter(array_map('trim', $to), fn ($m) => filter_var($m, FILTER_VALIDATE_EMAIL)));
-            if (!$to) return;
+            $to = array_values(array_unique(array_filter(array_map('trim', $to), fn ($m) => filter_var($m, FILTER_VALIDATE_EMAIL))));
+            if (!$to) return 0;
             $tenant = TenantService::current();
             $mail = new PlainNotificationMail($titel . ($tenant ? ' | ' . $tenant->name : ''), $text);
             $from = trim((string) Qm::setting('absender_email', ''));
             if ($from !== '' && filter_var($from, FILTER_VALIDATE_EMAIL)) $mail->replyTo($from);
             Mail::to($to)->queue($mail);
             self::protokoll($ereignis, $empfTyp, $empfId ?: implode(',', $to), 'email', $titel, $text, $bezugTyp, $bezugId);
+            return count($to);
         } catch (\Throwable $e) {
             report($e);
+            return 0;
         }
+    }
+
+    /** Was this event already delivered for the record? (reminders / escalations run once) */
+    public static function schonGesendet(string $ereignis, string $bezugTyp, $bezugId): bool
+    {
+        return Qm::t('qm_benachrichtigungen')->where('ereignis', $ereignis)->where('bezug_typ', $bezugTyp)
+            ->where('bezug_id', (string) $bezugId)->exists();
+    }
+
+    /** Marker for events without a recipient, so they are not retried every run. */
+    public static function merke(string $ereignis, string $bezugTyp, $bezugId, string $titel): void
+    {
+        self::protokoll($ereignis, 'system', '-', 'intern', $titel, '', $bezugTyp, $bezugId);
     }
 
     /** Office users holding one of the QM roles (optionally only with one action right). */

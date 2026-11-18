@@ -362,16 +362,15 @@ function plannerRenderNuSelectList() {
     });
 
     list.innerHTML = subs.length
-        ? `<div class="planner-nu-select-list-title">Verfügbare Nachunternehmer</div>` + subs.map(nu => `
-            <div class="planner-nu-select-item" onclick="plannerSelectNu('${escapeHtml(nu.nu_id)}')">
-                <div class="planner-nu-select-avatar">${escapeHtml((nu.firmenname || '').substring(0, 2).toUpperCase())}</div>
-                <div class="planner-nu-select-info">
-                    <div class="planner-nu-select-name">${escapeHtml(nu.firmenname)}</div>
-                    <div class="planner-nu-select-bereich">${nu.bereich ? escapeHtml(nu.bereich) : 'Nachunternehmer'}</div>
-                </div>
-                <span class="material-symbols-outlined planner-nu-select-arrow">arrow_forward</span>
-            </div>
-        `).join('')
+        ? `<div class="planner-nu-select-list-title">Verfügbare Nachunternehmer</div>
+            <md-list class="planner-nu-select-options">${subs.map(nu => `
+                <md-list-item type="button" class="planner-nu-select-item" onclick="plannerSelectNu('${escapeHtml(nu.nu_id)}')">
+                    <span slot="start" class="planner-nu-select-avatar">${escapeHtml((nu.firmenname || '').substring(0, 2).toUpperCase())}</span>
+                    <span slot="headline">${escapeHtml(nu.firmenname)}</span>
+                    <span slot="supporting-text">${nu.bereich ? escapeHtml(nu.bereich) : 'Nachunternehmer'}</span>
+                    <span slot="end" class="material-symbols-outlined planner-nu-select-arrow">chevron_right</span>
+                </md-list-item>
+            `).join('')}</md-list>`
         : '<div class="nu-empty" style="padding:30px 10px"><i class="material-symbols-outlined" style="font-size:2rem;color:var(--gray-400)">handshake</i><p style="margin-top:8px;color:var(--gray-500)">Keine weiteren Nachunternehmer verfügbar.</p></div>';
 }
 

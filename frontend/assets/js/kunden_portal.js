@@ -94,6 +94,8 @@ async function kpInit() {
         kpMe = me;
         if (me.objektbuch_label) kpObLabel = me.objektbuch_label;
         document.querySelectorAll('.kp-tab[data-qm]').forEach(b => { b.hidden = !me.qm; });
+        // Wachbuch switched off for the company (QM-Einstellungen) → no tab.
+        document.querySelectorAll('.kp-tab[data-tab="wachbuch"]').forEach(b => { b.hidden = me.wachbuch === false; });
         const sel = document.getElementById('kpObjekt');
         (me.objekte || []).forEach(o => {
             const opt = document.createElement('option');
@@ -122,6 +124,7 @@ async function kpLogout() {
 }
 
 function kpSwitchTab(tab) {
+    if (document.querySelector(`.kp-tab[data-tab="${tab}"]`)?.hidden) return;
     kpTab = tab;
     kpFolder = null;
     document.querySelectorAll('.kp-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
