@@ -32,7 +32,8 @@ DESK="${WORKER_DESK:-$(cd "$ROOT/.." && pwd)/clood-x-desktop/renderer}"
 [ -d "$SOT" ] || { echo "source of truth missing: $SOT" >&2; exit 1; }
 
 SHARED_ASSETS=(js/app.js js/call.js js/storage.js js/capacitor-bridge.js \
-               js/qm-wachbuch.js js/qm-live.js css/qm-wachbuch.css \
+               js/qm-wachbuch.js js/qm-live.js \
+               css/qm-wachbuch.css \
                css/app.css css/md3-tokens.css css/ms-icons.css \
                fonts/material-symbols-rounded.woff2 \
                icons/clood-x-logo.png icons/icon-192.png icons/icon-512.png)

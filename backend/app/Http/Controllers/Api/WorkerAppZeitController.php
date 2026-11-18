@@ -122,6 +122,7 @@ class WorkerAppZeitController extends Controller
             $active->display_note  = null;
             $active->beschreibung  = null;
             $active->bemerkung     = null;
+
         }
 
         // 2. Upcoming shifts (not yet clocked in)
@@ -184,6 +185,7 @@ class WorkerAppZeitController extends Controller
                 'beschreibung'  => $displayNote,
                 'can_clock_in'  => $canClockIn,
                 'minutes_until' => $minutesUntil,
+
             ];
         }
 

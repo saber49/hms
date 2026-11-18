@@ -81,6 +81,7 @@ const API = {
     docRequests: W_API_BASE + '/worker-app/doc-requests',
     boerse: W_API_BASE + '/worker-app/schichtboerse',
     signaturen: W_API_BASE + '/worker-app/signaturen',
+
     push: W_API_BASE + '/worker-app/push'
 };
 
@@ -995,9 +996,11 @@ function renderActiveShift(active) {
                 }
                 <button class="zeit-btn zeit-btn-stop" onclick="zeitClockOut()"><i class="fas fa-stop"></i> Beenden</button>
             </div>
+            
         </div>
     `;
 }
+
 
 function renderUpcomingShifts(shifts) {
     let html = '<div class="zeit-section-title">Heutige Schichten</div>';
@@ -1028,10 +1031,11 @@ function renderUpcomingShifts(shifts) {
                 ${ortLineHtml(s.ort)}
                 ${note ? '<div class="zeit-upcoming-note">' + esc(note) + '</div>' : ''}
                 ${countdownHtml}
-                <button class="zeit-btn zeit-btn-start ${canStart ? '' : 'disabled'}" 
+                <button class="zeit-btn zeit-btn-start ${canStart ? '' : 'disabled'}"
                         onclick="zeitClockIn('${esc(s.einsatz_id)}')" ${canStart ? '' : 'disabled'}>
                     <i class="fas fa-play"></i> ${canStart ? 'Schicht starten' : 'Noch nicht verfügbar'}
                 </button>
+                
             </div>
         `;
     });
