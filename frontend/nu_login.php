@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nachunternehmer-Portal — Clood-X</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="/assets/css/material-symbols.css?v=20261119ms1">
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/auth-md3.css?v=20261116ui1">
     <style>

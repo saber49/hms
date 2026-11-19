@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="assets/css/md3-tokens.css?v=20261114md3g">
     <link rel="stylesheet" href="assets/css/kunden_portal.css?v=20261118qmfix1">
     <link rel="stylesheet" href="assets/css/kunden_portal_qm.css?v=20261114md3g">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="/assets/css/material-symbols.css?v=20261119ms1">
     <script>
     (function () {
         // App handoff: the shared Clood-X app login passes the portal session
