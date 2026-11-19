@@ -123,7 +123,7 @@
         <p class="pd-crumb"><a href="/">Startseite</a> · <a href="/#services">Produkte</a> · Einsatz &amp; Personal</p>
         <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-5">Einsatz &amp; Personal</p>
         <h1 class="display-h text-4xl md:text-6xl text-primary-600 leading-[1.05] mb-6">Die Woche planen —<br><em>in Minuten, nicht Stunden.</em></h1>
-        <p class="text-lg md:text-xl text-ink-500 max-w-2xl mx-auto mb-9">Einsatz öffnen, Mitarbeiter ziehen, bestätigen. Die Disposition prüft beim Zuweisen Konflikte, Qualifikationen und ArbZG — und führt denselben Plan bis in den Monatsabschluss.</p>
+        <p class="text-lg md:text-xl text-ink-500 max-w-2xl mx-auto mb-9">Vom Board über die Schicht bis zum Monatsabschluss: Die Disposition prüft Konflikte beim Zuweisen, bindet Nachunternehmer ein und dokumentiert jede Freigabe — ein Plan für den ganzen Betrieb.</p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="/register.html" class="bg-primary-500 hover:bg-primary-600 text-paper px-8 py-4 rounded-full text-base font-semibold transition shadow-lg shadow-primary-500/20">14 Tage kostenlos testen</a>
             <a href="#video" class="text-ink-700 hover:text-ink-950 px-6 py-4 text-base font-medium transition">So sieht es aus <i class="fas fa-arrow-down ml-1 text-sm"></i></a>
@@ -132,8 +132,8 @@
 </header>
 
 <!-- VIDEO-PLATZHALTER: Erklärvideo zur Disposition hier einbinden.
-     Beispiel: <video controls poster="/assets/img/..."><source src="/assets/video/disposition-demo.mp4" type="video/mp4"></video>
-     Die .pd-video-Klasse skaliert das Video automatisch auf 16:9. -->
+     <video controls poster="…"><source src="/assets/video/disposition-demo.mp4" type="video/mp4"></video>
+     .pd-video skaliert das Video automatisch auf 16:9. -->
 <section id="video" class="pb-16 md:pb-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="pd-video">
@@ -146,44 +146,95 @@
     </div>
 </section>
 
-<!-- Feature 1: Die Planfläche -->
+<!-- 1 · Die Planfläche -->
 <section class="py-16 md:py-24 hairline-t">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div class="reveal">
                 <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Die Planfläche</p>
-                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Ein Board für die ganze Woche — jede Zeile ein Einsatz.</h2>
-                <p class="text-ink-500 mb-6">Jede Zeile ein Objekt, jede Spalte ein Tag. Mitarbeiter ziehen Sie per Drag &amp; Drop auf die Schicht — die Karte zeigt sofort Zeit, Objekt und Status.</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Ein Board für die ganze Woche — auf einen Blick sortiert.</h2>
+                <p class="text-ink-500 mb-6">Einsätze stehen als Karten im Wochenraster — gruppiert nach Kunde, gefärbt nach Bereich. Darüber sitzen Suche, Filter und die Statuszähler der Woche.</p>
                 <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Wochen- und Tagesansicht für alle Objekte parallel</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Volltextsuche über alles — Tastenkürzel „/“, Filter nach Kunde, Objekt, Mitarbeiter und Bereich</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Bereichs-Farben direkt am Plan — je Bereich sichtbar, wie viele Schichten offen sind</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Zähler in der Kopfzeile: Ausstehend · Geplant · Bestätigt · Abgelehnt</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Live-Plan: Änderungen anderer Planer erscheinen sofort — ohne Neuladen</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Wochen- und Monatsansicht:</strong> Kundenzeilen im Wochenraster oder Kalenderblatt — heute immer markiert</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Volltextsuche mit „/“-Kürzel:</strong> findet Kunde, Objekt, Mitarbeiter, Bestell-Nr. — und springt bei Bedarf automatisch in den passenden Monat</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Verknüpfte Filter:</strong> Kunde ↔ Objekt schränken sich gegenseitig ein — plus Mitarbeiter- und Bereich-Filter mit Zählern</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Bereich-Auswahl beim Einstieg:</strong> Wer nur seinen Bereich plant, sieht nur seine Einsätze — die Wahl bleibt für die Sitzung gemerkt</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Statuszähler in der Kopfzeile:</strong> Ausstehend · Geplant · Bestätigt · Abgelehnt — immer im Blick</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Live ohne Flackern:</strong> Änderungen anderer Planer erscheinen sofort — der Plan baut nur geänderte Karten neu auf</span></li>
                 </ul>
             </div>
             <div class="reveal">
                 <div class="mock-card">
                     <p class="mock-label">Disposition — Donnerstag, KW 47</p>
-                    <div class="flex gap-2 mb-3">
-                        <span class="mock-chip" style="background:#eceef2;color:#5c6678">Bewachung <strong>4/4</strong></span>
-                        <span class="mock-chip" style="background:#ecf3fe;color:#0842a0">Objektschutz <strong>3/5</strong></span>
-                        <span class="mock-chip" style="background:#fef3c7;color:#92400e">Stadion <strong>1/3</strong></span>
+                    <div class="flex gap-2 mb-3 flex-wrap">
+                        <span class="mock-chip" style="background:#eceef2;color:#5c6678">Ausstehend <strong>9</strong></span>
+                        <span class="mock-chip" style="background:#fef3c7;color:#92400e">Geplant <strong>21</strong></span>
+                        <span class="mock-chip" style="background:#dcfce7;color:#166534">Bestätigt <strong>14</strong></span>
                     </div>
-                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#0b57d0;color:#fbfaf8">AM</span><span class="font-medium text-ink-900">A. Meier</span></span><span class="text-ink-400 text-xs">06:00–14:00 · Nordpark</span></div>
-                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#dadfe6;color:#5c6678">KS</span><span class="font-medium text-ink-900">K. Schulz</span></span><span class="text-ink-400 text-xs">14:00–22:00 · St. Anna</span></div>
-                    <div class="mock-row" style="border:2px dashed #dadfe6; color:#8b94a4; justify-content:flex-start; gap:8px;"><i class="fas fa-hand-pointer"></i><span class="text-sm">Mitarbeiter hierher ziehen …</span></div>
+                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#0b57d0;color:#fbfaf8">AM</span><span class="font-medium text-ink-900">A. Meier · K. Schulz <span class="text-ink-400">+1</span></span></span><span class="text-ink-400 text-xs">06:00–14:00 · Nordpark <strong style="color:#16a34a">3/3</strong></span></div>
+                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#dadfe6;color:#5c6678">KS</span><span class="font-medium text-ink-900">K. Schulz</span></span><span class="text-ink-400 text-xs">14:00–22:00 · St. Anna <strong style="color:#f59e0b">1/2</strong></span></div>
+                    <div class="mock-row" style="border:2px dashed #dadfe6; color:#8b94a4; justify-content:flex-start; gap:8px;"><i class="fas fa-hand-pointer"></i><span class="text-sm">Einsatz öffnen → Mitarbeiter auswählen …</span></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Feature 2: Konflikt-Checks -->
+<!-- 2 · Die Schicht im Detail -->
 <section class="py-16 md:py-24 hairline-t bg-ink-50/50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div class="reveal md:order-1 order-2">
+                <div class="mock-card">
+                    <p class="mock-label">Einsatz · Bürokomplex Nordpark</p>
+                    <div class="mock-row" style="background:#f6f7f9"><span class="text-sm text-ink-700">Do · 06:00–14:00 · Objektschutz</span><span class="mock-badge" style="background:#eceef2;color:#5c6678">Soll 2 · Ist 1</span></div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="mock-chip" style="background:#eceef2;color:#5c6678"><i class="fas fa-user-shield"></i> § 34a</span>
+                        <span class="mock-chip" style="background:#eff6ff;color:#2563eb;font-weight:700">♂ 1</span>
+                        <span class="mock-chip" style="background:#fdf2f8;color:#db2777;font-weight:700">♀ 1</span>
+                        <span class="mock-chip" style="background:#eceef2;color:#5c6678"><i class="fas fa-check"></i> Funkruf</span>
+                    </div>
+                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#0b57d0;color:#fbfaf8">AM</span><span class="font-medium text-ink-900">A. Meier <span class="mock-chip" style="background:#fef3c7;color:#92400e">★ Stamm-Team</span></span></span><span class="text-ink-400 text-xs">Schlüssel beim Empfang</span></div>
+                    <div class="mock-row"><span class="text-sm text-ink-700"><i class="fas fa-file-alt mr-1" style="color:#0b57d0"></i>Aufgabe für das ganze Team…</span><span class="mock-badge" style="background:#ecf3fe;color:#0842a0">Für alle</span></div>
+                </div>
+            </div>
+            <div class="reveal md:order-2 order-1">
+                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Die Schicht im Detail</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Ein Klick auf den Einsatz — alles da.</h2>
+                <p class="text-ink-500 mb-6">Das Schicht-Fenster zeigt, was der Auftrag verlangt und wer passt — inklusive Soll-Zähler, Team-Aufgaben und dem Stamm-Team des Kunden ganz oben im Pool.</p>
+                <ul class="space-y-3">
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Anforderungen aus dem Auftrag:</strong> Positionen mit Anzahl, Funktion, Geschlecht, Qualifikation und Kleidung — als Tabelle am Einsatz</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Soll/Ist-Zähler und Geschlechts-Deckung:</strong> „1/2 Mitarbeiter“ und ♂/♀-Abdeckung laufen beim Zuweisen mit</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Aufgabe pro Mitarbeiter oder „für alle“:</strong> Team-Notizen landen direkt in der App — mit Autogrow-Feld</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Ort &amp; Treffpunkt mit Karte:</strong> ein Klick öffnet den Einsatzort in Google Maps</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Stamm-Team-Favoriten:</strong> bevorzugte Mitarbeiter des Kunden stehen markiert ganz oben im Pool</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Änderungs-Hinweis:</strong> hat sich der Auftrag seit der Besetzung geändert, zeigt die Schicht den aktuellen Stand zum Vergleich</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Mobil voll bedienbar:</strong> Mitarbeiter-Suche im Fenster — auch auf dem Smartphone</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3 · Der Plan warnt -->
+<section class="py-16 md:py-24 hairline-t">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div class="reveal">
+                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Konflikte vorher sehen</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Der Plan warnt beim Zuweisen — nicht bei der Abrechnung.</h2>
+                <p class="text-ink-500 mb-6">Jede Zuweisung wird sofort gegen Stammdaten, Kalender und Arbeitsrecht geprüft. Blocker erscheinen rot, reine Hinweise blau — und wer alle Anforderungen erfüllt, rückt automatisch nach oben.</p>
+                <ul class="space-y-3">
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Abwesenheiten:</strong> Urlaub und Krank liegen direkt auf der Planzeile — Doppelbelegungen inklusive</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>ArbZG-Wächter:</strong> Ruhezeit unter dem Mindestwert (§ 5) und Tageshöchstarbeitszeit (§ 3) — Schwellen je Betrieb einstellbar</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Qualifikationsabgleich:</strong> §-34a-Unterrichtung, DFB-Module und Objekt-Anforderungen — pro fehlendem Nachweis markiert</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Geschlecht-Anforderung:</strong> verlangt das Objekt männlich/weiblich, prüft der Plan die Position</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Stadionsperre pro Schicht:</strong> Gesperrte fallen nur bei Stadion-/DFB-Einsätzen auf — nicht überall</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>AÜG-Kontrolle:</strong> Überlassungshöchstdauer als harter Stopp, bald ablaufend und Equal Pay als Hinweis</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Zwei Warnstufen:</strong> harte Konflikte rot, Info-Hinweise blau — passende Mitarbeiter zuerst</span></li>
+                </ul>
+            </div>
+            <div class="reveal">
                 <div class="mock-card">
                     <p class="mock-label">Warnungen beim Zuweisen</p>
                     <div class="mock-row"><span class="mock-chip" style="background:#fef3c7;color:#92400e"><i class="fas fa-calendar-alt"></i> Urlaub</span><span class="text-sm text-ink-700">K. Schulz — Do geplant, Urlaub ab Mi</span></div>
@@ -194,56 +245,11 @@
                     <div class="mock-row"><span class="mock-chip" style="background:#ecf3fe;color:#0842a0"><i class="fas fa-check"></i> Hinweis</span><span class="text-sm text-ink-700">Equal Pay abgleichen — Info, kein Stopp</span></div>
                 </div>
             </div>
-            <div class="reveal md:order-2 order-1">
-                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Konflikte vorher sehen</p>
-                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Der Plan warnt beim Zuweisen — nicht bei der Abrechnung.</h2>
-                <p class="text-ink-500 mb-6">Jede Zuweisung wird sofort geprüft. Blocker erscheinen rot, reine Hinweise blau — und Mitarbeiter, die alle Anforderungen erfüllen, rücken automatisch nach oben.</p>
-                <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Urlaub und Krankmeldungen liegen direkt auf der Planzeile</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">ArbZG-Wächter: Ruhezeit &lt; 11 h (§ 5) und Tageshöchstarbeitszeit (§ 3) — je Betrieb einstellbar</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Qualifikationsabgleich: §-34a-Unterrichtung, DFB-Module und Objekt-Anforderungen</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Stadionsperre pro Schicht — Gesperrte fallen nur bei Stadion-/DFB-Einsätzen auf</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">AÜG-Kontrolle: Überlassungshöchstdauer als harter Stopp, Equal Pay als Hinweis</span></li>
-                </ul>
-            </div>
         </div>
     </div>
 </section>
 
-<!-- Feature 3: Der Einsatz im Detail -->
-<section class="py-16 md:py-24 hairline-t">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div class="reveal">
-                <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Die Schicht im Detail</p>
-                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Ein Klick auf den Einsatz — alles da.</h2>
-                <p class="text-ink-500 mb-6">Das Schicht-Fenster zeigt, was der Auftrag verlangt und wer passt: Soll-Besetzung, Anforderungen, Team — und jede Zuweisung trägt ihre eigene Aufgabe.</p>
-                <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Soll-Besetzung und Anforderungen aus dem Auftrag: Menge, Qualifikationen, Kleidung</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Aufgaben und Notizen direkt an der Zuweisung — der Mitarbeiter sieht sie in der App</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Ort mit Karte-Button — der Einsatzort ist per Maps-Link erreichbar</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Mitarbeiter-Suche im Fenster — auf dem Smartphone genauso bedienbar</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Teamleitungs-Briefing als PDF: Besatzung, Geschlecht, Qualifikationen, Hinweise</span></li>
-                </ul>
-            </div>
-            <div class="reveal">
-                <div class="mock-card">
-                    <p class="mock-label">Einsatz · Bürokomplex Nordpark</p>
-                    <div class="mock-row" style="background:#f6f7f9"><span class="text-sm text-ink-700">Do · 06:00–14:00 · Objektschutz</span><span class="mock-badge" style="background:#eceef2;color:#5c6678">Soll 2 · Ist 1</span></div>
-                    <div class="flex flex-wrap gap-2 mb-3">
-                        <span class="mock-chip" style="background:#eceef2;color:#5c6678"><i class="fas fa-user-shield"></i> § 34a Unterrichtung</span>
-                        <span class="mock-chip" style="background:#eceef2;color:#5c6678"><i class="fas fa-check"></i> Dienstkleidung</span>
-                        <span class="mock-chip" style="background:#eceef2;color:#5c6678"><i class="fas fa-check"></i> Funkruf</span>
-                    </div>
-                    <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#0b57d0;color:#fbfaf8">AM</span><span class="font-medium text-ink-900">A. Meier</span></span><span class="text-ink-400 text-xs">Schlüssel beim Empfang</span></div>
-                    <div class="mock-row" style="border:2px dashed #dadfe6;color:#8b94a4;justify-content:flex-start;gap:8px"><i class="fas fa-hand-pointer"></i><span class="text-sm">Mitarbeiter suchen …</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Feature 4: Nachunternehmer -->
+<!-- 4 · Nachunternehmer -->
 <section class="py-16 md:py-24 hairline-t bg-ink-50/50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -252,46 +258,50 @@
                     <p class="mock-label">NU-Positionen · Objekt West</p>
                     <div class="mock-row"><span class="flex items-center gap-3"><i class="fas fa-hard-hat text-ink-500"></i><span class="font-medium text-ink-900">Secura GmbH · 3 Positionen</span></span><span class="mock-badge" style="background:#ecf3fe;color:#0842a0">NU-Portal</span></div>
                     <div class="mock-row"><span class="flex items-center gap-3"><span class="mock-ava" style="background:#7c3aed;color:#fbfaf8">NU</span><span class="font-medium text-ink-900">Gemeldet: 2/3 Personal</span></span><span class="mock-chip" style="background:#fef3c7;color:#92400e">1 offen</span></div>
+                    <div class="mock-row"><span class="text-sm text-ink-700"><i class="fas fa-check mr-1" style="color:#16a34a"></i>Anforderungen aus dem Auftrag übernommen</span><span class="text-ink-400 text-xs">♂ 2 · ♀ 1</span></div>
                     <p class="text-xs text-ink-400 mt-3"><i class="fas fa-file-export mr-1"></i>Zeitänderung 22:00 → 21:00 automatisch an den NU gemailt</p>
                 </div>
             </div>
             <div class="reveal md:order-2 order-1">
                 <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Nachunternehmer</p>
                 <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Externe Besatzung planen wie eigene Leute.</h2>
-                <p class="text-ink-500 mb-6">Sie planen Positionen mit Stückzahl — der Nachunternehmer meldet sein Personal selbst zurück. Besetzungsstand und Absagen laufen ohne Anruf ins Büro.</p>
+                <p class="text-ink-500 mb-6">Sie planen Positionen mit Stückzahl — Geschlecht und Qualifikationen aus dem Auftrag gehen mit. Der Nachunternehmer meldet sein Personal selbst zurück.</p>
                 <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Positionen mit Stückzahl statt Namen — der NU meldet sein Personal selbst im Portal</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Das NU-Portal zeigt seine Einsätze — Meldungen laufen direkt in den Plan zurück</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Zeitänderungen und Absagen gehen automatisch per E-Mail an den NU</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">NU-Mitarbeiterkarten live im Plan — Besetzungsstand ohne Rückfrage</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Positionen statt Namen:</strong> Anzahl, Funktion, Geschlecht und Qualifikation werden aus den Auftrags-Anforderungen übernommen</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>NU-Portal:</strong> der Nachunternehmer sieht seine Einsätze und meldet sein Personal selbst — inklusive Sicherheitsfeldern wie DFB-Pin oder Funkruf</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Status direkt an der Karte:</strong> „Warte auf Meldung“ oder „angenommen“ — der Besetzungsstand steht im Plan</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Automatische E-Mails:</strong> Zeitänderungen und Absagen gehen ohne Anruf an den NU</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>NU-Mitarbeiterkarten live im Team:</strong> gemeldetes Personal taucht mit Firmen-Tag und Positionsname auf</span></li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Feature 5: Freigabe, Protokoll & Schichtbörse -->
+<!-- 5 · Freigabe, Protokoll & Benachrichtigung -->
 <section class="py-16 md:py-24 hairline-t">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div class="reveal">
                 <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Freigabe &amp; Protokoll</p>
-                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Die Woche ist fertig, wenn sie belegt ist.</h2>
-                <p class="text-ink-500 mb-6">Ein Klick sperrt die Woche — nachvollziehbar, wer wann geplant hat. Und bleibt ein Platz offen, schreibt die Schichtbörse ihn intern aus.</p>
+                <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Die Woche ist fertig, wenn sie belegt ist — nachweisbar.</h2>
+                <p class="text-ink-500 mb-6">Ein Klick sperrt die Woche — mit Zeitstempel, wer wann geplant hat. Jede spätere Änderung läuft nachvollziehbar weiter, nichts geht still verloren.</p>
                 <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Ganze Woche per Klick als geplant markieren — Planungszeitstempel zeigt wer und wann</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">„Plan aktualisieren“ statt neu planen — Änderungen laufen nachvollziehbar mit</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Storno-Schichten bleiben als Tombstone sichtbar — mit Grund im Bestelleingang-Log</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Beendete Schichten ohne Planung per Klick nachträglich bestätigen</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Schichtbörse: freie Plätze intern ausschreiben — nur geeignete Mitarbeiter sehen sie</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Das Team wird automatisch benachrichtigt — Push und App bei Planung, Zeitänderung, Absage</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>„Woche planen“ pro Klick:</strong> alle besetzten Einsätze auf „Geplant“ — respektiert die aktiven Filter</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>„Woche bestätigen“:</strong> geplante und schon gelaufene Schichten abschließen — mit Warnung bei Unterbesetzung</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Planungszeitstempel:</strong> wer hat wann geplant — sichtbar an jedem Einsatz</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>„Plan aktualisieren“ statt neu planen:</strong> geänderte Zeiten oder Besatzung laufen als Update nach</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>„Plan aufheben“ mit Audit-Spur:</strong> zurückgezogene Pläne sind als solche markiert — nicht verwechselbar mit Entwürfen</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Storno-Tombstones:</strong> aus dem Bestelleingang entfernte Schichten bleiben gesperrt sichtbar — reaktivierbar, Besatzung bleibt erhalten</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Team benachrichtigt:</strong> Push und App-Nachricht bei Planung, Zeitänderung und Absage — Mitarbeiter sehen die Woche live</span></li>
                 </ul>
             </div>
             <div class="reveal">
                 <div class="mock-card">
                     <p class="mock-label">Freigabe</p>
                     <div class="mock-row" style="background:#f6f7f9"><span class="text-sm text-ink-700">KW 47 — 38 Einsätze geplant</span><span class="mock-chip" style="background:#dcfce7;color:#166534"><i class="fas fa-check"></i> freigegeben</span></div>
-                    <div class="mock-row"><span class="flex items-center gap-3"><i class="fas fa-users text-ink-500"></i><span class="font-medium text-ink-900">Schichtbörse · Stadion Sa</span></span><span class="mock-badge" style="background:#fee2e2;color:#991b1b">1 offen</span></div>
+                    <div class="mock-row"><span class="text-sm text-ink-700"><i class="fas fa-file-alt mr-1" style="color:#f59e0b"></i>Plan aktualisiert: Do-Frühschicht 06:30 statt 06:00</span><span class="mock-badge" style="background:#ecf3fe;color:#0842a0">Update</span></div>
+                    <div class="mock-row" style="opacity:.65"><span class="text-sm text-ink-500"><i class="fas fa-lock mr-1"></i>Sa-Stadion — vom Bestelleingang entfernt</span><span class="mock-badge" style="background:#eceef2;color:#5c6678">Storno</span></div>
                     <p class="text-xs text-ink-400 mt-3">Planung abgeschlossen von S. Berger · 11.11., 16:42</p>
                 </div>
             </div>
@@ -299,7 +309,7 @@
     </div>
 </section>
 
-<!-- Feature 6: Monatsabschluss -->
+<!-- 6 · Monatsabschluss -->
 <section class="py-16 md:py-24 hairline-t bg-ink-50/50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -316,7 +326,7 @@
                         <div class="flex-1 rounded-t" style="height:90%;background:#0b57d0"></div>
                     </div>
                     <div class="flex gap-4 text-xs text-ink-400 mb-3"><span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:#0b57d0"></span>Intern</span><span><span class="inline-block w-2 h-2 rounded-full mr-1" style="background:#8b5cf6"></span>NU</span></div>
-                    <div class="mock-row"><span class="text-sm text-ink-700">Zeit-Freigabe · 41/43 Mitarbeiter</span><span class="mock-chip" style="background:#dcfce7;color:#166534"><i class="fas fa-check"></i> freigegeben</span></div>
+                    <div class="mock-row"><span class="text-sm text-ink-700">A. Meier — Soll 168 h · Ist 171 h · Abr. 170 h</span><span class="mock-chip" style="background:#dcfce7;color:#166534"><i class="fas fa-check"></i> freigegeben</span></div>
                     <div class="mock-row"><span class="text-sm text-ink-700">Kunden-Freigabe · Nordpark</span><span class="mock-chip" style="background:#fef3c7;color:#92400e">ausstehend</span></div>
                 </div>
             </div>
@@ -325,18 +335,36 @@
                 <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Der Plan wird zur Abrechnung — ohne Neueingabe.</h2>
                 <p class="text-ink-500 mb-6">Dieselbe Datenquelle wie Bestellung und Controlling: Soll aus dem Auftrag, Ist aus der App. Der Monatsabschluss sitzt direkt im Planungsmodul.</p>
                 <ul class="space-y-3">
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Zeit-Freigabe und Kunden-Freigabe direkt aus der Monatsübersicht — pro Mitarbeiter oder gesammelt</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Analytics: interne vs. NU-Stunden je Tag als Kurve — Abweichungen sofort sichtbar</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">PDF-Export im eigenen Dokument-Design — mit Logo und Briefkopf</span></li>
-                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700">Soll aus dem Auftrag, Ist aus der App — keine Excel-Brücke dazwischen</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Soll · MA-Ist · Abgerechnet je Zeile:</strong> Planstunden, App-Zeiten und die kundenbezahlten Stunden inklusive Pause — nebeneinander</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Zeit-Freigabe und Kunden-Freigabe:</strong> pro Mitarbeiter oder gesammelt — auch Abwesenheiten bekommen ihre Freigabe</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Analytics-Kurve:</strong> interne vs. NU-Stunden je Tag — Abweichungen sofort sichtbar</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Stundennachweis-PDFs im eigenen Design:</strong> Logo und Farben aus dem Dokument-Design — direkt an die Mitarbeiter versandt</span></li>
+                    <li class="pd-check"><i class="fas fa-check"></i><span class="text-sm text-ink-700"><strong>Excel-Export:</strong> die geprüften Zahlen als Tabelle weitergeben</span></li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-<!-- VIDEO-PLATZHALTER #2 (optional): Feature-Walkthrough längerer Form.
-     Gleiches Markup wie oben — .pd-video skaliert jedes eingebettete Video auf 16:9. -->
+<!-- 7 · Und noch mehr -->
+<section class="py-16 md:py-24 hairline-t">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-14 reveal">
+            <p class="eyebrow uppercase text-[11px] font-semibold text-ink-400 mb-4">Details, die zählen</p>
+            <h2 class="display-h text-3xl md:text-4xl text-primary-600 mb-5">Kleinigkeiten, die den Plan alltagstauglich machen.</h2>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 reveal">
+            <div class="xl-card"><i class="fas fa-file-alt"></i><h3>Briefing-PDF pro Schicht</h3><p>Teamleitung bekommt Besatzung, Geschlecht, Qualifikationen und Hinweise als PDF — ein Klick im Einsatz-Fenster.</p></div>
+            <div class="xl-card"><i class="fas fa-users"></i><h3>Aktive-Mitarbeiter-Panel</h3><p>Wer ist gerade im Einsatz, seit wann, mit welcher Pause — als Live-Übersicht neben dem Plan.</p></div>
+            <div class="xl-card"><i class="fas fa-comment-dots"></i><h3>Direkt aus der Benachrichtigung</h3><p>Ein Klick auf die Meldung öffnet genau den betroffenen Einsatz — kein Suchen im Plan.</p></div>
+            <div class="xl-card"><i class="fas fa-lock"></i><h3>Geschützte Besetzung</h3><p>Gebuchte Schichten lassen sich nicht über die Bestellung aus dem Plan reißen — Löschversuche werden mit Begründung blockiert.</p></div>
+            <div class="xl-card"><i class="fas fa-users"></i><h3>Bereichsbegrenzte Planung</h3><p>Bereichsleiter sehen und planen nur ihre eigenen Bereiche — der Rest bleibt unsichtbar.</p></div>
+            <div class="xl-card"><i class="fas fa-mobile-alt"></i><h3>Stabiles Arbeiten am Telefon</h3><p>Suchmodus, horizontales Blättern mit Pfeilen und klare Zähler — die Woche lässt sich auch vom Smartphone planen.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- VIDEO-PLATZHALTER #2 (optional): Feature-Walkthrough längerer Form. -->
 <section class="py-16 md:py-20 hairline-t">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="pd-video">
