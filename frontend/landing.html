@@ -959,7 +959,12 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 // sofort sichtbar machen, ohne auf den Observer zu warten.
 try {
     if (location.hash) {
-        document.querySelectorAll(location.hash + ' .reveal').forEach(el => el.classList.add('visible'));
+        const t = document.querySelector(location.hash);
+        if (t) {
+            t.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+            const host = t.closest('.reveal');
+            if (host) host.classList.add('visible');
+        }
     }
 } catch (e) { /* ungültiger Hash-Selector — ignorieren */ }
 
