@@ -127,7 +127,7 @@ class WachbuchPdf
     }
 
     /** Default pdf_template settings (Dokument-Design) — same source as the Auftragsbestätigung. */
-    private static function pdfSettings(): array
+    public static function pdfSettings(): array
     {
         if (!\Illuminate\Support\Facades\Schema::connection('tenant')->hasTable('pdf_templates')) return [];
         $t = Qm::t('pdf_templates')->where('is_default', 1)->first()
@@ -144,10 +144,10 @@ class WachbuchPdf
     }
 
     /** Same field whitelist as PortalQmController::kundenDetails. */
-    private static function kundenDetails(string $art, array $d): array
+    public static function kundenDetails(string $art, array $d): array
     {
         return match ($art) {
-            'besucher'   => array_intersect_key($d, array_flip(['name', 'firma', 'ziel', 'angemeldet', 'gegangen'])),
+            'besucher'   => array_intersect_key($d, array_flip(['name', 'firma', 'ziel', 'angemeldet', 'gegangen', 'vorgang'])),
             'lieferung'  => array_intersect_key($d, array_flip(['firma', 'zweck'])),
             'schluessel' => array_intersect_key($d, array_flip(['schluessel', 'aktion'])),
             'vorkommnis', 'alarm' => array_intersect_key($d, array_flip(['massnahmen', 'benachrichtigt'])),

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Services\Qm\DienstanweisungService;
 use App\Services\Qm\WachbuchPdf;
 use App\Services\Qm\WachbuchService;
+use App\Services\Qm\WachbuchTagesbericht;
+use App\Services\Qm\WachbuchTagesberichtPdf;
 use App\Support\Qm\Qm;
 use App\Support\Qm\QmRechte;
 use Carbon\Carbon;
@@ -112,7 +114,49 @@ class WachbuchblattController extends Controller
     {
         if ($e = $this->nichtBereit() ?? $this->objektOderFehler($request->user(), $objId)) return $e;
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $datum)) return response()->json(['error' => 'Ungültiges Datum'], 422);
+        if (WachbuchTagesbericht::aktivFuerTag(Qm::objektEinstellung($objId), $datum)) {
+            return WachbuchTagesberichtPdf::download($objId, $datum, false, WachbuchTagesbericht::letzter($objId, $datum));
+        }
         return WachbuchPdf::download($objId, $datum, false);
+    }
+
+    /** GET /api/qm/wachbuch/objekte/{objId}/tag/{datum}/bericht */
+    public function bericht(Request $request, string $objId, string $datum)
+    {
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($request->user(), $objId)) return $e;
+        try {
+            $daten = WachbuchTagesbericht::entwurf($objId, $datum);
+            $last = WachbuchTagesbericht::letzter($objId, $datum);
+            return response()->json([
+                'entwurf' => $daten,
+                'freigegeben' => $last ? [
+                    'version' => $last->version, 'am' => $last->freigegeben_am,
+                    'pruefsumme' => $last->pruefsumme, 'daten' => WachbuchTagesbericht::snapshot($last),
+                ] : null,
+                'darf_freigeben' => QmRechte::darf($request->user(), 'wachbuch_gegenzeichnen'),
+            ]);
+        } catch (\InvalidArgumentException $ex) {
+            return response()->json(['error' => $ex->getMessage()], 422);
+        } catch (\DomainException $ex) {
+            return response()->json(['error' => $ex->getMessage()], 409);
+        }
+    }
+
+    /** POST /api/qm/wachbuch/objekte/{objId}/tag/{datum}/bericht/freigeben */
+    public function berichtFreigeben(Request $request, string $objId, string $datum)
+    {
+        $u = $request->user();
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($u, $objId) ?? $this->rechtOderFehler($u, 'wachbuch_gegenzeichnen')) return $e;
+        [$d, $err] = Qm::pruefe($request->all(), ['ausnahme' => 'nullable|string|max:2000']);
+        if ($err) return Qm::fehler($err);
+        try {
+            $row = WachbuchTagesbericht::freigeben($objId, $datum, $u, $d['ausnahme'] ?? null);
+            return response()->json(['success' => true, 'version' => $row->version, 'pruefsumme' => $row->pruefsumme]);
+        } catch (\InvalidArgumentException $ex) {
+            return response()->json(['error' => $ex->getMessage()], 422);
+        } catch (\DomainException $ex) {
+            return response()->json(['error' => $ex->getMessage()], 409);
+        }
     }
 
     /** POST /api/qm/wachbuch/eintraege {obj_id, datum, art, text, …} — office entry or correction. */
@@ -139,9 +183,15 @@ class WachbuchblattController extends Controller
             $ref = Qm::t('qm_wb_eintraege')->find((int) $d['ref_id']);
             if (!$ref || $ref->obj_id !== $objId || $ref->art === 'berichtigung') return response()->json(['error' => 'Eintrag nicht gefunden'], 404);
             $blatt = Qm::t('qm_wb_blaetter')->find($ref->blatt_id);
+            if ($blatt && $blatt->gegengezeichnet_am) {
+                $datum = substr((string) $blatt->datum, 0, 10);
+                $blatt = WachbuchService::bueroBlatt($objId, $datum);
+            }
         }
         $blatt = $blatt ?: WachbuchService::bueroBlatt($objId, $datum);
         if ($blatt->gegengezeichnet_am) return response()->json(['error' => 'Das Blatt ist gegengezeichnet und eingefroren.'], 409);
+        [$d, $vorgangError] = WachbuchService::pruefeObjektEintrag($blatt, $d);
+        if ($vorgangError) return Qm::fehler($vorgangError);
         try {
             $row = WachbuchService::append($blatt, $d, ['quelle' => 'buero', 'user_id' => $u->id, 'erfasst_von' => Qm::userName($u)]);
         } catch (\DomainException $e) {

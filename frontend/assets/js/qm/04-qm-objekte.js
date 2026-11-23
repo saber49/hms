@@ -86,6 +86,14 @@ async function qmObjDetail(objId) {
                         <label class="crm-switch-row"><md-checkbox id="qo_foto" ${cfg.fotopflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Fotopflicht bei Vorkommnissen</label>
                         <label class="crm-switch-row"><md-checkbox id="qo_kpdf" ${cfg.kunde_pdf ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Kundenportal: ${qmE(qmLabel())} als PDF herunterladen</label>
                         <div class="crm-sub">Der Kunde sieht im Portal einen „PDF herunterladen"-Button je Tag — mit derselben gefilterten Kundenfassung wie seine Online-Ansicht.</div>
+                        <div class="crm-sec">Tagesbericht · objektbezogene Nachweise</div>
+                        <label class="crm-switch-row"><md-checkbox id="qo_bericht" ${cfg.bericht_pflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Tagesbericht nach Prüfung freigeben</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_24h" ${cfg.durchgehend_bewacht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Bewachung rund um die Uhr vereinbart (06:00–06:00)</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_ausweis" ${cfg.besucher_ausweis_pflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Ausweiskontrolle bei Besuchern verpflichtend</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_freigabe" ${cfg.lieferung_freigabe_pflicht ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Freigabe für Lieferungen verpflichtend</label>
+                        <label class="crm-switch-row"><md-checkbox id="qo_uebergabe" ${cfg.uebergabe_checkliste ? 'checked' : ''} ${darfCfg ? '' : 'disabled'}></md-checkbox> Übernahme-Checkliste bei Schichtwechsel</label>
+                        <md-outlined-text-field class="crm-fld" label="Besuchszeit endet (HH:MM, optional)" id="qo_besuch_ende" value="${qmE(cfg.besuchszeit_ende || '')}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
+                        <div class="crm-sub">Aussagen zur lückenlosen Besetzung oder zum Schlüsselbestand nur nach Prüfung der tatsächlichen Daten.</div>
                         <div class="crm-sub">App und Terminal verlangen das Foto bereits beim Speichern; im Büro bleibt ein fehlendes Pflichtfoto rot markiert.</div>
                         <md-outlined-text-field class="crm-fld" label="GPS-Grenze für Fotos (m)" type="number" min="20" max="2000" step="10" id="qo_gps" value="${qmE(cfg.gps_grenze_m || 150)}" ${darfCfg ? '' : 'disabled'}></md-outlined-text-field>
                         <div class="crm-sub">Fotos außerhalb dieser Entfernung zum Einsatz- bzw. Objektort werden als „nicht am Objekt“ markiert.</div>
@@ -96,13 +104,55 @@ async function qmObjDetail(objId) {
                         <div class="crm-sub">Wird der Wachperson im Dienst angezeigt (App und Terminal).</div>
                         ${darfCfg ? `<div class="crm-form-actions"><md-filled-button onclick="qmObjCfgSpeichern('${qmE(objId)}')"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button></div>` : '<div class="crm-muted">Nur der QMB ändert diese Einstellung.</div>'}
                     </div></div>
+                <div class="crm-card qm-mt"><div class="crm-card-title">${qmIcon('key')} Schlüsselregister</div>
+                    <div id="qmKeys" data-obj="${qmE(objId)}" class="crm-pad">${qmLoading()}</div></div>
             </div>
         </div>`;
+    qmKeysLoad(objId);
+}
+
+async function qmKeysLoad(objId) {
+    const r = await qmGet(QM_API + '/objekte/' + encodeURIComponent(objId) + '/schluessel');
+    const box = document.getElementById('qmKeys');
+    if (!box || box.dataset.obj !== objId) return;
+    if (!r.ok) { box.innerHTML = qmFehlerBox(r, `qmKeysLoad('${qmE(objId)}')`); return; }
+    const keys = r.data.schluessel || [];
+    box.innerHTML = `<div class="crm-sub">Nur physisch geprüfte, registrierte Schlüssel dürfen als Bestand im Tagesbericht gelten.</div>
+        ${keys.length ? `<table class="crm-proto"><tbody>${keys.map(k => `<tr><td><strong>${qmE(k.kennung)}</strong> · ${qmE(k.bezeichnung)}</td>
+            <td>${k.bestand_geprueft_am ? qmBadge('geprüft ' + qmDT(k.bestand_geprueft_am), 'ok') : qmBadge('Bestand nicht geprüft', 'warn')}</td>
+            <td>${qmCan('objekt_einstellungen') && !k.bestand_geprueft_am ? `<md-text-button onclick="qmKeyPruefen('${qmE(objId)}',${k.id})">Physisch geprüft</md-text-button>` : ''}</td></tr>`).join('')}</tbody></table>` : '<div class="crm-muted">Noch keine Schlüssel registriert. Kein Bestand kann als vollständig bestätigt werden.</div>'}
+        ${qmCan('objekt_einstellungen') ? `<div class="crm-form-actions">
+            <md-outlined-text-field label="Kennung" id="qmKeyId"></md-outlined-text-field>
+            <md-outlined-text-field label="Bezeichnung" id="qmKeyName"></md-outlined-text-field>
+            <md-filled-tonal-button onclick="qmKeyAnlegen('${qmE(objId)}')">Registrieren</md-filled-tonal-button>
+        </div>` : ''}`;
+}
+
+async function qmKeyAnlegen(objId) {
+    const r = await qmReq('POST', QM_API + '/objekte/' + encodeURIComponent(objId) + '/schluessel', {
+        kennung: qmV('qmKeyId'), bezeichnung: qmV('qmKeyName'),
+    });
+    if (qmFehler(r)) return;
+    showToast('Schlüssel registriert. Physische Bestandsprüfung noch offen.');
+    qmKeysLoad(objId);
+}
+
+async function qmKeyPruefen(objId, id) {
+    if (!(await mdConfirm('Schlüssel physisch vorhanden und persönlich geprüft? Diese Bestätigung wird protokolliert.', {
+        title: 'Bestand bestätigen', confirmLabel: 'Bestätigen',
+    }))) return;
+    const r = await qmReq('POST', QM_API + '/objekte/' + encodeURIComponent(objId) + '/schluessel/' + id + '/bestand', {});
+    if (qmFehler(r)) return;
+    showToast('Bestand protokolliert');
+    qmKeysLoad(objId);
 }
 
 async function qmObjCfgSpeichern(objId) {
     const r = await qmReq('PUT', QM_API + '/objekte/' + encodeURIComponent(objId) + '/einstellung', {
         wachbuch_aktiv: qmV('qo_wb'), fotopflicht: qmV('qo_foto'), kunde_pdf: qmV('qo_kpdf'), gps_grenze_m: +qmV('qo_gps') || 150,
+        bericht_pflicht: qmV('qo_bericht'), durchgehend_bewacht: qmV('qo_24h'), besucher_ausweis_pflicht: qmV('qo_ausweis'),
+        lieferung_freigabe_pflicht: qmV('qo_freigabe'), uebergabe_checkliste: qmV('qo_uebergabe'),
+        besuchszeit_ende: qmV('qo_besuch_ende') || null,
         objektleiter_id: qmV('qo_ol') ? +qmV('qo_ol') : null, bericht_empfaenger: qmV('qo_mail') || null,
         notfallkontakte: qmV('qo_notfall') || null,
     });
