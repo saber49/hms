@@ -104,7 +104,7 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/dienstanweisungen */
     public function dienstanweisungen(Request $request)
     {
-        if (!$this->qmAktiv()) return response()->json(['dienstanweisungen' => []]);
+        if (!$this->portalAktiv('portal_dienstanweisungen')) return response()->json(['dienstanweisungen' => []]);
         $z = $request->attributes->get('kp_zugang');
         $das = Qm::t('qm_dienstanweisungen as d')->join('objekte as o', 'o.obj_id', '=', 'd.obj_id')
             ->whereIn('d.obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])->where('d.status', 'freigegeben')
@@ -149,7 +149,7 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/reklamationen */
     public function reklamationen(Request $request)
     {
-        if (!$this->qmAktiv()) return response()->json(['reklamationen' => []]);
+        if (!$this->portalAktiv('portal_reklamationen')) return response()->json(['reklamationen' => []]);
         $rows = Qm::t('qm_reklamationen')->where('kunde_id', $request->attributes->get('kunde_id'))
             ->whereIn('obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])
             ->orderByDesc('eingang_am')->limit(300)->get();
@@ -160,7 +160,7 @@ class PortalQmController extends Controller
     /** POST /api/kunden-portal/reklamationen {obj_id, text} */
     public function reklamationMelden(Request $request)
     {
-        if (!$this->qmAktiv()) return response()->json(['error' => 'Nicht verfügbar'], 409);
+        if (!$this->portalAktiv('portal_reklamationen')) return response()->json(['error' => 'Nicht verfügbar'], 409);
         $objId = (string) $request->input('obj_id');
         if (!in_array($objId, $request->attributes->get('kp_objekte') ?: [], true)) return response()->json(['error' => 'Objekt nicht gefunden'], 404);
         [$d, $err] = Qm::pruefe($request->all(), ['obj_id' => 'required|string', 'text' => 'required|string|min:5|max:5000']);
@@ -172,7 +172,7 @@ class PortalQmController extends Controller
     /** GET /api/kunden-portal/massnahmen — only those released for the portal, without cause and names. */
     public function massnahmen(Request $request)
     {
-        if (!$this->qmAktiv()) return response()->json(['massnahmen' => []]);
+        if (!$this->portalAktiv('portal_reklamationen')) return response()->json(['massnahmen' => []]);
         $rows = Qm::t('qm_massnahmen as m')->join('objekte as o', 'o.obj_id', '=', 'm.obj_id')
             ->whereIn('m.obj_id', $request->attributes->get('kp_objekte') ?: ['__none__'])->where('m.im_kundenportal', 1)
             ->orderByDesc('m.created_at')->limit(300)->get(['m.id', 'm.nr', 'm.titel', 'm.status', 'm.frist', 'm.erledigt_am', 'm.obj_id', 'o.objektname']);
@@ -186,16 +186,16 @@ class PortalQmController extends Controller
 
     private function da(Request $request, int $id): object
     {
-        $da = $this->qmAktiv() ? Qm::t('qm_dienstanweisungen')->find($id) : null;
+        $da = $this->portalAktiv('portal_dienstanweisungen') ? Qm::t('qm_dienstanweisungen')->find($id) : null;
         if (!$da || $da->status !== 'freigegeben' || substr((string) $da->gueltig_ab, 0, 10) > Qm::heute()
             || !in_array($da->obj_id, $request->attributes->get('kp_objekte') ?: [], true)) abort(404);
         return $da;
     }
 
-    /** Setting "Kundenportal zeigt Dienstanweisungen und Reklamationen" — enforced here, not only by hiding tabs. */
-    private function qmAktiv(): bool
+    /** Enforce each portal section on the server, including its direct PDF/action routes. */
+    private function portalAktiv(string $key): bool
     {
-        return Qm::ready() && Qm::boolSetting('portal_qm');
+        return Qm::ready() && Qm::boolSetting($key);
     }
 
     /** Details whitelist per Art (no ID-card checks or internal approvals). */

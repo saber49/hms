@@ -21,6 +21,9 @@ class Qm
         'modul_wachbuch'        => '1',
         'modul_qm'              => '1',     // Dienstanweisung must be confirmed before check-in
         'portal_qm'             => '1',     // Kundenportal shows Dienstanweisungen + Reklamationen
+        'portal_dienstanweisungen' => '1',
+        'portal_reklamationen'  => '1',
+        'portal_fotos'          => '1',
         'da_freigabe_pflicht'   => '1',     // Objektleiter drafts need QMB release
         'da_pruefung_monate'    => '12',
         'rek_bestaetigung_std'  => '24',    // Eingangsbestätigung within N hours
@@ -102,6 +105,10 @@ class Qm
             // portal_qm was part of modul_qm before it became its own switch:
             // an unset value keeps following it, so nothing changes silently.
             if (!array_key_exists('portal_qm', $rows)) $s['portal_qm'] = $s['modul_qm'];
+            // Preserve the previous combined choice until each section is configured separately.
+            foreach (['portal_dienstanweisungen', 'portal_reklamationen'] as $key) {
+                if (!array_key_exists($key, $rows)) $s[$key] = $s['portal_qm'];
+            }
             return $s;
         });
     }

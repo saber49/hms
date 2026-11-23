@@ -126,11 +126,11 @@
         Powered by <a href="https://clood-x.com" target="_blank" rel="noopener">clood-x.com</a>
     </footer>
 
-    <script src="assets/js/kunden_portal.js?v=20261118qmfix1"></script>
+    <script src="assets/js/kunden_portal.js?v=20261123portal1"></script>
     <!-- QM module sections (register in KP_TABS; order irrelevant, after the core) -->
     <script src="/worker/assets/js/qm-live.js?v=20261114md3g"></script>
     <script src="assets/js/kunden_portal/qm-konto.js?v=20261114md3g"></script>
-    <script src="assets/js/kunden_portal/qm-wachbuch.js?v=20261118wbpdf1"></script>
+    <script src="assets/js/kunden_portal/qm-wachbuch.js?v=20261123portal1"></script>
     <script src="assets/js/kunden_portal/qm-qualitaet.js?v=20261114md3g"></script>
 </body>
 </html>

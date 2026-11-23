@@ -12,6 +12,7 @@ const KP_REFRESH_MS = 60000;
 
 let kpTab = 'einsaetze';
 let kpObLabel = 'Wachbuch'; // tenant name of the shift log (/me objektbuch_label)
+let kpWbStart = '06:00';
 let kpFolder = null; // open Objekt folder (obj_id) in Wachbuch / Fotos
 let kpWeekStart = kpMonday(new Date());
 let kpFotoUrls = [];
@@ -93,7 +94,10 @@ async function kpInit() {
         document.title = 'Kundenportal — ' + (me.kunde?.kundenname || '');
         kpMe = me;
         if (me.objektbuch_label) kpObLabel = me.objektbuch_label;
-        document.querySelectorAll('.kp-tab[data-qm]').forEach(b => { b.hidden = !me.qm; });
+        kpWbStart = me.tag_beginn || '06:00';
+        if (me.wachbuch_tag) kpWbDatum = me.wachbuch_tag;
+        document.querySelectorAll('.kp-tab[data-qm]').forEach(b => { b.hidden = !me['portal_' + b.dataset.tab]; });
+        document.querySelector('.kp-tab[data-tab="fotos"]').hidden = me.portal_fotos === false;
         // Wachbuch switched off for the company (QM-Einstellungen) → no tab.
         document.querySelectorAll('.kp-tab[data-tab="wachbuch"]').forEach(b => { b.hidden = me.wachbuch === false; });
         const sel = document.getElementById('kpObjekt');
