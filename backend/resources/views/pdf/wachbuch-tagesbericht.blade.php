@@ -3,8 +3,8 @@
     $accent = $settings['accent_color'] ?? '#b45333';
     $font = $settings['font_family'] ?? 'DejaVu Sans, sans-serif';
     $fontSize = ['small' => '8px', 'medium' => '9px', 'large' => '10.5px'][$settings['font_size'] ?? 'medium'] ?? '9px';
-    $logoPos = in_array($settings['logo_position'] ?? 'right', ['left', 'center', 'right'], true)
-        ? $settings['logo_position'] : 'right';
+    $logoPos = $settings['logo_position'] ?? 'right';
+    if (!in_array($logoPos, ['left', 'center', 'right'], true)) $logoPos = 'right';
     $headerBorder = match($settings['header_style'] ?? '') {
         'underline-thin' => '1px solid ' . $primary,
         'double-line' => '3px double ' . $primary,
