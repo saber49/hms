@@ -42,7 +42,8 @@ class PortalQmController extends Controller
             && (!WachbuchTagesbericht::aktivFuerTag($c, $datum) || in_array($c->obj_id, $signiert, true))]);
         $blaetter = Qm::t('qm_wb_blaetter')->whereIn('obj_id', $aktiv)->where('datum', $datum)->pluck('id')->all();
         $namen = Qm::t('objekte')->whereIn('obj_id', $aktiv)->pluck('objektname', 'obj_id');
-        $eintraege = collect(WachbuchService::eintraege($blaetter))->whereIn('art', self::WB_ARTEN)->map(fn ($e) => [
+        $eintraege = collect(WachbuchService::eintraege($blaetter))->whereIn('obj_id', $aktiv)
+            ->whereIn('art', self::WB_ARTEN)->map(fn ($e) => [
             'id' => $e['id'], 'obj_id' => $e['obj_id'],
             'art' => $e['art'], 'art_label' => $e['art_label'], 'zeit' => $e['zeit'], 'ort' => $e['ort'], 'text' => $e['text'],
             'details' => $this->kundenDetails($e['art'], (array) $e['details']), 'wichtig' => $e['wichtig'],

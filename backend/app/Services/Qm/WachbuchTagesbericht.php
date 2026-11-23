@@ -127,12 +127,20 @@ class WachbuchTagesbericht
             else $besucher[] = [
                 'id' => $e['id'], 'zeit' => $e['zeit'], 'name' => $d['name'] ?? null, 'ziel' => $d['ziel'] ?? null,
                 'angemeldet' => $d['angemeldet'] ?? null, 'ausweis_geprueft' => $d['ausweis_geprueft'] ?? null,
-                'gegangen' => null,
+                'ausnahme_grund' => $d['ausnahme_grund'] ?? null,
+                'erfasst_am' => $e['erfasst_am'] ?? null, 'gegangen' => null,
             ];
         }
+        $besuchsEnde = $cfg->besuchszeit_ende
+            ? CarbonImmutable::parse($datum . ' ' . $cfg->besuchszeit_ende, 'Europe/Berlin') : null;
+        if ($besuchsEnde && $besuchsEnde->lte($start)) $besuchsEnde = $besuchsEnde->addDay();
         foreach ($besucher as &$b) {
             $b['gegangen'] = $abmeldungen[$b['id']] ?? null;
             if ($cfg->besucher_ausweis_pflicht && $b['ausweis_geprueft'] !== true) $issues[] = 'Ausweiskontrolle bei Besucher #' . $b['id'] . ' nicht dokumentiert.';
+            if ($besuchsEnde && CarbonImmutable::parse($b['erfasst_am'] ?: $b['zeit'])->gte($besuchsEnde)) {
+                $issues[] = 'Besucher #' . $b['id'] . ' nach Besuchszeit '
+                    . ($b['ausnahme_grund'] ? '(Ausnahme dokumentiert)' : '(Ausnahme nicht dokumentiert)') . '.';
+            }
             if (!$b['gegangen']) $issues[] = 'Abmeldung von Besucher #' . $b['id'] . ' fehlt.';
         }
         unset($b);
@@ -194,6 +202,7 @@ class WachbuchTagesbericht
             'firma' => $tenant->name ?? '', 'datum' => $datum, 'von' => $start->toIso8601String(),
             'bis' => $end->toIso8601String(), 'deckung' => $coverage,
             'durchgehend_bewacht' => (bool) $cfg->durchgehend_bewacht,
+            'besuchszeit_ende' => $cfg->besuchszeit_ende,
             'waechterkontrolle_aktiv' => (bool) $cfg->waechterkontrolle_aktiv,
             'besucher' => $besucher, 'lieferungen' => $lieferungen, 'schluessel' => $schluessel,
             'schluessel_gesamt' => count($schluessel),
@@ -234,7 +243,7 @@ class WachbuchTagesbericht
     public static function kundenSicht(array $d): array
     {
         $fields = ['obj_id', 'objektname', 'kundenname', 'adresse', 'firma', 'datum', 'von', 'bis',
-            'deckung', 'durchgehend_bewacht', 'waechterkontrolle_aktiv', 'besucher', 'schluessel_gesamt',
+            'deckung', 'durchgehend_bewacht', 'waechterkontrolle_aktiv', 'besucher', 'besuchszeit_ende', 'schluessel_gesamt',
             'schluessel_vorhanden', 'schluessel_vollstaendig', 'wachpersonen'];
         $out = array_intersect_key($d, array_flip($fields));
         if (Qm::boolSetting('portal_dienstanweisungen')) $out['dienstanweisung'] = $d['dienstanweisung'] ?? null;

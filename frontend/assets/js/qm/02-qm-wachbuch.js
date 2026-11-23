@@ -327,7 +327,6 @@ async function qmGegenzeichnen(id, datum) {
 /** Office entry; with refId = correction of that entry (append-only). */
 function qmEintragDialog(refId = null) {
     const ref = refId ? (qm.cache.tag?.eintraege || []).find(e => e.id === refId) : null;
-    const blaetter = qm.cache.tag?.blaetter || [];
     // Signed sheets stay immutable; office corrections create an amendment
     // sheet instead of modifying the signed chain.
     const wbTag = qm.opt?.wachbuch_tag || qmHeute();
@@ -338,18 +337,94 @@ function qmEintragDialog(refId = null) {
                 : `<md-outlined-select class="crm-fld" label="Art" id="qe_art">${qmSelectOptions(arten, 'notiz')}</md-outlined-select>
                    <md-outlined-text-field class="crm-fld" label="Datum" id="qe_datum" type="date" data-f="datum" max="${qmE(wbTag)}" value="${qmE(qm.wb.tag || wbTag)}"></md-outlined-text-field>
                    <md-outlined-text-field class="crm-fld" label="Ort" type="text" id="qe_ort" data-max="200"></md-outlined-text-field>`}
+            ${ref ? '' : '<div id="qe_details"></div>'}
             <md-outlined-text-field class="crm-fld" label="${ref ? 'Richtigstellung *' : 'Text *'}" type="textarea" id="qe_text" rows="4" maxlength="4000" data-f="text"></md-outlined-text-field>
         </div>`,
         `<md-outlined-button onclick="closeModal()">Abbrechen</md-outlined-button><md-filled-button id="qeSave" onclick="qmEintragSpeichern(${refId || 'null'})"><md-icon slot="icon">save</md-icon>Speichern</md-filled-button>`);
+    if (!ref) {
+        document.getElementById('qe_art')?.addEventListener('change', qmEintragArt);
+        qmEintragArt();
+    }
+}
+
+async function qmEintragArt() {
+    const art = qmV('qe_art');
+    const box = document.getElementById('qe_details');
+    if (!box) return;
+    const cfg = qm.cache.wbCfg || {};
+    const entries = qm.cache.tag?.eintraege || [];
+    const abgemeldet = new Set(entries.filter(e => e.art === 'besucher' && e.details?.vorgang === 'abmeldung').map(e => +e.details.anmeldung_id));
+    const offen = entries.filter(e => e.art === 'besucher' && e.details?.vorgang !== 'abmeldung' && !abgemeldet.has(+e.id));
+    const fields = {
+        besucher: `<md-outlined-select class="crm-fld" id="qe_b_vorgang" label="Besuchervorgang">
+                ${qmSelectOptions({ anmeldung: 'Anmelden', abmeldung: 'Abmelden' }, 'anmeldung')}</md-outlined-select>
+            <md-outlined-select class="crm-fld" id="qe_b_id" label="Anmeldung (nur bei Abmeldung)">
+                <md-select-option value=""><div slot="headline">Anmeldung auswählen</div></md-select-option>
+                ${offen.map(e => `<md-select-option value="${e.id}"><div slot="headline">#${e.id} · ${qmE(e.details?.name || e.text || '')}</div></md-select-option>`).join('')}
+            </md-outlined-select>
+            <md-outlined-text-field class="crm-fld" id="qe_b_name" label="Besuchername *"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" id="qe_b_ziel" label="Ziel / Ansprechpartner *"></md-outlined-text-field>
+            ${cfg.besuchszeit_ende ? `<div class="crm-sub">Besuchszeit bis ${qmE(cfg.besuchszeit_ende)} Uhr; späte Besuche brauchen eine Begründung.</div>` : ''}
+            <md-outlined-text-field class="crm-fld" id="qe_b_ausnahme" label="Ausnahme bei spätem Besuch"></md-outlined-text-field>
+            <md-checkbox id="qe_b_angemeldet" checked></md-checkbox> Besucher angemeldet
+            <md-checkbox id="qe_b_ausweis"></md-checkbox> Ausweis geprüft${cfg.besucher_ausweis_pflicht ? ' *' : ''}`,
+        lieferung: `<md-outlined-text-field class="crm-fld" id="qe_l_firma" label="Firma *"></md-outlined-text-field>
+            <md-outlined-text-field class="crm-fld" id="qe_l_zweck" label="Zweck"></md-outlined-text-field>
+            <md-outlined-select class="crm-fld" id="qe_l_freigabe" label="Freigabe durch">
+                ${qmSelectOptions({ ohne: 'Keine', objektleitung: 'Objektleitung', auftraggeber: 'Auftraggeber', haustechnik: 'Haustechnik', empfang: 'Empfang', liste_kunde: 'Kundenliste' }, 'ohne')}
+            </md-outlined-select>
+            <md-outlined-text-field class="crm-fld" id="qe_l_name" label="Freigebende Person${cfg.lieferung_freigabe_pflicht ? ' *' : ''}"></md-outlined-text-field>
+            <md-checkbox id="qe_l_ok"></md-checkbox> Freigabe eingeholt und dokumentiert${cfg.lieferung_freigabe_pflicht ? ' *' : ''}`,
+        schluessel: `<md-outlined-select class="crm-fld" id="qe_k_id" label="Schlüsselkennung *">
+                <md-select-option value=""><div slot="headline">Registrierten Schlüssel auswählen</div></md-select-option>
+            </md-outlined-select>
+            <md-outlined-select class="crm-fld" id="qe_k_aktion" label="Vorgang">
+                ${qmSelectOptions({ ausgabe: 'Ausgabe', ruecknahme: 'Rücknahme', bestand: 'Bestand (Notiz)' }, 'ausgabe')}
+            </md-outlined-select>
+            <md-outlined-text-field class="crm-fld" id="qe_k_an" label="An / von"></md-outlined-text-field>`,
+    };
+    box.innerHTML = fields[art] || '';
+    const text = document.getElementById('qe_text');
+    if (text) text.label = ['besucher', 'lieferung', 'schluessel'].includes(art) ? 'Bemerkung' : 'Text *';
+    if (art === 'besucher') {
+        const artSelect = document.getElementById('qe_b_vorgang');
+        const toggle = () => {
+            const checkout = qmV('qe_b_vorgang') === 'abmeldung';
+            ['qe_b_name', 'qe_b_ziel', 'qe_b_ausnahme', 'qe_b_angemeldet', 'qe_b_ausweis'].forEach(id => {
+                const field = document.getElementById(id);
+                if (field) field.disabled = checkout;
+            });
+            document.getElementById('qe_b_id').disabled = !checkout;
+        };
+        artSelect?.addEventListener('change', toggle);
+        toggle();
+    }
+    if (art === 'schluessel') {
+        const r = await qmGet(QM_API + '/objekte/' + encodeURIComponent(qm.wb.obj) + '/schluessel');
+        const select = document.getElementById('qe_k_id');
+        if (r.ok && select && qmV('qe_art') === 'schluessel') {
+            const keys = (r.data.schluessel || []).filter(k => k.aktiv);
+            if (!keys.length && !cfg.bericht_pflicht) {
+                select.outerHTML = '<md-outlined-text-field class="crm-fld" id="qe_k_id" label="Schlüsselkennung *"></md-outlined-text-field>';
+            } else {
+                select.innerHTML += keys.map(k => `<md-select-option value="${qmE(k.kennung)}"><div slot="headline">${qmE(k.kennung)} · ${qmE(k.bezeichnung)}</div></md-select-option>`).join('');
+                if (!keys.length) showToast('Zuerst im Objekt das Schlüsselregister einrichten.', 'error');
+            }
+        }
+    }
 }
 
 async function qmEintragSpeichern(refId) {
     const body = refId ? { art: 'berichtigung', ref_id: refId, text: qmV('qe_text'), obj_id: qm.wb.obj }
         : { art: qmV('qe_art'), text: qmV('qe_text'), ort: qmV('qe_ort'), datum: qmV('qe_datum'), obj_id: qm.wb.obj, details: {} };
-    if (['besucher', 'lieferung', 'schluessel'].includes(body.art)) {
-        // Office shortcut: the free text carries the details; required keys are filled from it.
-        body.details = { besucher: { name: body.text, ziel: body.text }, lieferung: { firma: body.text }, schluessel: { schluessel: body.text } }[body.art];
-    }
+    if (body.art === 'besucher') body.details = qmV('qe_b_vorgang') === 'abmeldung'
+        ? { vorgang: 'abmeldung', anmeldung_id: +qmV('qe_b_id') || null }
+        : { vorgang: 'anmeldung', name: qmV('qe_b_name'), ziel: qmV('qe_b_ziel'),
+            angemeldet: qmV('qe_b_angemeldet'), ausweis_geprueft: qmV('qe_b_ausweis'),
+            ausnahme_grund: qmV('qe_b_ausnahme') };
+    if (body.art === 'lieferung') body.details = { firma: qmV('qe_l_firma'), zweck: qmV('qe_l_zweck'),
+        freigabe_durch: qmV('qe_l_freigabe'), freigabe_name: qmV('qe_l_name'), freigabe_bestaetigt: qmV('qe_l_ok') };
+    if (body.art === 'schluessel') body.details = { schluessel: qmV('qe_k_id'), aktion: qmV('qe_k_aktion'), an: qmV('qe_k_an') };
     const btn = document.getElementById('qeSave'); if (btn) btn.disabled = true;
     const r = await qmReq('POST', QM_API + '/wachbuch/eintraege', body);
     if (btn) btn.disabled = false;
