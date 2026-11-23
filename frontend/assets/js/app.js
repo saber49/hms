@@ -2649,9 +2649,14 @@ function closeModal() {
 // ============================================
 function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Bestätigen', cancelText = 'Abbrechen', icon = 'warning', type = 'warning' }) {
     return new Promise(resolve => {
-        const overlay = document.createElement('div');
+        // The planner sits in an md-dialog (top layer); another z-index overlay
+        // cannot appear above it. A modal dialog joins the top layer instead.
+        const overlay = document.createElement('dialog');
+        overlay.className = 'system-confirm-dialog';
         Object.assign(overlay.style, {
-            position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+            position: 'fixed', inset: '0', width: '100vw', height: '100dvh',
+            maxWidth: 'none', maxHeight: 'none', margin: '0', padding: '16px', border: '0',
+            boxSizing: 'border-box',
             zIndex: '10000', background: 'rgba(15,23,42,0.55)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             opacity: '0', transition: 'opacity 0.2s ease', backdropFilter: 'blur(4px)'
@@ -2670,16 +2675,21 @@ function systemConfirm({ title = 'Bestätigung', message = '', confirmText = 'Be
             </div>
         `;
         document.body.appendChild(overlay);
+        overlay.showModal();
         requestAnimationFrame(() => {
             overlay.style.opacity = '1';
             overlay.firstElementChild.style.transform = 'scale(1)';
         });
+        let settled = false;
         const cleanup = (result) => {
+            if (settled) return;
+            settled = true;
             overlay.style.opacity = '0';
             overlay.firstElementChild.style.transform = 'scale(0.92)';
             setTimeout(() => overlay.remove(), 200);
             resolve(result);
         };
+        overlay.addEventListener('cancel', e => { e.preventDefault(); cleanup(false); });
         overlay.querySelector('[data-action="cancel"]').onclick = () => cleanup(false);
         overlay.querySelector('[data-action="ok"]').onclick = () => cleanup(true);
         overlay.addEventListener('click', e => { if (e.target === overlay) cleanup(false); });
