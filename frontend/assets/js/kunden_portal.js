@@ -58,6 +58,31 @@ function kpGoLogin() {
     window.location.replace(localStorage.getItem('kp_app_shell') === '1' ? '/worker/login.php' : 'kunden_login.php');
 }
 
+// Native WebViews fall back to their old page history after the app login
+// hands off to this remote portal. Keep Back inside the customer session so
+// it cannot expose the unrelated main-system login.php.
+function kpInstallAppBackGuard() {
+    if (localStorage.getItem('kp_app_shell') !== '1') return;
+    const guard = () => history.pushState({ kpPortalBack: true }, '', location.href);
+    guard();
+    window.addEventListener('popstate', () => {
+        if (kpLeaving) return;
+        guard();
+        if (document.getElementById('kpLightbox')?.classList.contains('open')) { kpCloseLightbox(); return; }
+        const dialog = document.getElementById('kpDlg');
+        if (dialog) { dialog.querySelector('#kpDlgNo')?.click(); return; }
+        if (kpActiveFolder()) { kpCloseFolder(); return; }
+        if (kpTab !== 'einsaetze') { kpSwitchTab('einsaetze'); return; }
+        // Android: same behavior as the worker feed. On iOS there is no
+        // hardware Back; a swipe cannot leave the portal for stale web pages.
+        try {
+            window.androidBridge?.postMessage(JSON.stringify({
+                callbackId: 'kpBack', pluginId: 'App', methodName: 'minimizeApp', options: {}
+            }));
+        } catch (e) { /* old bridge: stay in the portal */ }
+    });
+}
+
 async function kpFetch(path, asBlob = false) {
     const res = await fetch(KP_API + path, {
         headers: { 'Accept': asBlob ? 'image/*' : 'application/json', 'Authorization': 'Bearer ' + kpToken() }
@@ -378,4 +403,5 @@ function kpOpenLightbox(url, caption, fileName) {
 function kpCloseLightbox() { document.getElementById('kpLightbox').classList.remove('open'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') kpCloseLightbox(); });
 
+document.addEventListener('DOMContentLoaded', kpInstallAppBackGuard);
 document.addEventListener('DOMContentLoaded', kpInit);
