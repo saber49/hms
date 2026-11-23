@@ -32,7 +32,7 @@
 <title>{{ $label }} — {{ $objekt->objektname }} — {{ \Carbon\Carbon::parse($datum)->format('d.m.Y') }}</title>
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    @page { margin: 30px 0 105px 0; }
+    @page { margin: 30px 0 190px 0; }
     body { font-family: {{ $fontFamily }}; font-size: {{ $bodyFontSize }}; color: #1e293b; line-height: 1.4; }
     .page { padding: 26px 40px 0 40px; }
 
@@ -78,10 +78,9 @@
     .fotos .cap { font-size: 6.8px; color: #94a3b8; }
     .leer { color: #64748b; padding: 10px 0; }
 
-    /* Dompdf positions fixed elements relative to the content box. Keep both
-       footers in the reserved @page bottom margin, below the entry table. */
-    .footer-doc { position: fixed; left: 40px; right: 40px; bottom: -14px; font-size: 7px; color: #94a3b8; text-align: center; }
-    .footer-legal { position: fixed; left: 40px; right: 40px; bottom: -97px; padding-top: 4px; border-top: 4px solid #000; font-size: 6px !important; color: #000; line-height: 1.2; }
+    /* Leave enough room for the fixed legal footer on every printed page. */
+    .footer-doc { position: fixed; left: 40px; right: 40px; bottom: 88px; font-size: 7px; color: #94a3b8; text-align: center; }
+    .footer-legal { position: fixed; left: 40px; right: 40px; bottom: 8px; padding-top: 4px; border-top: 4px solid #000; font-size: 6px !important; color: #000; line-height: 1.2; }
     .footer-legal table, .footer-legal td, .footer-legal .footer-line { font-size: 6px !important; line-height: 1.2 !important; }
     .footer-legal-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     .footer-legal-col { vertical-align: top; padding: 0 12px; width: 33.33%; }
