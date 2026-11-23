@@ -2,6 +2,16 @@
     $primary = $settings['primary_color'] ?? '#172b42';
     $accent = $settings['accent_color'] ?? '#b45333';
     $font = $settings['font_family'] ?? 'DejaVu Sans, sans-serif';
+    $fontSize = ['small' => '8px', 'medium' => '9px', 'large' => '10.5px'][$settings['font_size'] ?? 'medium'] ?? '9px';
+    $logoPos = in_array($settings['logo_position'] ?? 'right', ['left', 'center', 'right'], true)
+        ? $settings['logo_position'] : 'right';
+    $headerBorder = match($settings['header_style'] ?? '') {
+        'underline-thin' => '1px solid ' . $primary,
+        'double-line' => '3px double ' . $primary,
+        'flat' => '0',
+        default => '3px solid ' . $primary,
+    };
+    $striped = ($settings['table_style'] ?? 'striped') === 'striped';
     $zeit = fn ($v) => $v ? \Carbon\Carbon::parse($v)->setTimezone('Europe/Berlin')->format('d.m.Y H:i') : '–';
     $uhr = fn ($v) => $v ? \Carbon\Carbon::parse($v)->setTimezone('Europe/Berlin')->format('H:i') : '–';
     $zahl = fn ($v) => $v === null ? '–' : ($v >= 0 ? '+' : '') . $v . ' Min.';
@@ -17,9 +27,11 @@
 <style>
     @page { margin: 32px 38px 190px 38px; }
     * { box-sizing: border-box; }
-    body { font-family: {{ $font }}; font-size: 9px; color: #263443; line-height: 1.4; }
-    .head { border-bottom: 3px solid {{ $primary }}; padding-bottom: 10px; margin-bottom: 15px; }
+    body { font-family: {{ $font }}; font-size: {{ $fontSize }}; color: #263443; line-height: 1.4; }
+    .head { border-bottom: {{ $headerBorder }}; padding-bottom: 10px; margin-bottom: 15px; }
     .logo { max-width: 105px; max-height: 48px; float: right; }
+    .logo.left { float: left; margin-right: 12px; }
+    .logo.center { display: block; float: none; margin: 0 auto 8px; }
     .firma { color: {{ $primary }}; font-size: 15px; font-weight: bold; }
     .muted { color: #64748b; font-size: 8px; }
     h1 { color: {{ $primary }}; font-size: 19px; margin: 5px 0; }
@@ -35,7 +47,7 @@
     table.list { width: 100%; border-collapse: collapse; margin: 4px 0 12px; }
     .list th { background: {{ $primary }}; color: #fff; font-weight: bold; padding: 5px; text-align: left; }
     .list td { border-bottom: 1px solid #e3e9ed; padding: 5px; vertical-align: top; }
-    .list tr:nth-child(even) td { background: #f7f9fa; }
+    @if($striped).list tr:nth-child(even) td { background: #f7f9fa; }@endif
     .warning { padding: 7px 9px; background: #fff6e8; border-left: 3px solid #d69542; margin: 6px 0; }
     .ok { color: #186a4a; font-weight: bold; }
     .bad { color: #a6402c; font-weight: bold; }
@@ -49,7 +61,7 @@
 </head>
 <body>
 <div class="head">
-    @if($logo)<img class="logo" src="{{ $logo }}" alt="">@endif
+    @if($logo)<img class="logo {{ $logoPos }}" src="{{ $logo }}" alt="">@endif
     <div class="firma">{{ $daten['firma'] }}</div>
     <div class="muted">{{ $label }} · Tagesbericht · {{ $no }}</div>
     <div class="clear"></div>
@@ -206,6 +218,18 @@
 <div class="footer">
     {{ $daten['firma'] }} · {{ $label }} · {{ $daten['objektname'] }} · {{ \Carbon\Carbon::parse($daten['datum'])->format('d.m.Y') }}
     @if($version) · v{{ $version->version }} · Daten-Prüfsumme <span class="checksum">{{ substr($version->pruefsumme, 0, 16) }}</span>@endif
+    <br>{{ trim($company['address'] . ', ' . $company['zip'] . ' ' . $company['city'], ', ') }}
+    @if($company['phone']) · Tel. {{ $company['phone'] }}@endif
+    @if($company['email']) · {{ $company['email'] }}@endif
+    @if($company['website']) · {{ $company['website'] }}@endif
+    @if($company['register'] || $company['ust_id'])
+        <br>@if($company['register'])Handelsregister {{ $company['register'] }}@endif
+        @if($company['ust_id']) · USt-ID {{ $company['ust_id'] }}@endif
+    @endif
+    @if($company['bank'] || $company['iban'])
+        <br>@if($company['bank']){{ $company['bank'] }}@endif
+        @if($company['iban']) · IBAN {{ $company['iban'] }}@endif
+    @endif
 </div>
 </body>
 </html>
