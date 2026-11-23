@@ -1761,53 +1761,63 @@ body:has(.ma-page.ma-theme-kunde) {
     --ma-shadow-lg: 0 12px 32px color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
     --bg: var(--md-sys-color-surface-container-low);
 }
-/* Dark: light tones as foreground/fill + dark text on fills (MD3 on-primary) */
+/* Dark: keep mode colors as accents, not as the page canvas. */
 [data-theme="dark"] body:has(.ma-page.ma-theme-ma) {
     --ma-primary: var(--md-ext-color-success);
-    --ma-primary-dark: var(--md-ext-color-success-container);
-    --ma-primary-light: var(--md-ext-color-success-container);
+    --ma-primary-dark: var(--md-ext-color-success);
+    --ma-primary-light: var(--md-ext-color-success);
     --ma-primary-soft: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent);
     --ma-primary-50: color-mix(in srgb, var(--md-ext-color-success) 8%, transparent);
     --ma-accent: var(--md-ext-color-success);
-    --ma-accent-dark: var(--md-ext-color-success-container);
-    --ma-accent-light: var(--md-ext-color-success-container);
+    --ma-accent-dark: var(--md-ext-color-success);
+    --ma-accent-light: var(--md-ext-color-success);
     --ma-accent-soft: color-mix(in srgb, var(--md-ext-color-success) 16%, transparent);
     --ma-accent-50: color-mix(in srgb, var(--md-ext-color-success) 8%, transparent);
     --ma-nu: var(--md-ext-color-info);
     --ma-nu-2: var(--md-ext-color-info);
     --ma-nu-soft: color-mix(in srgb, var(--md-ext-color-info) 16%, transparent);
-    --ma-on-primary: var(--md-ext-color-success);
-    --ma-on-nu: var(--md-ext-color-info);
+    --ma-on-primary: var(--md-ext-color-on-success);
+    --ma-on-nu: var(--md-ext-color-on-info);
     --ma-canvas: color-mix(in srgb, var(--md-ext-color-success) 5%, transparent);
     --ma-border: color-mix(in srgb, var(--md-ext-color-success) 18%, transparent);
     --ma-shadow-sm:     var(--md-sys-elevation-level1);
     --ma-shadow-md:     var(--md-sys-elevation-level2);
     --ma-shadow-lg:     var(--md-sys-elevation-level3);
-    --bg: var(--md-ext-color-success);
+    --bg: color-mix(in srgb, var(--md-ext-color-success) 4%, var(--md-sys-color-surface-container-low));
 }
 [data-theme="dark"] body:has(.ma-page.ma-theme-kunde) {
-    --ma-primary: var(--md-sys-color-primary-container);
-    --ma-primary-dark: var(--md-sys-color-primary-container);
-    --ma-primary-light: var(--md-sys-color-primary-container);
+    --ma-primary: var(--md-sys-color-primary);
+    --ma-primary-dark: var(--md-sys-color-primary);
+    --ma-primary-light: var(--md-sys-color-primary);
     --ma-primary-soft: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
     --ma-primary-50: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-    --ma-accent: var(--md-sys-color-primary-container);
-    --ma-accent-dark: var(--md-sys-color-primary-container);
-    --ma-accent-light: var(--md-sys-color-primary-container);
+    --ma-accent: var(--md-sys-color-primary);
+    --ma-accent-dark: var(--md-sys-color-primary);
+    --ma-accent-light: var(--md-sys-color-primary);
     --ma-accent-soft: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
     --ma-accent-50: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
-    --ma-nu: var(--md-sys-color-primary-container);
+    --ma-nu: var(--md-sys-color-primary);
     --ma-nu-2: var(--md-sys-color-primary);
     --ma-nu-soft: color-mix(in srgb, var(--md-sys-color-primary) 16%, transparent);
-    --ma-on-primary: var(--md-sys-color-primary);
-    --ma-on-nu: var(--md-sys-color-primary);
+    --ma-on-primary: var(--md-sys-color-on-primary);
+    --ma-on-nu: var(--md-sys-color-on-primary);
     --ma-canvas: color-mix(in srgb, var(--md-sys-color-primary) 5%, transparent);
     --ma-border: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
     --ma-shadow-sm:     var(--md-sys-elevation-level1);
     --ma-shadow-md:     var(--md-sys-elevation-level2);
     --ma-shadow-lg:     var(--md-sys-elevation-level3);
-    --bg: var(--md-sys-color-primary);
+    --bg: color-mix(in srgb, var(--md-sys-color-primary) 4%, var(--md-sys-color-surface-container-low));
 }
+[data-theme="dark"] .ma-page[class*="ma-theme-"] .ma-filter-pills button.active,
+[data-theme="dark"] .ma-page[class*="ma-theme-"] .ma-btn-primary,
+[data-theme="dark"] .ma-page[class*="ma-theme-"] .ma-btn-primary:hover,
+[data-theme="dark"] .ma-page[class*="ma-theme-"] .ma-btn-gold,
+[data-theme="dark"] .ma-page[class*="ma-theme-"] .ma-btn-gold:hover {
+    color: var(--ma-on-primary);
+}
+[data-theme="dark"] .ma-freigabe-btn:not(.kunde).on { color: var(--md-ext-color-on-success); }
+[data-theme="dark"] .ma-freigabe-btn.kunde.on { color: var(--md-sys-color-on-primary); }
+[data-theme="dark"] .ma-empty i { color: var(--ma-primary); }
 /* Page canvas + topbar carry the mode tint (both paint var(--bg)) */
 body:has(.ma-page[class*="ma-theme-"]) .main-content { background: var(--bg); transition: background-color .25s ease; }
 body:has(.ma-page[class*="ma-theme-"]) .topbar { transition: background-color .25s ease; }
