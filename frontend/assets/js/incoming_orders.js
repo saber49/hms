@@ -974,11 +974,11 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-panel" data-panel="zeitraum">
                     <div class="be-vl-field">
                         <label for="wiz_range_von">Von</label>
-                        <md-outlined-text-field type="date" class="form-control" id="wiz_range_von"></md-outlined-text-field>
+                        <md-outlined-text-field type="text" maxlength="10" placeholder="TT.MM.JJJJ" class="form-control" id="wiz_range_von"></md-outlined-text-field>
                     </div>
                     <div class="be-vl-field">
                         <label for="wiz_range_bis">Bis</label>
-                        <md-outlined-text-field type="date" class="form-control" id="wiz_range_bis" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizGenerateRange(); }"></md-outlined-text-field>
+                        <md-outlined-text-field type="text" maxlength="10" placeholder="TT.MM.JJJJ" class="form-control" id="wiz_range_bis" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizGenerateRange(); }"></md-outlined-text-field>
                     </div>
                     <md-filled-button onclick="wizGenerateRange()" style="--md-filled-button-container-color:var(--be-accent)"><md-icon slot="icon">event_repeat</md-icon>Zeitraum generieren</md-filled-button>
                     <div class="be-vl-panel-info">Ohne gewählte Wochentage wird jeder Tag im Zeitraum erzeugt.</div>
@@ -986,7 +986,7 @@ function beWizardBodyHtml(customerOpts, prefill = {}) {
                 <div class="be-vl-panel" data-panel="einzel">
                     <div class="be-vl-field">
                         <label for="wiz_single_date">Datum</label>
-                        <md-outlined-text-field type="date" class="form-control" id="wiz_single_date" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizAddSingleDay(); }"></md-outlined-text-field>
+                        <md-outlined-text-field type="text" maxlength="10" placeholder="TT.MM.JJJJ" class="form-control" id="wiz_single_date" onkeydown="if (event.key === 'Enter') { event.preventDefault(); wizAddSingleDay(); }"></md-outlined-text-field>
                     </div>
                     <md-filled-button onclick="wizAddSingleDay()" style="--md-filled-button-container-color:var(--be-accent)"><md-icon slot="icon">add</md-icon>Einzeltag hinzufügen</md-filled-button>
                     <div class="be-vl-panel-info">Tipp: Ein Klick auf einen Tag im Kalender fügt ebenfalls eine Schicht hinzu.</div>
@@ -1750,18 +1750,6 @@ function wizOrderMonthLabel() {
     return (m && y) ? `${MONTHS_DE[m]} ${y}` : 'Bestellmonat';
 }
 
-function wizSyncDateBounds() {
-    const m = parseInt(document.getElementById('wiz_monat')?.value);
-    const y = parseInt(document.getElementById('wiz_jahr')?.value);
-    if (!m || !y) return;
-    const min = _beCalIso(y, m - 1, 1);
-    const max = _beCalIso(y, m - 1, new Date(y, m, 0).getDate());
-    ['wiz_single_date', 'wiz_range_von', 'wiz_range_bis'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.type === 'date') { el.min = min; el.max = max; }
-    });
-}
-
 function wizVorlageGuard() {
     if (!document.getElementById('wizVorlageCheck')) return true;
     const err = wizVorlageCheck().find(i => i[0] === 'err');
@@ -2142,7 +2130,7 @@ async function wizEditDay(btn) {
     const cells = row.querySelectorAll('td');
     const inp = (type, value, extra) => `<md-outlined-text-field type="${type}" class="form-control" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;${extra || ''}"></md-outlined-text-field>`;
     const tInp = (value) => `<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" value="${escapeHtml(String(value))}" style="padding:2px 6px;font-size:.8rem;width:86px"></md-outlined-text-field>`;
-    cells[1].innerHTML = inp('date', row.dataset.datum || '', 'width:130px');
+    cells[1].innerHTML = `<md-outlined-text-field type="text" maxlength="10" placeholder="TT.MM.JJJJ" class="form-control" value="${escapeHtml(formatDate(row.dataset.datum))}" style="padding:2px 6px;font-size:.8rem;width:130px"></md-outlined-text-field>`;
     cells[3].innerHTML = tInp(row.dataset.von || '');
     cells[4].innerHTML = tInp(row.dataset.bis || '');
     cells[6].innerHTML = inp('number', parseInt(row.dataset.pauseMinuten) || 0, 'width:64px;text-align:right') ;
@@ -2194,7 +2182,7 @@ function wizSaveDayEdit(btnOrRow) {
     const row = btnOrRow && btnOrRow.tagName === 'TR' ? btnOrRow : btnOrRow.closest('tr');
     if (!row) return false;
     const cells = row.querySelectorAll('td');
-    const datum = cells[1].querySelector('input, md-outlined-text-field')?.value || '';
+    const datum = wizParseDateInput(cells[1].querySelector('input, md-outlined-text-field')?.value);
     const von = cells[3].querySelector('input, md-outlined-text-field')?.value || '';
     const bis = cells[4].querySelector('input, md-outlined-text-field')?.value || '';
     let pause = parseInt(cells[6].querySelector('input, md-outlined-text-field')?.value) || 0;
@@ -2206,7 +2194,11 @@ function wizSaveDayEdit(btnOrRow) {
     // day's times actually changed — editing Ort/Menge/Datum must not wipe it.
     const timesChanged = von !== (row.dataset.von || '') || bis !== (row.dataset.bis || '');
     if (autoP !== null && !row._pauseTouched && (timesChanged || !row.dataset.pauseOverride)) pause = autoP;
-    if (!datum) { showToast('Bitte ein Datum angeben', 'error'); return false; }
+    if (!datum) { showToast('Bitte ein gültiges Datum im Format TT.MM.JJJJ angeben', 'error'); return false; }
+    if (datum !== row.dataset.datum && !wizDateInOrder(datum)) {
+        showToast(`${formatDate(datum)} liegt außerhalb des Bestellmonats ${wizOrderMonthLabel()}`, 'error');
+        return false;
+    }
     if (!von || !bis) { showToast('Bitte Von- und Bis-Zeit angeben', 'error'); return false; }
     // Parallel Einsätze are valid; an unacknowledged duplicate is checked on order save.
     // Menge is the hard cap for the M/W mix — never guess which gender to
@@ -2329,13 +2321,13 @@ function wizParseDateInput(raw) {
     if (!raw) return null;
     raw = raw.trim();
     const deParts = raw.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})$/);
-    if (deParts) {
-        const d = deParts[1].padStart(2, '0');
-        const m = deParts[2].padStart(2, '0');
-        return `${deParts[3]}-${m}-${d}`;
-    }
-    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-    return null;
+    const iso = deParts
+        ? `${deParts[3]}-${deParts[2].padStart(2, '0')}-${deParts[1].padStart(2, '0')}`
+        : raw;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+    const [y, m, d] = iso.split('-').map(Number);
+    if (y < 2020 || y > 2099 || m < 1 || m > 12) return null;
+    return d >= 1 && d <= new Date(y, m, 0).getDate() ? iso : null;
 }
 
 function wizDaySlot(datum, artikel, von, bis) {
@@ -2831,7 +2823,6 @@ function wizRenderDaysCal() {
         };
         ['wiz_monat', 'wiz_jahr'].forEach(id => document.getElementById(id)?.addEventListener('change', syncPeriod));
     }
-    wizSyncDateBounds();
     const rows = _beCalVisibleRows();
     _beCalRows = rows;
     const { y, m } = _beCalView(cal, rows);
@@ -3036,7 +3027,7 @@ function _beCalEditHtml(r, n) {
     const posTxt = pos.map(p => `${p.anzahl ? p.anzahl + '× ' : ''}${escapeHtml([p.funktion, geschlechtLabelText(p.geschlecht), p.qualifikation].filter(Boolean).join(' · ')) || '–'}`).join(', ');
     const val = v => escapeHtml(String(v ?? ''));
     return `<div class="be-cal-edit" data-n="${n}">
-        <label>Datum<md-outlined-text-field type="date" class="form-control" data-f="datum" value="${val(r.dataset.datum)}" min="${val(document.getElementById('wiz_single_date')?.min)}" max="${val(document.getElementById('wiz_single_date')?.max)}"></md-outlined-text-field></label>
+        <label>Datum<md-outlined-text-field type="text" maxlength="10" placeholder="TT.MM.JJJJ" class="form-control" data-f="datum" value="${val(formatDate(r.dataset.datum))}"></md-outlined-text-field></label>
         <label>Von<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="von" value="${val(r.dataset.von)}"></md-outlined-text-field></label>
         <label>Bis<md-outlined-text-field type="text" class="form-control t24" inputmode="numeric" maxlength="5" placeholder="HH:MM" data-f="bis" value="${val(r.dataset.bis)}"></md-outlined-text-field></label>
         <label>Pause (Min)<md-outlined-text-field type="number" class="form-control" min="0" data-f="pause" value="${parseInt(r.dataset.pauseMinuten) || 0}"></md-outlined-text-field></label>
@@ -3153,8 +3144,9 @@ async function _beCalPopClick(e) {
 async function _beCalSaveEdit(row, form) {
     if (!form) return;
     const v = f => form.querySelector(`[data-f="${f}"]`)?.value ?? '';
-    const newDatum = v('datum');
-    if (newDatum && newDatum !== row.dataset.datum && !wizDateInOrder(newDatum)) {
+    const newDatum = wizParseDateInput(v('datum'));
+    if (!newDatum) { showToast('Bitte ein gültiges Datum im Format TT.MM.JJJJ angeben', 'error'); return; }
+    if (newDatum !== row.dataset.datum && !wizDateInOrder(newDatum)) {
         showToast(`${formatDate(newDatum)} liegt außerhalb des Bestellmonats ${wizOrderMonthLabel()}`, 'error');
         return;
     }
@@ -3164,7 +3156,7 @@ async function _beCalSaveEdit(row, form) {
     if (!row.classList.contains('be-day-editing')) return;
     const cells = row.querySelectorAll('td');
     const set = (el, value) => { if (el) el.value = value; };
-    set(cells[1]?.querySelector('input, md-outlined-text-field'), v('datum'));
+    set(cells[1]?.querySelector('input, md-outlined-text-field'), formatDate(newDatum));
     set(cells[3]?.querySelector('input, md-outlined-text-field'), v('von').trim());
     set(cells[4]?.querySelector('input, md-outlined-text-field'), v('bis').trim());
     set(cells[6]?.querySelector('input, md-outlined-text-field'), v('pause'));
@@ -3211,7 +3203,7 @@ async function _beCalAddShift(iso) {
     if (!inp || !tbody || !iso) return;
     const before = new Set(tbody.querySelectorAll('tr'));
     const prev = inp.value;
-    inp.value = inp.type === 'date' ? iso : formatDate(iso);
+    inp.value = formatDate(iso);
     await wizAddSingleDay();
     if (inp.value) inp.value = prev;
     const added = [...tbody.querySelectorAll('tr')].find(r => !before.has(r));
