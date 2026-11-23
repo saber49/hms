@@ -148,6 +148,9 @@ class Qm
             'id' => null, 'obj_id' => $objId, 'wachbuch_aktiv' => 0, 'waechterkontrolle_aktiv' => 0,
             'fotopflicht' => 0, 'kunde_pdf' => 0, 'objektleiter_id' => null, 'bericht_empfaenger' => null, 'gps_grenze_m' => 150,
             'soll_begehung_tage' => null, 'soll_besuch_tage' => null, 'notfallkontakte' => null,
+            'bericht_pflicht' => 0, 'bericht_ab' => null, 'durchgehend_bewacht' => 0,
+            'besucher_ausweis_pflicht' => 0, 'lieferung_freigabe_pflicht' => 0,
+            'uebergabe_checkliste' => 0, 'besuchszeit_ende' => null,
         ];
     }
 

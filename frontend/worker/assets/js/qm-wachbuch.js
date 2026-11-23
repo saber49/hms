@@ -13,7 +13,8 @@
 
     const ARTEN_BUTTONS = [
         ['notiz', 'Notiz', 'fa-pen'], ['vorkommnis', 'Vorkommnis', 'fa-triangle-exclamation'], ['alarm', 'Alarm', 'fa-bell'],
-        ['besucher', 'Besucher', 'fa-id-badge'], ['lieferung', 'Lieferung', 'fa-truck'], ['schluessel', 'Schlüssel', 'fa-key'], ['foto', 'Foto', 'fa-camera'],
+        ['besucher', 'Besucher', 'fa-id-badge'], ['lieferung', 'Lieferung', 'fa-truck'], ['schluessel', 'Schlüssel', 'fa-key'],
+        ['uebergabe', 'Übergabe', 'fa-right-left'], ['foto', 'Foto', 'fa-camera'],
     ];
     const ICON = { dienstbeginn: 'fa-right-to-bracket', dienstende: 'fa-right-from-bracket', notiz: 'fa-pen', vorkommnis: 'fa-triangle-exclamation', alarm: 'fa-bell',
         besucher: 'fa-id-badge', lieferung: 'fa-truck', schluessel: 'fa-key', foto: 'fa-camera', uebergabe: 'fa-right-left', hinweis: 'fa-bullhorn', berichtigung: 'fa-eraser' };
@@ -168,6 +169,11 @@
             ${d.notfallkontakte ? `<details class="wqm-notfall"><summary><i class="fas fa-phone"></i> Notfallkontakte</summary><div>${esc(d.notfallkontakte).replace(/\n/g, '<br>')}</div></details>` : ''}
             ${offeneHinweise.map(h => `<div class="wqm-hinweis"><i class="fas fa-bullhorn"></i><div><strong>Hinweis vom Kunden · ${zeit(h.zeit)}</strong><div>${esc(h.text)}</div></div>
                 <button onclick="WQm.umgesetzt(${h.id})">Umgesetzt</button></div>`).join('')}
+            ${(d.offene_besucher || []).length ? `<div class="wqm-hinweis"><i class="fas fa-id-badge"></i><div><strong>Offene Besucheranmeldungen</strong>
+                ${(d.offene_besucher || []).map(v => `<div>${esc(v.name)} · ${esc(v.ziel)} · ${zeit(v.zeit)}
+                    <button onclick="WQm.neu('besucher',null,${v.id})">Abmelden</button></div>`).join('')}</div></div>` : ''}
+            ${d.uebergabe_checkliste && (d.offene_uebergaben || []).length ? `<div class="wqm-hinweis"><i class="fas fa-right-left"></i>
+                <div><strong>Übergabe zur Übernahme</strong> · ${esc(d.offene_uebergaben.map(h => h.von).join(', '))}</div></div>` : ''}
             <div class="wqm-grid">${ARTEN_BUTTONS.map(([a, l, i]) => `<button class="wqm-art wqm-art-${a}" onclick="WQm.neu('${a}')"><i class="fas ${i}"></i><span>${l}</span></button>`).join('')}</div>
             ${cfg.uebergabe ? `<label class="wqm-label">Hinweis an die Folgeschicht (wird beim Check-out übergeben)</label>
                 <textarea class="wqm-input" rows="2" maxlength="2000" oninput="localStorage.setItem('cx_qm_uebergabe', this.value)">${esc(localStorage.getItem('cx_qm_uebergabe') || '')}</textarea>` : ''}
@@ -196,55 +202,81 @@
     function feld(id, label, attrs = '') { return `<label class="wqm-label">${label}</label><input id="${id}" class="wqm-input" ${attrs}>`; }
     function janein(id, label) { return `<label class="wqm-check"><input type="checkbox" id="${id}"> ${label}</label>`; }
 
-    function neu(art, refId = null) {
+    function neu(art, refId = null, besucherId = null) {
         const d = state.data;
         const fotoPflicht = d?.fotopflicht && art === 'vorkommnis';
         const ref = refId ? d.eintraege.find(e => e.id === refId) : null;
+        const besucher = besucherId ? (d.offene_besucher || []).find(v => v.id === besucherId) : null;
+        if (besucherId && !besucher) return toast('Besucheranmeldung nicht mehr offen.', 'error');
+        const register = d.schluesselregister || [];
         const spezifisch = {
             besucher: feld('wq_name', 'Name *') + feld('wq_firma', 'Firma') + feld('wq_ziel', 'Ziel / Ansprechpartner *') + feld('wq_kennz', 'Kennzeichen', 'maxlength="20"')
-                + janein('wq_angemeldet', 'angemeldet') + janein('wq_ausweis', 'Ausweis geprüft'),
+                + janein('wq_angemeldet', 'angemeldet') + janein('wq_ausweis', d.besucher_ausweis_pflicht ? 'Ausweis geprüft *' : 'Ausweis geprüft'),
             lieferung: feld('wq_firma', 'Firma *') + feld('wq_person', 'Person') + feld('wq_kennz', 'Kennzeichen', 'maxlength="20"') + feld('wq_zweck', 'Zweck')
                 + `<label class="wqm-label">Freigabe durch</label><select id="wq_freigabe" class="wqm-input">${Object.entries(FREIGABE).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>`
+                + feld('wq_freigabe_name', d.lieferung_freigabe_pflicht ? 'Name der freigebenden Person *' : 'Name der freigebenden Person')
+                + janein('wq_freigabe_ok', d.lieferung_freigabe_pflicht ? 'Freigabe eingeholt und dokumentiert *' : 'Freigabe eingeholt')
                 + janein('wq_ausweis', 'Ausweis geprüft'),
-            schluessel: feld('wq_schluessel', 'Schlüssel *') + `<label class="wqm-label">Vorgang</label><select id="wq_aktion" class="wqm-input"><option value="ausgabe">Ausgabe</option><option value="ruecknahme">Rücknahme</option><option value="bestand">Bestand geprüft</option></select>`
+            schluessel: (register.length ? `<label class="wqm-label">Registrierter Schlüssel *</label><select id="wq_schluessel" class="wqm-input">
+                    <option value="">Bitte auswählen</option>${register.map(k => `<option value="${esc(k.kennung)}">${esc(k.kennung)} · ${esc(k.bezeichnung)}</option>`).join('')}</select>`
+                : feld('wq_schluessel', 'Schlüssel *')) + `<label class="wqm-label">Vorgang</label><select id="wq_aktion" class="wqm-input"><option value="ausgabe">Ausgabe</option><option value="ruecknahme">Rücknahme</option><option value="bestand">Bestand geprüft</option></select>`
                 + feld('wq_an', 'An / von'),
+            uebergabe: `<label class="wqm-label">Vorgang</label><select id="wq_uebergabe_art" class="wqm-input">
+                    <option value="uebergeben">An Folgeschicht übergeben</option>
+                    <option value="uebernommen">Von vorheriger Schicht übernommen</option></select>
+                <label class="wqm-label">Vorherige Übergabe (bei Übernahme)</label><select id="wq_uebergabe_ref" class="wqm-input">
+                    <option value="">Bitte auswählen</option>${(d.offene_uebergaben || []).map(h => `<option value="${h.id}">${esc(h.von)} · ${zeit(h.zeit)}</option>`).join('')}</select>
+                ${['schluessel', 'funk', 'objekt'].map(x => `<label class="wqm-label">${{ schluessel: 'Schlüsselbestand', funk: 'Funkgerät', objekt: 'Objektzustand' }[x]} geprüft *</label>
+                    <select id="wq_${x}_ok" class="wqm-input"><option value="">Bitte wählen</option><option value="ja">In Ordnung</option><option value="nein">Abweichung</option></select>`).join('')}`,
             vorkommnis: `<label class="wqm-label">Maßnahmen</label><textarea id="wq_mass" class="wqm-input" rows="2"></textarea>`
                 + `<label class="wqm-label">Benachrichtigt (Stelle + Uhrzeit)</label><div class="wqm-row"><input id="wq_stelle" class="wqm-input" placeholder="z. B. Polizei, Objektleitung"><input id="wq_bzeit" class="wqm-input wqm-time" placeholder="HH:MM" maxlength="5"></div>`,
         };
         spezifisch.alarm = spezifisch.vorkommnis;
-        const titel = ref ? 'Berichtigung zu #' + ref.nr : (ARTEN_BUTTONS.find(a => a[0] === art) || [, art])[1];
+        const titel = ref ? 'Berichtigung zu #' + ref.nr : (besucher ? 'Besucher abmelden' : (ARTEN_BUTTONS.find(a => a[0] === art) || [, art])[1]);
         document.getElementById('wqmSheet')?.remove();
         document.body.insertAdjacentHTML('beforeend', `
             <div class="wqm-sheet-overlay" id="wqmSheet" onclick="if(event.target===this)WQm.zu()"><div class="wqm-sheet">
                 <div class="wqm-sheet-title">${esc(titel)}<button onclick="WQm.zu()" aria-label="Schließen">&times;</button></div>
                 ${ref ? `<div class="wqm-muted">Der ursprüngliche Eintrag bleibt durchgestrichen sichtbar: „${esc((ref.text || ref.art_label).slice(0, 120))}“</div>` : feld('wq_ort', 'Ort', 'maxlength="200"')}
-                ${spezifisch[art] || ''}
+                ${besucher ? `<p>${esc(besucher.name)} · ${esc(besucher.ziel)} · angemeldet ${zeit(besucher.zeit)}</p>` : spezifisch[art] || ''}
                 <label class="wqm-label">${ref ? 'Richtigstellung *' : (['notiz', 'vorkommnis', 'alarm'].includes(art) ? 'Text *' : 'Bemerkung')}</label>
                 <textarea id="wq_text" class="wqm-input" rows="4" maxlength="4000"></textarea>
                 ${ref ? '' : `<label class="wqm-label">Foto${fotoPflicht || art === 'foto' ? ' *' : ''}</label><input id="wq_foto" type="file" accept="image/*" capture="environment" class="wqm-input">`}
                 <div class="wqm-err" id="wq_err"></div>
-                <button class="wqm-primary" id="wq_save" onclick="WQm.speichern('${art}', ${refId || 'null'}, ${fotoPflicht || art === 'foto'})">Speichern</button>
+                <button class="wqm-primary" id="wq_save" onclick="WQm.speichern('${art}', ${refId || 'null'}, ${fotoPflicht || art === 'foto'}, ${besucherId || 'null'})">Speichern</button>
             </div></div>`);
         if (art === 'foto') setTimeout(() => document.getElementById('wq_foto')?.click(), 100);
     }
 
     function wert(id) { const el = document.getElementById(id); return el ? (el.type === 'checkbox' ? el.checked : el.value.trim()) : undefined; }
 
-    async function speichern(art, refId, fotoNoetig) {
+    async function speichern(art, refId, fotoNoetig, besucherId = null) {
         const err = m => { document.getElementById('wq_err').textContent = m; };
         const file = document.getElementById('wq_foto')?.files?.[0];
         if (fotoNoetig && !file) return err('Bitte ein Foto aufnehmen.');
         const details = {
-            besucher: { name: wert('wq_name'), firma: wert('wq_firma'), ziel: wert('wq_ziel'), kennzeichen: wert('wq_kennz'), angemeldet: wert('wq_angemeldet'), ausweis_geprueft: wert('wq_ausweis') },
-            lieferung: { firma: wert('wq_firma'), person: wert('wq_person'), kennzeichen: wert('wq_kennz'), zweck: wert('wq_zweck'), freigabe_durch: wert('wq_freigabe'), ausweis_geprueft: wert('wq_ausweis') },
+            besucher: besucherId ? { vorgang: 'abmeldung', anmeldung_id: besucherId } :
+                { vorgang: 'anmeldung', name: wert('wq_name'), firma: wert('wq_firma'), ziel: wert('wq_ziel'), kennzeichen: wert('wq_kennz'), angemeldet: wert('wq_angemeldet'), ausweis_geprueft: wert('wq_ausweis') },
+            lieferung: { firma: wert('wq_firma'), person: wert('wq_person'), kennzeichen: wert('wq_kennz'), zweck: wert('wq_zweck'),
+                freigabe_durch: wert('wq_freigabe'), freigabe_name: wert('wq_freigabe_name'),
+                freigabe_bestaetigt: wert('wq_freigabe_ok'), ausweis_geprueft: wert('wq_ausweis') },
             schluessel: { schluessel: wert('wq_schluessel'), aktion: wert('wq_aktion'), an: wert('wq_an') },
+            uebergabe: { vorgang: wert('wq_uebergabe_art'), referenz_id: +wert('wq_uebergabe_ref') || null,
+                schluessel_ok: wert('wq_schluessel_ok') === 'ja', funk_ok: wert('wq_funk_ok') === 'ja',
+                objekt_ok: wert('wq_objekt_ok') === 'ja' },
             vorkommnis: { massnahmen: wert('wq_mass'), benachrichtigt: wert('wq_stelle') ? [{ stelle: wert('wq_stelle'), zeit: wert('wq_bzeit') || null }] : [] },
         };
         details.alarm = details.vorkommnis;
         const text = wert('wq_text');
-        if (art === 'besucher' && (!details.besucher.name || !details.besucher.ziel)) return err('Name und Ziel / Ansprechpartner sind Pflicht.');
+        if (art === 'besucher' && !besucherId && (!details.besucher.name || !details.besucher.ziel)) return err('Name und Ziel / Ansprechpartner sind Pflicht.');
+        if (art === 'besucher' && !besucherId && state.data.besucher_ausweis_pflicht && !details.besucher.ausweis_geprueft) return err('Ausweisprüfung ist für dieses Objekt Pflicht.');
         if (art === 'lieferung' && !details.lieferung.firma) return err('Firma ist Pflicht.');
+        if (art === 'lieferung' && state.data.lieferung_freigabe_pflicht &&
+            (!details.lieferung.freigabe_bestaetigt || !details.lieferung.freigabe_name || details.lieferung.freigabe_durch === 'ohne')) return err('Freigabe durch benannte Person dokumentieren.');
         if (art === 'schluessel' && !details.schluessel.schluessel) return err('Schlüssel ist Pflicht.');
+        if (art === 'uebergabe' && state.data.uebergabe_checkliste &&
+            ['schluessel', 'funk', 'objekt'].some(k => !wert('wq_' + k + '_ok'))) return err('Bitte alle drei Prüfungen bewerten.');
+        if (art === 'uebergabe' && details.uebergabe.vorgang === 'uebernommen' && !details.uebergabe.referenz_id) return err('Vorherige Übergabe auswählen.');
         if ((['notiz', 'vorkommnis', 'alarm'].includes(art) || refId) && !text) return err('Bitte einen Text eingeben.');
         const body = {
             art: refId ? 'berichtigung' : (art === 'foto' ? 'foto' : art), text, ort: wert('wq_ort'), ref_id: refId,

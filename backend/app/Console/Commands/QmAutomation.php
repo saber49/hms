@@ -8,6 +8,7 @@ use App\Services\Qm\DienstanweisungService;
 use App\Services\Qm\QmNotify;
 use App\Services\Qm\ReklamationService;
 use App\Services\Qm\WachbuchService;
+use App\Services\Qm\WachbuchTagesbericht;
 use App\Services\TenantService;
 use App\Support\Qm\Qm;
 use App\Support\TenantProfile;
@@ -248,10 +249,33 @@ class QmAutomation extends Command
         $tag = Carbon::parse(Qm::wachbuchTag())->subDay()->toDateString();
         $objekte = Qm::t('qm_objekt_einstellungen as q')->join('objekte as o', 'o.obj_id', '=', 'q.obj_id')
             ->where('q.wachbuch_aktiv', 1)->whereNotNull('q.bericht_empfaenger')->where('q.bericht_empfaenger', '!=', '')
-            ->get(['q.obj_id', 'q.bericht_empfaenger', 'o.objektname']);
+            ->get(['q.obj_id', 'q.bericht_empfaenger', 'q.bericht_pflicht', 'q.bericht_ab', 'o.objektname']);
         $label = TenantProfile::objektbuchLabel($tenant);
         $n = 0;
         foreach ($objekte as $o) {
+            if (WachbuchTagesbericht::aktivFuerTag($o, $tag)) {
+                // Unlike the legacy morning digest, an auditable daily report
+                // must not be mailed before a responsible person signs it.
+                $berichte = Qm::t('qm_wb_berichte')->where('obj_id', $o->obj_id)
+                    ->whereBetween('datum', [Carbon::parse($tag)->subDays(14)->toDateString(), $tag])
+                    ->orderByDesc('version')->get()->unique('datum');
+                foreach ($berichte as $b) {
+                    $key = $o->obj_id . '|' . substr((string) $b->datum, 0, 10);
+                    if (QmNotify::schonGesendet('wachbuch.tagesbericht', 'objekt', $key)) continue;
+                    $sicht = WachbuchTagesbericht::kundenSicht(WachbuchTagesbericht::snapshot($b));
+                    $n++;
+                    if ($this->dry) continue;
+                    $date = Carbon::parse($b->datum)->format('d.m.Y');
+                    $text = "$label – freigegebener Tagesbericht\nObjekt: {$o->objektname}\nTag: $date"
+                        . "\nBerichtsversion: {$b->version}\nPrüfsumme: {$b->pruefsumme}"
+                        . "\nBesucher: " . count($sicht['besucher']) . " · Lieferungen: " . count($sicht['lieferungen'])
+                        . " · Vorkommnisse/Alarme: " . count($sicht['vorkommnisse'])
+                        . "\n\nDer freigegebene Bericht ist im Kundenportal verfügbar.";
+                    QmNotify::mail(explode(',', (string) $o->bericht_empfaenger), 'wachbuch.tagesbericht',
+                        "$label Tagesbericht $date: {$o->objektname}", $text, 'kunde', $o->obj_id, 'objekt', $key);
+                }
+                continue;
+            }
             $key = $o->obj_id . '|' . $tag;
             if (QmNotify::schonGesendet('wachbuch.tagesbericht', 'objekt', $key)) continue;
             $blaetter = Qm::t('qm_wb_blaetter')->where('obj_id', $o->obj_id)->where('datum', $tag)->get();

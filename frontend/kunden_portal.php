@@ -130,7 +130,7 @@
     <!-- QM module sections (register in KP_TABS; order irrelevant, after the core) -->
     <script src="/worker/assets/js/qm-live.js?v=20261114md3g"></script>
     <script src="assets/js/kunden_portal/qm-konto.js?v=20261114md3g"></script>
-    <script src="assets/js/kunden_portal/qm-wachbuch.js?v=20261123portal1"></script>
+    <script src="assets/js/kunden_portal/qm-wachbuch.js?v=20261123bericht1"></script>
     <script src="assets/js/kunden_portal/qm-qualitaet.js?v=20261114md3g"></script>
 </body>
 </html>

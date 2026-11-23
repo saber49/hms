@@ -143,6 +143,7 @@ async function qmObjektLaden() {
     const box = document.getElementById('qmWbMonate');
     if (!r.ok) { box.innerHTML = qmFehlerBox(r, 'qmObjektLaden()'); return; }
     const d = r.data, o = d.objekt || {}, cfg = d.einstellung || {}, da = d.dienstanweisung;
+    qm.cache.wbCfg = cfg;
     document.getElementById('qmWbSteckbrief').innerHTML = `
         <div class="crm-card qm-steckbrief">
             <div class="qm-kv-grid">
@@ -207,20 +208,25 @@ function qmTagToggle(datum) {
 }
 
 async function qmTagLaden(datum, still = false) {
+    const objId = qm.wb.obj;
     const row = document.getElementById('qmTag_' + datum);
     const box = row?.querySelector('.qm-tag-body');
     if (!box) return;
     row.hidden = false;
     if (!still) box.innerHTML = qmLoading();
-    const r = await qmGet(QM_API + '/wachbuch/objekte/' + encodeURIComponent(qm.wb.obj) + '/tag/' + datum);
+    const r = await qmGet(QM_API + '/wachbuch/objekte/' + encodeURIComponent(objId) + '/tag/' + datum);
+    if (qm.wb.obj !== objId || !row.isConnected) return;
     if (!r.ok) { box.innerHTML = qmFehlerBox(r, `qmTagLaden('${datum}')`); return; }
     const { blaetter, eintraege } = r.data;
     qm.cache.tag = r.data;
     const nameDesBlatts = id => blaetter.find(b => b.id === id)?.name || '';
+    const cfg = qm.cache.wbCfg || {};
+    const mitBericht = cfg.bericht_pflicht && cfg.bericht_ab && datum >= cfg.bericht_ab.slice(0, 10);
     box.innerHTML = `
         <div class="crm-form-actions" style="justify-content:flex-end;margin-bottom:8px">
-            <md-outlined-button onclick="qmOpenPdf(QM_API + '/wachbuch/objekte/' + encodeURIComponent(qm.wb.obj) + '/tag/${datum}/pdf')"><md-icon slot="icon">picture_as_pdf</md-icon>PDF herunterladen</md-outlined-button>
+            <md-outlined-button onclick="qmOpenPdf(QM_API + '/wachbuch/objekte/' + encodeURIComponent('${qmE(objId)}') + '/tag/${datum}/pdf')"><md-icon slot="icon">picture_as_pdf</md-icon>PDF herunterladen</md-outlined-button>
         </div>
+        ${mitBericht ? `<div id="qmBericht_${datum}" class="crm-card crm-pad" data-obj="${qmE(objId)}">${qmLoading()}</div>` : ''}
         <div class="qm-blaetter">${blaetter.map(b => `
             <div class="qm-blatt">
                 <div><strong>${qmE(b.name)}</strong>${b.plan_von ? ` <span class="crm-muted">Plan ${qmE(b.plan_von)}–${qmE(b.plan_bis)}</span>` : ''}</div>
@@ -234,6 +240,38 @@ async function qmTagLaden(datum, still = false) {
         </div>
         <div class="qm-eintraege">${eintraege.length ? eintraege.map(e => qmEintragHtml(e, blaetter.length > 1 ? nameDesBlatts(e.blatt_id) : '')).join('') : '<div class="crm-muted crm-pad">Keine Einträge</div>'}</div>`;
     qmLoadImages(box);
+    if (mitBericht) qmBerichtLaden(objId, datum);
+}
+
+async function qmBerichtLaden(objId, datum) {
+    const box = document.getElementById('qmBericht_' + datum);
+    if (!box || box.dataset.obj !== objId) return;
+    const r = await qmGet(QM_API + '/wachbuch/objekte/' + encodeURIComponent(objId) + '/tag/' + datum + '/bericht');
+    if (!box.isConnected || box.dataset.obj !== objId || qm.wb.obj !== objId) return;
+    if (!r.ok) { box.innerHTML = qmFehlerBox(r, `qmBerichtLaden('${qmE(objId)}','${datum}')`); return; }
+    const { entwurf: d, freigegeben: signed, darf_freigeben: darf } = r.data;
+    box.innerHTML = `<div class="crm-card-title">${qmIcon('fact_check')} Tagesbericht · ${signed ? qmBadge('freigegeben v' + signed.version, 'ok') : qmBadge('Entwurf', 'warn')}</div>
+        <div class="crm-sub">${qmE(qmDT(d.von))} – ${qmE(qmDT(d.bis))} · ${d.wachpersonen} Wachpersonen · ${d.besucher.length} Besucher · ${d.lieferungen.length} Lieferungen
+            · ${d.schluessel_vorhanden}/${d.schluessel_gesamt} Schlüssel nachgewiesen · ${d.vorkommnisse.length} Vorkommnisse</div>
+        <div class="crm-sub">${d.durchgehend_bewacht ? (d.deckung.lueckenlos ? qmBadge('Besetzung lückenlos nachgewiesen', 'ok') : qmBadge('Lückenlose Besetzung nicht nachgewiesen', 'err')) : '24-h-Bewachung nicht vereinbart'}</div>
+        ${signed ? `<div class="crm-sub">Gespeicherter Stand: ${qmE(qmDT(signed.am))} · Daten-Prüfsumme ${qmE(signed.pruefsumme)}</div>` : ''}
+        ${d.pruefung.length ? `<div class="crm-banner crm-banner-amber"><strong>${d.pruefung.length} Punkte vor Freigabe prüfen:</strong>
+            <ul>${d.pruefung.map(i => `<li>${qmE(i)}</li>`).join('')}</ul></div>` : `<div class="crm-banner">Keine Abweichungen in den erfassten Daten erkannt. Das ersetzt keine persönliche Prüfung.</div>`}
+        ${darf ? `<div class="crm-form-actions">
+            ${d.pruefung.length ? `<md-outlined-text-field label="Abweichungen begründen (mind. 10 Zeichen)" id="qmBerichtGrund_${datum}" type="textarea" rows="2"></md-outlined-text-field>` : ''}
+            <md-filled-tonal-button onclick="qmBerichtFreigeben('${qmE(objId)}','${datum}')"><md-icon slot="icon">verified</md-icon>${signed ? 'Neue Version freigeben' : 'Nach Prüfung freigeben'}</md-filled-tonal-button>
+        </div><div class="crm-sub">Erst 12 Stunden nach Tagesende möglich; spätere Änderungen erfordern eine neue Version.</div>` : ''}`;
+}
+
+async function qmBerichtFreigeben(objId, datum) {
+    const grund = document.getElementById('qmBerichtGrund_' + datum)?.value || '';
+    if (!(await mdConfirm('Diesen Tagesbericht nach Prüfung freigeben? Ein gespeicherter Stand und seine Prüfsumme bleiben erhalten.', {
+        title: 'Tagesbericht freigeben', confirmLabel: 'Freigeben',
+    }))) return;
+    const r = await qmReq('POST', QM_API + '/wachbuch/objekte/' + encodeURIComponent(objId) + '/tag/' + datum + '/bericht/freigeben', { ausnahme: grund });
+    if (qmFehler(r)) return;
+    showToast('Tagesbericht freigegeben · v' + r.data.version);
+    qmBerichtLaden(objId, datum);
 }
 
 function qmDetailsText(e) {
@@ -271,7 +309,7 @@ function qmEintragHtml(e, wer = '') {
             <div class="crm-sub">${qmE(e.erfasst_von || wer || '')} · ${qmE({ app: 'App', terminal: 'Terminal', buero: 'Büro', kunde: 'Kundenportal', system: 'System' }[e.quelle] || e.quelle)}</div>
         </div>
         <div class="qm-eintrag-akt">
-            ${qmCan('wachbuch_eintrag') && !blattGesperrt && e.art !== 'berichtigung' && !e.berichtigt_durch && !e.auto ? `<md-icon-button title="Berichtigen" onclick="qmEintragDialog(${e.id})"><md-icon>edit_off</md-icon></md-icon-button>` : ''}
+            ${qmCan('wachbuch_eintrag') && e.art !== 'berichtigung' && !e.berichtigt_durch && !e.auto ? `<md-icon-button title="Berichtigen (ggf. als Nachtrag)" onclick="qmEintragDialog(${e.id})"><md-icon>edit_off</md-icon></md-icon-button>` : ''}
             ${qmCan('wachbuch_eintrag') && !blattGesperrt && e.status ? `<md-icon-button title="${e.status === 'offen' ? 'Erledigt' : 'Wieder öffnen'}" onclick="qmVkErledigt(${e.id}, ${e.status !== 'offen'})"><md-icon>${e.status === 'offen' ? 'done' : 'undo'}</md-icon></md-icon-button>` : ''}
             ${qmCan('massnahme_bearbeiten') && ['vorkommnis', 'alarm'].includes(e.art) ? `<md-icon-button title="Maßnahme anlegen" onclick="qmMnNeu({quelle_typ:'wachbuch', quelle_id:'${e.id}', obj_id:'${qmE(e.obj_id)}', titel:${qmE(JSON.stringify((e.art_label + ': ' + (e.text || '')).slice(0, 200)))}})"><md-icon>add_task</md-icon></md-icon-button>` : ''}
         </div>
@@ -290,9 +328,8 @@ async function qmGegenzeichnen(id, datum) {
 function qmEintragDialog(refId = null) {
     const ref = refId ? (qm.cache.tag?.eintraege || []).find(e => e.id === refId) : null;
     const blaetter = qm.cache.tag?.blaetter || [];
-    const gesperrt = refId ? blaetter.find(b => b.id === ref?.blatt_id)?.gegengezeichnet_am
-        : blaetter.find(b => !b.dienst_nr && b.gegengezeichnet_am)?.gegengezeichnet_am;
-    if (gesperrt) { showToast('Das Blatt ist gegengezeichnet und eingefroren.', 'error'); return; }
+    // Signed sheets stay immutable; office corrections create an amendment
+    // sheet instead of modifying the signed chain.
     const wbTag = qm.opt?.wachbuch_tag || qmHeute();
     const arten = { notiz: 'Notiz', vorkommnis: 'Vorkommnis', hinweis: 'Hinweis', besucher: 'Besucher', lieferung: 'Lieferung / Fremdfirma', schluessel: 'Schlüssel' };
     openModal(ref ? `Berichtigung zu #${ref.nr}` : 'Eintrag aus dem Büro', `

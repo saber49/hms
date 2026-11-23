@@ -10,6 +10,8 @@ use App\Services\Qm\QmNotify;
 use App\Services\Qm\ReklamationService;
 use App\Services\Qm\WachbuchPdf;
 use App\Services\Qm\WachbuchService;
+use App\Services\Qm\WachbuchTagesbericht;
+use App\Services\Qm\WachbuchTagesberichtPdf;
 use App\Support\Qm\Qm;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,9 +32,14 @@ class PortalQmController extends Controller
         $objIds = PortalController::objekteFuer($request);
         $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::wachbuchTag();
         if (!Qm::ready() || !Qm::boolSetting('modul_wachbuch')) return response()->json(['datum' => $datum, 'eintraege' => [], 'status' => []]);
-        $cfgRows = Qm::t('qm_objekt_einstellungen')->whereIn('obj_id', $objIds)->where('wachbuch_aktiv', 1)->get(['obj_id', 'kunde_pdf']);
+        $cfgRows = Qm::t('qm_objekt_einstellungen')->whereIn('obj_id', $objIds)->where('wachbuch_aktiv', 1)
+            ->get(['obj_id', 'kunde_pdf', 'bericht_pflicht', 'bericht_ab']);
         $aktiv = $cfgRows->pluck('obj_id')->all();
-        $pdfErlaubt = $cfgRows->mapWithKeys(fn ($c) => [(string) $c->obj_id => (bool) ($c->kunde_pdf ?? false)]);
+        $signiert = Qm::t('qm_wb_berichte')->whereIn('obj_id', $aktiv)->where('datum', $datum)->pluck('obj_id')->all();
+        $wartet = $cfgRows->mapWithKeys(fn ($c) => [(string) $c->obj_id => (bool) $c->kunde_pdf
+            && WachbuchTagesbericht::aktivFuerTag($c, $datum) && !in_array($c->obj_id, $signiert, true)]);
+        $pdfErlaubt = $cfgRows->mapWithKeys(fn ($c) => [(string) $c->obj_id => (bool) $c->kunde_pdf
+            && (!WachbuchTagesbericht::aktivFuerTag($c, $datum) || in_array($c->obj_id, $signiert, true))]);
         $blaetter = Qm::t('qm_wb_blaetter')->whereIn('obj_id', $aktiv)->where('datum', $datum)->pluck('id')->all();
         $namen = Qm::t('objekte')->whereIn('obj_id', $aktiv)->pluck('objektname', 'obj_id');
         $eintraege = collect(WachbuchService::eintraege($blaetter))->whereIn('art', self::WB_ARTEN)->map(fn ($e) => [
@@ -54,6 +61,7 @@ class PortalQmController extends Controller
                 'wachpersonen' => (int) ($imDienst[$o]->n ?? 0), 'seit' => isset($imDienst[$o]) ? Carbon::parse($imDienst[$o]->seit)->toIso8601String() : null,
                 'vorkommnisse_7_tage' => (int) ($vk7[$o] ?? 0),
                 'pdf_erlaubt' => (bool) ($pdfErlaubt[$o] ?? false),
+                'bericht_wartet' => (bool) ($wartet[$o] ?? false),
             ])->values(),
             'eintraege' => $eintraege,
         ]);
@@ -64,12 +72,36 @@ class PortalQmController extends Controller
     {
         $objId = (string) $request->query('obj_id');
         $datum = preg_match('/^\d{4}-\d{2}-\d{2}$/', (string) $request->query('datum')) ? $request->query('datum') : Qm::wachbuchTag();
+        $cfg = Qm::objektEinstellung($objId);
         if (!in_array($objId, $request->attributes->get('kp_objekte') ?: [], true)
             || !WachbuchService::aktiv($objId)
-            || !Qm::objektEinstellung($objId)->kunde_pdf) {
+            || !$cfg->kunde_pdf) {
             return response()->json(['error' => 'PDF ist für dieses Objekt nicht freigegeben.'], 404);
         }
+        if (WachbuchTagesbericht::aktivFuerTag($cfg, $datum)) {
+            $row = WachbuchTagesbericht::letzter($objId, $datum);
+            if (!$row) return response()->json(['error' => 'Tagesbericht noch nicht freigegeben.'], 404);
+            return WachbuchTagesberichtPdf::download($objId, $datum, true, $row);
+        }
         return WachbuchPdf::download($objId, $datum, true);
+    }
+
+    /** Only a signed, explicitly customer-filtered daily report is available here. */
+    public function wachbuchBericht(Request $request)
+    {
+        $objId = (string) $request->query('obj_id');
+        $datum = (string) $request->query('datum');
+        if (!in_array($objId, $request->attributes->get('kp_objekte') ?: [], true)
+            || !WachbuchService::aktiv($objId) || !Qm::objektEinstellung($objId)->kunde_pdf
+            || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datum)) abort(404);
+        $row = WachbuchTagesbericht::letzter($objId, $datum);
+        if (!$row) abort(404);
+        try {
+            return response()->json(['version' => $row->version, 'pruefsumme' => $row->pruefsumme,
+                'daten' => WachbuchTagesbericht::kundenSicht(WachbuchTagesbericht::snapshot($row))]);
+        } catch (\DomainException $e) {
+            return response()->json(['error' => 'Bericht konnte nicht geprüft werden.'], 409);
+        }
     }
 
     /** GET /api/kunden-portal/wachbuch/fotos/{id} */
@@ -201,12 +233,6 @@ class PortalQmController extends Controller
     /** Details whitelist per Art (no ID-card checks or internal approvals). */
     private function kundenDetails(string $art, array $d): array
     {
-        return match ($art) {
-            'besucher'   => array_intersect_key($d, array_flip(['name', 'firma', 'ziel', 'angemeldet', 'gegangen'])),
-            'lieferung'  => array_intersect_key($d, array_flip(['firma', 'zweck'])),
-            'schluessel' => array_intersect_key($d, array_flip(['schluessel', 'aktion'])),
-            'vorkommnis', 'alarm' => array_intersect_key($d, array_flip(['massnahmen', 'benachrichtigt'])),
-            default      => [],
-        };
+        return WachbuchPdf::kundenDetails($art, $d);
     }
 }

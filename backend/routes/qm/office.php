@@ -30,12 +30,14 @@ Route::prefix('qm')->middleware('permission:qm.view')->group(function () {
     Route::get('/wachbuch/objekte/{objId}', [WachbuchblattController::class, 'objekt']);
     Route::get('/wachbuch/objekte/{objId}/tage', [WachbuchblattController::class, 'tage']);
     Route::get('/wachbuch/objekte/{objId}/tag/{datum}', [WachbuchblattController::class, 'tag']);
+    Route::get('/wachbuch/objekte/{objId}/tag/{datum}/bericht', [WachbuchblattController::class, 'bericht']);
     Route::get('/wachbuch/objekte/{objId}/tag/{datum}/pdf', [WachbuchblattController::class, 'pdf']);
     Route::get('/wachbuch/fotos/{id}', [WachbuchblattController::class, 'foto'])->whereNumber('id');
 
     // Objekte & Dienstanweisungen
     Route::get('/objekte', [ObjektController::class, 'index']);
     Route::get('/objekte/{objId}', [ObjektController::class, 'show']);
+    Route::get('/objekte/{objId}/schluessel', [ObjektController::class, 'schluessel']);
     Route::get('/dienstanweisungen/{id}/pdf', [DienstanweisungController::class, 'pdf'])->whereNumber('id');
 
     // Reklamationen + Maßnahmen
@@ -58,8 +60,11 @@ Route::prefix('qm')->middleware('permission:qm.view')->group(function () {
     Route::post('/wachbuch/eintraege', [WachbuchblattController::class, 'store']);
     Route::post('/wachbuch/eintraege/{id}/erledigt', [WachbuchblattController::class, 'erledigt'])->whereNumber('id');
     Route::post('/wachbuch/blaetter/{id}/gegenzeichnen', [WachbuchblattController::class, 'gegenzeichnen'])->whereNumber('id');
+    Route::post('/wachbuch/objekte/{objId}/tag/{datum}/bericht/freigeben', [WachbuchblattController::class, 'berichtFreigeben']);
 
     Route::put('/objekte/{objId}/einstellung', [ObjektController::class, 'einstellung']);
+    Route::post('/objekte/{objId}/schluessel', [ObjektController::class, 'schluesselAnlegen']);
+    Route::post('/objekte/{objId}/schluessel/{id}/bestand', [ObjektController::class, 'bestandPruefen'])->whereNumber('id');
     Route::post('/objekte/{objId}/dienstanweisungen', [DienstanweisungController::class, 'store']);
     Route::post('/dienstanweisungen/{id}/freigabe', [DienstanweisungController::class, 'freigabe'])->whereNumber('id');
 

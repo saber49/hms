@@ -99,6 +99,10 @@ class ObjektController extends Controller
         [$d, $err] = Qm::pruefe($request->all(), [
             'wachbuch_aktiv' => 'sometimes|boolean', 'waechterkontrolle_aktiv' => 'sometimes|boolean', 'fotopflicht' => 'sometimes|boolean',
             'kunde_pdf' => 'sometimes|boolean',
+            'bericht_pflicht' => 'sometimes|boolean', 'durchgehend_bewacht' => 'sometimes|boolean',
+            'besucher_ausweis_pflicht' => 'sometimes|boolean',
+            'lieferung_freigabe_pflicht' => 'sometimes|boolean', 'uebergabe_checkliste' => 'sometimes|boolean',
+            'besuchszeit_ende' => ['sometimes', 'nullable', 'regex:/^([01]\d|2[0-3]):[0-5]\d$/'],
             'objektleiter_id' => 'sometimes|nullable|integer', 'bericht_empfaenger' => 'sometimes|nullable|string|max:500',
             'gps_grenze_m' => 'sometimes|integer|min:20|max:2000', 'notfallkontakte' => 'sometimes|nullable|string|max:2000',
             'soll_begehung_tage' => 'sometimes|nullable|integer|min:1|max:365', 'soll_besuch_tage' => 'sometimes|nullable|integer|min:1|max:365',
@@ -112,6 +116,11 @@ class ObjektController extends Controller
             if ($bad->isNotEmpty()) return Qm::fehler(['bericht_empfaenger' => ['Ungültige E-Mail: ' . $bad->implode(', ')]]);
         }
         $alt = Qm::objektEinstellung($objId);
+        if (array_key_exists('bericht_pflicht', $d) && $d['bericht_pflicht'] && !$alt->bericht_pflicht) {
+            // Existing customer PDFs stay available; the new final-only rule
+            // starts on the next complete operational day.
+            $d['bericht_ab'] = \Carbon\Carbon::parse(Qm::wachbuchTag())->addDay()->toDateString();
+        }
         $diff = Qm::diff($alt, $d);
         if ($diff) {
             Qm::t('qm_objekt_einstellungen')->updateOrInsert(['obj_id' => $objId], $d + ['updated_by' => $u->id, 'updated_at' => now()]
@@ -120,5 +129,55 @@ class ObjektController extends Controller
             Qm::changed('objekte');
         }
         return response()->json(['success' => true, 'einstellung' => Qm::objektEinstellung($objId)]);
+    }
+
+    /** Physical key register; a key is only counted after its stock is checked. */
+    public function schluessel(Request $request, string $objId)
+    {
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($request->user(), $objId)) return $e;
+        return response()->json(['schluessel' => Qm::t('qm_wb_schluessel')->where('obj_id', $objId)
+            ->orderBy('kennung')->get()]);
+    }
+
+    public function schluesselAnlegen(Request $request, string $objId)
+    {
+        $u = $request->user();
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($u, $objId) ?? $this->rechtOderFehler($u, 'objekt_einstellungen')) return $e;
+        [$d, $err] = Qm::pruefe($request->all(), [
+            'kennung' => 'required|string|max:80', 'bezeichnung' => 'required|string|max:200',
+        ]);
+        if ($err) return Qm::fehler($err);
+        $d['kennung'] = trim($d['kennung']);
+        $d['bezeichnung'] = trim($d['bezeichnung']);
+        if ($d['kennung'] === '' || $d['bezeichnung'] === '') return Qm::fehler(['kennung' => ['Kennung und Bezeichnung sind Pflicht.']]);
+        if (Qm::t('qm_wb_schluessel')->where('obj_id', $objId)->where('kennung', $d['kennung'])->exists()) {
+            return response()->json(['error' => 'Schlüssel ist bereits registriert.'], 409);
+        }
+        $id = Qm::t('qm_wb_schluessel')->insertGetId([
+            'obj_id' => $objId, 'kennung' => $d['kennung'], 'bezeichnung' => $d['bezeichnung'],
+            'aktiv' => true, 'created_at' => now(), 'updated_at' => now(),
+        ]);
+        Qm::log('wachbuch_schluessel', $id, 'registriert', null, ['obj_id' => $objId, 'kennung' => $d['kennung']], $u);
+        return response()->json(['success' => true, 'id' => $id], 201);
+    }
+
+    /** A named QM manager attests actual physical presence, never inferred from a note. */
+    public function bestandPruefen(Request $request, string $objId, int $id)
+    {
+        $u = $request->user();
+        if ($e = $this->nichtBereit() ?? $this->objektOderFehler($u, $objId) ?? $this->rechtOderFehler($u, 'objekt_einstellungen')) return $e;
+        $key = Qm::t('qm_wb_schluessel')->where('id', $id)->where('obj_id', $objId)->where('aktiv', 1)->first();
+        if (!$key) return response()->json(['error' => 'Schlüssel nicht gefunden.'], 404);
+        $last = Qm::t('qm_wb_eintraege')->where('obj_id', $objId)->where('art', 'schluessel')
+            ->where('details->schluessel', $key->kennung)
+            ->whereIn('details->aktion', ['ausgabe', 'ruecknahme'])->orderByDesc('id')->first();
+        if ($last && (json_decode((string) $last->details, true)['aktion'] ?? null) === 'ausgabe') {
+            return response()->json(['error' => 'Schlüssel ist noch ausgegeben. Bitte zuerst die Rücknahme dokumentieren.'], 409);
+        }
+        Qm::t('qm_wb_schluessel')->where('id', $id)->where('obj_id', $objId)->update([
+            'bestand_geprueft_am' => now(), 'bestand_geprueft_von' => $u->id, 'updated_at' => now(),
+        ]);
+        Qm::log('wachbuch_schluessel', $id, 'bestand_geprueft', null, ['obj_id' => $objId, 'kennung' => $key->kennung], $u);
+        return response()->json(['success' => true]);
     }
 }

@@ -34,6 +34,24 @@ class WaWachbuchController extends Controller
         }
         $blatt = WachbuchService::blattFuerSchicht($schicht->einsatz_id, $dn);
         $cfg = Qm::objektEinstellung($schicht->obj_id);
+        $visits = Qm::t('qm_wb_eintraege')->where('obj_id', $schicht->obj_id)->where('art', 'besucher')
+            ->where('zeit', '>=', now()->subDays(2))->orderBy('id')->get(['id', 'details', 'zeit']);
+        $closed = $visits->filter(fn ($v) => (json_decode((string) $v->details, true)['vorgang'] ?? '') === 'abmeldung')
+            ->map(fn ($v) => (int) (json_decode((string) $v->details, true)['anmeldung_id'] ?? 0))->all();
+        $open = $visits->filter(fn ($v) => (json_decode((string) $v->details, true)['vorgang'] ?? '') !== 'abmeldung'
+            && !in_array((int) $v->id, $closed, true))
+            ->map(fn ($v) => [
+                'id' => (int) $v->id, 'name' => json_decode((string) $v->details, true)['name'] ?? '',
+                'ziel' => json_decode((string) $v->details, true)['ziel'] ?? '', 'zeit' => $v->zeit,
+            ])->values();
+        $handoverRows = Qm::t('qm_wb_eintraege')->where('obj_id', $schicht->obj_id)->where('art', 'uebergabe')
+            ->where('zeit', '>=', now()->subHours(36))->orderByDesc('id')->limit(100)->get(['id', 'dienst_nr', 'erfasst_von', 'details', 'zeit']);
+        $accepted = $handoverRows->filter(fn ($v) => (json_decode((string) $v->details, true)['vorgang'] ?? '') === 'uebernommen')
+            ->map(fn ($v) => (int) (json_decode((string) $v->details, true)['referenz_id'] ?? 0))->all();
+        $handover = $handoverRows->filter(fn ($v) => $v->dienst_nr !== $dn
+            && (json_decode((string) $v->details, true)['vorgang'] ?? '') === 'uebergeben'
+            && !in_array((int) $v->id, $accepted, true))
+            ->map(fn ($v) => ['id' => (int) $v->id, 'von' => $v->erfasst_von, 'zeit' => $v->zeit])->values();
         // Open customer notes for this Objekt (today) — the guard ticks them off.
         $hinweise = Qm::t('qm_wb_eintraege')->where('obj_id', $schicht->obj_id)->where('art', 'hinweis')
             ->where('quelle', 'kunde')->where('zeit', '>=', now()->subHours(24))->orderBy('zeit')->get()
@@ -48,6 +66,14 @@ class WaWachbuchController extends Controller
             'blatt_id' => (int) $blatt->id,
             'fotopflicht' => (bool) $cfg->fotopflicht, 'gps_grenze_m' => (int) ($cfg->gps_grenze_m ?? 150),
             'notfallkontakte' => trim((string) ($cfg->notfallkontakte ?? '')) ?: null,
+            'bericht_pflicht' => (bool) $cfg->bericht_pflicht,
+            'besucher_ausweis_pflicht' => (bool) $cfg->besucher_ausweis_pflicht,
+            'lieferung_freigabe_pflicht' => (bool) $cfg->lieferung_freigabe_pflicht,
+            'uebergabe_checkliste' => (bool) $cfg->uebergabe_checkliste,
+            'besuchszeit_ende' => $cfg->besuchszeit_ende,
+            'offene_besucher' => $open, 'offene_uebergaben' => $handover,
+            'schluesselregister' => Qm::t('qm_wb_schluessel')->where('obj_id', $schicht->obj_id)
+                ->where('aktiv', 1)->orderBy('kennung')->get(['kennung', 'bezeichnung', 'bestand_geprueft_am']),
             'eintraege' => WachbuchService::eintraege([(int) $blatt->id]),
             'hinweise' => $hinweise,
             'arten' => WachbuchService::ARTEN, 'freigabe_durch' => WachbuchService::FREIGABE_DURCH,
@@ -76,6 +102,8 @@ class WaWachbuchController extends Controller
         }
 
         $cfg = Qm::objektEinstellung((string) $blatt->obj_id);
+        [$d, $vorgangError] = WachbuchService::pruefeObjektEintrag($blatt, $d);
+        if ($vorgangError) return Qm::fehler($vorgangError);
         $fotoPflicht = $d['art'] === 'foto' || ($d['art'] === 'vorkommnis' && (bool) $cfg->fotopflicht);
         if ($fotoPflicht && !$request->hasFile('foto')) {
             return Qm::fehler(['foto' => ['Foto ist Pflicht.']]);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hms-worker-v89';
+const CACHE_NAME = 'hms-worker-v90';
 const FETCH_TIMEOUT_MS = 12000;
 
 // fetch() has no built-in timeout — a stalled connection on a bad network
