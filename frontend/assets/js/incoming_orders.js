@@ -1991,6 +1991,7 @@ function wizAppendDayRow(tbody, idx, dateStr, dayOfWeek, von, bis, sollStd, gese
     tr.dataset.artikel = artikelId || _beState.activeArtTab || (_beState.selArt?.artikel_id) || '';
     tr.dataset.von = von;
     tr.dataset.bis = bis;
+    tr.dataset.initialSlot = wizDaySlot(dateStr, tr.dataset.artikel, von, bis);
     tr.dataset.std = sollStd;
     tr.dataset.pauseMinuten = parseInt(pauseMinuten) || 0;
     tr.dataset.gesetzlPause = dispoStatus ? (parseInt(gesetzlPause) || 0) : tr.dataset.pauseMinuten;
@@ -2207,16 +2208,7 @@ function wizSaveDayEdit(btnOrRow) {
     if (autoP !== null && !row._pauseTouched && (timesChanged || !row.dataset.pauseOverride)) pause = autoP;
     if (!datum) { showToast('Bitte ein Datum angeben', 'error'); return false; }
     if (!von || !bis) { showToast('Bitte Von- und Bis-Zeit angeben', 'error'); return false; }
-    // Prevent an exact duplicate of another row — same datum + von + bis
-    // UNDER THE SAME artikel. The same slot under another selected Leistung
-    // is a legitimate parallel service (Bewachung + Bau on one day).
-    const tbody = row.closest('tbody');
-    const primaryArt = ((_beState.selArts || [])[0]?.artikel_id) || '';
-    const rowArt = row.dataset.artikel || primaryArt;
-    const key = `${datum}|${von}|${bis}|${rowArt}`;
-    const dupe = [...tbody.querySelectorAll('tr')].some(r =>
-        r !== row && `${r.dataset.datum}|${r.dataset.von}|${r.dataset.bis}|${r.dataset.artikel || primaryArt}` === key);
-    if (dupe) { showToast('Ein identischer Tag (Datum + Zeiten + Leistung) existiert bereits', 'error'); return false; }
+    // Parallel Einsätze are valid; an unacknowledged duplicate is checked on order save.
     // Menge is the hard cap for the M/W mix — never guess which gender to
     // drop, make the user fix it.
     const mengeInput = cells[8].querySelector('.be-day-menge');
@@ -2322,6 +2314,7 @@ function wizDuplicateDay(btn) {
         null, row.dataset.artikel || ''
     );
     const newRow = tbody.lastElementChild;
+    if (newRow) newRow.dataset.parallelSlot = wizDaySlot(newRow.dataset.datum, newRow.dataset.artikel, newRow.dataset.von, newRow.dataset.bis);
     if (newRow && row.dataset.ortOverride) newRow.dataset.ortOverride = row.dataset.ortOverride;
     if (newRow && row.dataset.geschlechtMix) {
         newRow.dataset.geschlechtMix = row.dataset.geschlechtMix;
@@ -2345,6 +2338,33 @@ function wizParseDateInput(raw) {
     return null;
 }
 
+function wizDaySlot(datum, artikel, von, bis) {
+    return `${datum}|${artikel || ''}|${von || ''}|${bis || ''}`;
+}
+
+function wizParallelChoice(datum, von, bis, current, add, canIncrease) {
+    return new Promise(resolve => {
+        const dlg = document.createElement('md-dialog');
+        dlg.innerHTML = `
+            <div slot="headline">Gleiche Einsatzzeit</div>
+            <div slot="content">
+                <p>${escapeHtml(formatDate(datum))} ${escapeHtml(von)}–${escapeHtml(bis)} ist für diese Leistung bereits eingeplant.</p>
+                <p>Benötigen Sie mehr Personal im selben Einsatz oder einen getrennt planbaren Einsatz?</p>
+                ${canIncrease ? `<p>Personal erhöhen: ${current} + ${add} = ${current + add} Personen in einer Schicht.</p>`
+                    : '<p>Personal bitte direkt in der bestehenden Schicht bearbeiten (bereits besetzt, mehrere Einsätze oder Maximum erreicht).</p>'}
+            </div>
+            <div slot="actions">
+                <md-text-button data-v="cancel">Abbrechen</md-text-button>
+                ${canIncrease ? '<md-filled-tonal-button data-v="people">Personal erhöhen</md-filled-tonal-button>' : ''}
+                <md-filled-button data-v="shift">Separaten Einsatz anlegen</md-filled-button>
+            </div>`;
+        document.body.appendChild(dlg);
+        dlg.querySelectorAll('[data-v]').forEach(btn => { btn.onclick = () => dlg.close(btn.dataset.v); });
+        dlg.addEventListener('closed', () => { const choice = dlg.returnValue; dlg.remove(); resolve(choice); }, { once: true });
+        dlg.show();
+    });
+}
+
 async function wizAddSingleDay() {
     if (!wizVorlageGuard()) return;
     const dateInput = document.getElementById('wiz_single_date');
@@ -2366,22 +2386,35 @@ async function wizAddSingleDay() {
     const anf = wizCollectAnforderungen();
 
     const tbody = document.getElementById('wizDaysBody');
-    // Only reject if there is already an EXACT (datum, von, bis) match UNDER
-    // THE SAME artikel — the same slot under another selected Leistung is a
-    // legitimate parallel service (Bewachung + Bau on one day).
+    // Offer an explicit choice only for the same service and time; parallel
+    // services are different Einsätze by design.
     const curArt = _beState.activeArtTab || (_beState.selArt?.artikel_id) || '';
     const primaryArt = ((_beState.selArts || [])[0]?.artikel_id) || '';
-    const dup = [...tbody.querySelectorAll(`tr[data-datum="${dateStr}"]`)].find(r =>
+    const matches = [...tbody.querySelectorAll(`tr[data-datum="${dateStr}"]`)].filter(r =>
         (r.dataset.von || '') === (von || '') &&
         (r.dataset.bis || '') === (bis || '') &&
         (r.dataset.artikel || primaryArt) === curArt
     );
-    if (dup) {
-        // Same day + same time already exists. This IS allowed (a 2nd shift /
-        // 2nd team on the same slot becomes a separate Einsatz in Dispo), but
-        // confirm first so it isn't an accidental double-add.
-        const ok = await mdConfirm(`${formatDate(dateStr)} ${von}–${bis} ist bereits vorhanden.<br>Als zweite Schicht (separater Einsatz) trotzdem hinzufügen?`, 'Doppelter Tag');
-        if (!ok) return;
+    if (matches.length) {
+        const dup = matches[0];
+        const current = parseInt(dup.dataset.menge) || 1;
+        const add = parseInt(menge) || 1;
+        const dupAnf = wizParseAnf(dup.dataset.anforderungen) || wizCollectAnforderungen() || {};
+        const templateMix = wizParseAnf(dup.dataset.geschlechtMix);
+        // Position and gender counts need an explicit per-day edit; changing Menge alone would leave them stale.
+        const hasStaffingSplit = (dupAnf.positionen || []).length || dupAnf.geschlecht_mix || templateMix;
+        const canIncrease = matches.length === 1 && !wizRowLocked(dup) && !dup.classList.contains('be-day-editing')
+            && !hasStaffingSplit && current + add <= 100;
+        const choice = await wizParallelChoice(dateStr, von, bis, current, add, canIncrease);
+        if (choice === 'people' && canIncrease) {
+            dup.dataset.menge = current + add;
+            wizRedrawDayRow(dup, 0);
+            dateInput.value = '';
+            wizUpdateDaysFooter();
+            showToast(`Personal für ${formatDate(dateStr)} auf ${current + add} erhöht`);
+            return;
+        }
+        if (choice !== 'shift') return;
     }
 
     const stdMins = (von && bis) ? beShiftNetMinutes(von, bis, pause) : 0;
@@ -2392,6 +2425,7 @@ async function wizAddSingleDay() {
 
     _wizDayCount++;
     wizAppendDayRow(tbody, _wizDayCount, dateStr, dayOfWeek, von, bis, sollStd, gesetzlPause, menge, beschreibung, pause, anf, document.getElementById('wiz_shift_ort')?.value || '');
+    if (matches.length) tbody.lastElementChild.dataset.parallelSlot = wizDaySlot(dateStr, curArt, von, bis);
     // Keep the table sorted chronologically + renumber the index column
     wizSortAndRenumberDays();
     dateInput.value = '';
@@ -3946,16 +3980,21 @@ async function wizConfirmOutOfMonth(tage, storedDates) {
 }
 
 async function wizConfirmDuplicateDays(tage) {
-    const key = t => `${t.datum}|${t.artikel_id || ''}|${t.zeit_von || ''}|${t.zeit_bis || ''}`;
-    const keys = tage.map(key);
-    const dups = [...new Set(keys.filter((k, i) => keys.indexOf(k) !== i))];
+    const rows = [...document.getElementById('wizDaysBody').querySelectorAll('tr')];
+    const keys = tage.map(t => wizDaySlot(t.datum, t.artikel_id, t.zeit_von, t.zeit_bis));
+    const dups = [...new Set(keys.filter((k, i) => {
+        const first = keys.indexOf(k);
+        if (first === i) return false;
+        const firstMoved = rows[first]?.dataset.initialSlot !== k && rows[first]?.dataset.parallelSlot !== k;
+        return firstMoved || (rows[i]?.dataset.parallelSlot !== k && rows[i]?.dataset.originalSlot !== k);
+    }))];
     if (!dups.length) return true;
     const list = dups.map(k => {
         const [d, , von, bis] = k.split('|');
         return formatDate(d) + (von || bis ? ' ' + (von || '–') + '–' + (bis || '–') : '');
     }).join('<br>&bull; ');
-    return mdConfirm('Folgende Schichten sind <strong>doppelt</strong> eingetragen (gleicher Tag und gleiche Uhrzeit):<br><br>&bull; ' + list + '<br><br>Trotzdem speichern?',
-        { title: 'Doppelte Schichten', confirmLabel: 'Trotzdem speichern' });
+    return mdConfirm('Diese gleichen Zeiten wurden noch nicht als getrennte Einsätze bestätigt:<br><br>&bull; ' + list + '<br><br>Je Eintrag entsteht ein eigener Einsatz in der Planung. So speichern?',
+        { title: 'Parallele Einsätze prüfen', confirmLabel: 'Getrennt speichern' });
 }
 
 async function wizSaveIncoming() {
@@ -4515,6 +4554,7 @@ async function editIncomingOrder(id) {
             const pmin = (t.pause_minuten !== undefined && t.pause_minuten !== null) ? (parseInt(t.pause_minuten) || 0) : 0;
             wizAppendDayRow(tbody, _wizDayCount, dateStr, dow, von, bis,
                 t.soll_std || '', gp, t.menge || '', t.beschreibung || '', pmin, wizParseAnf(t.anforderungen), t.ort || '', t.dispo_status || null, t.artikel_id || '');
+            tbody.lastElementChild.dataset.originalSlot = wizDaySlot(dateStr, tbody.lastElementChild.dataset.artikel, von, bis);
             if (t.tag_uid) tbody.lastElementChild.dataset.tagUid = t.tag_uid;
         });
         // Days whose stored Ort differs from the header default already carry
@@ -4816,4 +4856,3 @@ if (window.HMSRealtime) {
         } catch (e) { /* best-effort */ }
     });
 }
-
