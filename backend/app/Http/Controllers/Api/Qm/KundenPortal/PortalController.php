@@ -59,8 +59,13 @@ class PortalController extends Controller
             'passwort_aendern' => (bool) ($z->passwort_aendern ?? false),
             'firma'   => $tenant->name,
             'objektbuch_label' => \App\Support\TenantProfile::objektbuchLabel($tenant),
-            'qm'      => Qm::ready() && Qm::boolSetting('portal_qm'),
+            'qm'      => Qm::ready() && (Qm::boolSetting('portal_dienstanweisungen') || Qm::boolSetting('portal_reklamationen')),
+            'portal_dienstanweisungen' => Qm::ready() && Qm::boolSetting('portal_dienstanweisungen'),
+            'portal_reklamationen' => Qm::ready() && Qm::boolSetting('portal_reklamationen'),
+            'portal_fotos' => Qm::ready() && Qm::boolSetting('portal_fotos'),
             'wachbuch' => Qm::ready() && Qm::boolSetting('modul_wachbuch'),
+            'tag_beginn' => Qm::ready() ? Qm::tagBeginn() : '06:00',
+            'wachbuch_tag' => Qm::ready() ? Qm::wachbuchTag() : null,
             'objekte' => $objekte,
         ]);
     }
@@ -158,6 +163,7 @@ class PortalController extends Controller
     /** GET /api/kunden-portal/fotos?von=&bis=&obj_id= */
     public function fotos(Request $request)
     {
+        if (!Qm::ready() || !Qm::boolSetting('portal_fotos')) return response()->json(['fotos' => []]);
         if (!Schema::connection('tenant')->hasColumn('mitarbeiter_nachrichten', 'einsatz_id')) {
             return response()->json(['fotos' => []]);
         }
@@ -180,6 +186,7 @@ class PortalController extends Controller
     /** GET /api/kunden-portal/fotos/{id} — image bytes, ownership re-checked. */
     public function foto(Request $request, int $id)
     {
+        if (!Qm::ready() || !Qm::boolSetting('portal_fotos')) abort(404);
         if (!Schema::connection('tenant')->hasColumn('mitarbeiter_nachrichten', 'einsatz_id')) abort(404);
         $path = $this->fotoQuery($request)->where('mn.id', $id)->value('mn.datei_pfad');
         if (!$path || !Storage::disk('public')->exists($path)) abort(404);

@@ -39,14 +39,14 @@ KP_TABS.wachbuch = {
         const obj = document.getElementById('kpObjekt').value;
         const data = await kpFetch('/wachbuch?datum=' + kpWbDatum + (obj ? '&obj_id=' + encodeURIComponent(obj) : ''));
         if (!data || seq !== kpLoadSeq) return;
-        const heute = kpWbDatum === kpIso(new Date());
+        const heute = kpWbDatum >= (kpMe?.wachbuch_tag || kpIso(new Date()));
         const korrigiert = new Set((data.eintraege || []).filter(e => e.berichtigt_durch).map(e => e.id));
         box.innerHTML = `
             <div class="kp-wb-nav">
                 <button class="kp-icon-btn" onclick="kpWbTag(-1)" title="Vorheriger Tag"><i class="material-symbols-outlined">chevron_left</i></button>
-                <input type="date" class="kp-select" value="${kpWbDatum}" max="${kpIso(new Date())}" onchange="kpWbDatum=this.value;kpLoad()">
+                <input type="date" class="kp-select" value="${kpWbDatum}" max="${kpMe?.wachbuch_tag || kpIso(new Date())}" onchange="kpWbDatum=this.value;kpLoad()">
                 <button class="kp-icon-btn" onclick="kpWbTag(1)" ${heute ? 'disabled' : ''} title="Nächster Tag"><i class="material-symbols-outlined">chevron_right</i></button>
-                <span class="kp-muted">${kpDayName(kpWbDatum, true)} 06:00 – folgender Tag 06:00</span>
+                <span class="kp-muted">${kpDayName(kpWbDatum, true)} ${kpEsc(kpWbStart)} – folgender Tag ${kpEsc(kpWbStart)}</span>
             </div>
             <div class="kp-wb-status">${(data.status || []).map(s => `
                 <div class="kp-card kp-wb-obj">
