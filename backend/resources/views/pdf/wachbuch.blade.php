@@ -78,9 +78,10 @@
     .fotos .cap { font-size: 6.8px; color: #94a3b8; }
     .leer { color: #64748b; padding: 10px 0; }
 
-    /* Same pinned legal-footer contract as pdf/order-form + a doc line above it. */
-    .footer-doc { position: fixed; left: 40px; right: 40px; bottom: 88px; font-size: 7px; color: #94a3b8; text-align: center; }
-    .footer-legal { position: fixed; left: 40px; right: 40px; bottom: 8px; padding-top: 4px; border-top: 4px solid #000; font-size: 6px !important; color: #000; line-height: 1.2; }
+    /* Dompdf positions fixed elements relative to the content box. Keep both
+       footers in the reserved @page bottom margin, below the entry table. */
+    .footer-doc { position: fixed; left: 40px; right: 40px; bottom: -14px; font-size: 7px; color: #94a3b8; text-align: center; }
+    .footer-legal { position: fixed; left: 40px; right: 40px; bottom: -97px; padding-top: 4px; border-top: 4px solid #000; font-size: 6px !important; color: #000; line-height: 1.2; }
     .footer-legal table, .footer-legal td, .footer-legal .footer-line { font-size: 6px !important; line-height: 1.2 !important; }
     .footer-legal-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     .footer-legal-col { vertical-align: top; padding: 0 12px; width: 33.33%; }
@@ -120,9 +121,10 @@
     @if(!$kunde && ($objekt->ansprechpartner || $objekt->kontakt_telefon))
         <div class="meta-row"><div class="meta-label">Ansprechpartner</div><div class="meta-value">{{ trim(($objekt->ansprechpartner ?? '') . ' ' . ($objekt->kontakt_telefon ?? '')) }}</div></div>
     @endif
-    <div class="meta-row"><div class="meta-label">Blätter / Einträge</div><div class="meta-value">{{ $blaetter->count() }} {{ $blaetter->count() === 1 ? 'Blatt' : 'Blätter' }} · {{ $eintraege->count() }} Einträge</div></div>
+    <div class="meta-row"><div class="meta-label">{{ $kunde ? 'Einträge' : 'Blätter / Einträge' }}</div><div class="meta-value">@if(!$kunde){{ $blaetter->count() }} {{ $blaetter->count() === 1 ? 'Blatt' : 'Blätter' }} · @endif{{ $eintraege->count() }} Einträge</div></div>
 </div>
 
+@if(!$kunde)
 @foreach($blaetter as $b)
     <div class="blatt">
         <span class="t">{{ $b->name }}</span>
@@ -144,6 +146,7 @@
         @endif
     </div>
 @endforeach
+@endif
 
 @if($eintraege->isEmpty())
     <div class="leer">Keine Einträge an diesem Tag.</div>
