@@ -18,6 +18,13 @@ class WachbuchTagesberichtPdf
         if ($kunde) $daten = WachbuchTagesbericht::kundenSicht($daten);
 
         $settings = WachbuchPdf::pdfSettings();
+        $company = [
+            'address' => $tenant->company_address ?? '', 'zip' => $tenant->company_zip ?? '',
+            'city' => $tenant->company_city ?? '', 'phone' => $tenant->company_phone ?? '',
+            'email' => $tenant->company_email ?? '', 'website' => $tenant->website ?? '',
+            'register' => $tenant->handelsregister_nr ?? '', 'ust_id' => $tenant->ust_id ?? '',
+            'bank' => $tenant->bank_name ?? '', 'iban' => $tenant->iban ?? '',
+        ];
         $logo = null;
         if (empty($settings['hide_logo']) && !empty($tenant->logo_path)) {
             $full = storage_path('app/public/' . $tenant->logo_path);
@@ -41,7 +48,7 @@ class WachbuchTagesberichtPdf
         $label = TenantProfile::objektbuchLabel($tenant);
         $pdf = Pdf::loadView('pdf.wachbuch-tagesbericht', [
             'daten' => $daten, 'kunde' => $kunde, 'version' => $version,
-            'label' => $label, 'logo' => $logo, 'settings' => $settings,
+            'label' => $label, 'logo' => $logo, 'settings' => $settings, 'company' => $company,
             'fotos' => $fotos, 'fotosNichtGezeigt' => max(0, $rows->count() - $gezeigt),
         ])->setPaper('A4', 'portrait');
         $pdf->render();
