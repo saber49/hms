@@ -52,11 +52,13 @@ echo "== $ENV: baseline ${OLD:0:8} -> deploy ${NEW:0:8} (origin/$BRANCH)"
 git checkout -qB "$BRANCH" "origin/$BRANCH"
 
 # --- 1) drift check: live vs last-deployed baseline --------------------------
-rm -rf /tmp/hms-base && mkdir -p /tmp/hms-base
-git archive "$OLD" | tar -x -C /tmp/hms-base
+BASE=$(mktemp -d /tmp/hms-base.XXXXXX)
+LINT=$(mktemp /tmp/hms-lint.XXXXXX)
+trap 'rm -rf "$BASE" "$LINT"' EXIT
+git archive "$OLD" | tar -x -C "$BASE"
 
-DRIFT=$( { rsync -rcn --delete -i "${BE_X[@]}" /tmp/hms-base/backend/  "$BE/" || true; \
-           rsync -rcn --delete -i "${FE_X[@]}" /tmp/hms-base/frontend/ "$FE/" || true; } )
+DRIFT=$( { rsync -rcn --delete -i "${BE_X[@]}" "$BASE/backend/"  "$BE/" || true; \
+           rsync -rcn --delete -i "${FE_X[@]}" "$BASE/frontend/" "$FE/" || true; } )
 if [ -n "$DRIFT" ]; then
   echo "!! DRIFT vs baseline $OLD (files changed on server outside git):"
   echo "$DRIFT" | head -60
@@ -76,7 +78,7 @@ if [ -z "$CH_BE$CH_FE" ]; then echo "nothing to deploy"; exit 0; fi
 # --- 3) apply: backup replaced/deleted files, rsync with delete --------------
 git checkout -qf "$NEW"
 mkdir -p "$BK/be" "$BK/fe"
-echo "$CH_BE" | awk '{sub(/^[^ ]+ +/,""); print}' | grep '\.php$' > /tmp/hms-lint || true
+echo "$CH_BE" | awk '{sub(/^[^ ]+ +/,""); print}' | grep '\.php$' > "$LINT" || true
 rsync -rc --delete --backup --backup-dir="$BK/be/" --chown=www-data:www-data "${BE_X[@]}" "$REPO/backend/"  "$BE/"
 rsync -rc --delete --backup --backup-dir="$BK/fe/" --chown=www-data:www-data "${FE_X[@]}" "$REPO/frontend/" "$FE/"
 
@@ -84,7 +86,7 @@ rsync -rc --delete --backup --backup-dir="$BK/fe/" --chown=www-data:www-data "${
 if [ -n "$CH_BE" ]; then
   while IFS= read -r f; do
     [ -f "$BE/$f" ] && php -l "$BE/$f" >/dev/null || { [ ! -f "$BE/$f" ] || { echo "LINT FAIL $f"; exit 1; }; }
-  done < /tmp/hms-lint
+  done < "$LINT"
   echo "php lint ok"
   if echo "$CH_BE" | grep -q 'database/migrations'; then
     (cd "$BE" && sudo -u www-data env HOME="$BE/storage/frankenphp" php artisan tenant:migrate 2>&1 | tail -15)
