@@ -112,6 +112,9 @@
 @endif
 
 <h2>Besucher · {{ count($daten['besucher']) }} Anmeldungen</h2>
+@if(!empty($daten['besuchszeit_ende']))
+    <p class="small">Besuchszeit endet um {{ $daten['besuchszeit_ende'] }} Uhr. Aussagen beruhen ausschließlich auf erfassten Einträgen.</p>
+@endif
 <table class="list">
     <thead><tr><th>Zeit</th><th>Name</th><th>Ziel</th><th>Angemeldet</th>@if(!$kunde)<th>Ausweis geprüft</th>@endif<th>Abgemeldet</th></tr></thead>
     <tbody>

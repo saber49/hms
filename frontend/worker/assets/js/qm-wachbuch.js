@@ -211,6 +211,8 @@
         const register = d.schluesselregister || [];
         const spezifisch = {
             besucher: feld('wq_name', 'Name *') + feld('wq_firma', 'Firma') + feld('wq_ziel', 'Ziel / Ansprechpartner *') + feld('wq_kennz', 'Kennzeichen', 'maxlength="20"')
+                + (d.besuchszeit_ende ? `<p class="wqm-muted">Besuchszeit bis ${esc(d.besuchszeit_ende)} Uhr. Späte Besuche begründen.</p>` : '')
+                + feld('wq_ausnahme', 'Ausnahme bei spätem Besuch')
                 + janein('wq_angemeldet', 'angemeldet') + janein('wq_ausweis', d.besucher_ausweis_pflicht ? 'Ausweis geprüft *' : 'Ausweis geprüft'),
             lieferung: feld('wq_firma', 'Firma *') + feld('wq_person', 'Person') + feld('wq_kennz', 'Kennzeichen', 'maxlength="20"') + feld('wq_zweck', 'Zweck')
                 + `<label class="wqm-label">Freigabe durch</label><select id="wq_freigabe" class="wqm-input">${Object.entries(FREIGABE).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>`
@@ -256,7 +258,8 @@
         if (fotoNoetig && !file) return err('Bitte ein Foto aufnehmen.');
         const details = {
             besucher: besucherId ? { vorgang: 'abmeldung', anmeldung_id: besucherId } :
-                { vorgang: 'anmeldung', name: wert('wq_name'), firma: wert('wq_firma'), ziel: wert('wq_ziel'), kennzeichen: wert('wq_kennz'), angemeldet: wert('wq_angemeldet'), ausweis_geprueft: wert('wq_ausweis') },
+                { vorgang: 'anmeldung', name: wert('wq_name'), firma: wert('wq_firma'), ziel: wert('wq_ziel'), kennzeichen: wert('wq_kennz'),
+                    angemeldet: wert('wq_angemeldet'), ausweis_geprueft: wert('wq_ausweis'), ausnahme_grund: wert('wq_ausnahme') },
             lieferung: { firma: wert('wq_firma'), person: wert('wq_person'), kennzeichen: wert('wq_kennz'), zweck: wert('wq_zweck'),
                 freigabe_durch: wert('wq_freigabe'), freigabe_name: wert('wq_freigabe_name'),
                 freigabe_bestaetigt: wert('wq_freigabe_ok'), ausweis_geprueft: wert('wq_ausweis') },

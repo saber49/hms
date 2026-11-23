@@ -311,7 +311,8 @@ class WachbuchService
             'besucher'   => ['name' => $s('name'), 'firma' => $s('firma'), 'ziel' => $s('ziel'), 'kennzeichen' => $s('kennzeichen', 20),
                              'vorgang' => ($det['vorgang'] ?? null) === 'abmeldung' ? 'abmeldung' : 'anmeldung',
                              'anmeldung_id' => filter_var($det['anmeldung_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: null,
-                             'angemeldet' => $b('angemeldet'), 'ausweis_geprueft' => $b('ausweis_geprueft'), 'gegangen' => $s('gegangen', 5)],
+                             'angemeldet' => $b('angemeldet'), 'ausweis_geprueft' => $b('ausweis_geprueft'),
+                             'ausnahme_grund' => $s('ausnahme_grund', 500), 'gegangen' => $s('gegangen', 5)],
             'lieferung'  => ['firma' => $s('firma'), 'person' => $s('person'), 'kennzeichen' => $s('kennzeichen', 20), 'zweck' => $s('zweck'),
                              'freigabe_durch' => in_array($det['freigabe_durch'] ?? null, self::FREIGABE_DURCH, true) ? $det['freigabe_durch'] : null,
                              'freigabe_name' => $s('freigabe_name'), 'freigabe_bestaetigt' => $b('freigabe_bestaetigt'),
@@ -378,6 +379,16 @@ class WachbuchService
             }
             if (($det['vorgang'] ?? '') !== 'abmeldung' && $cfg->bericht_pflicht && ($det['angemeldet'] ?? null) !== true) {
                 $err['details.angemeldet'][] = 'Besucher muss ausdrücklich angemeldet werden.';
+            }
+            if (($det['vorgang'] ?? '') !== 'abmeldung' && $cfg->besuchszeit_ende) {
+                $event = Carbon::parse($d['erfasst_am'] ?? now())->setTimezone('Europe/Berlin');
+                $tag = substr((string) $blatt->datum, 0, 10);
+                $beg = Carbon::parse($tag . ' ' . Qm::tagBeginn(), 'Europe/Berlin');
+                $grenze = Carbon::parse($tag . ' ' . $cfg->besuchszeit_ende, 'Europe/Berlin');
+                if ($grenze->lte($beg)) $grenze->addDay();
+                if ($event->gte($grenze) && $event->lt($beg->addDay()) && empty($det['ausnahme_grund'])) {
+                    $err['details.ausnahme_grund'][] = 'Besuch nach Ende der Besuchszeit: Ausnahme begründen.';
+                }
             }
         }
         if ($d['art'] === 'lieferung' && $cfg->lieferung_freigabe_pflicht
