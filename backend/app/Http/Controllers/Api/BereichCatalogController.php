@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Support\BereichScope;
 use App\Support\Branchen;
+use App\Support\TenantProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -88,7 +89,8 @@ class BereichCatalogController extends Controller
             return response()->json(array_values(array_unique($flat)));
         }
 
-        return response()->json(['mains' => $mains, 'managed' => true, 'branchen' => Branchen::forUi(), 'branche_ok' => Branchen::hasColumn()]);
+        $branchen = array_values(array_filter(Branchen::forUi(), fn ($b) => TenantProfile::isSecurityProfile($b['key'])));
+        return response()->json(['mains' => $mains, 'managed' => true, 'branchen' => $branchen, 'branche_ok' => Branchen::hasColumn()]);
     }
 
     /** GET /sicherheitsleistungen — active security service types (artikel picker). */
@@ -163,10 +165,10 @@ class BereichCatalogController extends Controller
             $insert['leistungsart_id'] = ($lid !== null && $lid !== '') ? (int) $lid
                 : \App\Support\SecurityServices::idForKey(\App\Support\SecurityServices::guess($name));
         }
-        $branche = $request->input('branche');
-        if ($branche !== null && $branche !== '') {
-            if ($parentId !== null || !Branchen::exists($branche)) {
-                return response()->json(['error' => 'Ungültige Branche'], 422);
+        if ($parentId === null || $request->exists('branche')) {
+            $branche = $request->input('branche', TenantProfile::INDUSTRY);
+            if ($parentId !== null || !TenantProfile::isSecurityProfile($branche)) {
+                return response()->json(['error' => 'Nur Sicherheitsdienst und Veranstaltungsdienst sind verfügbar'], 422);
             }
             if (Branchen::hasColumn()) $insert['branche'] = $branche;
         }
@@ -226,8 +228,7 @@ class BereichCatalogController extends Controller
             }
             $update[$f] = $request->boolean($f) ? 1 : 0;
         }
-        // Industry of a MAIN (null = none). Switches/lists follow only via
-        // the explicit starter pack (POST /bereich-catalog/{id}/paket).
+        // Only security industries may be selected on a main Bereich.
         if (array_key_exists('branche', $request->all())) {
             if (!Branchen::hasColumn()) {
                 return response()->json(['error' => 'Noch nicht verfügbar (Migration ausstehend)'], 409);
@@ -236,10 +237,10 @@ class BereichCatalogController extends Controller
                 return response()->json(['error' => 'Nur für Hauptbereiche'], 422);
             }
             $b = $request->input('branche');
-            if ($b !== null && $b !== '' && !Branchen::exists($b)) {
-                return response()->json(['error' => 'Ungültige Branche'], 422);
+            if (!TenantProfile::isSecurityProfile($b)) {
+                return response()->json(['error' => 'Nur Sicherheitsdienst und Veranstaltungsdienst sind verfügbar'], 422);
             }
-            $update['branche'] = ($b === '' ? null : $b);
+            $update['branche'] = $b;
         }
         // Stadium duty implies a security area.
         if (!empty($update['stadiondienst'])) $update['bewachung'] = 1;
@@ -315,8 +316,8 @@ class BereichCatalogController extends Controller
         }
         if ($resp = $this->scopeCheckRow($request->user(), $row)) return $resp;
         $key = (string) ($request->input('branche') ?: ($row->branche ?? ''));
-        if (!Branchen::exists($key)) {
-            return response()->json(['error' => 'Bitte zuerst eine Branche wählen'], 422);
+        if (!TenantProfile::isSecurityProfile($key)) {
+            return response()->json(['error' => 'Nur Sicherheitsdienst und Veranstaltungsdienst sind verfügbar'], 422);
         }
         $res = Branchen::applyPaket($id, $key);
         BereichScope::invalidateStaticCache();

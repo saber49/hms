@@ -700,11 +700,6 @@ function _cdocsFmtSize(bytes) {
 let _bereichCat = [];
 // Platform service types of the Sicherheitsbranche (GET /sicherheitsleistungen).
 let _bcatLeistungen = [];
-// Industry registry (GET /bereich-catalog → branchen): key, label, icon, paket summary.
-let _bereichBranchen = [];
-let _bereichBrancheOk = false;
-const _bcatBranche = (key) => (_bereichBranchen || []).find(b => b.key === key) || null;
-
 async function bcatSetLeistung(id, value) {
     const r = await apiPut(API_BASE + '/bereich-catalog/' + id, { leistungsart_id: value ? Number(value) : null });
     if (r && r.error) { showToast(r.error, 'error'); return; }
@@ -712,41 +707,6 @@ async function bcatSetLeistung(id, value) {
     _bcatReload();
 }
 window.bcatSetLeistung = bcatSetLeistung;
-
-// Industry of a Hauptbereich ('' = none). Lists/switches follow only via the pack.
-async function bcatSetBranche(id, key) {
-    const r = await apiPut(API_BASE + '/bereich-catalog/' + id, { branche: key || null });
-    if (!r || r.error) { showToast((r && r.error) || 'Fehler', 'error'); _bcatReload(); return; }
-    showToast('Branche gespeichert');
-    const m = (_bereichCat || []).find(x => x.id === id);
-    if (key && key !== 'sonstiges' && m) await _bcatPaketConfirmApply(id, m.name, key);
-    _bcatReload();
-}
-window.bcatSetBranche = bcatSetBranche;
-
-function bcatApplyPaket(id) {
-    const m = (_bereichCat || []).find(x => x.id === id);
-    if (m && m.branche) _bcatPaketConfirmApply(id, m.name, m.branche).then(_bcatReload);
-}
-window.bcatApplyPaket = bcatApplyPaket;
-
-async function _bcatPaketConfirmApply(id, name, key) {
-    const b = _bcatBranche(key);
-    if (!b) return;
-    const p = b.paket || { subs: [], quals: [], kleidung: [] };
-    const lines = [];
-    if (p.subs.length) lines.push('• Objektarten: ' + p.subs.join(', '));
-    p.quals.forEach(l => lines.push('• Qualifikationen „' + l.name + '“ (' + l.anzahl + ' Einträge)'));
-    p.kleidung.forEach(l => lines.push('• Dienstkleidung „' + l.name + '“ (' + l.anzahl + ' Einträge)'));
-    if (b.flags && b.flags.bewachung) lines.push('• Mitarbeiter-Formular: Bewachung §34a' + (b.flags.stadiondienst ? ' + Stadiondienst' : ''));
-    if (!lines.length) return;
-    if (!confirm('Branchen-Paket „' + b.label + '“ für „' + name + '“ übernehmen?\n\n' + lines.join('\n')
-        + '\n\nNur fehlende Einträge werden angelegt — Vorhandenes bleibt unverändert und kann danach umbenannt, deaktiviert oder gelöscht werden.')) return;
-    const r = await apiPost(API_BASE + '/bereich-catalog/' + id + '/paket', { branche: key });
-    if (!r || r.error) { showToast((r && r.error) || 'Paket konnte nicht übernommen werden', 'error'); return; }
-    const n = (r.subs || 0) + (r.listen || 0) + (r.eintraege || 0) + ((r.flags || []).length);
-    showToast(n ? `Paket übernommen — ${r.subs || 0} Objektarten, ${r.listen || 0} Listen, ${r.eintraege || 0} Einträge neu` : 'Alles aus dem Paket ist bereits vorhanden');
-}
 
 async function _cdocsBereicheRender(panel, quiet) {
     // quiet=true keeps the current DOM while refetching (no "Laden…" flash)
@@ -771,8 +731,6 @@ async function _cdocsBereicheRender(panel, quiet) {
         return;
     }
     _bereichCat = data.mains;
-    _bereichBranchen = Array.isArray(data.branchen) ? data.branchen : [];
-    _bereichBrancheOk = !!data.branche_ok;
     if (typeof ensureBereichColors === 'function') await ensureBereichColors(true);
     if (quiet && panel.childElementCount && typeof hmsMorph === 'function') {
         // Own edit: the field that was just submitted must come back empty
@@ -958,29 +916,7 @@ function _cdocsBereicheHtml() {
 
     // ── Einstellungen ───────────────────────────────────────────────
     const legacy = mains.length > 1;
-    const br = _bcatBranche(m.branche);
-    const brOpts = '<md-select-option value=""><div slot="headline">— keine Branche —</div></md-select-option>' + (_bereichBranchen || []).map(b =>
-        `<md-select-option value="${escapeHtml(b.key)}" ${b.key === m.branche ? 'selected' : ''}><div slot="headline">${escapeHtml(b.label)}</div></md-select-option>`).join('');
-    const brCard = !_bereichBrancheOk ? '' : `
-        <section class="bsec-card">
-            <header class="bsec-head">
-                <div>
-                    <h4>Branche</h4>
-                    <p>Bestimmt Standard-Objektarten, Qualifikationen, Dienstkleidung und branchenspezifische Funktionen.</p>
-                </div>
-            </header>
-            <div class="bcat-branche-row">
-                <md-outlined-select class="crm-fld bcat-input bcat-branche-sel" ${canEdit ? '' : 'disabled'} onchange="bcatSetBranche(${m.id}, this.value)">${brOpts}</md-outlined-select>
-                ${br && canEdit && br.key !== 'sonstiges' ? `
-                <md-outlined-button class="bcat-std-btn" onclick="bcatApplyPaket(${m.id})">
-                    <span class="material-symbols-outlined" slot="icon">library_add</span>
-                    Branchen-Paket übernehmen
-                </md-outlined-button>` : ''}
-            </div>
-            ${br && br.key !== 'sonstiges' ? `<div class="bcat-branche-hint">Paket: ${br.paket.subs.length} Objektarten · ${br.paket.quals.length} Qualifikations-Liste${br.paket.quals.length === 1 ? '' : 'n'} · ${br.paket.kleidung.length} Kleidungs-Liste${br.paket.kleidung.length === 1 ? '' : 'n'}${br.flags.bewachung ? ' · Bewachung §34a' : ''}${br.flags.stadiondienst ? ' · Stadiondienst' : ''} — vorhandene Einträge bleiben unverändert.</div>` : ''}
-        </section>`;
     const setHtml = `
-        ${brCard}
         <section class="bsec-card">
             <header class="bsec-head">
                 <div>
@@ -1108,11 +1044,6 @@ function _cdocsBereicheHtml() {
         .bsec-flag small{color:var(--gray-500);font-size:.76rem}
         .bsec-flag-fixed{background:var(--gray-50);cursor:default}
         .bsec-color-row{display:flex;align-items:center;gap:10px}
-        .bcat-branche-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-        .bcat-branche-sel{flex:0 1 320px;min-width:220px;background:var(--white);color:inherit}
-        .bcat-branche-hint{font-size:.78rem;color:var(--gray-500);margin:8px 0 0 8px}
-        .bcat-std-btn{flex:none}
-        @media (max-width:560px){.bcat-branche-row .bcat-input{flex:1 1 100%}}
         .bcat-color{position:relative;width:26px;height:26px;border-radius:50%;flex:none;cursor:pointer;background:var(--bc);box-shadow: 0 0 0 3px var(--bc-bg),0 1px 3px color-mix(in srgb, var(--md-sys-color-scrim) 25%, transparent)}
         .bcat-color-ro{cursor:default}
         .bcat-color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:inherit;border:0;padding:0}

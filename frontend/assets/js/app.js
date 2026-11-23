@@ -634,7 +634,7 @@ const PAGE_MODULE_SCRIPTS = {
     absences: ['assets/js/absences.js?v=20261117md3l'],
     users: ['assets/js/users.js?v=20261117md3l'],
     pdf_design: ['assets/js/pdf_design.js?v=20261117md3l'],
-    company_documents: ['assets/js/company_documents.js?v=20261117md3l'],
+    company_documents: ['assets/js/company_documents.js?v=20261123security1'],
     aufgaben: ['assets/js/aufgaben.js?v=20261117md3l']
 };
 // Opens the shared PDF editor (order_form.php) in a fullscreen in-app
