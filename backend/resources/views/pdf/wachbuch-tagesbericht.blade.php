@@ -15,7 +15,7 @@
 <meta charset="utf-8">
 <title>{{ $label }} · Tagesbericht {{ $no }}</title>
 <style>
-    @page { margin: 32px 38px 142px 38px; }
+    @page { margin: 32px 38px 190px 38px; }
     * { box-sizing: border-box; }
     body { font-family: {{ $font }}; font-size: 9px; color: #263443; line-height: 1.4; }
     .head { border-bottom: 3px solid {{ $primary }}; padding-bottom: 10px; margin-bottom: 15px; }
@@ -41,7 +41,7 @@
     .bad { color: #a6402c; font-weight: bold; }
     .photos img { max-width: 150px; max-height: 100px; margin: 3px; }
     .small { font-size: 7.5px; color: #64748b; }
-    .footer { position: fixed; bottom: 21px; left: 38px; right: 38px; border-top: 2px solid {{ $primary }};
+    .footer { position: fixed; bottom: -80px; left: 38px; right: 38px; border-top: 2px solid {{ $primary }};
         padding-top: 7px; font-size: 7px; color: #566575; }
     .checksum { word-break: break-all; font-size: 6.5px; }
     .clear { clear: both; }
@@ -64,6 +64,12 @@
     <tr><td class="label">{{ array_key_exists('dienstanweisung', $daten) ? 'Dienstanweisung' : '' }}</td><td>{{ array_key_exists('dienstanweisung', $daten) ? (isset($daten['dienstanweisung']) ? 'Version ' . $daten['dienstanweisung']['version'] : 'nicht nachgewiesen') : '' }}</td>
         <td class="label">Freigabe</td><td>{{ $version ? $zeit($version->freigegeben_am) : 'ausstehend' }}</td></tr>
 </table>
+@if($version)
+<p class="small"><strong>Digital freigegeben:</strong> {{ $zeit($version->freigegeben_am) }} · Version {{ $version->version }}.<br>
+    Prüfsumme des gespeicherten Berichtsdatenstands (SHA-256): <span class="checksum">{{ $version->pruefsumme }}</span></p>
+@else
+<p class="warning">ENTWURF. Diese Ansicht ist nicht freigegeben und kann sich durch nachgereichte Einträge noch ändern.</p>
+@endif
 
 <h2>Auf einen Blick</h2>
 <table class="tiles"><tr>
@@ -194,12 +200,6 @@
 <p class="warning">{{ $daten['pruefung_hinweis'] }}</p>
 @endif
 
-@if($version)
-<p><strong>Digital freigegeben:</strong> {{ $zeit($version->freigegeben_am) }} · Version {{ $version->version }}.</p>
-<p class="small">Prüfsumme des gespeicherten Berichtsdatenstands (SHA-256): <span class="checksum">{{ $version->pruefsumme }}</span></p>
-@else
-<p class="warning">ENTWURF. Diese Ansicht ist nicht freigegeben und kann sich durch nachgereichte Einträge noch ändern.</p>
-@endif
 <div class="footer">
     {{ $daten['firma'] }} · {{ $label }} · {{ $daten['objektname'] }} · {{ \Carbon\Carbon::parse($daten['datum'])->format('d.m.Y') }}
     @if($version) · v{{ $version->version }} · Daten-Prüfsumme <span class="checksum">{{ substr($version->pruefsumme, 0, 16) }}</span>@endif
