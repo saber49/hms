@@ -1050,6 +1050,8 @@ select.ma-scope-select.active {
 .ma-ist-ext summary::-webkit-details-marker { display: none; }
 .ma-ist-reason-preview { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; color: var(--ma-text-soft); }
 .ma-ist-ext-list { margin-top: 5px; padding: 6px; border-radius: 6px; background: var(--ma-warn-soft); color: var(--ma-text); white-space: normal; overflow-wrap: anywhere; font-weight: 400; }
+.ma-ist-ext[open] { position: relative; z-index: 2; }
+.ma-ist-ext[open] .ma-ist-ext-list { width: 185px; max-width: calc(100vw - 140px); box-shadow: 0 4px 12px rgba(0, 0, 0, .12); }
 .ma-ist-ext-list > div + div { margin-top: 5px; border-top: 1px solid var(--ma-border); padding-top: 5px; }
 .ma-ist-ext-time { display: block; color: var(--ma-warn); font-weight: 600; }
 .ma-ist-src {
