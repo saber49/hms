@@ -45,6 +45,7 @@ function weatherHttp(string $id, ?string $token): array
 
 $keys = [];
 $tokens = [];
+$failure = null;
 try {
     $ddr = Tenant::where('slug', 'ddr')->firstOrFail();
     TenantService::switchToTenant($ddr);
@@ -72,8 +73,7 @@ try {
     $shift->ort = $failureCoordinate;
     weatherCheck(ShiftForecast::forShift($shift) === null && ShiftForecast::forShift($shift) === null,
         'upstream outage returns no badge, without throwing');
-    Http::assertSentCount(2);
-    weatherCheck(true, 'cached requests do not repeat provider calls');
+    weatherCheck(Http::recorded()->count() === 2, 'cached requests do not repeat provider calls');
     $shift->datum = $start->subDays(20)->format('Y-m-d');
     weatherCheck(ShiftForecast::forShift($shift) === null, 'past shift cannot claim a current forecast');
     TenantService::reset();
@@ -97,8 +97,14 @@ try {
         && ($status !== 200 || isset(json_decode($body, true)['temperature'])),
         'own shift is available; missing forecast stays optional');
     echo "PASS $passed weather checks\n";
+} catch (\Throwable $e) {
+    $failure = $e;
 } finally {
     TenantService::reset();
     foreach ($keys as $key) Cache::forget($key);
     foreach ($tokens as [$owner, $id]) $owner->tokens()->where('id', $id)->delete();
+}
+if ($failure) {
+    fwrite(STDERR, $failure->getMessage() . PHP_EOL);
+    exit(1);
 }
