@@ -1045,7 +1045,13 @@ select.ma-scope-select.active {
 .ma-soll-sub { font-size: var(--md-sys-typescale-label-small-size); color: var(--ma-text-soft); }
 .ma-cell-ist.ma-cell-von { border-left: 1px solid var(--ma-border); }
 .ma-ist-early { font-size: var(--md-sys-typescale-label-small-size); color: var(--ma-text-soft); line-height: 1.1; }
-.ma-ist-ext { display: flex; width: max-content; align-items: center; gap: 2px; font-size: var(--md-sys-typescale-label-small-size); font-weight: 600; color: var(--ma-warn); line-height: 1.1; cursor: help; white-space: nowrap; }
+.ma-ist-ext { max-width: 145px; font-size: var(--md-sys-typescale-label-small-size); color: var(--ma-warn); line-height: 1.25; }
+.ma-ist-ext summary { display: block; cursor: pointer; font-weight: 600; list-style: none; }
+.ma-ist-ext summary::-webkit-details-marker { display: none; }
+.ma-ist-reason-preview { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 400; color: var(--ma-text-soft); }
+.ma-ist-ext-list { margin-top: 5px; padding: 6px; border-radius: 6px; background: var(--ma-warn-soft); color: var(--ma-text); white-space: normal; overflow-wrap: anywhere; font-weight: 400; }
+.ma-ist-ext-list > div + div { margin-top: 5px; border-top: 1px solid var(--ma-border); padding-top: 5px; }
+.ma-ist-ext-time { display: block; color: var(--ma-warn); font-weight: 600; }
 .ma-ist-src {
     display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: var(--md-sys-shape-corner-full);
     font-size: var(--md-sys-typescale-label-small-size); font-weight: 700; vertical-align: 1px;

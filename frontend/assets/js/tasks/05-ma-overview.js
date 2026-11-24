@@ -1066,16 +1066,28 @@ function maUtcToLocalHm(ts) {
     return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
 }
 
-// "Verlängert" chip under Ist-Bis: count + the worker's reasons (tooltip),
-// from zeiterfassung.verlaengerung_gruende written by the app's extend sheet.
+// App extension reasons are part of the recorded time, not hover-only metadata.
 function maExtensionHint(e) {
     const n = parseInt(e.app_verlaengerungen) || 0;
     if (n <= 0) return '';
     let list = [];
-    try { list = JSON.parse(e.app_verlaengerung_gruende || '[]') || []; } catch (err) { list = []; }
-    const lines = list.map(g => `${maUtcToLocalHm(g.am)} → bis ${maUtcToLocalHm(g.bis)}: ${g.grund || ''}`);
-    const title = 'Verlängert (' + n + '×)' + (lines.length ? '\n' + lines.join('\n') : '\nohne Begründung (ältere App)');
-    return `<div class="ma-ist-ext" title="${escapeHtml(title)}">${maIcon('more_time', 'font-size:12px')} ${n}× verl.</div>`;
+    try { list = JSON.parse(e.app_verlaengerung_gruende || '[]'); } catch (err) { /* old or malformed record */ }
+    if (!Array.isArray(list)) list = [];
+    const reasons = list.filter(g => g && typeof g === 'object').slice(0, n);
+    const missing = Math.max(0, n - reasons.length);
+    const fallback = 'Kein Grund gespeichert (ältere App)';
+    const first = reasons.length ? String(reasons[0].grund || '').trim() || fallback : fallback;
+    const rows = reasons.map(g => {
+        const time = [maUtcToLocalHm(g.am), maUtcToLocalHm(g.bis)].filter(Boolean).join(' → ');
+        return `<div>${time ? `<span class="ma-ist-ext-time">${escapeHtml(time)}</span>` : ''}${escapeHtml(String(g.grund || '').trim() || fallback)}</div>`;
+    });
+    if (missing) rows.push(`<div>${missing}× ${fallback}</div>`);
+    return `<details class="ma-ist-ext">
+        <summary>${maIcon('more_time', 'font-size:12px')} ${n}× verl.
+            <span class="ma-ist-reason-preview">Grund: ${escapeHtml(first)}</span>
+        </summary>
+        <div class="ma-ist-ext-list">${rows.join('')}</div>
+    </details>`;
 }
 
 function maSubHint(txt, title) {
@@ -1241,7 +1253,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
                 <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="ma-cell-input ma-cell-input-time ma-input t24" data-field="von" value="${escapeHtml(vonVal)}" style="display:none">
             </td>
             <td data-label="Ist bis" class="ma-cell-bis ma-cell-ist">
-                <span class="ma-display">${showBis || '–'}${lateHint}${extHint}</span>
+                <div class="ma-display">${showBis || '–'}${lateHint}${extHint}</div>
                 <input type="text" lang="de-DE" inputmode="numeric" maxlength="5" placeholder="HH:MM" class="ma-cell-input ma-cell-input-time ma-input t24" data-field="bis" value="${escapeHtml(bisVal)}" style="display:none">
             </td>
             <td data-label="Pause" class="ma-cell-pause ma-cell-ist ma-text-center">
