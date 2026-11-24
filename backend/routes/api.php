@@ -443,6 +443,7 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
     Route::middleware('permission:auftraege.dispo.view')->group(function () {
         Route::get('/tasks', [TaskController::class, 'index']);
         Route::get('/tasks/{id}', [TaskController::class, 'show']);
+        Route::get('/tasks/{id}/weather', [TaskController::class, 'weather'])->middleware('throttle:30,1');
         Route::get('/tasks/{id}/briefing-pdf', [TaskController::class, 'briefingPdf']);
         Route::get('/disposition/planner', [DispositionController::class, 'planner']);
         Route::get('/disposition/search', [DispositionController::class, 'search']);

@@ -1054,6 +1054,35 @@
     z-index: 10;
     background: var(--white);
 }
+.planner-weather {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 4px 10px;
+    border-radius: 13px;
+    background: #182b38;
+    color: #fff;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(9, 24, 35, .17);
+}
+.planner-weather[hidden] { display: none; }
+.planner-weather-icon { font-size: 23px; }
+.planner-weather-reading { display: flex; flex-direction: column; gap: 2px; line-height: 1; }
+.planner-weather-temp { font-size: 16px; font-weight: 700; }
+.planner-weather-reading small { font-size: 8px; letter-spacing: .01em; opacity: .82; }
+@media (max-width: 880px) {
+    .planner-weather {
+        position: static;
+        transform: none;
+        margin-left: auto;
+        margin-right: 8px;
+    }
+    .planner-modal-header:has(.planner-weather:not([hidden])) .planner-header-action { margin-left: 0; }
+}
 .planner-modal-footer {
     position: sticky;
     bottom: 0;

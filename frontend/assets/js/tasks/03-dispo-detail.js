@@ -1,6 +1,44 @@
 // tasks/03-dispo-detail.js — Einsatz-Detail-Modal: Mitarbeiter zuweisen, Plan/Bestätigen, Speichern
 // Teil 3/10 des früheren tasks.js. Alle Teile teilen den globalen Scope und MÜSSEN in dieser Reihenfolge geladen werden (PAGE_MODULE_SCRIPTS in app.js).
 
+function plannerWeatherIcon(symbol) {
+    const code = String(symbol || '');
+    const night = code.includes('_night');
+    if (code.includes('thunder')) return 'thunderstorm';
+    if (code.includes('snow') || code.includes('sleet')) return 'weather_snowy';
+    if (code.includes('rain') || code.includes('showers')) return 'rainy';
+    if (code.includes('fog')) return 'foggy';
+    if (code.includes('cloudy') || code.includes('fair')) return night ? 'partly_cloudy_night' : 'partly_cloudy_day';
+    return night ? 'clear_night' : 'sunny';
+}
+
+async function plannerLoadWeather(einsatzId, badge) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+        const response = await fetch(API.tasks + '/' + encodeURIComponent(einsatzId) + '/weather', {
+            headers: getAuthHeadersNoContent(), signal: controller.signal,
+        });
+        if (!response.ok || response.status !== 200) return;
+        const data = await response.json();
+        const temp = Number(data.temperature);
+        const date = new Date(data.forecast_at);
+        if (!badge.isConnected || !Number.isFinite(temp) || temp < -90 || temp > 70 || isNaN(date.getTime())) return;
+        const when = new Intl.DateTimeFormat('de-DE', {
+            timeZone: 'Europe/Berlin', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit',
+        }).format(date);
+        badge.querySelector('.planner-weather-icon').textContent = plannerWeatherIcon(data.symbol);
+        badge.querySelector('.planner-weather-temp').textContent = `${Math.round(temp)}°`;
+        badge.title = `Wetterprognose für ${when} Uhr · Daten: MET Norway (CC BY 4.0) · Standort: OpenStreetMap/Photon`;
+        badge.setAttribute('aria-label', badge.title);
+        badge.hidden = false;
+    } catch (_) {
+        // Forecast is optional: offline, timeout or malformed data leaves the modal untouched.
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
 async function openPlannerTaskDetail(einsatzId) {
     // Reset all disposition state on fresh open
     stopNuRefreshPolling();
@@ -283,6 +321,14 @@ async function openPlannerTaskDetail(einsatzId) {
         modalHeader.classList.add('planner-modal-header');
         const existingAction = modalHeader.querySelector('.planner-header-action');
         if (existingAction) existingAction.remove();
+        const weather = document.createElement('div');
+        weather.className = 'planner-weather';
+        weather.hidden = true;
+        weather.innerHTML = '<span class="material-symbols-outlined planner-weather-icon" aria-hidden="true"></span>'
+            + '<span class="planner-weather-reading"><strong class="planner-weather-temp"></strong>'
+            + '<small>MET Norway · OSM</small></span>';
+        modalHeader.insertBefore(weather, modalHeader.querySelector('.modal-max-btn') || modalHeader.querySelector('#modalClose'));
+        plannerLoadWeather(einsatzId, weather);
         // The Geplant button itself reflects the plan state: green "Geplant"
         // when currently planned, amber "Erneut planen" after a withdrawal,
         // plain amber "Geplant" for a never-published draft.
