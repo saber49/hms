@@ -194,7 +194,7 @@ header('Expires: 0');
     <link rel="stylesheet" href="assets/css/workers.css?v=20261117docui1">
     <link rel="stylesheet" href="assets/css/absences.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/notifications.css?v=20261117md3l">
-    <link rel="stylesheet" href="assets/css/tasks.css?v=20261117nupicker1">
+    <link rel="stylesheet" href="assets/css/tasks.css?v=20261123wx1">
     <link rel="stylesheet" href="assets/css/monatsabschluss.css?v=20261123darkcanvas1">
     <link rel="stylesheet" href="assets/css/incoming_orders.css?v=20261117md3l">
     <link rel="stylesheet" href="assets/css/order_confirmations.css?v=20261117md3l">
@@ -803,7 +803,7 @@ header('Expires: 0');
         });
     </script>
     <script defer src="assets/js/dom-morph.js?v=20261117md3l"></script>
-    <script defer src="assets/js/app.js?v=20261123bericht2"></script>
+    <script defer src="assets/js/app.js?v=20261123wx1"></script>
     <script defer src="assets/js/ui-components.js?v=20261117md3l"></script>
     <script defer src="assets/js/dashboard.js?v=20261117md3l"></script>
     <script defer src="assets/js/incoming_orders.js?v=20261123dates1"></script>

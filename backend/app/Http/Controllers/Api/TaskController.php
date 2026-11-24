@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\IdGenerator;
 use App\Helpers\NotificationDispatcher;
 use App\Helpers\SchichtartCalculator;
+use App\Services\ShiftForecast;
 use App\Support\BereichScope;
 use App\Mail\NuNotificationMail;
 use App\Services\TenantService;
@@ -219,6 +220,25 @@ class TaskController extends Controller
             // can be judged ✓/✗, free text only as "bitte prüfen".
             'qual_catalog' => array_values(array_unique(array_values($qualNames))),
         ]);
+    }
+
+    /** Optional forecast: same tenant and Bereich gate as the shift detail. */
+    public function weather(Request $request, string $id)
+    {
+        $shift = DB::connection('tenant')->table('einsaetze as e')
+            ->leftJoin('objekte as o', 'o.obj_id', '=', 'e.obj_id')
+            ->where('e.einsatz_id', $id)
+            ->first(['e.ort', 'e.datum', 'e.ist_start', 'o.plz', 'o.stadt']);
+        if (!$shift || !BereichScope::allowsEinsatz($request->user(), $id)) {
+            return response()->json(['error' => 'Einsatz nicht gefunden'], 404);
+        }
+        try {
+            $forecast = ShiftForecast::forShift($shift);
+            return $forecast ? response()->json($forecast) : response()->noContent();
+        } catch (\Throwable) {
+            // Weather must never block editing a shift.
+            return response()->noContent();
+        }
     }
 
     /**
