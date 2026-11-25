@@ -3,7 +3,7 @@
 This is the CURRENT operational map for agents working in
 `~/Desktop/CascadeProjects`. Read it before editing or publishing.
 The former 885-line notebook is preserved at
-`docs/AGENTS-legacy-2026-11-25.md`. It contains useful domain history,
+`hms/docs/AGENTS-legacy-2026-11-25.md`. It contains useful domain history,
 but dates, release claims, file paths and deploy commands there may be
 obsolete. Verify them against code and live state; this guide and the
 actual repository scripts take precedence.
@@ -16,7 +16,8 @@ actual repository scripts take precedence.
 | `clood-x-1/` | `saber49/clood-x-1` | Canonical worker UI `www/`, Capacitor iOS/Android projects | Native app builds; NOT the live server by itself |
 | `clood-x-desktop/` | `saber49/clood-x-desktop` | Electron wrapper, synced `renderer/`, Windows/macOS release | `/var/www/hms-frontend/desktop/` binary downloads |
 
-All paths below are relative to `~/Desktop/CascadeProjects` unless absolute.
+Repository-prefixed paths below are relative to
+`~/Desktop/CascadeProjects`; paths starting `docs/` are relative to `hms/`.
 `hms` has `main` (production) and `staging` (staging); the platform apps
 release from their own `main`. The three commits are NOT expected to have
 the same SHA. "One release train" means tracking the exact source commit,
