@@ -38,13 +38,12 @@ Do not call a source commit a deployed mobile/desktop release.
   Run `cd clood-x-desktop && npm run sync`, then
   `diff -rq renderer ../clood-x-1/www` from that repo. Codemagic builds
   the COMMITTED renderer without sync.
-- IMPORTANT current exception: `hms/frontend/worker/assets/js/qm-wachbuch.js`
-  has additional PWA forms not present in native `clood-x-1/www/assets/js/qm-wachbuch.js`.
-  They are NOT byte-identical. Do not run `hms/scripts/sync-worker-ui.sh`
-  blindly: it copies native JS over PWA JS and would drop those forms.
-  Reconcile the intended features with backend validation first; then
-  sync targeted assets, review the diff and explicitly test both UIs.
-  Desktop sync is separate and must NOT modify the PWA.
+- Wachbuch visitor, delivery, key and handover forms are now shared in
+  `clood-x-1/www/assets/js/qm-wachbuch.js` and synced byte-for-byte to
+  PWA and desktop. Do not edit a deployment copy: change the source and
+  run `hms/scripts/sync-worker-ui.sh` after reviewing local changes.
+  That script refuses to overwrite a dirty Wachbuch copy or desktop
+  renderer and verifies the synced bytes and SW cache version.
 
 ## Before any change or release
 
@@ -156,9 +155,10 @@ Do not call a source commit a deployed mobile/desktop release.
 
 ## Status snapshot (2026-11-25; re-check, never assume current)
 
-- HMS production: `c041c35`; staging: `147e98e`; worker PWA SW v93.
-- Native source: `03fdb43`; iOS source version 1.4.16, Android source
-  7.13 (versionCode 39). Distribution/installed versions NOT verified.
-- Desktop source: `5458f1a` (`desktop-v1.0.11`); Windows manifest live
+- HMS deployed production: `c041c35`; staging: `147e98e` before the
+  Wachbuch unification; source docs may have newer commits.
+- Native source was `03fdb43` before Wachbuch unification; iOS source
+  1.4.17 and Android source 7.14 (versionCode 40) require NEW builds.
+- Desktop source was `5458f1a` (`desktop-v1.0.11`); Windows manifest live
   1.0.11, macOS manifest last observed 1.0.10 pending Codemagic.
   Do not call this desktop release complete until macOS is verified.
