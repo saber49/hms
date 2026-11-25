@@ -30,6 +30,17 @@ PWA="$ROOT/frontend/worker"
 DESK="${WORKER_DESK:-$(cd "$ROOT/.." && pwd)/clood-x-desktop/renderer}"
 
 [ -d "$SOT" ] || { echo "source of truth missing: $SOT" >&2; exit 1; }
+[ -d "$DESK" ] || { echo "desktop renderer missing: $DESK" >&2; exit 1; }
+
+# Do not silently overwrite edits in either deployment copy.
+if [ -n "$(git -C "$ROOT" status --porcelain -- frontend/worker/assets/js/qm-wachbuch.js)" ]; then
+    echo "PWA Wachbuch has local changes; reconcile them in clood-x-1/www first." >&2
+    exit 1
+fi
+if [ -n "$(git -C "$(dirname "$DESK")" status --porcelain -- renderer)" ]; then
+    echo "Desktop renderer has local changes; review/commit before syncing." >&2
+    exit 1
+fi
 
 SHARED_ASSETS=(js/app.js js/call.js js/storage.js js/capacitor-bridge.js \
                js/qm-wachbuch.js js/qm-live.js \
@@ -68,10 +79,20 @@ echo
 cn="$(sed -n "s/.*CACHE_NAME = '[^0-9]*\([0-9]*\)'.*/\1/p" "$SOT/sw.js" | head -1)"
 rv="$(sed -n "s/.*register('sw\.js?v=\([0-9]*\)'.*/\1/p" "$PWA/index.php" 2>/dev/null | head -1)"
 echo "CACHE_NAME = v${cn:-?} · index.php registers sw.js?v=${rv:-?}"
-if [ -n "$cn" ] && [ -n "$rv" ] && [ "$cn" != "$rv" ]; then
-    echo "  !! MISMATCH — Cloudflare pins /worker/sw.js?v=$rv: bump the" >&2
-    echo "     register('sw.js?v=N') in worker/index.php to v$cn" >&2
+if [ -z "$cn" ] || [ "$cn" != "$rv" ]; then
+    echo "  ERROR: worker/index.php must register sw.js?v=$cn (currently $rv)" >&2
+    exit 1
 fi
 
+for f in "${SHARED_ASSETS[@]}"; do
+    cmp -s "$SOT/assets/$f" "$PWA/assets/$f" && cmp -s "$SOT/assets/$f" "$DESK/assets/$f" ||
+        { echo "Sync mismatch: assets/$f" >&2; exit 1; }
+done
+for f in sw.js login.html; do
+    cmp -s "$SOT/$f" "$PWA/$f" && cmp -s "$SOT/$f" "$DESK/$f" ||
+        { echo "Sync mismatch: $f" >&2; exit 1; }
+done
+cmp -s "$SOT/index.html" "$DESK/index.html" ||
+    { echo "Sync mismatch: desktop index.html" >&2; exit 1; }
 echo
 echo "Done. Reminders: bump ?v= in worker/index.php · deploy worker/ · rebuild native+desktop apps"

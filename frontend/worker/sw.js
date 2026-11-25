@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hms-worker-v93';
+const CACHE_NAME = 'hms-worker-v94';
 const FETCH_TIMEOUT_MS = 12000;
 
 // fetch() has no built-in timeout — a stalled connection on a bad network
@@ -63,7 +63,7 @@ const STATIC_ASSETS = [
     './assets/css/app.css',
     './assets/css/ms-icons.css',
     './assets/css/qm-wachbuch.css?v=20261118qmfix2',
-    './assets/js/qm-wachbuch.js?v=20261125foto2',
+    './assets/js/qm-wachbuch.js?v=20261125qm-unify1',
     './assets/js/qm-live.js?v=20261109live1',
     './assets/fonts/material-symbols-rounded.woff2',
     './assets/js/storage.js',
