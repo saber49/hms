@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Schema;
  * company's own bezahlt flag) requires it.
  *
  * Rules implemented:
- *   - bezahlt = 0                              → 0 h (unbezahlter Urlaub, Wunschfrei, …)
+ *   - bezahlt = 0                              → 0 h (unbezahlter Urlaub, …)
+ *   - Wunschfrei stays in Anträge & Urlaub; it is not a Zeiterfassung record
  *   - record `status` = 'pending'              → computed but flagged "beantragt"
  *   - day with a planned shift                 → credit = planned shift hours
  *     (Entgeltfortzahlung: what the worker WOULD have earned — §3/§4 EFZG
@@ -183,6 +184,19 @@ class AbsenceCreditService
                 $kat = self::kategorie($r);
                 $ganz = (int) ($r->ganzer_tag ?? 1) === 1;
                 $status = ($r->status ?? null) ?: 'genehmigt';
+                // Wunschfrei belongs to Anträge & Urlaub, not to the time
+                // statement or its exports. Still suppress planned shift
+                // hours on approved days when no work was recorded.
+                if (mb_strtolower(trim((string) $r->typ)) === 'wunschfrei') {
+                    if ($ganz && $status !== 'pending') {
+                        foreach (self::eachDay($r->startdatum, $r->enddatum ?: $r->startdatum) as $d) {
+                            if ($d >= $von && $d <= $bis && !isset($covered[$dienstNr][$d])) {
+                                $covered[$dienstNr][$d] = ['typ' => 'Abwesenheit', 'kategorie' => $kat];
+                            }
+                        }
+                    }
+                    continue;
+                }
                 $isKrank = $kat === 'krank';
                 $avg = self::avg13($days, $absDays, $eintritt, (string) $r->startdatum);
                 $manualHours = json_decode($r->stunden_korrekturen ?? '[]', true);
