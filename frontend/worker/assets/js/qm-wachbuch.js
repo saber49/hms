@@ -34,6 +34,7 @@
             const res = await fetch(cfg.base + path, { method, headers: h, body: method === 'GET' ? undefined : (isForm ? body : JSON.stringify(body || {})) });
             if (res.status === 401) { cfg.onAuthLost && cfg.onAuthLost(); return { ok: false, status: 401, data: {} }; }
             const data = await res.json().catch(() => ({}));
+            if (res.status === 413) data.error = data.error || 'Das Foto ist für den Server zu groß. Bitte ein kleineres Bild wählen.';
             return { ok: res.ok, status: res.status, data };
         } catch (e) {
             return { ok: false, status: 0, data: { error: 'offline' } };   // status 0 = no network
@@ -310,6 +311,7 @@
         const err = m => { document.getElementById('wq_err').textContent = m; };
         const file = document.getElementById('wq_foto')?.files?.[0];
         if (fotoNoetig && !file) return err('Bitte ein Foto aufnehmen.');
+        if (file && !file.size) return err('Das Foto ist leer. Bitte erneut aufnehmen.');
         const details = {
             besucher: besucherId ? { vorgang: 'abmeldung', anmeldung_id: besucherId } :
                 { vorgang: 'anmeldung', name: wert('wq_name'), firma: wert('wq_firma'), ziel: wert('wq_ziel'), kennzeichen: wert('wq_kennz'),

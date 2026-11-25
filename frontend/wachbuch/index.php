@@ -17,7 +17,7 @@
         <div class="t-top-actions" id="tTopActions"></div>
     </header>
     <main id="tMain"><div class="wqm-loading"><i class="fas fa-spinner fa-spin"></i></div></main>
-    <script src="/worker/assets/js/qm-wachbuch.js?v=20261118qmfix2"></script>
+    <script src="/worker/assets/js/qm-wachbuch.js?v=20261125foto2"></script>
     <script src="/worker/assets/js/qm-live.js?v=20261109live1"></script>
     <script src="terminal.js?v=20261118qmfix2"></script>
 </body>
