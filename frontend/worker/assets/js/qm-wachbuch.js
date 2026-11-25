@@ -97,15 +97,69 @@
                 () => { clearTimeout(t); res(null); }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
         });
     }
+    function dataUrlBlob(dataUrl) {
+        const [kopf, daten] = String(dataUrl || '').split(',');
+        if (!daten) return null;
+        const bin = atob(daten);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return new Blob([bytes], { type: (kopf.match(/data:([^;,]+)/) || [])[1] || 'image/jpeg' });
+    }
+    function canvasBlob(c, quality) {
+        return new Promise(resolve => {
+            let done = false;
+            const finish = b => { if (!done) { done = true; resolve(b); } };
+            const fallback = () => {
+                if (done) return;
+                try { finish(dataUrlBlob(c.toDataURL('image/jpeg', quality))); } catch (e) { finish(null); }
+            };
+            // WKWebView can return null from toBlob for very large camera
+            // images. toDataURL uses a separate implementation and the image
+            // is already scaled down here, so this is a safe fallback.
+            try { c.toBlob(b => b ? finish(b) : fallback(), 'image/jpeg', quality); } catch (e) { fallback(); }
+            setTimeout(fallback, 1200);
+        });
+    }
+    function bildElement(file) {
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => resolve({ quelle: img, width: img.naturalWidth, height: img.naturalHeight, freigeben: () => URL.revokeObjectURL(url) });
+            img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Bild konnte nicht gelesen werden')); };
+            img.src = url;
+        });
+    }
+    async function bildQuelle(file) {
+        if (typeof createImageBitmap === 'function') {
+            try {
+                const bmp = await createImageBitmap(file);
+                return { quelle: bmp, width: bmp.width, height: bmp.height, freigeben: () => bmp.close && bmp.close() };
+            } catch (e) { /* WKWebView sometimes fails here although <img> can decode the file */ }
+        }
+        return bildElement(file);
+    }
     async function verkleinern(file) {
-        try {
-            const bmp = await createImageBitmap(file);
-            const f = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
-            const c = document.createElement('canvas');
-            c.width = Math.round(bmp.width * f); c.height = Math.round(bmp.height * f);
-            c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-            return await new Promise(r => c.toBlob(b => r(b || file), 'image/jpeg', 0.85));
-        } catch (e) { return file; }
+        // Never silently send an oversized original when mobile Safari cannot
+        // transcode it: PHP would drop the invalid upload and the entry looked
+        // as if no photo had been selected at all.
+        const ORIGINAL_FALLBACK_MAX = 14 * 1024 * 1024;
+        for (const [maxPx, quality] of [[1600, 0.85], [1200, 0.78]]) {
+            let bild = null;
+            try {
+                bild = await bildQuelle(file);
+                const f = Math.min(1, maxPx / Math.max(bild.width, bild.height));
+                const c = document.createElement('canvas');
+                c.width = Math.max(1, Math.round(bild.width * f));
+                c.height = Math.max(1, Math.round(bild.height * f));
+                c.getContext('2d').drawImage(bild.quelle, 0, 0, c.width, c.height);
+                const blob = await canvasBlob(c, quality);
+                if (blob && blob.size > 0 && blob.size <= 15 * 1024 * 1024) return blob;
+            } catch (e) { /* next size / original fallback */ } finally {
+                if (bild && bild.freigeben) bild.freigeben();
+            }
+        }
+        if (file.size > 0 && file.size <= ORIGINAL_FALLBACK_MAX) return file;
+        throw new Error('Das Foto ist zu groß und konnte auf diesem Gerät nicht verkleinert werden. Bitte erneut mit geringerer Auflösung aufnehmen.');
     }
     function sendFoto(eintragId, blob, meta) {
         const fd = new FormData();
@@ -243,7 +297,7 @@
                 ${besucher ? `<p>${esc(besucher.name)} · ${esc(besucher.ziel)} · angemeldet ${zeit(besucher.zeit)}</p>` : spezifisch[art] || ''}
                 <label class="wqm-label">${ref ? 'Richtigstellung *' : (['notiz', 'vorkommnis', 'alarm'].includes(art) ? 'Text *' : 'Bemerkung')}</label>
                 <textarea id="wq_text" class="wqm-input" rows="4" maxlength="4000"></textarea>
-                ${ref ? '' : `<label class="wqm-label">Foto${fotoPflicht || art === 'foto' ? ' *' : ''}</label><input id="wq_foto" type="file" accept="image/*" capture="environment" class="wqm-input">`}
+                ${ref ? '' : `<label class="wqm-label">Foto${fotoPflicht || art === 'foto' ? ' *' : ''}</label><input id="wq_foto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" class="wqm-input">`}
                 <div class="wqm-err" id="wq_err"></div>
                 <button class="wqm-primary" id="wq_save" onclick="WQm.speichern('${art}', ${refId || 'null'}, ${fotoPflicht || art === 'foto'}, ${besucherId || 'null'})">Speichern</button>
             </div></div>`);
@@ -288,7 +342,13 @@
         };
         const btn = document.getElementById('wq_save'); btn.disabled = true;
         const meta = file ? await gps() : null;
-        const blob = file ? await verkleinern(file) : null;
+        let blob = null;
+        try {
+            blob = file ? await verkleinern(file) : null;
+        } catch (e) {
+            btn.disabled = false;
+            return err(e.message || 'Das Foto konnte nicht vorbereitet werden.');
+        }
         const r = await sendEintrag(body, blob, meta);
         if (r.status === 0) {
             await qAdd({ kind: 'eintrag', body, blob, meta: { ...meta, erfasst_am: body.erfasst_am }, t: Date.now() });
@@ -352,7 +412,7 @@
     }
 
     window.WQm = {
-        mount, flush, neu, speichern, zu, umgesetzt, pdf, bestaetigen, ladeDa,
+        mount, flush, neu, speichern, zu, umgesetzt, pdf, bestaetigen, ladeDa, _verkleinern: verkleinern,
         konfig(o) { cfg = o; },
         /** Live update (Reverb): re-fetch the open view without spinner; never while a form is open. */
         async refresh() {

@@ -20,6 +20,16 @@ class FotoService
     public const MAX_PX = 1600;
     public const REGEL = 'required|file|max:15360|mimes:jpg,jpeg,png,webp';
 
+    /** Human-readable reason when PHP/Symfony already marks the upload invalid. */
+    public static function uploadFehlermeldung(UploadedFile $file): string
+    {
+        return match ($file->getError()) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'Das Foto ist größer als der Server-Upload erlaubt. Bitte erneut aufnehmen oder mit geringerer Auflösung senden.',
+            UPLOAD_ERR_PARTIAL => 'Das Foto wurde nicht vollständig übertragen. Bitte erneut versuchen.',
+            default => 'Das Foto konnte nicht hochgeladen werden. Bitte erneut versuchen.',
+        };
+    }
+
     /** $meta: lat, lng, genauigkeit_m, quelle */
     public static function speichern(object $eintrag, UploadedFile $file, array $meta, ?string $wer): object
     {
