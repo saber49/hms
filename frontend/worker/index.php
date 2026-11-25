@@ -103,7 +103,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
     <!-- Session is loaded from secure storage by storage.js and consumed by
          app.js' async bootstrap (which redirects to login if no valid token). -->
     <script src="assets/js/storage.js?v=20260818uni2"></script>
-    <script src="assets/js/qm-wachbuch.js?v=20261123bericht2"></script>
+    <script src="assets/js/qm-wachbuch.js?v=20261125foto1"></script>
     <script src="assets/js/qm-live.js?v=20261109live1"></script>
     <script src="assets/js/app.js?v=20261118sboff1"></script>
     <script src="assets/js/call.js?v=20260929call6"></script>
@@ -133,7 +133,7 @@ header('Permissions-Policy: geolocation=(self), camera=(), microphone=(), paymen
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=91').catch(() => {});
+            navigator.serviceWorker.register('sw.js?v=92').catch(() => {});
         }
     </script>
 </body>

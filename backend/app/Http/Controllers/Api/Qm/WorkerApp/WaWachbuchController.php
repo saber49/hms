@@ -8,6 +8,7 @@ use App\Services\Qm\FotoService;
 use App\Services\Qm\WachbuchService;
 use App\Support\Qm\Qm;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -105,6 +106,11 @@ class WaWachbuchController extends Controller
         [$d, $vorgangError] = WachbuchService::pruefeObjektEintrag($blatt, $d);
         if ($vorgangError) return Qm::fehler($vorgangError);
         $fotoPflicht = $d['art'] === 'foto' || ($d['art'] === 'vorkommnis' && (bool) $cfg->fotopflicht);
+        $fotoUpload = $request->file('foto');
+        $fotoUngueltig = $fotoUpload instanceof UploadedFile && !$fotoUpload->isValid() && $fotoUpload->getError() !== UPLOAD_ERR_NO_FILE;
+        if ($fotoUngueltig) {
+            return Qm::fehler(['foto' => [FotoService::uploadFehlermeldung($fotoUpload)]]);
+        }
         if ($fotoPflicht && !$request->hasFile('foto')) {
             return Qm::fehler(['foto' => ['Foto ist Pflicht.']]);
         }
