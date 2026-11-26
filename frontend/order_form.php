@@ -42,10 +42,8 @@ $safeBottom = min(120, max(0, (int)($_GET['sab'] ?? 0)));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $viewerOnly ? 'PDF Ansicht' : 'PDF Editor' ?> — Auftragsbestätigung</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="/assets/css/roboto.css?v=20261119ms1">
+    <link rel="stylesheet" href="/assets/css/material-symbols.css?v=20261119ms1">
     <!-- Same theme bootstrap as index.php: light default, dark only when the
          user explicitly chose it (hms_theme). Set before stylesheets. -->
     <script>

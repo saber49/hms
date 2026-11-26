@@ -7,11 +7,18 @@
     <meta name="description" content="Offene Schichten intern ausschreiben: Mitarbeiter bewerben sich in der App, die Disposition vergibt per Klick — ohne Telefonkette.">
     <link rel="canonical" href="https://clood-x.com/produkte/einsatz-personal/schichtboerse.html">
     <meta name="theme-color" content="#fbfaf8">
+    <meta property="og:title" content="Schichtbörse — Clood-X">
+    <meta property="og:description" content="Offene Schichten intern ausschreiben: Mitarbeiter bewerben sich in der App, die Disposition vergibt per Klick — ohne Telefonkette.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://clood-x.com/produkte/einsatz-personal/schichtboerse.html">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://clood-x.com/assets/img/clood-x-dashboard.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://clood-x.com/assets/img/clood-x-dashboard.jpg">
     <link rel="stylesheet" href="/assets/css/marketing.tailwind.min.css?v=20261112c">
     <link rel="stylesheet" href="/assets/css/fonts.css?v=20261112c">
     <link rel="stylesheet" href="/assets/css/fa-subset.css?v=20261112c">
-    <link rel="stylesheet" href="/produkte/einsatz-personal/shared.css?v=20261112c">
-    <link rel="stylesheet" href="/produkte/einsatz-personal/schichtboerse.css?v=20261112c">
+    <link rel="stylesheet" href="/produkte/einsatz-personal/shared.css?v=20261119pd1">
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png?v=2">
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png?v=2">
@@ -27,7 +34,7 @@
             </a>
             <div class="hidden lg:flex items-center space-x-6 whitespace-nowrap ml-8 nav-links">
                 <div class="nav-prod">
-                    <button type="button" id="prodMenuBtn" aria-expanded="false" aria-haspopup="true" class="text-ink-500 hover:text-ink-950 transition text-sm">
+                    <button type="button" id="prodMenuBtn" aria-expanded="false" aria-haspopup="menu" class="text-ink-500 hover:text-ink-950 transition text-sm">
                         Produkte <span class="nav-caret"></span>
                     </button>
                     <div class="nav-mega">
@@ -41,30 +48,30 @@
                             </div>
                             <div>
                                 <p class="nav-mega-head">Auftrag &amp; Abrechnung</p>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-inbox"></i><span><strong>Bestelleingang</strong><small>Aufträge digital annehmen</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-invoice"></i><span><strong>Bestellungen &amp; Auftragsbestätigungen</strong><small>PDF-Belege im Firmendesign</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-clipboard-check"></i><span><strong>Monatsabschluss</strong><small>Prüfen &amp; freigeben per Klick</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Lohn- &amp; Kundenabrechnung</strong><small>Aus Einsatzdaten, ohne Neueingabe</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-chart-line"></i><span><strong>Controlling &amp; Exporte</strong><small>Marge, Stunden, Deckungsbeitrag</small></span></a>
+                                <a href="/#svc-bestelleingang" class="nav-mega-item"><i class="fas fa-inbox"></i><span><strong>Bestelleingang</strong><small>Aufträge digital annehmen</small></span></a>
+                                <a href="/#svc-bestellungen" class="nav-mega-item"><i class="fas fa-file-invoice"></i><span><strong>Bestellungen &amp; Auftragsbestätigungen</strong><small>PDF-Belege im Firmendesign</small></span></a>
+                                <a href="/#svc-monatsabschluss" class="nav-mega-item"><i class="fas fa-clipboard-check"></i><span><strong>Monatsabschluss</strong><small>Prüfen &amp; freigeben per Klick</small></span></a>
+                                <a href="/#arbeitspaket" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Lohn- &amp; Kundenabrechnung</strong><small>Aus Einsatzdaten, ohne Neueingabe</small></span></a>
+                                <a href="/#svc-controlling" class="nav-mega-item"><i class="fas fa-chart-line"></i><span><strong>Controlling &amp; Exporte</strong><small>Marge, Stunden, Deckungsbeitrag</small></span></a>
                             </div>
                             <div>
                                 <p class="nav-mega-head">Qualität &amp; Compliance</p>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-shield-alt"></i><span><strong>Wachbuch &amp; Leitstand</strong><small>Schichtprotokoll in Echtzeit</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-check"></i><span><strong>Reklamation &amp; Maßnahmen</strong><small>CAPA bis zur Lösung</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Dienstanweisungen</strong><small>Pro Objekt, immer aktuell</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-balance-scale"></i><span><strong>ArbZG-konform</strong><small>Ruhezeiten &amp; Pausen im Griff</small></span></a>
-                                <a href="/landing.html#services" class="nav-mega-item"><i class="fas fa-lock"></i><span><strong>Dokumente &amp; Signatur</strong><small>Archiv + elektronische Signatur</small></span></a>
+                                <a href="/#svc-wachbuch" class="nav-mega-item"><i class="fas fa-shield-alt"></i><span><strong>Wachbuch &amp; Leitstand</strong><small>Schichtprotokoll in Echtzeit</small></span></a>
+                                <a href="/#svc-reklamation" class="nav-mega-item"><i class="fas fa-check"></i><span><strong>Reklamation &amp; Maßnahmen</strong><small>CAPA bis zur Lösung</small></span></a>
+                                <a href="/#svc-dienstanweisungen" class="nav-mega-item"><i class="fas fa-file-alt"></i><span><strong>Dienstanweisungen</strong><small>Pro Objekt, immer aktuell</small></span></a>
+                                <a href="/#svc-arbzg" class="nav-mega-item"><i class="fas fa-balance-scale"></i><span><strong>ArbZG-konform</strong><small>Ruhezeiten &amp; Pausen im Griff</small></span></a>
+                                <a href="/#svc-dokumente" class="nav-mega-item"><i class="fas fa-lock"></i><span><strong>Dokumente &amp; Signatur</strong><small>Archiv + elektronische Signatur</small></span></a>
                             </div>
                         </div>
                         <div class="nav-mega-band">
-                            <a href="/landing.html#services" class="nav-band-item"><i class="fas fa-users"></i><span><strong>Kundenbeziehungen</strong><small>CRM · Kunden-Portal · NU-Portal · Nachrichten</small></span></a>
-                            <a href="/landing.html#ki" class="nav-band-item"><i class="fas fa-robot"></i><span><strong>KI-Assistent <em class="nav-new">Neu</em></strong><small>Antworten aus echten Zahlen · PDF → Daten · Aktionen mit Freigabe</small></span></a>
+                            <a href="/#svc-portale" class="nav-band-item"><i class="fas fa-users"></i><span><strong>Kundenbeziehungen</strong><small>CRM · Kunden-Portal · NU-Portal · Nachrichten</small></span></a>
+                            <a href="/#ki" class="nav-band-item"><i class="fas fa-robot"></i><span><strong>KI-Assistent <em class="nav-new">Neu</em></strong><small>Antworten aus echten Zahlen · PDF → Daten · Aktionen mit Freigabe</small></span></a>
                         </div>
                     </div>
                 </div>
-                <a href="/landing.html#workflow" class="text-ink-500 hover:text-ink-950 transition text-sm">Ablauf</a>
-                <a href="/landing.html#vergleich" class="text-ink-500 hover:text-ink-950 transition text-sm">Vergleich</a>
-                <a href="/landing.html#faq" class="text-ink-500 hover:text-ink-950 transition text-sm">FAQ</a>
+                <a href="/#workflow" class="text-ink-500 hover:text-ink-950 transition text-sm">Ablauf</a>
+                <a href="/#vergleich" class="text-ink-500 hover:text-ink-950 transition text-sm">Vergleich</a>
+                <a href="/#faq" class="text-ink-500 hover:text-ink-950 transition text-sm">FAQ</a>
                                 <a href="/desktop/Clood-X-Setup.exe" class="text-ink-500 hover:text-ink-950 transition text-sm"><i class="fab fa-windows mr-1"></i>Windows-App</a>
                 <a href="/desktop/Clood-X.dmg" class="text-ink-500 hover:text-ink-950 transition text-sm"><i class="fab fa-apple mr-1"></i>Mac-App</a>
                 <a href="/login.php" class="text-ink-500 hover:text-ink-950 transition text-sm">Anmelden</a>
@@ -86,25 +93,25 @@
                     <a href="/produkte/einsatz-personal/antraege-abwesenheiten.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Anträge &amp; Abwesenheiten</a>
                     <a href="/produkte/einsatz-personal/schichtboerse.html" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Schichtbörse</a>
                     <p class="mob-head">Auftrag &amp; Abrechnung</p>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestelleingang</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestellungen &amp; Auftragsbestätigungen</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Monatsabschluss</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Lohn- &amp; Kundenabrechnung</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Controlling &amp; Exporte</a>
+                    <a href="/#svc-bestelleingang" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestelleingang</a>
+                    <a href="/#svc-bestellungen" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Bestellungen &amp; Auftragsbestätigungen</a>
+                    <a href="/#svc-monatsabschluss" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Monatsabschluss</a>
+                    <a href="/#arbeitspaket" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Lohn- &amp; Kundenabrechnung</a>
+                    <a href="/#svc-controlling" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Controlling &amp; Exporte</a>
                     <p class="mob-head">Qualität &amp; Compliance</p>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Wachbuch &amp; Leitstand</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Reklamation &amp; Maßnahmen</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dienstanweisungen</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">ArbZG-konform</a>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dokumente &amp; Signatur</a>
+                    <a href="/#svc-wachbuch" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Wachbuch &amp; Leitstand</a>
+                    <a href="/#svc-reklamation" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Reklamation &amp; Maßnahmen</a>
+                    <a href="/#svc-dienstanweisungen" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dienstanweisungen</a>
+                    <a href="/#svc-arbzg" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">ArbZG-konform</a>
+                    <a href="/#svc-dokumente" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Dokumente &amp; Signatur</a>
                     <p class="mob-head">Mehr</p>
-                    <a href="/landing.html#services" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Kundenbeziehungen (CRM · Portale · Chat)</a>
-                    <a href="/landing.html#ki" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">KI-Assistent</a>
+                    <a href="/#svc-portale" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">Kundenbeziehungen (CRM · Portale · Chat)</a>
+                    <a href="/#ki" class="block text-ink-500 hover:text-ink-950 py-1.5 text-sm">KI-Assistent</a>
                 </div>
             </details>
-            <a href="/landing.html#workflow" class="block text-ink-500 hover:text-ink-950 py-2">Ablauf</a>
-            <a href="/landing.html#vergleich" class="block text-ink-500 hover:text-ink-950 py-2">Vergleich</a>
-            <a href="/landing.html#faq" class="block text-ink-500 hover:text-ink-950 py-2">FAQ</a>
+            <a href="/#workflow" class="block text-ink-500 hover:text-ink-950 py-2">Ablauf</a>
+            <a href="/#vergleich" class="block text-ink-500 hover:text-ink-950 py-2">Vergleich</a>
+            <a href="/#faq" class="block text-ink-500 hover:text-ink-950 py-2">FAQ</a>
             <a href="/login.php" class="block text-ink-500 hover:text-ink-950 py-2">Anmelden</a>
             <a href="/register.html" class="block bg-primary-500 text-paper text-center px-5 py-3 rounded-full font-semibold">Kostenlos testen</a>
         </div>
@@ -261,6 +268,12 @@ const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+
+// Fallback: reveal everything if the observer never fires
+setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+}, 1500);
 
 if (localStorage.getItem('hms_token')) {
     document.querySelectorAll('a[href="/register.html"]').forEach(a => { a.href = '/index.php'; });

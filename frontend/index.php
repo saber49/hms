@@ -22,10 +22,8 @@ header('Expires: 0');
         .hms-boot-spinner{width:32px;height:32px;border: 3px solid color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);border-top-color: var(--md-sys-color-primary);border-radius:50%;animation:hmsBootSpin .75s linear infinite}
         @keyframes hmsBootSpin{to{transform:rotate(360deg)}}
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block">
+    <link rel="stylesheet" href="/assets/css/roboto.css?v=20261119ms1">
+    <link rel="stylesheet" href="/assets/css/material-symbols.css?v=20261119ms1">
     <!-- Theme bootstrap — set data-theme BEFORE stylesheets to avoid a
          flash. Light is the default; dark applies ONLY if the user
          explicitly chose it (hms_theme). OS preference is ignored. -->
