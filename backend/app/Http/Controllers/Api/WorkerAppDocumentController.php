@@ -104,6 +104,16 @@ class WorkerAppDocumentController extends Controller
                 'updated_at'      => now(),
             ]);
 
+        try {
+            DB::connection('tenant')->table('mitarbeiter_dokument_anfragen_log')->insert([
+                'anfrage_id' => $id,
+                'aktion' => 'uploaded',
+                'sender' => 'Mitarbeiter',
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('doc-renewal upload log insert failed', ['id' => $id, 'error' => $e->getMessage()]);
+        }
+
         // Notify HR managers (in-app bell + email) that a review is pending.
         try {
             $tenant = \App\Services\TenantService::current();

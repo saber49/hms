@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\NotificationDispatcher;
 use App\Http\Controllers\Controller;
+use App\Services\TenantService;
 use App\Support\BereichScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * HR side of the document-renewal workflow.
@@ -29,6 +31,14 @@ class WorkerDocRenewalController extends Controller
     private function ready(): bool
     {
         return Schema::connection('tenant')->hasTable('mitarbeiter_dokument_anfragen');
+    }
+
+    private function isWorkerUploadPath(?string $path, string $dienstNr): bool
+    {
+        return is_string($path)
+            && str_starts_with($path, 'uploads/workers/' . $dienstNr . '/')
+            && !str_contains($path, '..')
+            && !str_contains($path, '\\');
     }
 
     // ============================================================
@@ -144,7 +154,7 @@ class WorkerDocRenewalController extends Controller
             || !BereichScope::allowsWorker($request->user(), (string) $row->dienst_nr)) {
             return response()->json(['error' => 'Keine Datei vorhanden'], 404);
         }
-        if (!str_starts_with($row->dateipfad, 'uploads/workers/')) {
+        if (!$this->isWorkerUploadPath($row->dateipfad, (string) $row->dienst_nr)) {
             return response()->json(['error' => 'Zugriff verweigert'], 403);
         }
         if (!Storage::disk('public')->exists($row->dateipfad)) {
@@ -153,7 +163,8 @@ class WorkerDocRenewalController extends Controller
 
         return response()->file(Storage::disk('public')->path($row->dateipfad), [
             'Content-Type'           => 'application/pdf',
-            'Content-Disposition'    => 'inline; filename="' . ($row->dateiname ?: 'dokument.pdf') . '"',
+            'Content-Disposition'    => 'inline; filename="dokument-zur-pruefung.pdf"',
+            'Cache-Control'          => 'private, no-store',
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
@@ -163,36 +174,92 @@ class WorkerDocRenewalController extends Controller
     // ============================================================
     public function approve(Request $request, int $id)
     {
+        TenantService::assertActive();
         if (!$this->ready()) return response()->json(['error' => 'Nicht gefunden'], 404);
 
         $data = $request->validate([
             'ablaufdatum' => 'nullable|date',
         ]);
 
-        $row = DB::connection('tenant')->table('mitarbeiter_dokument_anfragen')->where('id', $id)->first();
-        if (!$row || !BereichScope::allowsWorker($request->user(), (string) $row->dienst_nr)) {
-            return response()->json(['error' => 'Anfrage nicht gefunden'], 404);
-        }
-        if ($row->status !== 'hochgeladen') {
-            return response()->json(['error' => 'Nur hochgeladene Dokumente können genehmigt werden (Status: ' . $row->status . ')'], 409);
-        }
-        if (empty($row->dateipfad)) {
-            return response()->json(['error' => 'Keine Datei vorhanden'], 409);
-        }
-
         $reviewer    = trim((string) ($request->user()->full_name ?? $request->user()->name ?? '')) ?: 'HR';
-        $ablaufdatum = $data['ablaufdatum'] ?? ($row->ablaufdatum_neu ?: null);
+        $oldPath = null;
+        $archivePath = null;
+        $row = null;
 
         DB::connection('tenant')->beginTransaction();
         try {
-            $oldPath = null;
+            $row = DB::connection('tenant')->table('mitarbeiter_dokument_anfragen')
+                ->where('id', $id)->lockForUpdate()->first();
+            if (!$row || !BereichScope::allowsWorker($request->user(), (string) $row->dienst_nr)) {
+                DB::connection('tenant')->rollBack();
+                return response()->json(['error' => 'Anfrage nicht gefunden'], 404);
+            }
+            if ($row->status !== 'hochgeladen' || empty($row->dateipfad)) {
+                DB::connection('tenant')->rollBack();
+                return response()->json(['error' => 'Nur hochgeladene Dokumente können genehmigt werden'], 409);
+            }
+            if (!$this->isWorkerUploadPath($row->dateipfad, (string) $row->dienst_nr)
+                || !Storage::disk('public')->exists($row->dateipfad)) {
+                DB::connection('tenant')->rollBack();
+                return response()->json(['error' => 'Neues Dokument nicht gefunden'], 409);
+            }
+
             $existing = $row->dokument_id
-                ? DB::connection('tenant')->table('mitarbeiter_dokumente')->where('id', $row->dokument_id)->first()
+                ? DB::connection('tenant')->table('mitarbeiter_dokumente')
+                    ->where('id', $row->dokument_id)->where('dienst_nr', $row->dienst_nr)->lockForUpdate()->first()
                 : null;
+            if ($row->dokument_id && !$existing) {
+                DB::connection('tenant')->rollBack();
+                return response()->json(['error' => 'Bisheriges Dokument nicht gefunden'], 409);
+            }
+            $ablaufdatum = $data['ablaufdatum'] ?? ($row->ablaufdatum_neu ?: null);
+            if ($existing && $existing->ablaufdatum
+                && (!$ablaufdatum || $ablaufdatum <= now()->toDateString())) {
+                DB::connection('tenant')->rollBack();
+                return response()->json(['error' => 'Für die Erneuerung ist ein zukünftiges Ablaufdatum erforderlich'], 422);
+            }
 
             if ($existing) {
-                // Replace the old document in place — keeps its id/history.
+                if (!Schema::connection('tenant')->hasTable('mitarbeiter_dokument_versionen')) {
+                    DB::connection('tenant')->rollBack();
+                    return response()->json(['error' => 'Dokumentenarchiv noch nicht verfügbar'], 409);
+                }
                 $oldPath = $existing->dateipfad;
+                if (!$this->isWorkerUploadPath($oldPath, (string) $row->dienst_nr)
+                    || !Storage::disk('public')->exists($oldPath)) {
+                    DB::connection('tenant')->rollBack();
+                    return response()->json(['error' => 'Bisherige Datei nicht gefunden; Freigabe abgebrochen'], 409);
+                }
+                $archivePath = 'worker-document-versions/' . TenantService::assertActive()->id
+                    . '/' . Str::uuid() . '.pdf';
+                $stream = Storage::disk('public')->readStream($oldPath);
+                if (!$stream) throw new \RuntimeException('Bisherige Datei nicht lesbar');
+                try {
+                    if (!Storage::disk('local')->writeStream($archivePath, $stream)) {
+                        throw new \RuntimeException('Archivierung fehlgeschlagen');
+                    }
+                } finally {
+                    fclose($stream);
+                }
+                $oldHash = hash_file('sha256', Storage::disk('public')->path($oldPath));
+                $archiveHash = hash_file('sha256', Storage::disk('local')->path($archivePath));
+                if (!$oldHash || !$archiveHash || !hash_equals($oldHash, $archiveHash)) {
+                    throw new \RuntimeException('Archivierte Datei stimmt nicht mit dem Original überein');
+                }
+                DB::connection('tenant')->table('mitarbeiter_dokument_versionen')->insert([
+                    'dokument_id' => $existing->id,
+                    'dienst_nr' => $row->dienst_nr,
+                    'titel' => $existing->titel,
+                    'dateiname' => $existing->dateiname,
+                    'dateipfad' => $archivePath,
+                    'dateigroesse' => $existing->dateigroesse,
+                    'pruefsumme' => $oldHash,
+                    'ablaufdatum' => $existing->ablaufdatum,
+                    'hochgeladen_am' => $existing->hochgeladen_am,
+                    'archiviert_am' => now(),
+                    'archiviert_von' => $reviewer,
+                    'anfrage_id' => $id,
+                ]);
                 DB::connection('tenant')->table('mitarbeiter_dokumente')
                     ->where('id', $existing->id)
                     ->update([
@@ -204,7 +271,7 @@ class WorkerDocRenewalController extends Controller
                         'hochgeladen_am' => now(),
                     ]);
             } else {
-                DB::connection('tenant')->table('mitarbeiter_dokumente')->insert([
+                $newId = DB::connection('tenant')->table('mitarbeiter_dokumente')->insertGetId([
                     'dienst_nr'    => $row->dienst_nr,
                     'titel'        => $row->titel,
                     'dateiname'    => $row->dateiname,
@@ -218,30 +285,34 @@ class WorkerDocRenewalController extends Controller
                 ->where('id', $id)
                 ->update([
                     'status'       => 'genehmigt',
+                    'dokument_id'  => $existing?->id ?? $newId,
                     'geprueft_von' => $reviewer,
                     'geprueft_am'  => now(),
                     'updated_at'   => now(),
                 ]);
 
             DB::connection('tenant')->commit();
-
-            // Best-effort cleanup of the replaced file + thumbnails.
-            if ($oldPath && $oldPath !== $row->dateipfad) {
-                try {
-                    Storage::disk('public')->delete($oldPath);
-                    \App\Services\DocumentThumbnailer::delete('public', $oldPath);
-                } catch (\Throwable $e) { /* non-fatal */ }
-            }
-            try {
-                \App\Services\DocumentThumbnailer::generate('public', $row->dateipfad);
-            } catch (\Throwable $e) { /* non-fatal */ }
         } catch (\Throwable $e) {
             DB::connection('tenant')->rollBack();
+            if ($archivePath) Storage::disk('local')->delete($archivePath);
             Log::error('WorkerDocRenewal approve failed', ['id' => $id, 'error' => $e->getMessage()]);
             return response()->json(['error' => 'Genehmigung fehlgeschlagen'], 500);
         }
 
+        if ($oldPath && $oldPath !== $row->dateipfad) {
+            try {
+                Storage::disk('public')->delete($oldPath);
+                \App\Services\DocumentThumbnailer::delete('public', $oldPath);
+            } catch (\Throwable $e) {
+                Log::warning('Worker document old public file cleanup failed', ['id' => $id]);
+            }
+        }
+        try {
+            \App\Services\DocumentThumbnailer::generate('public', $row->dateipfad);
+        } catch (\Throwable $e) { /* non-fatal */ }
+
         $worker = DB::connection('tenant')->table('mitarbeiter')->where('dienst_nr', $row->dienst_nr)->first();
+        $this->logNotify($id, 'approved', $reviewer);
         if ($worker) {
             NotificationDispatcher::notifyWorker(
                 $worker,
@@ -300,6 +371,7 @@ class WorkerDocRenewalController extends Controller
                 'updated_at'      => now(),
             ]);
 
+        $this->logNotify($id, 'rejected', $reviewer);
         $worker = DB::connection('tenant')->table('mitarbeiter')->where('dienst_nr', $row->dienst_nr)->first();
         if ($worker) {
             NotificationDispatcher::notifyWorker(
@@ -370,7 +442,9 @@ class WorkerDocRenewalController extends Controller
         if (!$this->ready()) return response()->json([]);
 
         $row = DB::connection('tenant')->table('mitarbeiter_dokument_anfragen')->where('id', $id)->first();
-        if (!$row) return response()->json(['error' => 'Anfrage nicht gefunden'], 404);
+        if (!$row || !BereichScope::allowsWorker($request->user(), (string) $row->dienst_nr)) {
+            return response()->json(['error' => 'Anfrage nicht gefunden'], 404);
+        }
 
         $rows = DB::connection('tenant')->table('mitarbeiter_dokument_anfragen_log')
             ->where('anfrage_id', $id)

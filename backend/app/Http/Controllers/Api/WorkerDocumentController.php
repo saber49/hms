@@ -3,13 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\TenantService;
 use App\Support\BereichScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class WorkerDocumentController extends Controller
 {
+    private function isArchivedVersionPath(?string $path, int $tenantId): bool
+    {
+        $prefix = 'worker-document-versions/' . $tenantId . '/';
+        return is_string($path)
+            && str_starts_with($path, $prefix)
+            && preg_match('/^[a-f0-9-]{36}\.pdf$/i', substr($path, strlen($prefix))) === 1;
+    }
+
     public function index(Request $request)
     {
         $dienst_nr = $request->query('dienst_nr');
@@ -22,6 +32,47 @@ class WorkerDocumentController extends Controller
             ->where('dienst_nr', $dienst_nr)->orderByDesc('hochgeladen_am')->get();
 
         return response()->json($docs);
+    }
+
+    public function versions(Request $request, int $id)
+    {
+        TenantService::assertActive();
+        $doc = DB::connection('tenant')->table('mitarbeiter_dokumente')->where('id', $id)->first();
+        if (!$doc || !BereichScope::allowsWorker($request->user(), (string) $doc->dienst_nr)) {
+            return response()->json(['error' => 'Dokument nicht gefunden'], 404);
+        }
+        if (!Schema::connection('tenant')->hasTable('mitarbeiter_dokument_versionen')) {
+            return response()->json([]);
+        }
+
+        return response()->json(DB::connection('tenant')->table('mitarbeiter_dokument_versionen')
+            ->where('dokument_id', $id)->where('dienst_nr', $doc->dienst_nr)
+            ->select('id', 'titel', 'dateiname', 'ablaufdatum', 'hochgeladen_am', 'archiviert_am', 'archiviert_von')
+            ->orderByDesc('archiviert_am')->get());
+    }
+
+    public function versionFile(Request $request, int $id, int $versionId)
+    {
+        TenantService::assertActive();
+        $doc = DB::connection('tenant')->table('mitarbeiter_dokumente')->where('id', $id)->first();
+        if (!$doc || !BereichScope::allowsWorker($request->user(), (string) $doc->dienst_nr)
+            || !Schema::connection('tenant')->hasTable('mitarbeiter_dokument_versionen')) {
+            return response()->json(['error' => 'Dokument nicht gefunden'], 404);
+        }
+        $version = DB::connection('tenant')->table('mitarbeiter_dokument_versionen')
+            ->where('id', $versionId)->where('dokument_id', $id)
+            ->where('dienst_nr', $doc->dienst_nr)->first();
+        if (!$version || !$this->isArchivedVersionPath($version->dateipfad, (int) TenantService::assertActive()->id)
+            || !Storage::disk('local')->exists($version->dateipfad)) {
+            return response()->json(['error' => 'Version nicht gefunden'], 404);
+        }
+
+        return response()->file(Storage::disk('local')->path($version->dateipfad), [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="dokument-version.pdf"',
+            'Cache-Control' => 'private, no-store',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     public function upload(Request $request)
@@ -83,6 +134,7 @@ class WorkerDocumentController extends Controller
 
     public function destroy(Request $request)
     {
+        TenantService::assertActive();
         $data = $request->all();
         $docId = $data['id'] ?? null;
         if (!$docId) return response()->json(['error' => 'Dokument-ID erforderlich'], 400);
@@ -90,6 +142,18 @@ class WorkerDocumentController extends Controller
         $doc = DB::connection('tenant')->table('mitarbeiter_dokumente')->where('id', $docId)->first();
         if (!$doc || !BereichScope::allowsWorker($request->user(), (string) $doc->dienst_nr)) {
             return response()->json(['error' => 'Dokument nicht gefunden'], 404);
+        }
+
+        if (Schema::connection('tenant')->hasTable('mitarbeiter_dokument_versionen')) {
+            $versions = DB::connection('tenant')->table('mitarbeiter_dokument_versionen')
+                ->where('dokument_id', $docId)->where('dienst_nr', $doc->dienst_nr)->get();
+            foreach ($versions as $version) {
+                if ($this->isArchivedVersionPath($version->dateipfad, (int) TenantService::assertActive()->id)) {
+                    Storage::disk('local')->delete($version->dateipfad);
+                }
+            }
+            DB::connection('tenant')->table('mitarbeiter_dokument_versionen')
+                ->where('dokument_id', $docId)->where('dienst_nr', $doc->dienst_nr)->delete();
         }
 
         if ($doc->dateipfad) {
