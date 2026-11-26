@@ -594,7 +594,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=' + (f === '05-ma-overview' ? '20261126pausebill1'
+].map(f => 'assets/js/tasks/' + f + '.js?v=' + (f === '05-ma-overview' ? '20261126filterfix2'
     : (f === '03-dispo-detail' ? '20261123wx1'
     : (f === '09-dispo-nu' ? '20261117nupicker1' : (f === '06-ma-actions' ? '20261126filterfix1' : '20261118sboff1')))));
 

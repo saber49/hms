@@ -508,9 +508,13 @@ function maBuildBento(data) {
 
 function maBuildToolbar() {
     const scope = maResolveScopeLists();
+    // Plain native selects: md-outlined-select's popover menu failed to
+    // render its options reliably inside this morphing toolbar, so users
+    // could not pick a Kunde/Objekt at all.
     const scopeOpts = (list, cur) => list.map(v =>
-        `<md-select-option value="${escapeHtml(v)}"${v === cur ? ' selected' : ''}><div slot="headline">${escapeHtml(v)}</div></md-select-option>`
+        `<option value="${escapeHtml(v)}"${v === cur ? ' selected' : ''}>${escapeHtml(v)}</option>`
     ).join('');
+    const selStyle = 'height:40px;border:1px solid var(--md-sys-color-outline,#79747e);border-radius:8px;background:var(--md-sys-color-surface,#fff);color:var(--md-sys-color-on-surface,#1d1b20);padding:0 10px;font-size:0.88rem;max-width:230px';
     return `
         <div class="ma-toolbar${_maMode === 'kunde' ? ' is-kunde' : ''}">
             <div class="ma-toolbar-top">
@@ -535,14 +539,14 @@ function maBuildToolbar() {
                     <md-filter-chip label="Hinweise" data-filter="anomaly" ${_maFilter === 'anomaly' ? 'selected' : ''} onclick="maSetFilter('anomaly')"></md-filter-chip>
                     <md-filter-chip label="Abwesend" data-filter="abwesenheit" ${_maFilter === 'abwesenheit' ? 'selected' : ''} onclick="maSetFilter('abwesenheit')"></md-filter-chip>
                 </md-chip-set>
-                <md-outlined-select class="ma-scope-select${_maFilterKunde ? ' active' : ''}" id="maScopeKunde" onchange="maScopeChange('kunde', this.value)" title="Nach Kunde filtern">
-                    <md-select-option value=""><div slot="headline">Alle Kunden</div></md-select-option>
+                <select class="ma-scope-select${_maFilterKunde ? ' active' : ''}" id="maScopeKunde" onchange="maScopeChange('kunde', this.value)" title="Nach Kunde filtern" style="${selStyle}">
+                    <option value="">Alle Kunden</option>
                     ${scopeOpts(scope.kunden, _maFilterKunde)}
-                </md-outlined-select>
-                <md-outlined-select class="ma-scope-select${_maFilterObjekt ? ' active' : ''}" id="maScopeObjekt" onchange="maScopeChange('objekt', this.value)" title="Nach Objekt filtern">
-                    <md-select-option value=""><div slot="headline">Alle Objekte</div></md-select-option>
+                </select>
+                <select class="ma-scope-select${_maFilterObjekt ? ' active' : ''}" id="maScopeObjekt" onchange="maScopeChange('objekt', this.value)" title="Nach Objekt filtern" style="${selStyle}">
+                    <option value="">Alle Objekte</option>
                     ${scopeOpts(scope.objekte, _maFilterObjekt)}
-                </md-outlined-select>
+                </select>
             </div>
         </div>`;
 }
