@@ -291,8 +291,6 @@ function maResolveScopeLists() {
         ({ kunden, objekte } = lists());
         if (_maFilterObjekt && !objekte.includes(_maFilterObjekt)) _maFilterObjekt = '';
         if (_maFilterKunde && !kunden.includes(_maFilterKunde)) _maFilterKunde = '';
-        if (_maFilterObjekt && !_maFilterKunde && kunden.length === 1 && src !== 'kunde') _maFilterKunde = kunden[0];
-        if (_maFilterKunde && !_maFilterObjekt && objekte.length === 1 && src !== 'objekt') _maFilterObjekt = objekte[0];
         if (pk === _maFilterKunde && po === _maFilterObjekt) break;
     }
     return lists();
@@ -323,8 +321,8 @@ function maApplyFilters() {
                 if (_maFilter === 'anomaly' && tr.dataset.rowAnomaly !== '1') ok = false;
                 if (_maFilter === 'abwesenheit' && tr.dataset.rowAbw !== '1') ok = false;
                 if (q && !(tr.dataset.rowName || '').includes(q) && !objName.includes(q)) ok = false;
-                if (_maFilterKunde && tr.dataset.rowKunde !== _maFilterKunde) ok = false;
-                if (_maFilterObjekt && block.dataset.objekt !== _maFilterObjekt) ok = false;
+                if (_maFilterKunde && (tr.dataset.rowKunde || '').trim() !== _maFilterKunde) ok = false;
+                if (_maFilterObjekt && (block.dataset.objekt || '').trim() !== _maFilterObjekt) ok = false;
                 tr.style.display = ok ? '' : 'none';
                 if (ok) any = true;
             });
@@ -347,8 +345,8 @@ function maApplyFilters() {
                 wk = JSON.parse(block.dataset.kunden || '[]');
                 wo = JSON.parse(block.dataset.objekte || '[]');
             } catch (e) { /* keep */ }
-            if (_maFilterKunde && !wk.includes(_maFilterKunde)) show = false;
-            if (_maFilterObjekt && !wo.includes(_maFilterObjekt)) show = false;
+            if (_maFilterKunde && !wk.map(v => (v || '').trim()).includes(_maFilterKunde)) show = false;
+            if (_maFilterObjekt && !wo.map(v => (v || '').trim()).includes(_maFilterObjekt)) show = false;
         }
 
         block.style.display = show ? '' : 'none';
