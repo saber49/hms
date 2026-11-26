@@ -627,20 +627,23 @@ async function wkOpenExpiringDocs() {
     });
 
     const statusChip = (a, withResend = false) => {
-        const requestedAt = a.created_at ? 'Angefordert am ' + formatDate(a.created_at) : 'Angefordert';
+        const requestedAt = a.created_at ? 'Angefordert am ' + formatDateTimeLocal(a.created_at) : 'Angefordert';
         const anfrageVon  = a.angefordert_von ? 'Anforderung von: ' + escapeHtml(a.angefordert_von) : '';
         const resendCount = parseInt(a.resend_count || 0);
         const resendInfo  = resendCount > 0
             ? `\nErneut gesendet: ${resendCount}x` +
-              (a.last_resend_at ? ` (zuletzt ${formatDate(a.last_resend_at)}` + (a.last_resend_von ? ` von ${escapeHtml(a.last_resend_von)}` : '') + ')' : '')
+              (a.last_resend_at ? ` (zuletzt ${formatDateTimeLocal(a.last_resend_at)}` + (a.last_resend_von ? ` von ${escapeHtml(a.last_resend_von)}` : '') + ')' : '')
             : '';
-        const logTitle = 'Protokoll ansehen — wer und wann wurde benachrichtigt';
-        if (a.status === 'hochgeladen') return `<span style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Vom Mitarbeiter hochgeladen, wartet auf Freigabe">${wkIcon('upload_file', 'font-size:13px;vertical-align:-2px')} Zur Prüfung</span>`;
-        if (a.status === 'abgelehnt')   return `<span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Das hochgeladene Dokument wurde abgelehnt — Mitarbeiter muss erneut hochladen\nZuletzt erneut gesendet: ${resendCount}x">${wkIcon('replay', 'font-size:13px;vertical-align:-2px')} Abgelehnt</span>`;
+        const logTitle = 'Verlauf der Anfrage ansehen';
+        const history = `<md-icon-button onclick="event.stopPropagation();wkOpenRenewalLog(${a.id})" title="${logTitle}"><md-icon>history</md-icon></md-icon-button>`;
+        if (a.status === 'hochgeladen') return `
+            <span style="background: var(--md-sys-color-primary-container);color: var(--md-sys-color-primary);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap">${wkIcon('upload_file', 'font-size:13px;vertical-align:-2px')} Zur Prüfung</span>
+            <md-filled-tonal-button onclick="event.stopPropagation();wkApproveDocRenewal(${a.id},'${a.ablaufdatum_neu || ''}','${hmsFileArg(a.dienst_nr)}',${a.dokument_id || 'null'})">Prüfen</md-filled-tonal-button>${history}`;
+        if (a.status === 'abgelehnt') return `<span style="background: var(--md-sys-color-error-container);color: var(--md-sys-color-error);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Mitarbeiter muss erneut hochladen">${wkIcon('replay', 'font-size:13px;vertical-align:-2px')} Abgelehnt</span>${history}`;
         return `
             <span style="display:inline-flex;align-items:center;gap:4px;background: var(--md-ext-color-warning-container);color: var(--md-ext-color-warning);border-radius:8px;padding:2px 8px;font-size:0.72rem;font-weight:600;white-space:nowrap" title="Mitarbeiter wurde per E-Mail, App-Push und In-App-Benachrichtigung informiert\n${anfrageVon}\n${requestedAt}${resendInfo}">${wkIcon('send', 'font-size:13px;vertical-align:-2px')} Angefordert${resendCount > 0 ? ' · ' + resendCount + 'x erneut' : ''}</span>
             ${withResend ? `<md-icon-button style="--md-icon-button-icon-size:18px;--md-icon-button-icon-color:#b45309" onclick="event.stopPropagation();wkResendDocRenewal(${a.id})" title="Erinnerung erneut senden"><md-icon style="font-size:18px">send</md-icon></md-icon-button>` : ''}
-            <md-icon-button style="--md-icon-button-icon-size:18px;--md-icon-button-icon-color:var(--wk-text-muted)" onclick="event.stopPropagation();wkOpenRenewalLog(${a.id})" title="${logTitle}"><md-icon style="font-size:18px">history</md-icon></md-icon-button>`;
+            ${history}`;
     };
 
     const reviewSection = renewals.filter(a => a.status === 'hochgeladen').map(a => `
@@ -650,14 +653,14 @@ async function wkOpenExpiringDocs() {
                 <div class="wk-cl-title">${escapeHtml(a.titel)} — ${escapeHtml(a.vorname || '')} ${escapeHtml(a.name || '')}</div>
                 <div class="wk-cl-meta">
                     <span>${wkIcon('tag', 'font-size:12px;vertical-align:-2px')} ${escapeHtml(a.dienst_nr)}</span> ·
-                    <span>Hochgeladen: ${formatDate(a.hochgeladen_am)}</span>
+                    <span>Hochgeladen: ${formatDateTimeLocal(a.hochgeladen_am)}</span>
                     ${a.ablaufdatum_neu ? ` · <span>Neues Ablaufdatum: ${formatDate(a.ablaufdatum_neu)}</span>` : ''}
                 </div>
             </div>
             <div class="wk-cl-actions" style="display:flex;gap:6px">
-                <md-icon-button onclick="hmsOpenFile('${hmsFileArg(a.dateipfad)}')" title="PDF ansehen"><md-icon>visibility</md-icon></md-icon-button>
-                <md-icon-button style="--md-icon-button-icon-color:#16a34a" onclick="wkApproveDocRenewal(${a.id},'${a.ablaufdatum_neu || ''}')" title="Genehmigen"><md-icon>check</md-icon></md-icon-button>
-                <md-icon-button style="--md-icon-button-icon-color:#dc2626" onclick="wkRejectDocRenewal(${a.id})" title="Ablehnen"><md-icon>close</md-icon></md-icon-button>
+                <md-icon-button onclick="wkOpenRenewalFile(${a.id})" title="Neues PDF ansehen"><md-icon>visibility</md-icon></md-icon-button>
+                <md-filled-tonal-button onclick="wkApproveDocRenewal(${a.id},'${a.ablaufdatum_neu || ''}','${hmsFileArg(a.dienst_nr)}',${a.dokument_id || 'null'})">Prüfen</md-filled-tonal-button>
+                <md-icon-button style="--md-icon-button-icon-color:#dc2626" onclick="wkRejectDocRenewal(${a.id},'${hmsFileArg(a.dienst_nr)}')" title="Ablehnen"><md-icon>close</md-icon></md-icon-button>
             </div>
         </div>
     `).join('');
@@ -977,17 +980,17 @@ async function wkOpenRenewalLog(id) {
         <div style="font-weight:600;margin-bottom:10px;color:var(--wk-text-muted);font-size:0.85rem">${escapeHtml(data.titel)} · ${escapeHtml(data.dienst_nr)}</div>
         <div class="wk-cl-list">
             ${rows.map(l => {
-                const isResend = l.aktion === 'resend';
-                const icon = isResend ? 'send' : 'send';
-                const color = isResend ? '#f59e0b' : '#3b82f6';
-                const label = isResend ? 'Erinnerung gesendet' : 'Erstmalig angefordert';
+                const labels = { requested: 'Erstmalig angefordert', resend: 'Erinnerung gesendet',
+                    uploaded: 'Dokument hochgeladen', approved: 'Dokument genehmigt', rejected: 'Dokument abgelehnt' };
+                const label = labels[l.aktion] || l.aktion;
+                const color = l.aktion === 'rejected' ? '#dc2626' : (l.aktion === 'approved' ? '#16a34a' : '#3b82f6');
                 return `
                     <div class="wk-cl-item" style="border-left:3px solid ${color};cursor:default">
-                        ${wkIcon(icon, 'color:' + color)}
+                        ${wkIcon('history', 'color:' + color)}
                         <div class="wk-cl-body">
-                            <div class="wk-cl-title">${label}</div>
+                            <div class="wk-cl-title">${escapeHtml(label)}</div>
                             <div class="wk-cl-meta">
-                                <span>${wkIcon('person', 'font-size:12px;vertical-align:-2px')} Gesendet von: <strong>${escapeHtml(l.sender || '—')}</strong></span> ·
+                                <span>${wkIcon('person', 'font-size:12px;vertical-align:-2px')} ${escapeHtml(l.sender || '—')}</span> ·
                                 <span>${wkIcon('schedule', 'font-size:12px;vertical-align:-2px')} ${new Date(l.created_at).toLocaleString('de-DE')}</span>
                             </div>
                         </div>
@@ -998,33 +1001,48 @@ async function wkOpenRenewalLog(id) {
     document.getElementById('workersDialogBody').innerHTML = html;
 }
 
-function wkApproveDocRenewal(id, ablaufNeu, dienstNr) {
+async function wkApproveDocRenewal(id, ablaufNeu, dienstNr, dokumentId) {
+    dienstNr = decodeURIComponent(dienstNr || '');
+    const w = dienstNr && dokumentId ? await apiGet(WK_API.show(dienstNr)).catch(() => null) : null;
+    const old = (w?.dokumente || []).find(d => d.id == dokumentId);
+    const requiresExpiry = !!old?.ablaufdatum;
     const body = `
         <div style="padding:4px 2px">
-            <p style="margin:0 0 12px">Das hochgeladene Dokument wird das bisherige ersetzen.</p>
-            <md-outlined-text-field type="date" id="wkRenewalAblauf" label="Neues Ablaufdatum" value="${ablaufNeu || ''}" style="width:100%"></md-outlined-text-field>
-            <div style="font-size:0.75rem;color:var(--wk-text-muted);margin-top:4px">Leer lassen, wenn das Dokument kein Ablaufdatum hat.</div>
+            <p style="margin:0 0 12px">${old
+                ? 'Bitte das neue PDF prüfen. Das alte Dokument bleibt bis zur Genehmigung gültig und wird danach privat archiviert.'
+                : 'Bitte das neue PDF prüfen. Es wird erst nach der Genehmigung als offizielles Dokument übernommen.'}</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+                ${old ? `<md-outlined-button id="wkRenewalOldFile">Bisheriges PDF ansehen</md-outlined-button>` : ''}
+                <md-outlined-button onclick="wkOpenRenewalFile(${id})">Neues PDF ansehen</md-outlined-button>
+            </div>
+            <md-outlined-text-field type="date" id="wkRenewalAblauf" label="Neues Ablaufdatum${requiresExpiry ? ' *' : ''}" value="${ablaufNeu || ''}" style="width:100%"></md-outlined-text-field>
+            <div style="font-size:0.75rem;color:var(--wk-text-muted);margin-top:4px">${requiresExpiry ? 'Für eine ablaufende Datei ist ein zukünftiges Ablaufdatum erforderlich.' : 'Leer lassen, wenn das Dokument kein Ablaufdatum hat.'}</div>
         </div>`;
     const footer = `
         <md-text-button onclick="closeWorkersDialog()">Abbrechen</md-text-button>
         <md-filled-button id="wkRenewalApproveBtn" style="--md-filled-button-container-color:#16a34a"><md-icon slot="icon">check</md-icon>Genehmigen</md-filled-button>`;
     openWorkersDialog('Dokument genehmigen', body, footer);
+    if (old) document.getElementById('wkRenewalOldFile').onclick = () => hmsOpenFile(hmsFileArg(old.dateipfad));
     document.getElementById('wkRenewalApproveBtn').onclick = async () => {
         const ablaufdatum = document.getElementById('wkRenewalAblauf').value || null;
-        closeWorkersDialog();
+        const today = new Date().toLocaleDateString('sv-SE');
+        if (requiresExpiry && (!ablaufdatum || ablaufdatum <= today)) {
+            showToast('Bitte ein zukünftiges Ablaufdatum eingeben', 'error'); return;
+        }
         const r = await apiPost(WK_API.renewals + '/' + id + '/approve', { ablaufdatum });
         if (r && r.success) {
+            closeWorkersDialog();
             showToast('Dokument genehmigt und übernommen');
-            if (dienstNr) wkLoadDocs(dienstNr);
+            if (document.querySelector('.wk-profile') && dienstNr) { wkLoadDocs(dienstNr); wkLoadChecklist(dienstNr); }
             else wkOpenExpiringDocs();
-            if (typeof wkLoadStats === 'function') { try { wkLoadStats(); } catch (e) {} }
         } else {
             showToast((r && r.error) || 'Fehler bei der Genehmigung', 'error');
         }
     };
 }
 
-function wkRejectDocRenewal(id) {
+function wkRejectDocRenewal(id, dienstNr) {
+    dienstNr = decodeURIComponent(dienstNr || '');
     const body = `
         <div style="padding:4px 2px">
             <md-outlined-text-field type="textarea" rows="3" id="wkRenewalGrund" label="Grund der Ablehnung *" style="width:100%" placeholder="z. B. Dokument unleserlich, falsches Dokument …"></md-outlined-text-field>
@@ -1041,7 +1059,8 @@ function wkRejectDocRenewal(id) {
         const r = await apiPost(WK_API.renewals + '/' + id + '/reject', { grund });
         if (r && r.success) {
             showToast('Dokument abgelehnt — Mitarbeiter wurde benachrichtigt');
-            wkOpenExpiringDocs();
+            if (document.querySelector('.wk-profile') && dienstNr) wkLoadDocs(dienstNr);
+            else wkOpenExpiringDocs();
         } else {
             showToast((r && r.error) || 'Fehler beim Ablehnen', 'error');
         }
@@ -1325,6 +1344,7 @@ async function wkLoadDocs(dienstNr, loaded) {
     const docs = w?.dokumente || [];
     const requests = await apiGet(WK_API.renewals);
     const ownRequests = Array.isArray(requests) ? requests.filter(r => r.dienst_nr === dienstNr && r.status !== 'genehmigt') : [];
+    const completedRequests = Array.isArray(requests) ? requests.filter(r => r.dienst_nr === dienstNr && r.status === 'genehmigt').slice(0, 5) : [];
     document.getElementById('wkTabCountDocs').textContent = docs.length;
 
     container.innerHTML = `
@@ -1366,11 +1386,20 @@ async function wkLoadDocs(dienstNr, loaded) {
                     <div class="wk-cl-body"><strong>${escapeHtml(r.titel)}</strong> · ${escapeHtml(r.status)}${r.nachricht ? `<div class="wk-cl-meta">${escapeHtml(r.nachricht)}</div>` : ''}</div>
                     ${r.status === 'hochgeladen' ? `
                         <md-outlined-button onclick="wkOpenRenewalFile(${r.id})">Ansehen</md-outlined-button>
-                        <md-filled-tonal-button onclick="wkApproveDocRenewal(${r.id},'', '${dienstNr}')">Genehmigen</md-filled-tonal-button>
-                        <md-outlined-button onclick="wkRejectDocRenewal(${r.id})">Ablehnen</md-outlined-button>` : ''}
+                        <md-filled-tonal-button onclick="wkApproveDocRenewal(${r.id},'${r.ablaufdatum_neu || ''}','${hmsFileArg(dienstNr)}',${r.dokument_id || 'null'})">Prüfen</md-filled-tonal-button>
+                        <md-outlined-button onclick="wkRejectDocRenewal(${r.id},'${hmsFileArg(dienstNr)}')">Ablehnen</md-outlined-button>` : ''}
                     ${r.status === 'angefordert' || r.status === 'abgelehnt' ? `<md-outlined-button onclick="wkResendDocRenewal(${r.id})">Erinnern</md-outlined-button>` : ''}
+                    <md-outlined-button onclick="wkOpenRenewalLog(${r.id})">Verlauf</md-outlined-button>
                 </div>`).join('')}</div>` : ''}
         </div>
+        ${completedRequests.length ? `<div class="wk-docs-upload" style="margin-top:12px">
+            <strong>Erneuerungsverlauf</strong>
+            <div style="margin-top:12px">${completedRequests.map(r => `
+                <div class="wk-cl-item">
+                    <div class="wk-cl-body"><strong>${escapeHtml(r.titel)}</strong> · genehmigt<div class="wk-cl-meta">${r.geprueft_am ? formatDateTimeLocal(r.geprueft_am) : ''}${r.geprueft_von ? ' · ' + escapeHtml(r.geprueft_von) : ''}</div></div>
+                    <md-outlined-button onclick="wkOpenRenewalLog(${r.id})">Verlauf</md-outlined-button>
+                </div>`).join('')}</div>
+        </div>` : ''}
         <div class="wk-docs-grid">
             ${docs.length ? docs.map(d => wkDocCardHtml(d, dienstNr)).join('') : `<div class="wk-empty" style="grid-column:1/-1">${wkIcon('picture_as_pdf')}<p>Noch keine Dokumente</p></div>`}
         </div>
@@ -1391,9 +1420,13 @@ async function wkRequestNewDoc(dienstNr) {
 }
 
 async function wkOpenRenewalFile(id) {
+    wkOpenProtectedPdf(WK_API.renewals + '/' + id + '/file');
+}
+
+async function wkOpenProtectedPdf(url) {
     const tab = window.open('', '_blank');
     try {
-        const response = await fetch(WK_API.renewals + '/' + id + '/file', { headers: getAuthHeaders() });
+        const response = await fetch(url, { headers: getAuthHeaders() });
         if (!response.ok) throw new Error('Dokument konnte nicht geladen werden');
         const url = URL.createObjectURL(await response.blob());
         if (tab) tab.location.href = url;
@@ -1403,6 +1436,28 @@ async function wkOpenRenewalFile(id) {
         tab?.close();
         showToast(e.message, 'error');
     }
+}
+
+async function wkOpenDocVersions(id) {
+    openWorkersDialog('Frühere Dokumentversionen', `${wkSpinner()} Laden...`,
+        '<md-text-button onclick="closeWorkersDialog()">Schließen</md-text-button>', true);
+    const versions = await apiGet(WK_API.docs + '/' + id + '/versions').catch(() => null);
+    const body = document.getElementById('workersDialogBody');
+    if (!body) return;
+    if (!Array.isArray(versions)) {
+        body.innerHTML = `<div class="wk-empty">Versionen konnten nicht geladen werden</div>`; return;
+    }
+    body.innerHTML = versions.length ? `
+        <p style="color:var(--wk-text-muted);font-size:0.85rem">Frühere PDFs liegen geschützt außerhalb des öffentlichen Upload-Verzeichnisses. Nur berechtigte Personalnutzer können sie öffnen.</p>
+        <div class="wk-cl-list">${versions.map(v => `
+            <div class="wk-cl-item">
+                ${wkIcon('history')}
+                <div class="wk-cl-body">
+                    <div class="wk-cl-title">${escapeHtml(v.titel)}</div>
+                    <div class="wk-cl-meta">Archiviert: ${formatDateTimeLocal(v.archiviert_am)} · Ablauf: ${v.ablaufdatum ? formatDate(v.ablaufdatum) : 'ohne'} · durch ${escapeHtml(v.archiviert_von || '—')}</div>
+                </div>
+                <md-outlined-button onclick="wkOpenProtectedPdf(WK_API.docs + '/${id}/versions/${v.id}/file')">PDF ansehen</md-outlined-button>
+            </div>`).join('')}</div>` : `<div class="wk-empty">${wkIcon('history')}<p>Noch keine früheren Versionen vorhanden</p></div>`;
 }
 
 function wkDocCardHtml(doc, dienstNr) {
@@ -1436,6 +1491,7 @@ function wkDocCardHtml(doc, dienstNr) {
                 </div>
             </div>
             <div class="wk-doc-actions">
+                <md-icon-button onclick="wkOpenDocVersions(${doc.id})" title="Frühere Versionen (geschützt)"><md-icon>history</md-icon></md-icon-button>
                 <md-icon-button onclick="wkRequestDocRenewal('${dienstNr}',${doc.id},'${escapeHtml(doc.titel).replace(/'/g, '&#39;')}',true)" title="Erneuerung jetzt anfordern"><md-icon>send</md-icon></md-icon-button>
                 <md-icon-button onclick="wkEditDoc(${doc.id},'${escapeHtml(doc.titel)}','${doc.ablaufdatum || ''}','${dienstNr}','${escapeHtml(doc.dok_typ || '')}')" title="Bearbeiten"><md-icon>edit</md-icon></md-icon-button>
                 <md-icon-button onclick="hmsOpenFile('${hmsFileArg(doc.dateipfad)}')" title="Anzeigen"><md-icon>visibility</md-icon></md-icon-button>
@@ -1524,7 +1580,7 @@ function wkOpenDoc(docId) {
 window.wkOpenDoc = wkOpenDoc;
 
 async function wkDeleteDoc(docId, dienstNr) {
-    if (!await mdConfirm('Dokument wirklich löschen?', { title: 'Dokument löschen', confirmLabel: 'Löschen' })) return;
+    if (!await mdConfirm('Dokument und gespeicherte frühere Versionen wirklich löschen?', { title: 'Dokument löschen', confirmLabel: 'Löschen' })) return;
     const result = await apiPost(WK_API.docs + '/delete', { id: docId });
     if (result.success) {
         showToast('Gelöscht');
@@ -1633,6 +1689,7 @@ async function wkLoadAbsences(dienstNr, year) {
     // Single source of truth — the backend Urlaubskonto (same numbers the
     // worker sees in the app). No client-side re-computation.
     const konto = res.urlaubskonto || { anspruch: 0, genommen: 0, beantragt: 0, rest: 0 };
+    const historical = Number(selectedYear) !== currentYear;
 
     container.innerHTML = `
         <div class="wk-absence-stats">
@@ -1649,7 +1706,7 @@ async function wkLoadAbsences(dienstNr, year) {
                 <div class="wk-absence-stat-label">Unbezahlt</div>
             </div>
             <div class="wk-absence-stat vacation">
-                <div class="wk-absence-stat-value">${konto.anspruch}</div>
+                <div class="wk-absence-stat-value">${historical ? '–' : konto.anspruch}</div>
                 <div class="wk-absence-stat-label">Urlaubsanspruch</div>
             </div>
             <div class="wk-absence-stat">
@@ -1657,7 +1714,7 @@ async function wkLoadAbsences(dienstNr, year) {
                 <div class="wk-absence-stat-label">Beantragt</div>
             </div>
             <div class="wk-absence-stat remaining">
-                <div class="wk-absence-stat-value" style="${konto.rest <= 0 ? 'color:var(--wk-danger)' : ''}">${konto.rest}</div>
+                <div class="wk-absence-stat-value" style="${!historical && konto.rest <= 0 ? 'color:var(--wk-danger)' : ''}">${historical ? '–' : konto.rest}</div>
                 <div class="wk-absence-stat-label">Resturlaub</div>
             </div>
         </div>
@@ -1995,25 +2052,41 @@ function wkDeleteAbsence(id, dienstNr) {
 // ============================================================
 // Urlaub Tab
 // ============================================================
-async function wkLoadUrlaub(dienstNr, loaded) {
+async function wkLoadUrlaub(dienstNr, loaded, year) {
+    dienstNr = decodeURIComponent(dienstNr || '');
     const container = document.getElementById('tab-urlaub');
     if (!container) return;
     const currentYear = new Date().getFullYear();
-    const res = loaded || await apiGet(WK_API.absences + '?dienst_nr=' + dienstNr + '&jahr=' + currentYear);
+    const selectedYear = Number(year) || currentYear;
+    const res = loaded && selectedYear === currentYear ? loaded
+        : await apiGet(WK_API.absences + '?dienst_nr=' + encodeURIComponent(dienstNr) + '&jahr=' + selectedYear);
+    if (!res || res.error) {
+        container.innerHTML = `<div class="wk-empty">Urlaubsdaten konnten nicht geladen werden</div>`; return;
+    }
 
     // Single source of truth — backend Urlaubskonto.
     const konto = res.urlaubskonto || { anspruch: 0, genommen: 0, beantragt: 0, rest: 0 };
-    const pct = konto.anspruch > 0 ? Math.min(100, Math.round(((konto.genommen + konto.beantragt) / konto.anspruch) * 100)) : 0;
+    const isCurrent = selectedYear === currentYear;
+    const pct = isCurrent && konto.anspruch > 0
+        ? Math.min(100, Math.round(((konto.genommen + konto.beantragt) / konto.anspruch) * 100)) : 0;
     const barColor = pct > 90 ? 'var(--wk-danger)' : pct > 70 ? 'var(--wk-warn)' : 'var(--wk-ok)';
+    const bookings = (res.abwesenheiten || []).filter(a => a.kategorie === 'urlaub' || a.typ === 'Urlaub');
 
     container.innerHTML = `
         <div class="wk-data-card" style="padding:20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+                <strong>Urlaubskonto ${selectedYear}</strong>
+                <md-outlined-select label="Jahr" value="${selectedYear}" onchange="wkLoadUrlaub('${hmsFileArg(dienstNr)}',null,this.value)" style="min-width:120px">
+                    ${Array.from({ length: 6 }, (_, i) => currentYear - i).map(y =>
+                        `<md-select-option value="${y}" ${y === selectedYear ? 'selected' : ''}><div slot="headline">${y}</div></md-select-option>`).join('')}
+                </md-outlined-select>
+            </div>
+            ${!isCurrent ? `<p style="font-size:0.85rem;color:var(--wk-text-muted)">Für ${selectedYear} ist kein historischer Urlaubsanspruch gespeichert. Die Buchungen unten sind echt; ein früherer Resturlaub kann daraus nicht zuverlässig berechnet werden.</p>` : ''}
             <div style="display:flex;gap:32px;flex-wrap:wrap;margin-bottom:24px">
                 <div style="flex:1;min-width:200px">
-                    <div style="font-size:0.7rem;font-weight:700;color:var(--wk-text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Urlaubskonto ${currentYear}</div>
                     <div style="display:flex;gap:24px;flex-wrap:wrap">
                         <div>
-                            <div style="font-size:2.2rem;font-weight:800;color:var(--wk-text);line-height:1">${konto.anspruch}</div>
+                            <div style="font-size:2.2rem;font-weight:800;color:var(--wk-text);line-height:1">${isCurrent ? konto.anspruch : '–'}</div>
                             <div style="font-size:0.72rem;color:var(--wk-text-muted);text-transform:uppercase;font-weight:700;letter-spacing:0.4px;margin-top:4px">Anspruch</div>
                         </div>
                         <div>
@@ -2025,18 +2098,30 @@ async function wkLoadUrlaub(dienstNr, loaded) {
                             <div style="font-size:0.72rem;color:var(--wk-text-muted);text-transform:uppercase;font-weight:700;letter-spacing:0.4px;margin-top:4px">Beantragt</div>
                         </div>
                         <div>
-                            <div style="font-size:2.2rem;font-weight:800;color:${konto.rest > 0 ? 'var(--wk-accent)' : 'var(--wk-danger)'};line-height:1">${konto.rest}</div>
+                            <div style="font-size:2.2rem;font-weight:800;color:${isCurrent && konto.rest > 0 ? 'var(--wk-accent)' : 'var(--wk-danger)'};line-height:1">${isCurrent ? konto.rest : '–'}</div>
                             <div style="font-size:0.72rem;color:var(--wk-text-muted);text-transform:uppercase;font-weight:700;letter-spacing:0.4px;margin-top:4px">Verbleibend</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="background:var(--wk-bg-strip);border-radius:8px;height:14px;overflow:hidden;margin-bottom:6px">
+            ${isCurrent ? `<div style="background:var(--wk-bg-strip);border-radius:8px;height:14px;overflow:hidden;margin-bottom:6px">
                 <div style="height:100%;width:${pct}%;background:${barColor};border-radius:8px;transition:width .5s ease"></div>
             </div>
             <div style="font-size:0.74rem;color:var(--wk-text-muted);text-align:right;font-weight:700">${pct}% genutzt</div>
+            ${Number(konto.anspruch) === 0 ? '<p style="color:var(--wk-warn);font-size:0.85rem">Kein jährlicher Anspruch in den Stammdaten hinterlegt.</p>' : ''}
             <div class="wk-data-actions">
                 <md-filled-button onclick="openWorkerModal('${dienstNr}')" style="--md-filled-button-container-color:var(--wk-accent)"><md-icon slot="icon">edit</md-icon>Urlaubstage bearbeiten</md-filled-button>
+            </div>` : ''}
+            <div style="margin-top:24px;border-top:1px solid var(--wk-border);padding-top:16px">
+                <strong>Urlaubsbuchungen ${selectedYear}</strong>
+                ${bookings.length ? `<div class="wk-cl-list" style="margin-top:12px">${bookings.map(a => `
+                    <div class="wk-cl-item">
+                        ${wkIcon('event_available')}
+                        <div class="wk-cl-body">
+                            <div class="wk-cl-title">${formatDate(a.startdatum)}${a.enddatum && a.enddatum !== a.startdatum ? ' – ' + formatDate(a.enddatum) : ''}</div>
+                            <div class="wk-cl-meta">${Number(a.tage) || 0} Tage · ${a.status === 'pending' ? 'Beantragt' : a.status === 'abgelehnt' ? 'Abgelehnt' : 'Genehmigt'}</div>
+                        </div>
+                    </div>`).join('')}</div>` : `<div class="wk-empty" style="padding:24px">${wkIcon('event_busy')}<p>Keine Urlaubsbuchungen für ${selectedYear} vorhanden</p></div>`}
             </div>
         </div>
     `;

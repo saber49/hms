@@ -697,6 +697,8 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\EnsureEmailVerified::cla
     Route::middleware('permission:stammdaten.mitarbeiter.view')->group(function () {
         Route::get('/worker-documents', [WorkerDocumentController::class, 'index']);
         Route::get('/worker-documents/{id}/thumb', [WorkerDocumentController::class, 'thumb'])->whereNumber('id');
+        Route::get('/worker-documents/{id}/versions', [WorkerDocumentController::class, 'versions'])->whereNumber('id');
+        Route::get('/worker-documents/{id}/versions/{versionId}/file', [WorkerDocumentController::class, 'versionFile'])->whereNumber('id')->whereNumber('versionId');
     });
     Route::middleware('permission:stammdaten.mitarbeiter.edit')->group(function () {
         Route::post('/worker-documents/upload', [WorkerDocumentController::class, 'upload']);
