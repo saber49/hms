@@ -13,13 +13,13 @@ header('Expires: 0');
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Clood-X — System</title>
     <style>
-        #hmsBoot{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background: var(--md-sys-color-primary-container);color: var(--md-sys-color-on-primary-container);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .2s ease}
-        [data-theme="dark"] #hmsBoot{background: var(--md-sys-color-primary);color: var(--md-sys-color-primary-container)}
+        #hmsBoot{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background: var(--md-sys-color-primary-container,#e3e9f7);color: var(--md-sys-color-on-primary-container,#17285b);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:opacity .2s ease}
+        [data-theme="dark"] #hmsBoot{background: var(--md-sys-color-surface,#111318);color: var(--md-sys-color-on-surface,#e4e6eb)}
         #hmsBoot.hms-boot-done{opacity:0;pointer-events:none}
         .hms-boot-box{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
-        .hms-boot-mark{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background: var(--md-sys-color-primary);color: #fff;font-size:25px;font-weight:800;box-shadow: 0 16px 36px color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent)}
+        .hms-boot-mark{width:92px;height:92px;border-radius:26px;display:grid;place-items:center;background: var(--md-sys-color-primary,#1d5fd6);color: #fff;font-size:25px;font-weight:800;box-shadow: 0 16px 36px color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent)}
         .hms-boot-title{font-size:24px;font-weight:750}.hms-boot-text{font-size:14px;opacity:.7}
-        .hms-boot-spinner{width:32px;height:32px;border: 3px solid color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);border-top-color: var(--md-sys-color-primary);border-radius:50%;animation:hmsBootSpin .75s linear infinite}
+        .hms-boot-spinner{width:32px;height:32px;border: 3px solid color-mix(in srgb, var(--md-sys-color-primary,#1d5fd6) 18%, transparent);border-top-color: var(--md-sys-color-primary,#1d5fd6);border-radius:50%;animation:hmsBootSpin .75s linear infinite}
         @keyframes hmsBootSpin{to{transform:rotate(360deg)}}
     </style>
     <link rel="stylesheet" href="/assets/css/roboto.css?v=20261119ms1">
