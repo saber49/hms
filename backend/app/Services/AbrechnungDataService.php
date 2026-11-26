@@ -123,11 +123,13 @@ class AbrechnungDataService
     private static function customerHoursExpr(string $stdExpr, string $pauseExpr): string
     {
         // ONE pause (Planung, einsaetze.pause_minuten): deducted from the
-        // worker, paid by the customer — billed = Std + Pause. The former
+        // worker. Whether the customer pays it is the Objekt-level contract
+        // term objekte.pause_berechnen (customerPauseHoursExpr). The former
         // separate Kunden-Pause (gesetzl_pause) is no longer part of it.
+        $pausePart = ControllingAggregationService::customerPauseHoursExpr("COALESCE({$pauseExpr}, e.pause_minuten, 0)");
         return "GREATEST(0,
             COALESCE(NULLIF({$stdExpr}, 0), e.ist_std_menge, 0)
-            + COALESCE({$pauseExpr}, e.pause_minuten, 0) / 60
+            + {$pausePart}
         )";
     }
 
@@ -152,6 +154,8 @@ class AbrechnungDataService
         $sollSelect = self::sollSelect();
         $emPauseCol = Schema::connection('tenant')->hasColumn('einsatz_mitarbeiter', 'pause_minuten')
             ? 'em.pause_minuten AS em_pause' : 'NULL AS em_pause';
+        $pauseBerechnenCol = Schema::connection('tenant')->hasColumn('objekte', 'pause_berechnen')
+            ? 'COALESCE(o.pause_berechnen, 1) AS pause_berechnen' : '1 AS pause_berechnen';
         $realInCol = Schema::connection('tenant')->hasColumn('zeiterfassung', 'clock_in_real')
             ? 'z.clock_in_real AS app_clock_in_real' : 'NULL AS app_clock_in_real';
         $realInCol .= Schema::connection('tenant')->hasColumn('zeiterfassung', 'verlaengerung_gruende')
@@ -177,6 +181,7 @@ class AbrechnungDataService
                    e.gesetzl_pause, e.pause_minuten AS plan_pause, em.ist_std,
                    e.beschreibung, e.hms_bestaetigt, e.pruefung, k.kundenname, o.objektname,
                    o.adresse AS objekt_adresse, o.plz AS objekt_plz, o.stadt AS objekt_stadt,
+                   {$pauseBerechnenCol},
                    {$sollSelect},
                    z.clock_in AS app_clock_in, z.clock_out AS app_clock_out,
                    z.pause_total AS app_pause, {$realInCol}, {$korrCols},
@@ -211,6 +216,7 @@ class AbrechnungDataService
                    e.beschreibung, e.hms_bestaetigt, e.pruefung,
                    k.kundenname, o.objektname,
                    o.adresse AS objekt_adresse, o.plz AS objekt_plz, o.stadt AS objekt_stadt,
+                   {$pauseBerechnenCol},
                    {$sollSelect},
                    z.clock_in, z.clock_out, z.pause_total, {$realInCol}
               FROM zeiterfassung z
@@ -249,6 +255,7 @@ class AbrechnungDataService
                 'beschreibung' => $orphan->beschreibung, 'hms_bestaetigt' => $orphan->hms_bestaetigt,
                 'pruefung' => $orphan->pruefung, 'kundenname' => $orphan->kundenname,
                 'objektname' => $orphan->objektname, 'zeit_freigabe' => 0,
+                'pause_berechnen' => $orphan->pause_berechnen ?? 1,
                 'objekt_adresse' => $orphan->objekt_adresse, 'objekt_plz' => $orphan->objekt_plz,
                 'objekt_stadt' => $orphan->objekt_stadt,
                 'kunden_start' => null, 'kunden_ende' => null, 'kunden_pause' => null,

@@ -822,7 +822,7 @@ function maBuildObjektBlock(g, blockId) {
             <div class="ma-worker-std-display">
                 <div class="ma-worker-std-label">Kunde</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
-                <div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten der Mitarbeiter · Abr. = im Leistungsnachweis abgerechnet (Std + Pause, vom Kunden bezahlt)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
+                <div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten der Mitarbeiter · Abr. = im Leistungsnachweis abgerechnet (Std + Pause, sofern das Objekt die Pause berechnet)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
             </div>
             <div class="ma-worker-actions"></div>
         </div>
@@ -896,7 +896,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
                 <div class="ma-worker-std-label">${kunde ? 'Kunde' : 'Ist'}</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
                 ${kunde
-                    ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = im Leistungsnachweis abgerechnet (Std + Pause aus der Planung, vom Kunden bezahlt)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
+                    ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = im Leistungsnachweis abgerechnet (Std + Pause, sofern das Objekt die Pause berechnet)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
                     : `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · Abrechnung = Ist + bezahlte Abwesenheiten (Urlaub/Krank/Feiertag), ohne Erfassung Plan-Stunden">Soll ${maFmtHrs(sollTotal)} h · Abr. ${maFmtHrs(totalStd + abwStd)} h${abwStd > 0 ? ` · davon Abw. ${maFmtHrs(abwStd)} h` : ''}</div>`}
             </div>
             <div class="ma-worker-actions">${actions}</div>
@@ -1051,7 +1051,11 @@ function maIstStd(e) {
 // as the Leistungsnachweis (AbrechnungDataService::customerHoursExpr):
 // Std + the Planung pause (the customer pays the pause).
 function maKundeAbrStd(e) {
-    return Math.max(0, maCalcEntryStd(e) + (parseInt(e.pause_minuten) || 0) / 60);
+    // Objekt contract term (objekte.pause_berechnen): 1 = customer pays the
+    // pause (volle Postenzeit), 0 = net billing — same rule as the
+    // server-side Leistungsnachweis.
+    const pauseBilled = !(e.pause_berechnen === 0 || e.pause_berechnen === '0');
+    return Math.max(0, maCalcEntryStd(e) + (pauseBilled ? (parseInt(e.pause_minuten) || 0) / 60 : 0));
 }
 
 function maFmtHrs(h) {
@@ -1217,7 +1221,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
             const abr = maKundeAbrStd(e);
             const shownStd = istStd != null ? istStd : maCalcEntryStd(e);
             if (Math.abs(abr - shownStd) >= 0.005) {
-                abrHint = maSubHint(`Abr. ${maFmtHrs(abr)} h`, `Im Leistungsnachweis abgerechnet: Std + Pause (${istPause} Min, vom Kunden bezahlt)`);
+                abrHint = maSubHint(`Abr. ${maFmtHrs(abr)} h`, `Im Leistungsnachweis abgerechnet: Std + Pause (${istPause} Min, laut Objekt-Einstellung)`);
             }
         }
         if (kunde) {

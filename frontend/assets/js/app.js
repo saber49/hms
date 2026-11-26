@@ -594,7 +594,7 @@ const TASKS_MODULE_SCRIPTS = [
     '01-tasks-core', '02-dispo-board', '03-dispo-detail', '04-worker-panels',
     '05-ma-overview', '06-ma-actions', '07-ma-analytics', '08-ma-pdf',
     '09-dispo-nu', '10-dispo-live',
-].map(f => 'assets/js/tasks/' + f + '.js?v=' + (f === '05-ma-overview' ? '20261124extreason1'
+].map(f => 'assets/js/tasks/' + f + '.js?v=' + (f === '05-ma-overview' ? '20261126pausebill1'
     : (f === '03-dispo-detail' ? '20261123wx1'
     : (f === '09-dispo-nu' ? '20261117nupicker1' : '20261118sboff1'))));
 
@@ -612,7 +612,7 @@ const PAGE_MODULE_SCRIPTS = {
     einstellungen: ['assets/js/einstellungen.js?v=20261118qmfix1'],
     interessenten: ['assets/js/crm.js?v=20261117md3l'],
     customers: ['assets/js/customers.js?v=20261117md3l'],
-    objects: ['assets/js/objects.js?v=20261117objmode1'],
+    objects: ['assets/js/objects.js?v=20261126pausebill1'],
     subcontractors: ['assets/js/subcontractors.js?v=20261117md3l'],
     price_history: ['assets/js/price_history.js?v=20261117md3l'],
     lager: ['assets/js/lager.js?v=20261117md3l'],
