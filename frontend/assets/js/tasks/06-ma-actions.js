@@ -301,6 +301,13 @@ function maResolveScopeLists() {
 function maScopeChange(which, value) {
     _maLinkedSrc = which;
     if (which === 'kunde') _maFilterKunde = value; else _maFilterObjekt = value;
+    // An Objekt belongs to exactly one Kunde — show it in the Kunde box for
+    // context (filter-wise it is implied). The reverse is NOT forced: a
+    // Kunde has many Objekte, so the Objekt box stays "Alle Objekte".
+    if (which === 'objekt' && value) {
+        const hit = maAllEntries().find(e => (e.objektname || '').trim() === value);
+        if (hit && (hit.kundenname || '').trim()) _maFilterKunde = (hit.kundenname || '').trim();
+    }
     maRefreshToolbar();
     maRenderQuickJump();
     maApplyFilters();
