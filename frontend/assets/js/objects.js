@@ -380,6 +380,12 @@ async function openObjectModal(id = null) {
                         <md-select-option value="0" ${obj.aktiv == 0 && id ? 'selected' : ''}><div slot="headline">Nein — inaktiv</div></md-select-option>
                     </md-outlined-select>
                 </div>
+                <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;margin-top:8px">
+                    <md-switch id="f_obj_pause_berechnen" ${id && (obj.pause_berechnen === 0 || obj.pause_berechnen === '0') ? '' : 'selected'}></md-switch>
+                    <label for="f_obj_pause_berechnen" style="cursor:pointer;font-size:0.9rem">Pause dem Kunden berechnen
+                        <div style="font-size:0.75rem;color:var(--md-sys-color-on-surface-variant,#888);margin-top:2px">An: der Kunde zahlt die volle Postenzeit (Std + Pause). Aus: der Leistungsnachweis rechnet nur die Netto-Arbeitszeit ab — die Pause wird nicht berechnet.</div>
+                    </label>
+                </div>
             </div>
 
             <!-- Right Column: Kontakt + Hinweise -->
@@ -520,6 +526,7 @@ async function saveObject(id, opts = {}) {
         bestellbeschreibung: document.getElementById('f_bestellbeschreibung')?.value || null,
         arten:            (typeof collectArtenChecks === 'function') ? collectArtenChecks('f_obj_arten') : [],
         aktiv:            document.getElementById('f_obj_aktiv').value,
+        pause_berechnen:  document.getElementById('f_obj_pause_berechnen')?.selected ? 1 : 0,
     };
     data.art = data.art || data.arten[0] || null;
     // Hauptbereich has no UI on objects — it follows the Kunde. Customer
