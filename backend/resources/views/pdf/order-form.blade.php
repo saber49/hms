@@ -175,20 +175,15 @@
                 'preis_kunde' => isset($w->preis_kunde) ? (float)$w->preis_kunde : 0,
                 'einnahmen' => isset($w->einnahmen) ? (float)$w->einnahmen : null,
                 'aufschlag' => isset($w->aufschlag) ? (float)$w->aufschlag : null,
-                'gesetzl_pause' => (int)($w->gesetzl_pause ?? 0),
-                'has_kundenstunden' => isset($w->kundenstunden),
             ];
         };
         $allWorkers = collect($confirmedWorkers)->map($rowFn)
             ->merge(collect($confirmedNu)->map($rowFn));
 
-        // Same rule as the editor (order_form.js applyPauseHours): with the
-        // Pause column shown, Std = Von/Bis − Pause; hidden → billed hours
-        // incl. the paid pause. Money columns always use the billed hours.
+        // kundenstunden already excludes the pause, with or without the Pause column.
         $pauseHidden = in_array('col.th.pause', (array) $hideExtra, true);
-        $allWorkers = $allWorkers->map(function ($w) use ($pauseHidden) {
-            $paid = max(0, (int)($w->pause_minuten ?? 0) - $w->gesetzl_pause);
-            $w->std_view = ($pauseHidden || !$w->has_kundenstunden) ? $w->ist_std : max(0, $w->ist_std - $paid / 60);
+        $allWorkers = $allWorkers->map(function ($w) {
+            $w->std_view = $w->ist_std;
             return $w;
         });
 

@@ -27,7 +27,7 @@ class ControllingAggregationService
      *   v6 → `dienst_nr` filter (per-worker scope) added to whereClause().
      *   v7 → /details rows expose kunden_id/obj_id/nu_id/artikel_id (drill-down links).
      *   v8 → KPI exposes einnahmen_offen / kosten_offen / *_erwartet (unbestätigt-Hinweis). */
-    public const CACHE_VERSION = 'v13';
+    public const CACHE_VERSION = 'v14';
 
     /** Soft cap so a single request can never serialize > 50k rows. */
     public const MAX_DETAILS = 5000;
@@ -69,13 +69,15 @@ class ControllingAggregationService
      */
     public static function billableJoin(): string
     {
+        $schema = \Illuminate\Support\Facades\Schema::connection('tenant');
+        $emCustomerStd = $schema->hasColumn('einsatz_mitarbeiter', 'kunden_std') ? 'em.kunden_std, ' : '';
+        $nuCustomerStd = $schema->hasColumn('nu_position_zuweisungen', 'kunden_std') ? 'npz.kunden_std, ' : '';
         return "
             -- INTERNAL workers
             LEFT JOIN (
                 SELECT em.einsatz_id,
                        SUM(GREATEST(0,
-                           COALESCE(NULLIF(em.ist_std, 0), eW.ist_std_menge, 0)
-                           + COALESCE(em.pause_minuten, eW.pause_minuten, 0) / 60
+                           COALESCE({$emCustomerStd}NULLIF(em.ist_std, 0), eW.ist_std_menge, 0)
                        )) AS customer_bill_hours,
                        SUM(COALESCE(NULLIF(em.ist_std, 0), eW.ist_std_menge, 0)) AS worker_hours,
                        COUNT(*) AS total_workers
@@ -88,8 +90,7 @@ class ControllingAggregationService
             LEFT JOIN (
                 SELECT nsp.einsatz_id,
                        SUM(GREATEST(0,
-                           COALESCE(NULLIF(npz.ist_std, 0), eN.ist_std_menge, 0)
-                           + COALESCE(npz.pause_minuten, eN.pause_minuten, 0) / 60
+                           COALESCE({$nuCustomerStd}NULLIF(npz.ist_std, 0), eN.ist_std_menge, 0)
                        )) AS customer_bill_hours,
                        SUM(COALESCE(NULLIF(npz.ist_std, 0), eN.ist_std_menge, 0)) AS worker_hours,
                        COUNT(npz.id) AS nu_total_zuweisungen
@@ -169,15 +170,16 @@ class ControllingAggregationService
     {
         return 'GREATEST(0,
             COALESCE(e.ist_std_menge, 1)
-            + COALESCE(e.pause_minuten, 0) / 60
         )';
     }
 
     public static function customerWorkerHoursExpr(string $alias = 'em'): string
     {
+        $table = $alias === 'npz' ? 'nu_position_zuweisungen' : 'einsatz_mitarbeiter';
+        $customerStd = \Illuminate\Support\Facades\Schema::connection('tenant')->hasColumn($table, 'kunden_std')
+            ? "{$alias}.kunden_std, " : '';
         return "GREATEST(0,
-            COALESCE(NULLIF({$alias}.ist_std, 0), e.ist_std_menge, 0)
-            + COALESCE({$alias}.pause_minuten, e.pause_minuten, 0) / 60
+            COALESCE({$customerStd}NULLIF({$alias}.ist_std, 0), e.ist_std_menge, 0)
         )";
     }
 

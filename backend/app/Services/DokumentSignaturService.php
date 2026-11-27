@@ -72,8 +72,8 @@ class DokumentSignaturService
         $byWorker = [];
         foreach (AbrechnungDataService::confirmedOrderAssignments($bestellId)['workers'] as $w) {
             $pause = max(0, (int) ($w->pause_minuten ?? 0));
-            // Same numbers as the sheet with the Pause column: Von/Bis − Pause.
-            $std = round(max(0, (float) ($w->kundenstunden ?? 0) - $pause / 60), 2);
+            // kundenstunden already excludes the customer pause.
+            $std = round(max(0, (float) ($w->kundenstunden ?? 0)), 2);
             $byWorker[(string) $w->dienst_nr]['name'] = trim(($w->vorname ?? '') . ' ' . ($w->name ?? ''));
             $byWorker[(string) $w->dienst_nr]['rows'][] = [
                 'key'    => (string) $w->einsatz_id,

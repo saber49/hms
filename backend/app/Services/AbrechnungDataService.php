@@ -37,7 +37,7 @@ class AbrechnungDataService
         $emEnde  = $kv('em', $hasKunden, 'kunden_ende', 'em.ist_ende');
         $emStd   = $kv('em', $hasKunden, 'kunden_std', 'em.ist_std');
         $emPause = $kv('em', $hasKunden, 'kunden_pause', 'em.pause_minuten');
-        $workerHours = self::customerHoursExpr($emStd, $emPause);
+        $workerHours = self::customerHoursExpr($emStd, $hasKunden ? 'em.kunden_std' : 'NULL');
         $workerRevenue = ControllingAggregationService::workerRevenueExpr($workerHours);
         $workerSurcharge = self::workerSurchargeExpr($workerHours);
         $workerPaidHours = 'COALESCE(NULLIF(em.ist_std, 0), e.ist_std_menge, 0)';
@@ -77,7 +77,7 @@ class AbrechnungDataService
         $nuEnde  = $kv('npz', $hasNuKunden, 'kunden_ende', 'npz.ist_ende');
         $nuStd   = $kv('npz', $hasNuKunden, 'kunden_std', 'npz.ist_std');
         $nuPause = $kv('npz', $hasNuKunden, 'kunden_pause', 'npz.pause_minuten');
-        $nuWorkerHours = self::customerHoursExpr($nuStd, $nuPause);
+        $nuWorkerHours = self::customerHoursExpr($nuStd, $hasNuKunden ? 'npz.kunden_std' : 'NULL');
         $nuWorkerRevenue = ControllingAggregationService::workerRevenueExpr($nuWorkerHours);
         $nuWorkerSurcharge = self::workerSurchargeExpr($nuWorkerHours);
         $nuPaidHours = 'COALESCE(NULLIF(npz.ist_std, 0), e.ist_std_menge, 0)';
@@ -120,13 +120,12 @@ class AbrechnungDataService
     }
 
     /** Customer-billable hours of one row (same rule as customerWorkerHoursExpr). */
-    private static function customerHoursExpr(string $stdExpr, string $pauseExpr): string
+    private static function customerHoursExpr(string $stdExpr, string $approvedStdExpr): string
     {
-        // ONE pause: deducted from worker time and included in customer billing.
-        // The former separate Kunden-Pause (gesetzl_pause) is no longer part of it.
+        // kunden_std is already net of the customer pause (including an
+        // explicitly approved zero); otherwise fall back to worker/plan net.
         return "GREATEST(0,
-            COALESCE(NULLIF({$stdExpr}, 0), e.ist_std_menge, 0)
-            + COALESCE({$pauseExpr}, e.pause_minuten, 0) / 60
+            COALESCE({$approvedStdExpr}, NULLIF({$stdExpr}, 0), e.ist_std_menge, 0)
         )";
     }
 

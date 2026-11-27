@@ -826,7 +826,7 @@ function maBuildObjektBlock(g, blockId) {
             <div class="ma-worker-std-display">
                 <div class="ma-worker-std-label">Kunde</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
-                <div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten der Mitarbeiter · Abr. = im Leistungsnachweis abgerechnet (Std + Pause, sofern das Objekt die Pause berechnet)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
+                <div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten der Mitarbeiter · Abr. = Netto-Stunden für den Kunden (Pause bereits abgezogen)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
             </div>
             <div class="ma-worker-actions"></div>
         </div>
@@ -900,7 +900,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
                 <div class="ma-worker-std-label">${kunde ? 'Kunde' : 'Ist'}</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
                 ${kunde
-                    ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = im Leistungsnachweis abgerechnet (Std + Pause, sofern das Objekt die Pause berechnet)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
+                    ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = Netto-Stunden für den Kunden (Pause bereits abgezogen)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
                     : `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · Abrechnung = Ist + bezahlte Abwesenheiten (Urlaub/Krank/Feiertag), ohne Erfassung Plan-Stunden">Soll ${maFmtHrs(sollTotal)} h · Abr. ${maFmtHrs(totalStd + abwStd)} h${abwStd > 0 ? ` · davon Abw. ${maFmtHrs(abwStd)} h` : ''}</div>`}
             </div>
             <div class="ma-worker-actions">${actions}</div>
@@ -1053,9 +1053,10 @@ function maIstStd(e) {
 
 // Billed customer hours of a Kunde-projected row (maKundeEntry) — same rule
 // as the Leistungsnachweis (AbrechnungDataService::customerHoursExpr):
-// Std + the Planung pause (the customer pays the pause).
+// Customer-facing Std is already net of the pause.
 function maKundeAbrStd(e) {
-    return Math.max(0, maCalcEntryStd(e) + (parseInt(e.pause_minuten) || 0) / 60);
+    if (e.kunden_std != null && e.kunden_std !== '') return Math.max(0, Number(e.kunden_std) || 0);
+    return Math.max(0, maCalcEntryStd(e));
 }
 
 function maFmtHrs(h) {
@@ -1209,7 +1210,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
             + rec(recBis, showBis, app.out, recBis);
         const extHint = maExtensionHint(m);
         // Kunde mode: ONE customer pause (edited here, default = Planung
-        // pause, paid by the customer) — the worker's own pause only shows
+        // pause, deducted from billed time) — the worker's own pause only shows
         // as a hint when it differs.
         const maPause = m.em_pause != null && m.em_pause !== '' ? parseInt(m.em_pause) : null;
         let pauseHint = (app.pause != null ? maSubHint(`App ${app.pause} Min`, `In der App erfasste Pause: ${app.pause} Min`) : '')
@@ -1221,7 +1222,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
             const abr = maKundeAbrStd(e);
             const shownStd = istStd != null ? istStd : maCalcEntryStd(e);
             if (Math.abs(abr - shownStd) >= 0.005) {
-                abrHint = maSubHint(`Abr. ${maFmtHrs(abr)} h`, `Im Leistungsnachweis abgerechnet: Std + Pause (${istPause} Min, laut Objekt-Einstellung)`);
+                abrHint = maSubHint(`Abr. ${maFmtHrs(abr)} h`, 'Im Leistungsnachweis abgerechnet: Netto-Stunden nach Pause');
             }
         }
         if (kunde) {
