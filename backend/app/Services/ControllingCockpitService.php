@@ -114,12 +114,10 @@ final class ControllingCockpitService
     {
         $k = self::hasKunden();
         $row = fn (string $a, string $e) => "GREATEST(0,
-                           COALESCE(NULLIF({$a}.ist_std, 0), {$e}.ist_std_menge, 0)
-                           + COALESCE({$a}.pause_minuten, {$e}.pause_minuten, 0) / 60)";
-        // Customer hours = Kunden-Std + the one (Planung) pause the customer
-        // pays — same rule as the Leistungsnachweis (AbrechnungDataService).
+                           COALESCE(NULLIF({$a}.ist_std, 0), {$e}.ist_std_menge, 0))";
+        // Customer hours are net of the pause, including an approved zero.
         $cust = fn (string $a, string $e) => $k
-            ? "COALESCE({$a}.kunden_std + COALESCE({$a}.kunden_pause, {$e}.pause_minuten, 0) / 60, {$row($a, $e)})"
+            ? "COALESCE({$a}.kunden_std, {$row($a, $e)})"
             : $row($a, $e);
         $frei = fn (string $a, string $e) => $k ? "CASE WHEN {$a}.kunden_freigabe = 1 THEN {$cust($a, $e)} ELSE 0 END" : '0';
         $freiRows = fn (string $a) => $k ? "SUM(CASE WHEN {$a}.kunden_freigabe = 1 THEN 1 ELSE 0 END)" : '0';

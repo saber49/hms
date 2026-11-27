@@ -772,12 +772,9 @@
             const istStd = parseFloat(w.ist_std);
             const std    = Number.isFinite(customerStd) ? customerStd : (istStd > 0 ? istStd : (parseFloat(w.ist_std_menge) || 0));
             const pause  = parseInt(w.pause_minuten || 0) || 0;
-            // Customer hours include the paid part of the pause (only the
-            // legal pause is deducted). With the Pause column visible the
-            // sheet shows Von/Bis − Pause instead (applyPauseHours).
-            const stdNet = Number.isFinite(customerStd)
-                ? Math.max(0, std - Math.max(0, pause - (parseInt(w.gesetzl_pause || 0) || 0)) / 60)
-                : std;
+            // Customer hours are already net of the pause, regardless of
+            // whether the Pause column is shown.
+            const stdNet = std;
             const prKnd  = parseFloat(w.preis_kunde || 0) || 0;
             const zPct   = parseFloat(w.zuschlag_pct || 0) || 0;
             const calculated = prKnd * std * (1 + zPct/100);
@@ -1821,11 +1818,8 @@
         applyPauseHours(page, hidden.has('th.pause'));
     }
 
-    // Leistungsnachweis: Pause column visible → Std = Von/Bis − Pause;
-    // hidden → Std incl. the paid pause (= billed customer hours). Row
-    // cells carry both values (data-std-g / data-std-n); Gesamt and the
-    // Zusammenfassung are re-summed. A cell the user typed over by hand
-    // keeps its text (and its number counts in the totals).
+    // The pause column is informational; both modes show the same net billed
+    // hours. Keep manually edited cells and totals intact.
     function applyPauseHours(page, pauseHidden) {
         const cells = [...page.querySelectorAll('td[data-std-g]')];
         if (!cells.length) return;
