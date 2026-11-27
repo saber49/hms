@@ -341,11 +341,6 @@ class ObjectController extends Controller
         if (Schema::connection('tenant')->hasColumn('objekte', 'bundesland')) {
             $insert['bundesland'] = !empty($data['bundesland']) ? strtoupper(trim((string) $data['bundesland'])) : null;
         }
-        if (Schema::connection('tenant')->hasColumn('objekte', 'pause_berechnen')) {
-            $insert['pause_berechnen'] = array_key_exists('pause_berechnen', $data)
-                ? (((int) $data['pause_berechnen']) ? 1 : 0) : 1;
-        }
-
         if (Schema::connection('tenant')->hasColumn('objekte', 'bereiche')) {
             $list = BereichScope::bereicheForStorage($data['bereiche'] ?? [], $insert['bereich']);
             $insert['bereiche'] = $list ? json_encode($list) : null;
@@ -425,11 +420,6 @@ class ObjectController extends Controller
             'bereich'          => array_key_exists('bereich', $data)         ? $data['bereich']         : $existing->bereich,
             'aktiv'            => $data['aktiv'] ?? $existing->aktiv,
         ];
-
-        if (Schema::connection('tenant')->hasColumn('objekte', 'pause_berechnen')
-            && array_key_exists('pause_berechnen', $data)) {
-            $update['pause_berechnen'] = ((int) $data['pause_berechnen']) ? 1 : 0;
-        }
 
         // Merge Zuschläge updates only for fields the caller actually sent.
         $update += $this->extractZuschlagFields($data, fillDefaults: false);

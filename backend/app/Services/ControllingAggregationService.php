@@ -165,28 +165,11 @@ class ControllingAggregationService
         )";
     }
 
-    /**
-     * Billable pause fraction of one row. Whether the customer pays the
-     * pause is an Objekt-level contract term (objekte.pause_berechnen):
-     * 1 = customer pays the pause (full post coverage), 0 = net billing.
-     * Resolved through a correlated lookup so every query that has the
-     * einsaetze alias `e` can use it without an extra join. Pre-migration
-     * tenants keep the legacy rule (pause always billed).
-     */
-    public static function customerPauseHoursExpr(string $pauseMinutesExpr): string
-    {
-        if (!\Illuminate\Support\Facades\Schema::connection('tenant')->hasColumn('objekte', 'pause_berechnen')) {
-            return "({$pauseMinutesExpr}) / 60";
-        }
-        return "(CASE WHEN COALESCE((SELECT pb.pause_berechnen FROM objekte pb WHERE pb.obj_id = e.obj_id LIMIT 1), 1) = 1"
-            . " THEN ({$pauseMinutesExpr}) / 60 ELSE 0 END)";
-    }
-
     public static function plannedCustomerHoursExpr(): string
     {
         return 'GREATEST(0,
             COALESCE(e.ist_std_menge, 1)
-            + ' . self::customerPauseHoursExpr('COALESCE(e.pause_minuten, 0)') . '
+            + COALESCE(e.pause_minuten, 0) / 60
         )';
     }
 
@@ -194,7 +177,7 @@ class ControllingAggregationService
     {
         return "GREATEST(0,
             COALESCE(NULLIF({$alias}.ist_std, 0), e.ist_std_menge, 0)
-            + " . self::customerPauseHoursExpr("COALESCE({$alias}.pause_minuten, e.pause_minuten, 0)") . "
+            + COALESCE({$alias}.pause_minuten, e.pause_minuten, 0) / 60
         )";
     }
 
