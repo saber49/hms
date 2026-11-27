@@ -1055,11 +1055,7 @@ function maIstStd(e) {
 // as the Leistungsnachweis (AbrechnungDataService::customerHoursExpr):
 // Std + the Planung pause (the customer pays the pause).
 function maKundeAbrStd(e) {
-    // Objekt contract term (objekte.pause_berechnen): 1 = customer pays the
-    // pause (volle Postenzeit), 0 = net billing — same rule as the
-    // server-side Leistungsnachweis.
-    const pauseBilled = !(e.pause_berechnen === 0 || e.pause_berechnen === '0');
-    return Math.max(0, maCalcEntryStd(e) + (pauseBilled ? (parseInt(e.pause_minuten) || 0) / 60 : 0));
+    return Math.max(0, maCalcEntryStd(e) + (parseInt(e.pause_minuten) || 0) / 60);
 }
 
 function maFmtHrs(h) {
