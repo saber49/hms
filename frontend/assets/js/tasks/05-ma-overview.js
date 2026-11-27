@@ -460,13 +460,13 @@ function maBuildBento(data) {
                 <div class="ma-kpi-value">${totalStd.toFixed(1)}<span class="ma-kpi-value-suffix">h</span></div>
                 <div class="ma-kpi-sub">Ø ${avgStdPerWorker} h / MA</div>
             </div>
-            <div class="ma-kpi" title="Ist = in der App erfasst · Soll = Bestelleingang${istMissing ? ` · ${istMissing} Einsätze ohne Ist` : ''}">
+            <div class="ma-kpi" title="Ist = in der App erfasst · Soll netto = Bestelleingang nach Pause${istMissing ? ` · ${istMissing} Einsätze ohne Ist` : ''}">
                 <div class="ma-kpi-head">
                     <div class="ma-kpi-icon">${maIcon('compare_arrows')}</div>
                     <span class="ma-kpi-label">Ist-Stunden</span>
                 </div>
                 <div class="ma-kpi-value">${istAll.toFixed(1)}<span class="ma-kpi-value-suffix">h</span></div>
-                <div class="ma-kpi-sub">Soll ${sollAll.toFixed(1)} h</div>
+                <div class="ma-kpi-sub">Soll netto ${sollAll.toFixed(1)} h</div>
             </div>
             <div class="ma-kpi nu" data-clickable="1" onclick="maSetFilter('nu')">
                 <div class="ma-kpi-head">
@@ -800,6 +800,7 @@ function maGroupByObjekt() {
 
 function maBuildObjektBlock(g, blockId) {
     const entries = g.entries;
+    const schichtzeit = entries.reduce((s, e) => s + maSollGrossStd(e), 0);
     const sollTotal = entries.reduce((s, e) => s + maSollStd(e), 0);
     const istTotal = entries.reduce((s, e) => s + (maIstStd(e) || 0), 0);
     const maIst = entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0);
@@ -826,7 +827,8 @@ function maBuildObjektBlock(g, blockId) {
             <div class="ma-worker-std-display">
                 <div class="ma-worker-std-label">Kunde</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
-                <div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten der Mitarbeiter · Abr. = Netto-Stunden für den Kunden (Pause bereits abgezogen)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
+                <div class="ma-worker-std-sub" title="Schichtzeit = geplante Von–Bis-Zeit ohne Pausenabzug · Soll netto = geplante Stunden nach Pause">Schichtzeit ${maFmtHrs(schichtzeit)} h · Soll netto ${maFmtHrs(sollTotal)} h</div>
+                <div class="ma-worker-std-sub" title="MA-Ist = Zeiten der Mitarbeiter · Abr. = Netto-Stunden für den Kunden">MA-Ist ${maFmtHrs(maIst)} h · Abr. ${maFmtHrs(abr)} h</div>
             </div>
             <div class="ma-worker-actions"></div>
         </div>
@@ -841,6 +843,7 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
         || worker.dienst_nr || worker.personal_nr || ('NU-' + worker.nu_worker_id);
     const initials = wpWorkerInitials(worker.vorname, worker.name);
     const totalStd = maCalcWorkerTotal(worker.entries);
+    const schichtzeit = worker.entries.reduce((s, e) => s + maSollGrossStd(e), 0);
     const sollTotal = worker.entries.reduce((s, e) => s + maSollStd(e), 0);
     const istTotal = worker.entries.reduce((s, e) => s + (maIstStd(e) || 0), 0);
 
@@ -900,8 +903,10 @@ function maBuildWorkerBlock(worker, isNu, blockId) {
                 <div class="ma-worker-std-label">${kunde ? 'Kunde' : 'Ist'}</div>
                 <div class="ma-worker-std-value"><span class="ma-worker-std-text">${istTotal.toFixed(2)}</span><span class="ma-worker-std-value-suffix">h</span></div>
                 ${kunde
-                    ? `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · MA-Ist = Zeiten des Mitarbeiters · Abr. = Netto-Stunden für den Kunden (Pause bereits abgezogen)">Soll ${maFmtHrs(sollTotal)} h · MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
-                    : `<div class="ma-worker-std-sub" title="Soll = Bestelleingang · Abrechnung = Ist + bezahlte Abwesenheiten (Urlaub/Krank/Feiertag), ohne Erfassung Plan-Stunden">Soll ${maFmtHrs(sollTotal)} h · Abr. ${maFmtHrs(totalStd + abwStd)} h${abwStd > 0 ? ` · davon Abw. ${maFmtHrs(abwStd)} h` : ''}</div>`}
+                    ? `<div class="ma-worker-std-sub" title="Schichtzeit = geplante Von–Bis-Zeit ohne Pausenabzug · Soll netto = geplante Stunden nach Pause">Schichtzeit ${maFmtHrs(schichtzeit)} h · Soll netto ${maFmtHrs(sollTotal)} h</div>
+                       <div class="ma-worker-std-sub" title="MA-Ist = Zeiten des Mitarbeiters · Abr. = Netto-Stunden für den Kunden">MA-Ist ${maFmtHrs(worker.entries.reduce((s, e) => s + (maIstStd(e._ma) || 0), 0))} h · Abr. ${maFmtHrs(worker.entries.reduce((s, e) => s + maKundeAbrStd(e), 0))} h</div>`
+                    : `<div class="ma-worker-std-sub" title="Schichtzeit = geplante Von–Bis-Zeit ohne Pausenabzug · Soll netto = geplante Stunden nach Pause">Schichtzeit ${maFmtHrs(schichtzeit)} h · Soll netto ${maFmtHrs(sollTotal)} h</div>
+                       <div class="ma-worker-std-sub" title="Abrechnung = Ist + bezahlte Abwesenheiten (Urlaub/Krank/Feiertag), ohne Erfassung Plan-Stunden">Abr. ${maFmtHrs(totalStd + abwStd)} h${abwStd > 0 ? ` · davon Abw. ${maFmtHrs(abwStd)} h` : ''}</div>`}
             </div>
             <div class="ma-worker-actions">${actions}</div>
         </div>
@@ -1045,6 +1050,22 @@ function maSollStd(e) {
     return Math.max(0, span - (parseInt(e.soll_pause) || 0)) / 60;
 }
 
+// Scheduled wall-clock span (including breaks), not actual elapsed time on a
+// DST night. Use the original plan times; older rows without times fall back
+// to their net planned hours plus the planned break.
+function maSollGrossStd(e) {
+    const von = String(e.soll_start || '').substring(0, 5);
+    const bis = String(e.soll_ende || '').substring(0, 5);
+    if (!/^\d{2}:\d{2}$/.test(von) || !/^\d{2}:\d{2}$/.test(bis)) {
+        return maSollStd(e) + (parseInt(e.soll_pause) || 0) / 60;
+    }
+    const [vh, vm] = von.split(':').map(Number);
+    const [bh, bm] = bis.split(':').map(Number);
+    let span = (bh * 60 + bm) - (vh * 60 + vm);
+    if (span <= 0) span += 1440;
+    return span / 60;
+}
+
 // Ist = only what was really recorded for THIS worker (app clock or office
 // correction) — never the plan fallback. null = nothing recorded.
 function maIstStd(e) {
@@ -1127,7 +1148,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
     let html = `<div class="ma-table-wrap"><table class="ma-table ma-table-sollist"><thead>
     <tr class="ma-th-group">
         <th colspan="${isNu ? 4 : 3}"></th>
-        <th class="ma-th-soll">Soll <span class="ma-th-hint">Bestelleingang</span></th>
+        <th class="ma-th-soll">Soll netto <span class="ma-th-hint">Bestelleingang</span></th>
         <th class="ma-th-ist" colspan="4">${kunde ? 'Kunde <span class="ma-th-hint">Leistungsnachweis</span>' : `Ist <span class="ma-th-hint">${isNu ? 'erfasst' : 'Mitarbeiter-App'}</span>`}</th>
         <th colspan="${hasFreigabe ? 4 : 3}"></th>
     </tr>
@@ -1249,7 +1270,7 @@ function maBuildWorkerTable(entries, isNu, byObj = false) {
                 ? `<td data-label="Mitarbeiter"><strong>${escapeHtml(maEntryWorkerName(e))}</strong><div class="ma-soll-sub">${rowNu ? `${maIcon('apartment', 'font-size:11px;vertical-align:-2px')} ${escapeHtml(e.nu_firmenname || 'NU')}${e.position_name ? ' · ' + escapeHtml(e.position_name) : ''}` : escapeHtml(e.dienst_nr || '')}</div></td>`
                 : `<td data-label="Objekt">${escapeHtml(e.objektname || '–')}</td>`}
             ${isNu ? `<td data-label="Position">${escapeHtml(e.position_name || '–')}</td>` : ''}
-            <td data-label="Soll" class="ma-cell-soll">
+            <td data-label="Soll netto" class="ma-cell-soll">
                 <div class="ma-soll-time">${sollTime}</div>
                 <div class="ma-soll-sub">${sollStd ? maFmtHrs(sollStd) + ' h' : '–'}${sollPause > 0 ? ' · ' + sollPause + ' Min' : ''}</div>
             </td>
