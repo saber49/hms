@@ -164,7 +164,7 @@ staging.clood-x.com {
 
 # ---------- main: clood-x.com + www + *.clood-x.com ----------
 clood-x.com, www.clood-x.com, *.clood-x.com {
-	tls /etc/frankenphp/certs/clood-x.com.crt /etc/frankenphp/certs/clood-x.com.key
+	tls /etc/frankenphp/certs/clood-x-origin.crt /etc/frankenphp/certs/clood-x-origin.key
 	root * /var/www/hms-frontend
 	request_body {
 		max_size 20MB
